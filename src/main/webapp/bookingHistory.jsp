@@ -401,6 +401,7 @@
 
         </style>
     </head>
+    <jsp:include page="/includes/customer/header.jsp" />
     <jsp:include page="/includes/customer/navbar.jsp" />
     <body class="  font-body " data-framework="tailwind">
         <link href="https://www.loopple.com/css/vendor/tailwind.min.css" rel="stylesheet">
