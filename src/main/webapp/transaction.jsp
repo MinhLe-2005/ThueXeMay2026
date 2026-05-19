@@ -353,48 +353,54 @@
 
         /* Simplified Sidebar */
         .sidebar-item {
-            padding: 0.75rem 1rem;
-            margin: 0.2rem 1rem;
-            display: flex;
-            align-items: center;
-            border-radius: 0.5rem;
-            transition: all 0.2s ease;
-            color: #64748b;
+            padding: 0.75rem 1rem !important;
+            margin: 0.2rem 1rem !important;
+            display: flex !important;
+            align-items: center !important;
+            border-radius: 0.5rem !important;
+            transition: all 0.2s ease !important;
+            color: #1e293b !important; /* Dark Slate-800 for absolute contrast */
+            font-weight: 700 !important; /* Bold, highly readable */
+            font-size: 0.95rem !important; /* Slightly larger */
+            text-decoration: none !important;
         }
         .sidebar-item:hover {
-            background-color: #f1f5f9;
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important; /* Slate-900 */
         }
         .sidebar-item.active {
-            background-color: #fdf8eb; /* very light gold */
-            color: #b59349;
-            font-weight: 600;
+            background-color: #fdf8eb !important; /* very light gold */
+            color: #854d0e !important; /* Deep Golden Amber for maximum readability */
+            font-weight: 800 !important;
         }
         .icon-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            width: 32px;
-            height: 32px;
-            border-radius: 0.5rem;
-            background-color: #f1f5f9;
-            color: #64748b;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin-right: 1rem !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 0.5rem !important;
+            background-color: #e2e8f0 !important; /* Deeper gray for contrast */
+            color: #334155 !important; /* Slate-700 */
+            transition: all 0.2s ease !important;
         }
         .sidebar-item.active .icon-box {
-            background-color: #b59349;
-            color: #ffffff;
+            background-color: #b59349 !important;
+            color: #ffffff !important;
         }
         .nav-text {
-            font-size: 0.9rem;
+            font-size: 0.95rem !important;
         }
         .sidebar-heading {
-            padding-left: 1.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            color: #94a3b8;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
+            padding-left: 1.5rem !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            font-size: 0.8rem !important; /* Slightly larger */
+            color: #475569 !important; /* Slate-600 */
+            margin-top: 1.5rem !important;
+            margin-bottom: 0.5rem !important;
+            letter-spacing: 0.05em !important;
         }
 
         </style>
@@ -424,7 +430,7 @@
                             <div class="sidebar-heading">Quản lý thuê xe</div>
                         </li>
                         <li class="w-full"> 
-                            <a class="sidebar-item active" href="javascript:;">
+                            <a class="sidebar-item active" href="transaction">
                                 <div class="icon-box">
                                     <i class="fas fa-credit-card text-xs"></i>
                                 </div> 
