@@ -576,21 +576,54 @@
                                 document.querySelectorAll(".sidebar-item").forEach(item => {
                                     item.classList.remove("active");
                                     const itemHref = item.getAttribute("href");
-                                    if (itemHref === url || (url.includes("bookingHistory") && itemHref && itemHref.includes("bookingHistory"))) {
+                                    if (itemHref === url || 
+                                        (url.includes("bookingHistory") && itemHref && itemHref.includes("bookingHistory")) ||
+                                        (url.includes("transaction") && itemHref && itemHref.includes("transaction")) ||
+                                        (url.includes("profileCustomer") && itemHref && itemHref.includes("profileCustomer")) ||
+                                        (url.includes("settingsProfile") && itemHref && itemHref.includes("settingsProfile"))) {
                                         item.classList.add("active");
                                     }
                                 });
                                 
-                                // Re-initialize any page-specific JS
-                                // For booking history:
-                                if (url.includes("bookingHistory")) {
-                                    const scripts = doc.querySelectorAll("script");
-                                    scripts.forEach(script => {
-                                        if (script.innerHTML.includes("initializeFilters")) {
-                                            eval(script.innerHTML);
+                                // Re-initialize any page-specific JS with temporary DOMContentLoaded override
+                                const scripts = doc.querySelectorAll("script");
+                                const originalAddEventListener = document.addEventListener;
+                                document.addEventListener = function(type, listener, options) {
+                                    if (type === 'DOMContentLoaded') {
+                                        setTimeout(listener, 0);
+                                    } else {
+                                        originalAddEventListener.call(document, type, listener, options);
+                                    }
+                                };
+                                
+                                scripts.forEach(script => {
+                                    if (script.src) {
+                                        // Skip common static libraries to avoid duplicate loading
+                                        if (script.src.includes("chartjs") || 
+                                            script.src.includes("perfect-scrollbar") || 
+                                            script.src.includes("buttons.js") || 
+                                            script.src.includes("soft-ui-dashboard-tailwind") || 
+                                            script.src.includes("cropperjs") ||
+                                            script.src.includes("jquery") ||
+                                            script.src.includes("bootstrap")) {
+                                            return;
                                         }
-                                    });
-                                }
+                                        const newScript = document.createElement("script");
+                                        newScript.src = script.src;
+                                        document.body.appendChild(newScript);
+                                    } else if (script.innerHTML.trim()) {
+                                        try {
+                                            eval(script.innerHTML);
+                                        } catch (e) {
+                                            console.error("Error executing page script:", e);
+                                        }
+                                    }
+                                });
+                                
+                                // Restore original addEventListener
+                                setTimeout(() => {
+                                    document.addEventListener = originalAddEventListener;
+                                }, 100);
                                 
                                 // Re-bind click handlers
                                 initSPANavigation();

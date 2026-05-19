@@ -414,102 +414,127 @@
         <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
         <link href="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/css/nucleo-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/css/soft-ui-dashboard-tailwind.css">
-        <div class="builder-container builder-container-preview  font-body ">
-            <div class="container mt-5">
-                <div class="row" style="justify-content: flex-end; margin-top: 9%;">
-                    <aside class="max-w-62.5 ease-nav-brand z-990 absolute inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent text-slate-500"
-                           id="sidenav-main">
-                        <hr class="h-px mt-0 bg-transparent bg-gradient-horizontal-dark">
-                        <div style="margin-top: 6rem" class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
-                            <ul class="flex flex-col pl-0 mb-0">
-                                <li class="w-full">
-                                    <div class="sidebar-heading">Quản lý thuê xe</div>
-                                </li>
-                                <li class="w-full"> 
-                                    <a class="sidebar-item active" href="javascript:;">
-                                        <div class="icon-box">
-                                            <i class="fas fa-credit-card text-xs"></i>
-                                        </div> 
-                                        <span class="nav-text">Giao dịch gần đây</span>
-                                    </a> 
-                                </li>
-                                <li class="w-full"> 
-                                    <a class="sidebar-item" href="bookingHistory?status=all">
-                                        <div class="icon-box">
-                                            <i class="fas fa-history text-xs"></i>
-                                        </div> 
-                                        <span class="nav-text">Lịch sử thuê xe</span>
-                                    </a> 
-                                </li>
-                                <li class="w-full">
-                                    <div class="sidebar-heading">Quản lý tài khoản</div>
-                                </li>
-                                <li class="w-full"> 
-                                    <a class="sidebar-item" href="profileCustomer.jsp">
-                                        <div class="icon-box">
-                                            <i class="fas fa-user-circle text-xs"></i>
-                                        </div> 
-                                        <span class="nav-text">Thông tin cá nhân</span>
-                                    </a> 
-                                </li>
-                                <li class="w-full"> 
-                                    <a class="sidebar-item" href="settingsProfile.jsp">
-                                        <div class="icon-box">
-                                            <i class="fas fa-shield-alt text-xs"></i>
-                                        </div> 
-                                        <span class="nav-text">Mật khẩu và bảo mật</span>
-                                    </a> 
-                                </li>
-                            </ul>
-                        </div>
-                    </aside>
+        <div class="builder-container builder-container-preview font-body">
+            <aside class="max-w-62.5 ease-nav-brand z-990 absolute inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent text-slate-500"
+                   id="sidenav-main">
+                <hr class="h-px mt-0 bg-transparent bg-gradient-horizontal-dark">
+                <div style="margin-top: 6rem" class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
+                    <ul class="flex flex-col pl-0 mb-0">
+                        <li class="w-full">
+                            <div class="sidebar-heading">Quản lý thuê xe</div>
+                        </li>
+                        <li class="w-full"> 
+                            <a class="sidebar-item active" href="javascript:;">
+                                <div class="icon-box">
+                                    <i class="fas fa-credit-card text-xs"></i>
+                                </div> 
+                                <span class="nav-text">Giao dịch gần đây</span>
+                            </a> 
+                        </li>
+                        <li class="w-full"> 
+                            <a class="sidebar-item" href="bookingHistory?status=all">
+                                <div class="icon-box">
+                                    <i class="fas fa-history text-xs"></i>
+                                </div> 
+                                <span class="nav-text">Lịch sử thuê xe</span>
+                            </a> 
+                        </li>
+                        <li class="w-full">
+                            <div class="sidebar-heading">Quản lý tài khoản</div>
+                        </li>
+                        <li class="w-full"> 
+                            <a class="sidebar-item" href="profileCustomer.jsp">
+                                <div class="icon-box">
+                                    <i class="fas fa-user-circle text-xs"></i>
+                                </div> 
+                                <span class="nav-text">Thông tin cá nhân</span>
+                            </a> 
+                        </li>
+                        <li class="w-full"> 
+                            <a class="sidebar-item" href="settingsProfile.jsp">
+                                <div class="icon-box">
+                                    <i class="fas fa-shield-alt text-xs"></i>
+                                </div> 
+                                <span class="nav-text">Mật khẩu và bảo mật</span>
+                            </a> 
+                        </li>
+                    </ul>
+                </div>
+            </aside>
 
-                    <div style="width: 83.666667%;" class="col-lg-8 pb-5">
+            <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
+                <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
+                    <div style="padding-top: 8%; width: 96%;" class="pt-8 mx-auto removable">
                         <div class="flex flex-wrap -mx-3 drop-zone">
-                            <div style="position: relative;" class="table-responsive">
-                                <table class="caption-top min-w-full table-auto table-hover table-borderless table-striped" id="booking-table">
-                                    <caption class="caption-top">Giao dịch gần đây</caption>
-                                    <thead style="border: 1px solid">
-                                        <tr>
-                                            <th scope="col" class="col-table px-8 py-2">Mã đơn</th>
-                                            <th scope="col" class="col-table px-10 py-2">Phương thức</th>
-                                            <th scope="col" class="col-table px-10 py-2">Ngày thanh toán</th>
-                                            <th scope="col" class="col-table px-8 py-2">Thành tiền</th>
-                                            <th scope="col" class="col-table px-10 py-2">Trạng thái</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:if test="${empty transaction}">
-                                            <tr>
-                                                <td colspan="5" class="text-center italic py-4 text-lg">Không có thông tin giao dịch nào ở đây</td>
-                                            </tr>
-                                        </c:if>
-                                        <c:forEach items="${transaction}" var="trans">
-                                            <tr>
-                                                <td class="px-8 py-2"><strong>${trans.bookingId}</strong></td>
-                                                <td class="px-10 py-2">${trans.paymentMethod}</td>
-                                                <td class="px-10 py-2">${trans.paymentDate}</td>
-                                                <td class="px-8 py-2">
-                                                    <fmt:formatNumber value="${trans.paymentAmount * 1000}" type="currency" currencySymbol="VNĐ" />
-                                                </td>
-                                                <td class="px-10 py-2">
-                                                    <c:choose>
-                                                        <c:when test="${trans.paymentStatus == 'Giao dịch thành công'}">
-                                                            <span class="status-success">${trans.paymentStatus}</span>
-                                                        </c:when>
-                                                        <c:when test="${trans.paymentStatus == 'Giao dịch thất bại'}">
-                                                            <span class="status-failure">${trans.paymentStatus}</span>
-                                                        </c:when>
-                                                        <c:when test="${trans.paymentStatus == 'Chờ xử lý'}">
-                                                            <span class="status-pending">${trans.paymentStatus}</span>
-                                                        </c:when>
-                                                    </c:choose>
-                                                </td>
-
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
+                            <div class="w-full max-w-full px-3 mb-4 draggable" draggable="true">
+                                <div class="relative flex flex-col h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border overflow-hidden p-8">
+                                    
+                                    <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                                        <i class="fas fa-credit-card mr-2 text-amber-500"></i> Giao dịch gần đây
+                                    </h3>
+                                    
+                                    <div class="table-responsive w-full overflow-x-auto rounded-xl border border-slate-100">
+                                        <table class="table min-w-full align-middle mb-0" id="booking-table">
+                                            <thead class="bg-slate-50 border-b border-slate-100">
+                                                <tr class="bg-slate-50">
+                                                    <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Mã đơn</th>
+                                                    <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Phương thức</th>
+                                                    <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Ngày thanh toán</th>
+                                                    <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Thành tiền</th>
+                                                    <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Trạng thái</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-slate-100">
+                                                <c:if test="${empty transaction}">
+                                                    <tr>
+                                                        <td colspan="5" class="text-center italic py-8 text-slate-400">Không có thông tin giao dịch nào ở đây</td>
+                                                    </tr>
+                                                </c:if>
+                                                <c:forEach items="${transaction}" var="trans">
+                                                    <tr class="hover:bg-slate-50 transition-colors duration-150">
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-amber-600">
+                                                            #${trans.bookingId}
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 font-medium">
+                                                            <span class="inline-flex items-center gap-1.5">
+                                                                <i class="fas fa-wallet text-slate-400"></i>
+                                                                <span>${trans.paymentMethod}</span>
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                                                            ${trans.paymentDate}
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
+                                                            <fmt:formatNumber value="${trans.paymentAmount * 1000}" type="currency" currencySymbol="đ" />
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <c:choose>
+                                                                <c:when test="${trans.paymentStatus == 'Giao dịch thành công'}">
+                                                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                                        Giao dịch thành công
+                                                                    </span>
+                                                                </c:when>
+                                                                <c:when test="${trans.paymentStatus == 'Giao dịch thất bại'}">
+                                                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-100">
+                                                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                                                        Giao dịch thất bại
+                                                                    </span>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-100">
+                                                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                                        ${trans.paymentStatus}
+                                                                    </span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
