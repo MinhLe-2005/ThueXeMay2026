@@ -1,0 +1,135 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.smartride.dao;
+
+import com.smartride.dto.Payment;
+import com.smartride.util.DBUtil;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author LeQuangMinh
+ */
+public class PaymentDAO implements Serializable {
+
+    private static PaymentDAO instance;
+    private Connection conn = DBUtil.makeConnection();
+
+    private PaymentDAO() {
+    }
+
+    public static PaymentDAO getInstance() {
+
+        if (instance == null) {
+            instance = new PaymentDAO();
+        }
+        return instance;
+    }
+
+    public Payment getPayMentbyBookingId(String bookingId) {
+        PreparedStatement stm;
+        ResultSet rs;
+        String sql = "Select * from Payment where BookingID = ?";
+        try {
+            stm = conn.prepareStatement(sql);
+            stm.setString(1, bookingId);
+            rs = stm.executeQuery();
+            if (rs.next()) {
+                Payment payment = new Payment();
+                payment.setPaymentId(rs.getInt(1));
+                payment.setBookingId(rs.getString(2));
+                payment.setPaymentMethod(rs.getString(3));
+                payment.setPaymentDate(rs.getString(4));
+                payment.setPaymentAmount(rs.getDouble(5));
+                payment.setPaymentStatus(rs.getString(6));
+                return payment;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(ExtensionDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
+
+    public void addPayment(String bookingId, String method, String paymentDate, int amount, String status) {
+        String sql = "INSERT INTO [dbo].[Payment] \n"
+                + "    ([BookingID], [PaymentMethod], [PaymentDate], [PaymentAmount], [PaymentStatus])\n"
+                + "VALUES \n"
+                + "    (?,?, ?, ?, ?);";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingId);
+            ps.setString(2, method);
+            ps.setString(3, paymentDate);
+            ps.setInt(4, amount);
+            ps.setString(5, status);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public List<Payment> getListByBookingId(String id) {
+        List<Payment> list = new ArrayList<>();
+        PreparedStatement stm;
+        ResultSet rs;
+        try {
+            String sql = "Select * from Payment where BookingID = ?";
+            stm = conn.prepareStatement(sql);
+            stm.setString(1, id);
+            rs = stm.executeQuery();
+            while (rs.next()) {
+                list.add(new Payment(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6)));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public List<Payment> getAllPaymentsByCustomer(int accountId) {
+        PreparedStatement stm;
+        ResultSet rs;
+        List<Payment> list = new ArrayList<>();
+        String sql = "select PaymentID, Payment.BookingID, PaymentMethod, FORMAT(PaymentDate, 'dd-MM-yyyy HH:mm:ss') AS PaymentDate, PaymentAmount, PaymentStatus\n"
+                + "from Payment\n"
+                + "JOIN Booking b on b.BookingID = Payment.BookingID\n"
+                + "WHERE CustomerID = (Select CustomerID from Customer where AccountID = ?)\n"
+                + "order by Payment.BookingID asc";
+        try {
+            stm = conn.prepareStatement(sql);
+            stm.setInt(1, accountId); 
+            rs = stm.executeQuery();
+            while (rs.next()) {
+                Payment p = new Payment();
+                p.setPaymentId(rs.getInt(1));
+                p.setBookingId(rs.getString(2));
+                p.setPaymentMethod(rs.getString(3));
+                p.setPaymentDate(rs.getString(4));
+                p.setPaymentAmount(rs.getDouble(5));
+                p.setPaymentStatus(rs.getString(6));
+                list.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public static void main(String[] args) {
+        PaymentDAO dao = getInstance();
+//        for (Payment x : dao.getListByBookingId("BOOK908040")) {
+//            System.out.println(x);
+//        }
+        System.out.println(dao.getAllPaymentsByCustomer(1));
+    }
+}
