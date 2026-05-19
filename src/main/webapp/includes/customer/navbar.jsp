@@ -589,7 +589,7 @@
                                 });
                                 
                                 // Re-initialize any page-specific JS with temporary DOMContentLoaded override
-                                const scripts = doc.querySelectorAll("script");
+                                const scripts = newPanel.querySelectorAll("script");
                                 const originalAddEventListener = document.addEventListener;
                                 document.addEventListener = function(type, listener, options) {
                                     if (type === 'DOMContentLoaded') {

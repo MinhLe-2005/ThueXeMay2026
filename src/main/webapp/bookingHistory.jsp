@@ -697,7 +697,7 @@
                                         history.pushState(null, '', url);
                                         
                                         // Re-initialize scripts on the new panel
-                                        const scripts = doc.querySelectorAll("script");
+                                        const scripts = newPanel.querySelectorAll("script");
                                         scripts.forEach(script => {
                                             if (script.innerHTML.includes("initializeFilters")) {
                                                 eval(script.innerHTML);
@@ -743,7 +743,7 @@
                                         history.pushState(null, '', url);
                                         
                                         // Re-initialize scripts on the new panel
-                                        const scripts = doc.querySelectorAll("script");
+                                        const scripts = newPanel.querySelectorAll("script");
                                         scripts.forEach(script => {
                                             if (script.innerHTML.includes("initializeFilters")) {
                                                 eval(script.innerHTML);
