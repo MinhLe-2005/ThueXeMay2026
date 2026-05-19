@@ -298,6 +298,7 @@
     .menu-container {
         visibility: hidden;
         opacity: 0;
+        z-index: 9999 !important;
     }
 
     .menu-container.active {
@@ -319,6 +320,7 @@
         margin-top: 20px;
         margin-right: 30px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+        z-index: 9999 !important;
     }
 
     .user-menu .profile-highlight {
@@ -528,7 +530,8 @@
         // Intercept sidebar link clicks for seamless SPA transition on Customer Profile pages
         const initSPANavigation = () => {
             document.querySelectorAll(".sidebar-item").forEach(link => {
-                if (link.getAttribute("href").startsWith("javascript:")) return;
+                const href = link.getAttribute("href");
+                if (!href || href.startsWith("javascript:")) return;
                 
                 // Clone node to prevent duplicate event listeners
                 const newLink = link.cloneNode(true);
