@@ -646,13 +646,21 @@
     });
 
     const miniPhoto = document.querySelector('.mini-photo-wrapper');
-    if (miniPhoto) {
-        miniPhoto.addEventListener('click', function () {
-            document.querySelector('.menu-container').classList.toggle('active');
+    const menuContainer = document.querySelector('.menu-container');
+    
+    if (miniPhoto && menuContainer) {
+        miniPhoto.addEventListener('click', function (e) {
+            e.stopPropagation();
+            menuContainer.classList.toggle('active');
+        });
+        
+        // Đóng dropdown khi click ra ngoài
+        document.addEventListener('click', function (e) {
+            if (menuContainer.classList.contains('active') && !menuContainer.contains(e.target) && !miniPhoto.contains(e.target)) {
+                menuContainer.classList.remove('active');
+            }
         });
     }
-
-   
 
 </script>
 
