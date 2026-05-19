@@ -325,9 +325,9 @@
                             <input style="background-color: #f1f5f9; color: #64748b; cursor: not-allowed;" readonly value="${account.userName}" type="text" id="account-username" name="username" class="form-control mt-1 p-2 border border-gray-300 rounded-md w-full">
                         </div>
                     </div>
-                    <div class="flex justify-end">
-                        <button type="button" id="closeModalBtn" class="mr-4 px-4 py-2 bg-gray-300 rounded-md">Quay về</button>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Lưu thay đổi</button>
+                    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem; border-top: 1px solid #e2e8f0; padding-top: 1.25rem;">
+                        <button type="button" id="closeModalBtn" style="background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; padding: 0.6rem 1.5rem; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; outline: none;">Quay về</button>
+                        <button type="submit" style="background-color: #2563eb; color: white; font-weight: 600; padding: 0.6rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.2s; outline: none;">Lưu thay đổi</button>
                     </div>
                 </form>
             </div>
