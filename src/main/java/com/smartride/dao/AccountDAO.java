@@ -244,20 +244,20 @@ public class AccountDAO implements Serializable {
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                Account acc = new Account();
-                acc.setAccountId(rs.getInt(1));
-                acc.setFirstName(rs.getString(2));
-                acc.setLastName(rs.getString(3));
-                acc.setGender(rs.getString(4));
-                acc.setDob(rs.getString(5));
-                acc.setAddress(rs.getString(6));
-                acc.setPhoneNumber(rs.getString(7));
-                acc.setImage(rs.getString(8));
-                acc.setEmail(rs.getString(9));
-                acc.setUserName(rs.getString(10));
-                acc.setPassWord(rs.getString(11));
-                acc.setRoleID(rs.getInt(12));
-                return acc;
+                return new Account(
+                    rs.getInt("AccountID"),
+                    rs.getString("FirstName"),
+                    rs.getString("LastName"),
+                    rs.getString("Gender"),
+                    rs.getString("DayOfBirth"),
+                    rs.getString("Address"),
+                    rs.getString("PhoneNumber"),
+                    rs.getString("Image"),
+                    rs.getString("Email"),
+                    rs.getString("Username"),
+                    rs.getString("Password"),
+                    rs.getInt("RoleID")
+                );
             }
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -486,7 +486,7 @@ public class AccountDAO implements Serializable {
     public Account getAccountbyBookingID(String bookingId) {
         PreparedStatement st;
         ResultSet rs;
-        String sql = "SELECT * FROM \"Account\" a\n"
+        String sql = "SELECT a.* FROM \"Account\" a\n"
                 + "JOIN \"Customer\" c ON a.\"AccountID\" = c.\"AccountID\"\n"
                 + "JOIN \"Booking\" b ON b.\"CustomerID\" = c.\"CustomerID\"\n"
                 + "WHERE b.\"BookingID\" = ?";
@@ -495,20 +495,20 @@ public class AccountDAO implements Serializable {
             st.setString(1, bookingId);
             rs = st.executeQuery();
             if (rs.next()) {
-                Account acc = new Account();
-                acc.setAccountId(rs.getInt(1));
-                acc.setFirstName(rs.getString(2));
-                acc.setLastName(rs.getString(3));
-                acc.setGender(rs.getString(4));
-                acc.setDob(rs.getString(5));
-                acc.setAddress(rs.getString(6));
-                acc.setPhoneNumber(rs.getString(7));
-                acc.setImage(rs.getString(8));
-                acc.setEmail(rs.getString(9));
-                acc.setUserName(rs.getString(10));
-                acc.setPassWord(rs.getString(11));
-                acc.setRoleID(rs.getInt(12));
-                return acc;
+                return new Account(
+                    rs.getInt("AccountID"),
+                    rs.getString("FirstName"),
+                    rs.getString("LastName"),
+                    rs.getString("Gender"),
+                    rs.getString("DayOfBirth"),
+                    rs.getString("Address"),
+                    rs.getString("PhoneNumber"),
+                    rs.getString("Image"),
+                    rs.getString("Email"),
+                    rs.getString("Username"),
+                    rs.getString("Password"),
+                    rs.getInt("RoleID")
+                );
             }
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -551,31 +551,30 @@ public class AccountDAO implements Serializable {
     }
 
     public Account getAccountbyCustomerId(int customerID) {
-
         PreparedStatement st;
         ResultSet rs;
-        String sql = "SELECT * FROM \"Account\"\n"
-                + "JOIN \"Customer\" ON \"Account\".\"AccountID\" = \"Customer\".\"AccountID\"\n"
-                + "WHERE \"CustomerID\" = ?";
+        String sql = "SELECT a.* FROM \"Account\" a\n"
+                + "JOIN \"Customer\" c ON a.\"AccountID\" = c.\"AccountID\"\n"
+                + "WHERE c.\"CustomerID\" = ?";
         try {
             st = conn.prepareStatement(sql);
             st.setInt(1, customerID);
             rs = st.executeQuery();
             if (rs.next()) {
-                Account acc = new Account();
-                acc.setAccountId(rs.getInt(1));
-                acc.setFirstName(rs.getString(2));
-                acc.setLastName(rs.getString(3));
-                acc.setGender(rs.getString(4));
-                acc.setDob(rs.getString(5));
-                acc.setAddress(rs.getString(6));
-                acc.setPhoneNumber(rs.getString(7));
-                acc.setImage(rs.getString(8));
-                acc.setEmail(rs.getString(9));
-                acc.setUserName(rs.getString(10));
-                acc.setPassWord(rs.getString(11));
-                acc.setRoleID(rs.getInt(12));
-                return acc;
+                return new Account(
+                    rs.getInt("AccountID"),
+                    rs.getString("FirstName"),
+                    rs.getString("LastName"),
+                    rs.getString("Gender"),
+                    rs.getString("DayOfBirth"),
+                    rs.getString("Address"),
+                    rs.getString("PhoneNumber"),
+                    rs.getString("Image"),
+                    rs.getString("Email"),
+                    rs.getString("Username"),
+                    rs.getString("Password"),
+                    rs.getInt("RoleID")
+                );
             }
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
