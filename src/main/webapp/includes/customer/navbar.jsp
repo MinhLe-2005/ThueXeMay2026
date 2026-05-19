@@ -524,6 +524,89 @@
                 document.body.classList.remove('scrolled');
             }
         });
+
+        // Intercept sidebar link clicks for seamless SPA transition on Customer Profile pages
+        const initSPANavigation = () => {
+            document.querySelectorAll(".sidebar-item").forEach(link => {
+                if (link.getAttribute("href").startsWith("javascript:")) return;
+                
+                // Clone node to prevent duplicate event listeners
+                const newLink = link.cloneNode(true);
+                link.parentNode.replaceChild(newLink, link);
+            });
+            
+            document.querySelectorAll(".sidebar-item").forEach(link => {
+                const url = link.getAttribute("href");
+                if (!url || url.startsWith("javascript:")) return;
+                
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    
+                    const panel = document.getElementById("panel");
+                    if (!panel) {
+                        window.location.href = url;
+                        return;
+                    }
+                    
+                    panel.style.transition = "opacity 0.15s ease, transform 0.15s ease";
+                    panel.style.opacity = "0";
+                    panel.style.transform = "translateY(5px)";
+                    
+                    fetch(url)
+                        .then(response => response.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, "text/html");
+                            const newPanel = doc.getElementById("panel");
+                            
+                            if (newPanel) {
+                                // Update content
+                                panel.innerHTML = newPanel.innerHTML;
+                                
+                                // Trigger fade in
+                                setTimeout(() => {
+                                    panel.style.opacity = "1";
+                                    panel.style.transform = "translateY(0)";
+                                }, 50);
+                                
+                                // Update browser history URL
+                                history.pushState(null, '', url);
+                                
+                                // Update active link styling in all sidebars
+                                document.querySelectorAll(".sidebar-item").forEach(item => {
+                                    item.classList.remove("active");
+                                    const itemHref = item.getAttribute("href");
+                                    if (itemHref === url || (url.includes("bookingHistory") && itemHref && itemHref.includes("bookingHistory"))) {
+                                        item.classList.add("active");
+                                    }
+                                });
+                                
+                                // Re-initialize any page-specific JS
+                                // For booking history:
+                                if (url.includes("bookingHistory")) {
+                                    const scripts = doc.querySelectorAll("script");
+                                    scripts.forEach(script => {
+                                        if (script.innerHTML.includes("initializeFilters")) {
+                                            eval(script.innerHTML);
+                                        }
+                                    });
+                                }
+                                
+                                // Re-bind click handlers
+                                initSPANavigation();
+                            } else {
+                                window.location.href = url;
+                            }
+                        })
+                        .catch(err => {
+                            console.error("SPA fetch failed, falling back to standard navigation:", err);
+                            window.location.href = url;
+                        });
+                });
+            });
+        };
+        
+        initSPANavigation();
     });
 
     const miniPhoto = document.querySelector('.mini-photo-wrapper');

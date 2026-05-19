@@ -355,15 +355,18 @@
             align-items: center;
             border-radius: 0.5rem;
             transition: all 0.2s ease;
-            color: #64748b;
+            color: #334155; /* Slate-700 for clear readability */
+            font-weight: 600; /* Sharp, bold medium text */
+            text-decoration: none !important;
         }
         .sidebar-item:hover {
             background-color: #f1f5f9;
+            color: #0f172a; /* Slate-900 */
         }
         .sidebar-item.active {
             background-color: #fdf8eb; /* very light gold */
             color: #b59349;
-            font-weight: 600;
+            font-weight: 700;
         }
         .icon-box {
             display: flex;
@@ -374,7 +377,7 @@
             height: 32px;
             border-radius: 0.5rem;
             background-color: #f1f5f9;
-            color: #64748b;
+            color: #475569;
         }
         .sidebar-item.active .icon-box {
             background-color: #b59349;
@@ -385,10 +388,10 @@
         }
         .sidebar-heading {
             padding-left: 1.5rem;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
             font-size: 0.75rem;
-            color: #94a3b8;
+            color: #475569; /* Slate-600 */
             margin-top: 1.5rem;
             margin-bottom: 0.5rem;
         }
@@ -484,80 +487,126 @@
                                                     <option value="returned" <c:if test="${'returned' eq deliveryStatus}">selected</c:if>>Đã trả</option>
                                                 </select>
                                             </div>
-                                            
                                             <div class="table-responsive w-full overflow-x-auto rounded-xl border border-slate-100">
                                                 <table class="table min-w-full align-middle mb-0" id="booking-table">
                                                     <thead class="bg-slate-50 border-b border-slate-100">
-                                            <tr>
-                                                <th scope="col" class="col-table px-8 py-2">Mã đơn</th>
-                                                <th scope="col" class="col-table px-6 py-2">Ngày bắt đầu</th>
-                                                <th scope="col" class="col-table px-10 py-2">Ngày trả xe</th>
-                                                <th scope="col" class="col-table px-6 py-2">Số lượng xe</th>
-                                                <th scope="col" class="col-table px-8 py-2">Trạng thái</th>
-                                                <th scope="col" class="col-table px-10 py-2">Giá</th>
-                                                <th scope="col" class="col-table px-6 py-2"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:if test="${empty listB}">
-                                            <tr>
-                                                <td colspan="7" class="text-center italic py-4 text-lg">Không có thông tin Booking nào ở đây</td>
-                                            </tr>
-                                        </c:if>
-                                        <c:forEach items="${listB}" var="o">
-                                            <tr class="${status}">
-                                                <td class="px-8 py-2">${o.bookingID}</td>
-                                                <td class="px-6 py-2">
-                                                    <c:set var="startDate" value="${o.startDate}" />
-                                                    <c:set var="startYear" value="${fn:substring(startDate, 0, 4)}" />
-                                                    <c:set var="startMonth" value="${fn:substring(startDate, 5, 7)}" />
-                                                    <c:set var="startDay" value="${fn:substring(startDate, 8, 10)}" />
-                                                    ${startDay}-${startMonth}-${startYear}
-                                                </td>
-
-                                                <td class="px-10 py-2">
-                                                    <c:set var="endDate" value="${o.endDate}" />
-                                                    <c:set var="endYear" value="${fn:substring(endDate, 0, 4)}" />
-                                                    <c:set var="endMonth" value="${fn:substring(endDate, 5, 7)}" />
-                                                    <c:set var="endDay" value="${fn:substring(endDate, 8, 10)}" />
-                                                    ${endDay}-${endMonth}-${endYear}
-                                                </td>
-                                                <td class="px-6 py-2">${fn:length(o.listBookingDetails)}</td>
-                                                <td class="px-8 py-2">${o.statusBooking}</td>
-                                                <td class="px-10 py-2">
-                                                    <c:set var="total" value="0"/>
-                                                    <c:forEach items="${o.listBookingDetails}" var="detail">
-                                                        <c:set var="total" value="${total + detail.totalPrice}"/>
+                                                        <tr class="bg-slate-50">
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Mã đơn</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Thời gian thuê</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Số lượng xe</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Trạng thái</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tổng giá</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Hành động</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-slate-100">
+                                                    <c:if test="${empty listB}">
+                                                        <tr>
+                                                            <td colspan="6" class="text-center italic py-8 text-slate-400">Không có thông tin Booking nào ở đây</td>
+                                                        </tr>
+                                                    </c:if>
+                                                    <c:forEach items="${listB}" var="o">
+                                                        <c:set var="status" value="${o.statusBooking == 'Chờ xác nhận' ? 'pending' : (o.statusBooking == 'Đã xác nhận' ? 'confirmed' : 'cancelled')}" />
+                                                        <c:set var="delivery" value="${o.deliveryStatus == 'Đã trả' ? 'returned' : (o.deliveryStatus == 'Đã giao' ? 'delivered' : 'notDelivered')}" />
+                                                        
+                                                        <tr class="${status} ${delivery} hover:bg-slate-50 transition-colors duration-150">
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-amber-600">
+                                                                #${o.bookingID}
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700">
+                                                                <c:set var="startDate" value="${o.startDate}" />
+                                                                <c:set var="startYear" value="${fn:substring(startDate, 0, 4)}" />
+                                                                <c:set var="startMonth" value="${fn:substring(startDate, 5, 7)}" />
+                                                                <c:set var="startDay" value="${fn:substring(startDate, 8, 10)}" />
+                                                                
+                                                                <c:set var="endDate" value="${o.endDate}" />
+                                                                <c:set var="endYear" value="${fn:substring(endDate, 0, 4)}" />
+                                                                <c:set var="endMonth" value="${fn:substring(endDate, 5, 7)}" />
+                                                                <c:set var="endDay" value="${fn:substring(endDate, 8, 10)}" />
+                                                                
+                                                                <span class="inline-flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
+                                                                    <i class="far fa-calendar-alt text-slate-400 text-xs"></i>
+                                                                    <span>${startDay}-${startMonth}-${startYear}</span>
+                                                                    <i class="fas fa-long-arrow-alt-right text-amber-500 text-xs mx-1"></i>
+                                                                    <span>${endDay}-${endMonth}-${endYear}</span>
+                                                                </span>
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 font-medium">
+                                                                <span class="inline-flex items-center gap-1">
+                                                                    <i class="fas fa-motorcycle text-slate-400"></i>
+                                                                    <span>${fn:length(o.listBookingDetails)} xe</span>
+                                                                </span>
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                <c:choose>
+                                                                    <c:when test="${o.statusBooking == 'Chờ xác nhận'}">
+                                                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-100">
+                                                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                                            Chờ xác nhận
+                                                                        </span>
+                                                                    </c:when>
+                                                                    <c:when test="${o.statusBooking == 'Đã xác nhận'}">
+                                                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                                            Đã xác nhận
+                                                                        </span>
+                                                                        <c:if test="${not empty o.deliveryStatus}">
+                                                                            <div class="mt-1">
+                                                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                                                                                    o.deliveryStatus == 'Đã trả' ? 'bg-blue-50 text-blue-700 border border-blue-100' :
+                                                                                    o.deliveryStatus == 'Đã giao' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' :
+                                                                                    'bg-slate-50 text-slate-600 border border-slate-100'
+                                                                                }">
+                                                                                    ${o.deliveryStatus}
+                                                                                </span>
+                                                                            </div>
+                                                                        </c:if>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-100">
+                                                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                                                            Đã hủy
+                                                                        </span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
+                                                                <c:set var="total" value="0"/>
+                                                                <c:forEach items="${o.listBookingDetails}" var="detail">
+                                                                    <c:set var="total" value="${total + detail.totalPrice}"/>
+                                                                </c:forEach>
+                                                                <fmt:formatNumber value="${total*1000}" type="currency" currencySymbol="đ" />
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                                                <div class="inline-flex items-center justify-center gap-2">
+                                                                    <a href="bookingHistoryDetail?bookingId=${o.bookingID}" class="w-8 h-8 rounded-full bg-slate-50 hover:bg-amber-500 hover:text-white text-slate-500 flex items-center justify-center transition-all duration-200 border border-slate-100 shadow-sm text-decoration-none" title="Xem chi tiết" data-toggle="tooltip">
+                                                                        <i class="fa fa-eye text-xs"></i>
+                                                                    </a>
+                                                                    
+                                                                    <input type="hidden" name="bookingId" value="${o.bookingID}" />
+                                                                    <c:set var="feedback" value="${feedbackMap[o.bookingID]}"/>
+                                                                    <c:choose>
+                                                                        <c:when test="${not empty feedback}">
+                                                                            <c:if test="${(status == 'all' && o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả') || ((status == 'confirmed') && (o.deliveryStatus == 'Đã trả'))}">
+                                                                                <a href="feedback?bookingId=${o.bookingID}" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm border border-emerald-100" title="Xem đánh giá">
+                                                                                    <i class="fas fa-star text-[10px] mr-1"></i> Xem ĐG
+                                                                                </a>
+                                                                            </c:if>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <c:if test="${(status == 'all' && o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả') || ((status == 'confirmed') && (o.deliveryStatus != 'Đã trả'))}">
+                                                                                <a href="feedback?bookingId=${o.bookingID}" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm border border-rose-100 animate-pulse" title="Viết đánh giá">
+                                                                                    <i class="fas fa-pen text-[10px] mr-1"></i> Viết ĐG
+                                                                                </a>
+                                                                            </c:if>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
                                                     </c:forEach>
-                                                    <fmt:formatNumber value="${total*1000}" type="currency" currencySymbol="VNĐ" />
-                                                </td>
-                                                <td class="px-6 py-2 text-center">
-                                                    <a href="bookingHistoryDetail?bookingId=${o.bookingID}" class="btn btn-info" title="View" data-toggle="tooltip" onclick="showBookingDetail(this)" data-original-title="View">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr class="text-right">
-                                                <td colspan="7" class="px-4 py-2">
-                                                    <input type="hidden" name="bookingId" value="${o.bookingID}" />
-                                                    <c:set var="feedback" value="${feedbackMap[o.bookingID]}"/>
-                                                    <c:choose>
-                                                        <c:when test="${not empty feedback}">
-                                                            <c:if test="${(status == 'all' && o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả') || ((status == 'confirmed') && (o.deliveryStatus == 'Đã trả'))}">
-                                                                <a style="color: green" id="view-review-button" class="text-decoration-none italic" href="feedback?bookingId=${o.bookingID}">Xem đánh giá</a>
-                                                            </c:if>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <c:if test="${(status == 'all' && o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả') || ((status == 'confirmed') && (o.deliveryStatus != 'Đã trả'))}">
-                                                                <a style="color: red" id="write-review-button" class="text-decoration-none italic" href="feedback?bookingId=${o.bookingID}">Viết đánh giá</a>
-                                                            </c:if>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
+                                                </tbody>
+                                            </table>
                             </div>
                         </div>
                     </div>
@@ -574,66 +623,114 @@
             src="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/js/soft-ui-dashboard-tailwind.js"
         async=""></script>
         <script>
-                                                        document.addEventListener("DOMContentLoaded", () => {
-                                                            initializeFilters();
-                                                        });
+            document.addEventListener("DOMContentLoaded", () => {
+                initializeFilters();
+            });
 
-                                                        // Initialize filters and add event listeners
-                                                        function initializeFilters()
-                                                        {
-                                                            const confirmedFilters = document.getElementById("confirmed-filters");
-                                                            const confirmedStatusSelect = document.getElementById("confirmed-status");
+            // Initialize filters and add event listeners
+            function initializeFilters() {
+                const confirmedFilters = document.getElementById("confirmed-filters");
+                const confirmedStatusSelect = document.getElementById("confirmed-status");
 
-                                                            // Add event listeners to filter buttons
-                                                            document.querySelectorAll(".filter-btn").forEach(button => {
-                                                                button.addEventListener("click", () => {
-                                                                    const filter = button.getAttribute("data-filter");
-                                                                    applyFilter(filter);
-                                                                    confirmedFilters.style.display = "none";
-                                                                    window.location.href = "bookingHistory?status=" + filter;
+                // Add event listeners to filter buttons
+                document.querySelectorAll(".filter-btn").forEach(button => {
+                    button.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        const filter = button.getAttribute("data-filter");
+                        const url = "bookingHistory?status=" + filter;
+                        
+                        const panel = document.getElementById("panel");
+                        if (panel) {
+                            panel.style.transition = "opacity 0.15s ease, transform 0.15s ease";
+                            panel.style.opacity = "0";
+                            panel.style.transform = "translateY(5px)";
+                            
+                            fetch(url)
+                                .then(response => response.text())
+                                .then(html => {
+                                    const parser = new DOMParser();
+                                    const doc = parser.parseFromString(html, "text/html");
+                                    const newPanel = doc.getElementById("panel");
+                                    if (newPanel) {
+                                        panel.innerHTML = newPanel.innerHTML;
+                                        setTimeout(() => {
+                                            panel.style.opacity = "1";
+                                            panel.style.transform = "translateY(0)";
+                                        }, 50);
+                                        history.pushState(null, '', url);
+                                        
+                                        // Re-initialize scripts on the new panel
+                                        const scripts = doc.querySelectorAll("script");
+                                        scripts.forEach(script => {
+                                            if (script.innerHTML.includes("initializeFilters")) {
+                                                eval(script.innerHTML);
+                                            }
+                                        });
+                                    } else {
+                                        window.location.href = url;
+                                    }
+                                })
+                                .catch(() => { window.location.href = url; });
+                        } else {
+                            window.location.href = url;
+                        }
+                    });
+                });
+                
+                checkURL();
 
+                // Add event listener to confirmed status select
+                if (confirmedStatusSelect) {
+                    confirmedStatusSelect.addEventListener("change", () => {
+                        const filter = confirmedStatusSelect.value;
+                        const url = "bookingHistory?status=confirmed&deliveryStatus=" + filter;
+                        
+                        const panel = document.getElementById("panel");
+                        if (panel) {
+                            panel.style.transition = "opacity 0.15s ease, transform 0.15s ease";
+                            panel.style.opacity = "0";
+                            panel.style.transform = "translateY(5px)";
+                            
+                            fetch(url)
+                                .then(response => response.text())
+                                .then(html => {
+                                    const parser = new DOMParser();
+                                    const doc = parser.parseFromString(html, "text/html");
+                                    const newPanel = doc.getElementById("panel");
+                                    if (newPanel) {
+                                        panel.innerHTML = newPanel.innerHTML;
+                                        setTimeout(() => {
+                                            panel.style.opacity = "1";
+                                            panel.style.transform = "translateY(0)";
+                                        }, 50);
+                                        history.pushState(null, '', url);
+                                        
+                                        // Re-initialize scripts on the new panel
+                                        const scripts = doc.querySelectorAll("script");
+                                        scripts.forEach(script => {
+                                            if (script.innerHTML.includes("initializeFilters")) {
+                                                eval(script.innerHTML);
+                                            }
+                                        });
+                                    } else {
+                                        window.location.href = url;
+                                    }
+                                })
+                                .catch(() => { window.location.href = url; });
+                        } else {
+                            window.location.href = url;
+                        }
+                    });
+                }
+            }
 
-                                                                });
-                                                            });
-                                                            checkURL();
- 
-
-                                                            // Add event listener to confirmed status select
-                                                            confirmedStatusSelect.addEventListener("change", () => {
-                                                                const filter = confirmedStatusSelect.value;
-                                                                applyConfirmedFilter(filter);
-                                                                window.location.href = "bookingHistory?status=confirmed&deliveryStatus=" + filter;
-                                                            });
-                                                        }
-
-                                                        function checkURL() {
-                                                            const currentURL = window.location.href;
-                                                            if (currentURL.includes('bookingHistory?status=confirmed')) {
-                                                                document.getElementById("confirmed-filters").style.display = 'block';
-                                                            }
-                                                        }
-
-                                                        // Apply filter for confirmed status
-                                                        function applyConfirmedFilter(filter) {
-                                                            document.querySelectorAll("#booking-table tbody tr.confirmed").forEach(row => {
-                                                                if (filter === "all" || row.classList.contains(filter)) {
-                                                                    row.style.display = "";
-                                                                } else {
-                                                                    row.style.display = "none";
-                                                                }
-                                                            });
-                                                        }
-                                                        // Apply filter based on the status (all, pending, confirmed, cancelled)
-                                                        function applyFilter(filter) {
-                                                            document.querySelectorAll("#booking-table tbody tr").forEach(row => {
-                                                                if (filter === "all" || row.classList.contains(filter)) {
-                                                                    row.style.display = "";
-                                                                } else {
-                                                                    row.style.display = "none";
-                                                                }
-                                                            });
-
-                                                        }
+            function checkURL() {
+                const currentURL = window.location.href;
+                if (currentURL.includes('bookingHistory?status=confirmed')) {
+                    const confirmedFilters = document.getElementById("confirmed-filters");
+                    if (confirmedFilters) confirmedFilters.style.display = 'block';
+                }
+            }
         </script>
     </body>
 </html>
