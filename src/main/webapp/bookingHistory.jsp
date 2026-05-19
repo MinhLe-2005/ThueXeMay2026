@@ -650,8 +650,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/chartjs.min.js"></script>
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/perfect-scrollbar.min.js"
         async=""></script>
@@ -768,6 +767,7 @@
                     if (confirmedFilters) confirmedFilters.style.display = 'block';
                 }
             }
-        </script>
+            </div> <!-- #panel -->
+        </div> <!-- .builder-container -->
     </body>
 </html>
