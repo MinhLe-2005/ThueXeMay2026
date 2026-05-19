@@ -408,15 +408,8 @@
     <jsp:include page="/includes/customer/header.jsp" />
     <jsp:include page="/includes/customer/navbar.jsp" />
     <body class="  font-body " data-framework="tailwind">
-        <link href="https://www.loopple.com/css/vendor/tailwind.min.css" rel="stylesheet">
-        <link href="https://www.loopple.com/css/tailwind/app.css?v=1.0.0" rel="stylesheet">
-        <link href="" id="google-font-url" rel="stylesheet">
         <!-- CSS Links -->
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/js/bootstrap.bundle.min.js"></script>
-        <link href="css/sidebarProfile.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
         <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
         <link href="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/css/nucleo-icons.css" rel="stylesheet">
@@ -471,10 +464,7 @@
 
             <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
                 <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
-                    <div style="padding-top: 8%; width: 96%;" class="pt-8 mx-auto removable">
-                        <div class="flex flex-wrap -mx-3 drop-zone">
-                            <div class="w-full max-w-full px-3 mb-4 draggable" draggable="true">
-                                <div class="relative flex flex-col h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border overflow-hidden p-8">
+                    <div class="relative flex flex-col flex-auto min-w-0 p-4 mx-6 mt-16 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border mb-4 draggable" draggable="true">
                                     
                                     <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
                                         <i class="fas fa-credit-card mr-2 text-amber-500"></i> Giao dịch gần đây
@@ -546,8 +536,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/chartjs.min.js"></script>
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/perfect-scrollbar.min.js"
         async=""></script>

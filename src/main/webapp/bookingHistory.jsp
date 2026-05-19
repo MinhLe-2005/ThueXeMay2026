@@ -277,20 +277,6 @@
                 margin-bottom: 1rem;
             }
 
-            .filters .filter-btn {
-                padding: 0.5rem 1rem;
-                margin-right: 0.5rem;
-                background: linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%);
-                color: #fff;
-                border: none;
-                cursor: pointer;
-                border-radius: 5px;
-            }
-
-            .filters .filter-btn:hover {
-                background: linear-gradient(243.4deg, rgb(0, 132, 255) 13%, rgb(8, 126, 120) 98%) !important;
-            }
-
             .confirmed-filters {
                 display: none;
                 margin-bottom: 1rem;
@@ -341,10 +327,9 @@
                 color: #000;
             }
             .filter-btn.active {
-                background: linear-gradient(135deg, #b59349 0%, #d4af37 100%) !important;
-                color: #ffffff !important;
+                color: #b59349 !important;
+                border-bottom-color: #b59349 !important;
                 font-weight: 700 !important;
-                box-shadow: 0 4px 12px rgba(181, 147, 73, 0.25);
             }
 
         /* Simplified Sidebar */
@@ -404,82 +389,72 @@
     <jsp:include page="/includes/customer/header.jsp" />
     <jsp:include page="/includes/customer/navbar.jsp" />
     <body class="  font-body " data-framework="tailwind">
-        <link href="https://www.loopple.com/css/vendor/tailwind.min.css" rel="stylesheet">
-        <link href="https://www.loopple.com/css/tailwind/app.css?v=1.0.0" rel="stylesheet">
-        <link href="" id="google-font-url" rel="stylesheet">
         <!-- CSS Links -->
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/js/bootstrap.bundle.min.js"></script>
-        <link href="css/sidebarProfile.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
         <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
         <link href="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/css/nucleo-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/css/soft-ui-dashboard-tailwind.css">
-        <div class="builder-container builder-container-preview  font-body ">
-                    <aside class="max-w-62.5 ease-nav-brand z-990 absolute inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent text-slate-500"
-                           id="sidenav-main">
-                        <hr class="h-px mt-0 bg-transparent bg-gradient-horizontal-dark">
-                        <div style="margin-top: 6rem" class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
-                            <ul class="flex flex-col pl-0 mb-0">
-                                <li class="w-full">
-                                    <div class="sidebar-heading">Quản lý thuê xe</div>
-                                </li>
-                                <li class="w-full"> 
-                                    <a class="sidebar-item" href="transaction">
-                                        <div class="icon-box">
-                                            <i class="fas fa-credit-card text-xs"></i>
-                                        </div> 
-                                        <span class="nav-text">Giao dịch gần đây</span>
-                                    </a> 
-                                </li>
-                                <li class="w-full"> 
-                                    <a class="sidebar-item active" href="bookingHistory?status=all">
-                                        <div class="icon-box">
-                                            <i class="fas fa-history text-xs"></i>
-                                        </div> 
-                                        <span class="nav-text">Lịch sử thuê xe</span>
-                                    </a> 
-                                </li>
-                                <li class="w-full">
-                                    <div class="sidebar-heading">Quản lý tài khoản</div>
-                                </li>
-                                <li class="w-full"> 
-                                    <a class="sidebar-item" href="profileCustomer.jsp">
-                                        <div class="icon-box">
-                                            <i class="fas fa-user-circle text-xs"></i>
-                                        </div> 
-                                        <span class="nav-text">Thông tin cá nhân</span>
-                                    </a> 
-                                </li>
-                                <li class="w-full"> 
-                                    <a class="sidebar-item" href="settingsProfile.jsp">
-                                        <div class="icon-box">
-                                            <i class="fas fa-shield-alt text-xs"></i>
-                                        </div> 
-                                        <span class="nav-text">Mật khẩu và bảo mật</span>
-                                    </a> 
-                                </li>
-                            </ul>
-                        </div>
-                    </aside>
-                    <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
-                        <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
-                            <div style="padding-top: 8%; width: 96%;" class="pt-8 mx-auto removable">
-                                <div class="flex flex-wrap -mx-3 drop-zone">
-                                    <div class="w-full max-w-full px-3 mb-4 draggable" draggable="true">
-                                        <div class="relative flex flex-col h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border overflow-hidden p-8">
+        <div class="builder-container builder-container-preview font-body">
+            <aside class="max-w-62.5 ease-nav-brand z-990 absolute inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent text-slate-500"
+                   id="sidenav-main">
+                <hr class="h-px mt-0 bg-transparent bg-gradient-horizontal-dark">
+                <div style="margin-top: 6rem" class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
+                    <ul class="flex flex-col pl-0 mb-0">
+                        <li class="w-full">
+                            <div class="sidebar-heading">Quản lý thuê xe</div>
+                        </li>
+                        <li class="w-full"> 
+                            <a class="sidebar-item" href="transaction">
+                                <div class="icon-box">
+                                    <i class="fas fa-credit-card text-xs"></i>
+                                </div> 
+                                <span class="nav-text">Giao dịch gần đây</span>
+                            </a> 
+                        </li>
+                        <li class="w-full"> 
+                            <a class="sidebar-item active" href="bookingHistory?status=all">
+                                <div class="icon-box">
+                                    <i class="fas fa-history text-xs"></i>
+                                </div> 
+                                <span class="nav-text">Lịch sử thuê xe</span>
+                            </a> 
+                        </li>
+                        <li class="w-full">
+                            <div class="sidebar-heading">Quản lý tài khoản</div>
+                        </li>
+                        <li class="w-full"> 
+                            <a class="sidebar-item" href="profileCustomer.jsp">
+                                <div class="icon-box">
+                                    <i class="fas fa-user-circle text-xs"></i>
+                                </div> 
+                                <span class="nav-text">Thông tin cá nhân</span>
+                            </a> 
+                        </li>
+                        <li class="w-full"> 
+                            <a class="sidebar-item" href="settingsProfile.jsp">
+                                <div class="icon-box">
+                                    <i class="fas fa-shield-alt text-xs"></i>
+                                </div> 
+                                <span class="nav-text">Mật khẩu và bảo mật</span>
+                            </a> 
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+            <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
+                <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
+                    <div class="relative flex flex-col flex-auto min-w-0 p-4 mx-6 mt-16 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border mb-4 draggable" draggable="true">
                                             
                                             <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
                                                 <i class="fas fa-history mr-2 text-amber-500"></i> Lịch sử thuê xe
                                             </h3>
 
-                                            <div class="filters flex gap-2 mb-6"> 
-                                                <button class="filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-200" data-filter="all" onclick="applyFilter('all')">Tất cả</button>
-                                                <button class="filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-200" data-filter="pending" onclick="applyFilter('pending')">Chờ xác nhận</button>
-                                                <button class="filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-200" data-filter="confirmed" onclick="applyFilter('confirmed')">Đã xác nhận</button>
-                                                <button class="filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-200" data-filter="cancelled" onclick="applyFilter('cancelled')">Đã hủy</button>
+                                            <div class="filters flex gap-6 mb-6 border-b border-slate-200"> 
+                                                <button class="filter-btn pb-2 text-slate-500 hover:text-slate-800 font-semibold transition-all duration-200 border-b-2 border-transparent hover:border-slate-300" data-filter="all" onclick="applyFilter('all')">Tất cả</button>
+                                                <button class="filter-btn pb-2 text-slate-500 hover:text-slate-800 font-semibold transition-all duration-200 border-b-2 border-transparent hover:border-slate-300" data-filter="pending" onclick="applyFilter('pending')">Chờ xác nhận</button>
+                                                <button class="filter-btn pb-2 text-slate-500 hover:text-slate-800 font-semibold transition-all duration-200 border-b-2 border-transparent hover:border-slate-300" data-filter="confirmed" onclick="applyFilter('confirmed')">Đã xác nhận</button>
+                                                <button class="filter-btn pb-2 text-slate-500 hover:text-slate-800 font-semibold transition-all duration-200 border-b-2 border-transparent hover:border-slate-300" data-filter="cancelled" onclick="applyFilter('cancelled')">Đã hủy</button>
                                             </div>
                                             
                                             <div class="confirmed-filters mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3" id="confirmed-filters">
@@ -617,8 +592,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/chartjs.min.js"></script>
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/perfect-scrollbar.min.js"
         async=""></script>
