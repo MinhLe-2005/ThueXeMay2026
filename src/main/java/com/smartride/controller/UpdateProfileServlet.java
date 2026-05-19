@@ -69,14 +69,20 @@ public class UpdateProfileServlet extends HttpServlet {
                     request.setAttribute("errorProfile", "Cập nhật hồ sơ thất bại! Email chưa đúng format.");
                 } else if (!isEmptyOrNull(phoneNumber) && !phoneNumber.matches("^0\\d{9}$")) {
                     request.setAttribute("errorProfile", "Cập nhật hồ sơ thất bại! Điện thoại phải có 10 số, và bắt đầu số 0.");
+                } else if (!isEmptyOrNull(dob) && java.time.LocalDate.parse(dob).isAfter(java.time.LocalDate.now())) {
+                    request.setAttribute("errorProfile", "Cập nhật hồ sơ thất bại! Ngày sinh không được lớn hơn ngày hiện tại.");
                 } else if (AccountDAO.getInstance().checkEmailExists(email, ac.getEmail())) {
                     request.setAttribute("errorProfile", "Email đã tồn tại trước đó. Vui lòng nhập địa chỉ email khác!");
                 } else if (AccountDAO.getInstance().checkPhoneNumExists(phoneNumber, ac.getPhoneNumber())) {
                     request.setAttribute("errorProfile", "Số điện thoại đã tồn tại trước đó. Vui lòng nhập số khác!");
                 } else {
-                    AccountDAO.getInstance().update(firstName, lastName, gender, dob, address, phoneNumber, email, userName, Integer.parseInt(accountID));
-                    session.setAttribute("account", AccountDAO.getInstance().checkLogin(ac.getUserName(), ac.getPassWord()));
-                    request.setAttribute("mess", "Cập nhật hồ sơ thành công!");
+                    boolean success = AccountDAO.getInstance().update(firstName, lastName, gender, dob, address, phoneNumber, email, userName, Integer.parseInt(accountID));
+                    if (success) {
+                        session.setAttribute("account", AccountDAO.getInstance().getAccountbyID(Integer.parseInt(accountID)));
+                        request.setAttribute("mess", "Cập nhật hồ sơ thành công!");
+                    } else {
+                        request.setAttribute("errorProfile", "Cập nhật hồ sơ thất bại!");
+                    }
                 }
             } else {
                 response.setContentType("text/html;charset=UTF-8");

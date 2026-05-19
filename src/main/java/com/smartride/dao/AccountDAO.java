@@ -192,7 +192,18 @@ public class AccountDAO implements Serializable {
             st.setString(1, firstName);
             st.setString(2, lastName);
             st.setString(3, gender);
-            st.setString(4, dob);
+            
+            if (dob == null || dob.trim().isEmpty()) {
+                st.setNull(4, java.sql.Types.DATE);
+            } else {
+                try {
+                    java.sql.Date sqlDate = java.sql.Date.valueOf(dob);
+                    st.setDate(4, sqlDate);
+                } catch (IllegalArgumentException e) {
+                    st.setNull(4, java.sql.Types.DATE);
+                }
+            }
+            
             st.setString(5, address);
             st.setString(6, phoneNumber);
             st.setString(7, email);

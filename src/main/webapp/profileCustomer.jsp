@@ -375,6 +375,12 @@
             const closeModalBtn = document.getElementById('closeModalBtn');
             const toast = document.getElementById('toast');
 
+            const dobInput = document.getElementById('account-dob');
+            if (dobInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dobInput.setAttribute('max', today);
+            }
+
             editProfileBtn.addEventListener('click', () => {
                 editProfileModal.classList.remove('hidden');
             });
@@ -442,6 +448,19 @@
             // Required fields check
             const firstName = document.getElementById("account-firstname").value.trim();
             const lastName = document.getElementById("account-lastname").value.trim();
+            const dobVal = document.getElementById("account-dob").value;
+            
+            if (dobVal) {
+                const selectedDate = new Date(dobVal);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (selectedDate > today) {
+                    event.preventDefault();
+                    alert("Cập nhật thất bại! Ngày sinh không được lớn hơn ngày hiện tại.");
+                    document.getElementById("account-dob").focus();
+                    return;
+                }
+            }
             
             if (emailText.textContent !== "" || phoneText.textContent !== "" || !firstName || !lastName) {
                 event.preventDefault(); // Stop submission
