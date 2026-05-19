@@ -504,20 +504,20 @@
             </aside>
             <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
                 <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
-                    <div class="relative flex flex-col flex-auto min-w-0 p-4 mx-6 mt-32 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border mb-4 draggable" draggable="true">
+                    <div class="relative flex flex-col flex-auto min-w-0 p-4 mx-6 mt-32 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border mb-4">
                                             
                                             <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
                                                 <i class="fas fa-history mr-2 text-amber-500"></i> Lịch sử thuê xe
                                             </h3>
 
                                             <div class="filters flex gap-6 mb-6 border-b border-slate-200"> 
-                                                <button class="filter-btn pb-2 text-slate-500 hover:text-slate-800 font-semibold transition-all duration-200 border-b-2 border-transparent hover:border-slate-300" data-filter="all" onclick="applyFilter('all')">Tất cả</button>
-                                                <button class="filter-btn pb-2 text-slate-500 hover:text-slate-800 font-semibold transition-all duration-200 border-b-2 border-transparent hover:border-slate-300" data-filter="pending" onclick="applyFilter('pending')">Chờ xác nhận</button>
-                                                <button class="filter-btn pb-2 text-slate-500 hover:text-slate-800 font-semibold transition-all duration-200 border-b-2 border-transparent hover:border-slate-300" data-filter="confirmed" onclick="applyFilter('confirmed')">Đã xác nhận</button>
-                                                <button class="filter-btn pb-2 text-slate-500 hover:text-slate-800 font-semibold transition-all duration-200 border-b-2 border-transparent hover:border-slate-300" data-filter="cancelled" onclick="applyFilter('cancelled')">Đã hủy</button>
+                                                <button class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${empty param.status || param.status eq 'all' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}" data-filter="all">Tất cả</button>
+                                                <button class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'pending' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}" data-filter="pending">Chờ xác nhận</button>
+                                                <button class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'confirmed' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}" data-filter="confirmed">Đã xác nhận</button>
+                                                <button class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'cancelled' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}" data-filter="cancelled">Đã hủy</button>
                                             </div>
                                             
-                                            <div class="confirmed-filters mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3" id="confirmed-filters">
+                                            <div class="confirmed-filters mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3" id="confirmed-filters" style="${param.status eq 'confirmed' ? 'display: flex;' : 'display: none;'}">
                                                 <label for="confirmed-status" class="text-sm font-semibold text-slate-600">Trạng thái giao nhận:</label>
                                                 <select id="confirmed-status" class="ml-2 border border-slate-200 rounded-lg p-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 w-48">
                                                     <option value="all" <c:if test="${empty deliveryStatus || 'all' eq deliveryStatus}">selected</c:if>>Tất cả trạng thái</option>
@@ -659,9 +659,13 @@
             src="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/js/soft-ui-dashboard-tailwind.js"
         async=""></script>
         <script>
-            document.addEventListener("DOMContentLoaded", () => {
+            if (document.readyState === 'loading') {
+                document.addEventListener("DOMContentLoaded", () => {
+                    initializeFilters();
+                });
+            } else {
                 initializeFilters();
-            });
+            }
 
             // Initialize filters and add event listeners
             function initializeFilters() {

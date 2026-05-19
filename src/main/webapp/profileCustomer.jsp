@@ -167,7 +167,7 @@
                 <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
                     <div style="padding-top: 8%; width: 96%;" class="pt-8 mx-auto removable">
                         <div class="flex flex-wrap -mx-3 drop-zone">
-                            <div class="w-full max-w-full px-3 mb-4 draggable" draggable="true">
+                            <div class="w-full max-w-full px-3 mb-4">
                                 <div class="relative flex flex-col h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border overflow-hidden">
                                     
                                     <!-- Main Content container -->
@@ -372,9 +372,16 @@
         </div>
         <!-- End Modal Chỉnh Sửa Ảnh -->
         <!-- End Modal Chỉnh Sửa Ảnh -->
-    </body>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                initProfileEvents();
+            });
+        } else {
+            initProfileEvents();
+        }
+
+        function initProfileEvents() {
             const editProfileBtn = document.getElementById('editProfileBtn');
             const editProfileModal = document.getElementById('editProfileModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
@@ -386,21 +393,25 @@
                 dobInput.setAttribute('max', today);
             }
 
-            editProfileBtn.addEventListener('click', () => {
-                editProfileModal.classList.remove('hidden');
-            });
+            if (editProfileBtn) {
+                editProfileBtn.addEventListener('click', () => {
+                    editProfileModal.classList.remove('hidden');
+                });
+            }
 
-            closeModalBtn.addEventListener('click', () => {
-                editProfileModal.classList.add('hidden');
-            });
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => {
+                    editProfileModal.classList.add('hidden');
+                });
+            }
 
             window.addEventListener('click', (event) => {
                 if (event.target == editProfileModal) {
                     editProfileModal.classList.add('hidden');
                 }
             });
+        }
 
-        });
 
         const emailInput = document.getElementById("account-email");
         const emailText = document.getElementById("email-text");

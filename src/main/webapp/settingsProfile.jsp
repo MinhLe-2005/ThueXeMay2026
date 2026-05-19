@@ -140,7 +140,7 @@
                 <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
                     <div style="padding-top: 8%; width: 96%;" class="pt-8 mx-auto removable">
                         <div class="flex flex-wrap -mx-3 drop-zone">
-                            <div class="w-full max-w-full px-3 mb-4 draggable" draggable="true">
+                            <div class="w-full max-w-full px-3 mb-4">
                                 <div class="relative flex flex-col h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border overflow-hidden">
                                     
                                     <!-- Main Content container -->
@@ -177,8 +177,7 @@
                         </div>
                     </div>
                 </div> <!-- Footer -->
-            </div>
-        </div>
+
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/chartjs.min.js"></script>
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/perfect-scrollbar.min.js"
         async=""></script>
@@ -188,30 +187,11 @@
         async=""></script>
     </body>
     <script>
-                                            document.addEventListener('DOMContentLoaded', () => {
-                                                const editProfileBtn = document.getElementById('editProfileBtn');
-                                                const editProfileModal = document.getElementById('editProfileModal');
-                                                const closeModalBtn = document.getElementById('closeModalBtn');
-                                                const toast = document.getElementById('toast');
-
-                                                editProfileBtn.addEventListener('click', () => {
-                                                    editProfileModal.classList.remove('hidden');
-                                                });
-
-                                                closeModalBtn.addEventListener('click', () => {
-                                                    editProfileModal.classList.add('hidden');
-                                                });
-
-                                                window.addEventListener('click', (event) => {
-                                                    if (event.target == editProfileModal) {
-                                                        editProfileModal.classList.add('hidden');
-                                                    }
-                                                });
-                                            });
-
                                             function changePass() {
                                                 window.location.href = "changepassword";
                                             }
 
-    </script>
+            </div> <!-- #panel -->
+        </div> <!-- .builder-container -->
+    </body>
 </html>
