@@ -341,8 +341,10 @@
                 color: #000;
             }
             .filter-btn.active {
-                opacity: 0.7; /* hoặc bất kỳ thuộc tính CSS nào bạn muốn áp dụng */
-                border: 5px solid #333; /* ví dụ cho border */
+                background: linear-gradient(135deg, #b59349 0%, #d4af37 100%) !important;
+                color: #ffffff !important;
+                font-weight: 700 !important;
+                box-shadow: 0 4px 12px rgba(181, 147, 73, 0.25);
             }
 
         /* Simplified Sidebar */
@@ -353,15 +355,18 @@
             align-items: center;
             border-radius: 0.5rem;
             transition: all 0.2s ease;
-            color: #64748b;
+            color: #334155; /* Slate-700 for clear readability */
+            font-weight: 600; /* Sharp, bold medium text */
+            text-decoration: none !important;
         }
         .sidebar-item:hover {
             background-color: #f1f5f9;
+            color: #0f172a; /* Slate-900 */
         }
         .sidebar-item.active {
             background-color: #fdf8eb; /* very light gold */
             color: #b59349;
-            font-weight: 600;
+            font-weight: 700;
         }
         .icon-box {
             display: flex;
@@ -372,7 +377,7 @@
             height: 32px;
             border-radius: 0.5rem;
             background-color: #f1f5f9;
-            color: #64748b;
+            color: #475569;
         }
         .sidebar-item.active .icon-box {
             background-color: #b59349;
@@ -383,10 +388,10 @@
         }
         .sidebar-heading {
             padding-left: 1.5rem;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
             font-size: 0.75rem;
-            color: #94a3b8;
+            color: #475569; /* Slate-600 */
             margin-top: 1.5rem;
             margin-bottom: 0.5rem;
         }
@@ -455,27 +460,37 @@
                             </ul>
                         </div>
                     </aside>
-                    <div style="width: 83.666667%;" class="col-lg-8 pb-5">
-                        <div class="filters flex gap-2"> 
-                            <button class="filter-btn" data-filter="all" onclick="applyFilter('all')">Tất cả</button>
-                            <button class="filter-btn" data-filter="pending" onclick="applyFilter('pending')">Chờ xác nhận</button>
-                            <button class="filter-btn" data-filter="confirmed" onclick="applyFilter('confirmed')">Đã xác nhận</button>
-                            <button class="filter-btn" data-filter="cancelled" onclick="applyFilter('cancelled')">Đã hủy</button>
-                        </div>
-                        <div class="confirmed-filters" id="confirmed-filters">
-                            <label for="confirmed-status">Đã xác nhận:</label>
-                            <select id="confirmed-status" class="ml-2">
-                                <option value="all" <c:if test="${empty deliveryStatus || 'all' eq deliveryStatus}">selected</c:if>>Tất cả trạng thái</option>
-                                <option value="notDelivered" <c:if test="${'notDelivered' eq deliveryStatus}">selected</c:if>>Chưa giao</option>
-                                <option value="delivered" <c:if test="${'delivered' eq deliveryStatus}">selected</c:if>>Đã giao</option>
-                                <option value="returned" <c:if test="${'returned' eq deliveryStatus}">selected</c:if>>Đã trả</option>
-                                </select>
-                            </div>
-                            <div class="flex flex-wrap -mx-3 drop-zone">
-                                <div style="position: relative;" class="table-responsive">
-                                    <table class="caption-top min-w-full table-auto table-hover table-borderless table-striped" id="booking-table">
-                                        <caption class="caption-top">Lịch sử thuê xe</caption>
-                                        <thead style="border: 1px solid">
+                    <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
+                        <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
+                            <div style="padding-top: 8%; width: 96%;" class="pt-8 mx-auto removable">
+                                <div class="flex flex-wrap -mx-3 drop-zone">
+                                    <div class="w-full max-w-full px-3 mb-4 draggable" draggable="true">
+                                        <div class="relative flex flex-col h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border overflow-hidden p-8">
+                                            
+                                            <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                                                <i class="fas fa-history mr-2 text-amber-500"></i> Lịch sử thuê xe
+                                            </h3>
+
+                                            <div class="filters flex gap-2 mb-6"> 
+                                                <button class="filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-200" data-filter="all" onclick="applyFilter('all')">Tất cả</button>
+                                                <button class="filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-200" data-filter="pending" onclick="applyFilter('pending')">Chờ xác nhận</button>
+                                                <button class="filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-200" data-filter="confirmed" onclick="applyFilter('confirmed')">Đã xác nhận</button>
+                                                <button class="filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition-all duration-200" data-filter="cancelled" onclick="applyFilter('cancelled')">Đã hủy</button>
+                                            </div>
+                                            
+                                            <div class="confirmed-filters mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3" id="confirmed-filters">
+                                                <label for="confirmed-status" class="text-sm font-semibold text-slate-600">Trạng thái giao nhận:</label>
+                                                <select id="confirmed-status" class="ml-2 border border-slate-200 rounded-lg p-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 w-48">
+                                                    <option value="all" <c:if test="${empty deliveryStatus || 'all' eq deliveryStatus}">selected</c:if>>Tất cả trạng thái</option>
+                                                    <option value="notDelivered" <c:if test="${'notDelivered' eq deliveryStatus}">selected</c:if>>Chưa giao</option>
+                                                    <option value="delivered" <c:if test="${'delivered' eq deliveryStatus}">selected</c:if>>Đã giao</option>
+                                                    <option value="returned" <c:if test="${'returned' eq deliveryStatus}">selected</c:if>>Đã trả</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="table-responsive w-full overflow-x-auto rounded-xl border border-slate-100">
+                                                <table class="table min-w-full align-middle mb-0" id="booking-table">
+                                                    <thead class="bg-slate-50 border-b border-slate-100">
                                             <tr>
                                                 <th scope="col" class="col-table px-8 py-2">Mã đơn</th>
                                                 <th scope="col" class="col-table px-6 py-2">Ngày bắt đầu</th>
@@ -549,10 +564,11 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
+    </div>
+</div>
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/chartjs.min.js"></script>
         <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/perfect-scrollbar.min.js"
         async=""></script>

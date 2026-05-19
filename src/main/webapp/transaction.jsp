@@ -359,15 +359,18 @@
             align-items: center;
             border-radius: 0.5rem;
             transition: all 0.2s ease;
-            color: #64748b;
+            color: #334155; /* Slate-700 for clear readability */
+            font-weight: 600; /* Sharp, bold medium text */
+            text-decoration: none !important;
         }
         .sidebar-item:hover {
             background-color: #f1f5f9;
+            color: #0f172a; /* Slate-900 */
         }
         .sidebar-item.active {
             background-color: #fdf8eb; /* very light gold */
             color: #b59349;
-            font-weight: 600;
+            font-weight: 700;
         }
         .icon-box {
             display: flex;
@@ -378,7 +381,7 @@
             height: 32px;
             border-radius: 0.5rem;
             background-color: #f1f5f9;
-            color: #64748b;
+            color: #475569;
         }
         .sidebar-item.active .icon-box {
             background-color: #b59349;
@@ -389,10 +392,10 @@
         }
         .sidebar-heading {
             padding-left: 1.5rem;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
             font-size: 0.75rem;
-            color: #94a3b8;
+            color: #475569; /* Slate-600 */
             margin-top: 1.5rem;
             margin-bottom: 0.5rem;
         }
