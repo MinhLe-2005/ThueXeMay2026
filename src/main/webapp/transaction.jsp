@@ -464,7 +464,7 @@
 
             <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
                 <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
-                    <div class="relative flex flex-col flex-auto min-w-0 p-4 mx-6 mt-16 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border mb-4 draggable" draggable="true">
+                    <div class="relative flex flex-col flex-auto min-w-0 p-4 mx-6 mt-32 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border mb-4 draggable" draggable="true">
                                     
                                     <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
                                         <i class="fas fa-credit-card mr-2 text-amber-500"></i> Giao dịch gần đây
@@ -536,19 +536,5 @@
                         </div>
                     </div>
                 </div>
-        <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/chartjs.min.js"></script>
-        <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/perfect-scrollbar.min.js"
-        async=""></script>
-        <script async="" defer="" src="https://buttons.github.io/buttons.js"></script>
-        <script
-            src="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/js/soft-ui-dashboard-tailwind.js"
-        async=""></script>
     </body>
-    <!-- Include Cropper.js library -->
-    <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/chartjs.min.js"></script>
-    <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/perfect-scrollbar.min.js" async=""></script>
-    <script async="" defer="" src="https://buttons.github.io/buttons.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/js/soft-ui-dashboard-tailwind.js" async=""></script>
-    <script src="https://unpkg.com/cropperjs"></script>
-    <link href="https://unpkg.com/cropperjs/dist/cropper.min.css" rel="stylesheet">
 </html>
