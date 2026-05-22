@@ -82,7 +82,8 @@ public class BookingServlet extends HttpServlet {
         } else if(account != null && account.getRoleID() != 1) {
             response.sendRedirect("accessdenied.jsp");
         } else {
-            response.sendRedirect("login.jsp");
+            session.setAttribute("redirectAfterLogin", "booking");
+            response.sendRedirect("login");
         }
            
        

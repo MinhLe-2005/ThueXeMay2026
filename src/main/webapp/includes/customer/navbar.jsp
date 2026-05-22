@@ -18,10 +18,11 @@
     </div>
 
     <!-- Main Navigation Bar Container -->
-    <div class="container-fluid container-xl position-relative d-flex align-items-center" style="height: 72px;">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center" style="height: 75px;">
 
-        <a href="home" class="logo d-flex align-items-center me-auto" style="text-decoration: none; padding: 4px 0; transition: all 0.3s ease;">
-            <img src="images/logo.png?v=<%=System.currentTimeMillis()%>" alt="SmartRide Logo" style="height: 42px; width: auto; object-fit: contain; transition: filter 0.4s ease-in-out, transform 0.3s ease;" />
+        <a href="home" class="logo d-flex align-items-center me-auto" style="text-decoration: none; padding: 4px 0; transition: all 0.3s ease; gap: 10px;">
+            <img src="${pageContext.request.contextPath}/images/newlogo_transparent.png?v=<%=System.currentTimeMillis()%>" alt="SmartRide Logo" class="logo-icon" />
+            <span class="logo-brand-name">SmartRide</span>
         </a>
 
         <nav id="navmenu" class="navmenu">
@@ -54,7 +55,7 @@
                         <a class="mini-photo-wrapper"><img class="mini-photo" style="object-fit: cover; cursor: pointer" src="${sessionScope.account.image}?${now.time}" width="36" height="36"/></a>
                     </c:when>
                     <c:otherwise>
-                        <a class="mini-photo-wrapper"><img class="mini-photo" style="object-fit: cover; cursor: pointer"  src="images\avarta.jpg" width="36" height="36"/></a>
+                        <a class="mini-photo-wrapper"><img class="mini-photo" style="object-fit: cover; cursor: pointer"  src="images/avarta.jpg" width="36" height="36"/></a>
 
                     </c:otherwise>
                 </c:choose>
@@ -64,8 +65,9 @@
 
 
                 <div class="menu-container">
-                    <ul class="user-menu">
-                        <div class="profile-highlight">
+                    <div class="user-menu">
+                        <div style="background-color: #ffffff !important; padding-top: 5px;">
+                            <div class="profile-highlight">
                             <c:choose>
                                 <c:when test="${sessionScope.account.image != null}">
                                     <img src="${sessionScope.account.image}?${now.time}" alt="profile-img" width="36" height="36">
@@ -78,7 +80,14 @@
 
                             <div class="details">
                                 <div class="sitename" id="profile-name">SmartRide</div>
-                                <div id="profile-footer">Xin chào ${sessionScope.account.email}</div>
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.account.firstName or not empty sessionScope.account.lastName}">
+                                        <div id="profile-footer" style="text-transform: capitalize;">Xin chào ${sessionScope.account.lastName} ${sessionScope.account.firstName}</div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div id="profile-footer">Xin chào ${sessionScope.account.email}</div>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                         <!--                        <li class="user-menu__item">
@@ -87,24 +96,25 @@
                                                         <div>Achievements</div>
                                                     </a>
                                                 </li>-->
-                        <li class="user-menu__item">
+                        <div class="user-menu__item">
                             <a class="user-menu-link" href="profileCustomer.jsp">
                                 <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1604623/team.png" alt="team_icon" width=20 height=20 >
                                 <div>Thông tin cá nhân</div>
                             </a>
-                        </li>
-                        <li class="user-menu__item">
+                        </div>
+                        <div class="user-menu__item">
                             <a class="user-menu-link" href="bookingHistory?status=all">
                                 <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1604623/book.png" alt="team_icon" width=20 height=20 >
                                 <div>Quản lý đặt hàng</div>
                             </a>
-                        </li>
-                        <div class="footer">
-                            <li class="user-menu__item"><a class="user-menu-link" href="logout" style="background: linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%);background-clip: text;
-                                                           color: transparent !important; font-weight: bold; font-size: large; display: flex; justify-content: center;">Đăng xuất</a></li>
-                            <!--<li class="user-menu__item"><a class="user-menu-link" href="#">Settings</a></li>-->
                         </div>
-                    </ul>
+                        </div>
+                        <div class="user-menu-footer" style="padding: 12px 20px; margin-bottom: 0 !important; display: flex; flex-direction: column;">
+                            <a href="logout" style="display: flex; align-items: center; justify-content: center; gap: 8px; background-color: #b59349; color: #ffffff !important; font-weight: 600; font-size: 0.875rem; padding: 10px 0; border-radius: 9999px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(181, 147, 73, 0.2); margin-bottom: 0 !important;">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </c:if>
@@ -128,17 +138,57 @@
         padding: 0 !important;
     }
     
-    .logo img {
+    /* Logo icon - just the motorcycle graphic */
+    .logo img.logo-icon,
+    #header .logo img.logo-icon,
+    .header .logo img.logo-icon {
+        height: 52px !important;
+        max-height: 52px !important;
+        min-height: 52px !important;
+        width: auto !important;
         transition: filter 0.4s ease-in-out, transform 0.3s ease !important;
     }
+
+    /* Brand name text next to logo - like motogo.vn */
+    .logo-brand-name {
+        font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif !important;
+        font-size: 22px !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.5px !important;
+        background: linear-gradient(135deg, #b59349 0%, #d4a843 50%, #8c6f32 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        transition: all 0.4s ease !important;
+        line-height: 1 !important;
+    }
+
     
     .logo:hover img {
         transform: scale(1.05);
     }
 
-    /* Invert logo to solid luxury white only at the top of the Home page (transparent background) */
-    body.index-page:not(.scrolled) .header .logo img {
+    /* At top of index page (dark hero) → white icon + white brand text */
+    body.index-page:not(.scrolled) .header .logo img.logo-icon {
         filter: brightness(0) invert(1) !important;
+    }
+    body.index-page:not(.scrolled) .logo-brand-name {
+        background: none !important;
+        -webkit-text-fill-color: #ffffff !important;
+        color: #ffffff !important;
+    }
+
+    /* Scrolled / other pages → colored icon + gold gradient brand text */
+    body.index-page.scrolled .header .logo img.logo-icon,
+    body:not(.index-page) .header .logo img.logo-icon {
+        filter: none !important;
+    }
+    body.index-page.scrolled .logo-brand-name,
+    body:not(.index-page) .logo-brand-name {
+        background: linear-gradient(135deg, #b59349 0%, #d4a843 50%, #8c6f32 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
     }
 
     /* Default solid glassmorphic navbar for scrolled states & subpages */
@@ -293,12 +343,17 @@
     /* User Menu */
     .user-menu-wrap {
         margin-left: 60px;
+        position: relative;
     }
 
     .menu-container {
         visibility: hidden;
         opacity: 0;
         z-index: 9999 !important;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        margin-top: 10px;
     }
 
     .menu-container.active {
@@ -308,19 +363,16 @@
     }
 
     .user-menu {
-        position: absolute;
-        left: 87.5%;
-        background-color: #ffffff !important;
+        width: 280px !important;
+        background-color: #fcfaf5 !important;
         color: #2b2824 !important;
-        width: 256px;
         border-radius: 8px;
         border: 1px solid #eae6df !important;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        margin-top: 20px;
-        margin-right: 30px;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
-        z-index: 9999 !important;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+        overflow: hidden;
     }
 
     .user-menu .profile-highlight {
@@ -341,12 +393,14 @@
         display: flex;
         flex-direction: column;
         margin: auto 12px;
+        overflow: hidden;
     }
 
     .user-menu .profile-highlight #profile-name {
         font-weight: 600;
         font-size: 16px;
         color: #b59349 !important;
+        word-break: break-word;
     }
 
     .user-menu .profile-highlight #profile-footer {
@@ -354,15 +408,19 @@
         font-size: 14px;
         margin-top: 4px;
         color: #666666 !important;
+        word-break: break-word;
     }
 
-    .user-menu .footer {
+    .user-menu .user-menu-footer {
         border-top: 1px solid #eae6df !important;
         padding-top: 6px;
         margin-top: 6px;
+        background-color: #fcfaf5 !important;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
     }
 
-    .user-menu .footer .user-menu-link {
+    .user-menu .user-menu-footer .user-menu-link {
         font-size: 13px;
     }
 
@@ -384,20 +442,20 @@
         color: #b59349 !important;
     }
 
-    .user-menu:before {
+    .menu-container:before {
         position: absolute;
         top: -16px;
-        left: 120px;
+        right: 10px;
         display: inline-block;
         content: "";
         border: 8px solid transparent;
         border-bottom-color: #eae6df !important;
     }
 
-    .user-menu:after {
+    .menu-container:after {
         position: absolute;
         top: -14px;
-        left: 121px;
+        right: 11px;
         display: inline-block;
         content: "";
         border: 7px solid transparent;
@@ -527,122 +585,7 @@
             }
         });
 
-        // Intercept sidebar link clicks for seamless SPA transition on Customer Profile pages
-        const initSPANavigation = () => {
-            document.querySelectorAll(".sidebar-item").forEach(link => {
-                const href = link.getAttribute("href");
-                if (!href || href.startsWith("javascript:")) return;
-                
-                // Clone node to prevent duplicate event listeners
-                const newLink = link.cloneNode(true);
-                link.parentNode.replaceChild(newLink, link);
-            });
-            
-            document.querySelectorAll(".sidebar-item").forEach(link => {
-                const url = link.getAttribute("href");
-                if (!url || url.startsWith("javascript:")) return;
-                
-                link.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    
-                    const panel = document.getElementById("panel");
-                    if (!panel) {
-                        window.location.href = url;
-                        return;
-                    }
-                    
-                    panel.style.transition = "opacity 0.15s ease, transform 0.15s ease";
-                    panel.style.opacity = "0";
-                    panel.style.transform = "translateY(5px)";
-                    
-                    fetch(url)
-                        .then(response => response.text())
-                        .then(html => {
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(html, "text/html");
-                            const newPanel = doc.getElementById("panel");
-                            
-                            if (newPanel) {
-                                // Update content
-                                panel.innerHTML = newPanel.innerHTML;
-                                
-                                // Trigger fade in
-                                setTimeout(() => {
-                                    panel.style.opacity = "1";
-                                    panel.style.transform = "translateY(0)";
-                                }, 50);
-                                
-                                // Update browser history URL
-                                history.pushState(null, '', url);
-                                
-                                // Update active link styling in all sidebars
-                                document.querySelectorAll(".sidebar-item").forEach(item => {
-                                    item.classList.remove("active");
-                                    const itemHref = item.getAttribute("href");
-                                    if (itemHref === url || 
-                                        (url.includes("bookingHistory") && itemHref && itemHref.includes("bookingHistory")) ||
-                                        (url.includes("transaction") && itemHref && itemHref.includes("transaction")) ||
-                                        (url.includes("profileCustomer") && itemHref && itemHref.includes("profileCustomer")) ||
-                                        (url.includes("settingsProfile") && itemHref && itemHref.includes("settingsProfile"))) {
-                                        item.classList.add("active");
-                                    }
-                                });
-                                
-                                // Re-initialize any page-specific JS with temporary DOMContentLoaded override
-                                const scripts = newPanel.querySelectorAll("script");
-                                const originalAddEventListener = document.addEventListener;
-                                document.addEventListener = function(type, listener, options) {
-                                    if (type === 'DOMContentLoaded') {
-                                        setTimeout(listener, 0);
-                                    } else {
-                                        originalAddEventListener.call(document, type, listener, options);
-                                    }
-                                };
-                                
-                                scripts.forEach(script => {
-                                    if (script.src) {
-                                        // Skip common static libraries to avoid duplicate loading
-                                        if (script.src.includes("chartjs") || 
-                                            script.src.includes("perfect-scrollbar") || 
-                                            script.src.includes("buttons.js") || 
-                                            script.src.includes("soft-ui-dashboard-tailwind") || 
-                                            script.src.includes("cropperjs") ||
-                                            script.src.includes("jquery") ||
-                                            script.src.includes("bootstrap")) {
-                                            return;
-                                        }
-                                        const newScript = document.createElement("script");
-                                        newScript.src = script.src;
-                                        document.body.appendChild(newScript);
-                                    } else if (script.innerHTML.trim()) {
-                                        try {
-                                            eval(script.innerHTML);
-                                        } catch (e) {
-                                            console.error("Error executing page script:", e);
-                                        }
-                                    }
-                                });
-                                
-                                // Restore original addEventListener
-                                setTimeout(() => {
-                                    document.addEventListener = originalAddEventListener;
-                                }, 100);
-                                
-                                // Re-bind click handlers
-                                initSPANavigation();
-                            } else {
-                                window.location.href = url;
-                            }
-                        })
-                        .catch(err => {
-                            console.error("SPA fetch failed, falling back to standard navigation:", err);
-                            window.location.href = url;
-                        });
-                });
-            });
-        };
-        
-        initSPANavigation();
+
     });
 
     const miniPhoto = document.querySelector('.mini-photo-wrapper');

@@ -98,7 +98,7 @@ h6 {
 }
 
 .header .logo img {
-  max-height: 36px;
+  max-height: none;
   margin-right: 8px;
 }
 
@@ -423,7 +423,7 @@ h6 {
 }
 
 .footer .footer-about .logo img {
-  max-height: 40px;
+  max-height: none;
   margin-right: 6px;
 }
 

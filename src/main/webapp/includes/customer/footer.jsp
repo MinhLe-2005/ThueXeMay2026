@@ -10,8 +10,9 @@
     <div class="container footer-top">
         <div class="row gy-4">
             <div class="col-lg-5 col-md-12 footer-about">
-                <a href="home" class="logo d-flex align-items-center" style="text-decoration: none; margin-bottom: 20px; display: inline-flex !important; width: fit-content; transition: all 0.3s ease;">
-                    <img src="images/logo.png?v=<%=System.currentTimeMillis()%>" alt="SmartRide Logo" style="height: 44px; width: auto; object-fit: contain;" />
+                <a href="home" class="logo d-flex align-items-center" style="text-decoration: none; margin-bottom: 20px; display: inline-flex !important; width: fit-content; transition: all 0.3s ease; gap: 10px;">
+                    <img src="${pageContext.request.contextPath}/images/newlogo_transparent.png" alt="SmartRide Logo" style="height: 52px; width: auto; object-fit: contain;" />
+                    <span style="font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #b59349 0%, #d4a843 50%, #8c6f32 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1;">SmartRide</span>
                 </a>
                 <p>"Tự do trên từng chuyến hành trình"</p>
                 <p>Chọn chúng tôi để khởi đầu hành trình của bạn với sự tiện lợi và
@@ -50,6 +51,7 @@
                 <p style="padding-left: 20px;">Thạc Gián, Thanh Khê, Đà Nẵng</p>
                 <p class="mt-4"><strong>Phone:</strong> <span style="color: #b59349; font-weight: 600;">0824 551 789</span></p>
                 <p><strong>Email:</strong> <span>support@smartride.com</span></p>
+                <p class="mt-3"><i class="bi bi-clock-fill" style="color: #b59349; margin-right: 8px;"></i><strong>Giờ hoạt động:</strong> <span>Thứ Hai - Chủ Nhật: 7:00 - 23:00</span></p>
             </div>
 
         </div>
@@ -91,19 +93,20 @@
 
 <style>
 .footer {
-    background-color: #f5f2eb !important;
-    color: #2b2824 !important;
-    border-top: 1px solid #eae6df !important;
+    background-color: #fafafa !important;
+    color: #333 !important;
+    border-top: 1px solid #eaeaea !important;
     padding: 60px 0 30px 0 !important;
 }
 .footer h4 {
-    color: #1a1816 !important;
-    font-family: 'Poppins', sans-serif !important;
+    color: #1a1a1a !important;
+    font-family: 'Times New Roman', serif !important;
     font-weight: 700 !important;
     margin-bottom: 20px !important;
-    border-bottom: 2px solid #eae6df !important;
-    padding-bottom: 8px !important;
-    font-size: 15px !important;
+    border-bottom: 1px solid #eaeaea !important;
+    padding-bottom: 12px !important;
+    font-size: 18px !important;
+    letter-spacing: 0.5px;
 }
 .footer p, .footer-contact p {
     color: #4a4744 !important;
@@ -119,6 +122,15 @@
 .footer a:hover {
     color: #b59349 !important;
     padding-left: 6px !important;
+}
+.footer .logo:hover {
+    padding-left: 0 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+.footer .logo img {
+    background-color: transparent !important;
+    box-shadow: none !important;
 }
 .footer .footer-links ul li {
     padding: 8px 0 !important;

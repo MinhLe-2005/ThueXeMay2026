@@ -12,7 +12,7 @@
     <head>
         <meta charset="utf-8">
 
-        <link rel="website icon" type="png" href="images/logo.png">
+        
 
         <title>FAQs Manage</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -267,7 +267,7 @@
 
                                 <div class="ibox-content m-b-sm border-bottom">
                                     <div class="text-center p-lg">
-                                        <h2>Quản lý Câu hỏi thường gặp của công ty ColorBike</h2>
+                                        <h2>Quản lý Câu hỏi thường gặp của công ty SmartRide</h2>
                                         <span>Nếu bạn muốn thêm một câu hỏi, bấm vào đây </span>
 
                                         <button type="button" class="btn btn-primary" id="launchModalBtn" data-mdb-toggle="modal"

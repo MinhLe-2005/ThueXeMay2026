@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>ColorBike Events</title>
+        <title>SmartRide Events</title>
         <style>
             /* breadcrumb */
 
@@ -64,7 +64,7 @@
             <div class="container MuiBox-root css-0">
 
                 <div class="event-container">
-                    <h2>ColorBike Events</h2>
+                    <h2>SmartRide Events</h2>
                     <p>Plan Your Perfect Event with Our User-Friendly App</p>
                 </div>
                 <div

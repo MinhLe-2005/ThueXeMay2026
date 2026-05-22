@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="icon" type="image/png" href="images/favicon.png?v=<%=System.currentTimeMillis()%>">
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
@@ -280,7 +280,7 @@
             <!-- Form Side -->
             <div class="login-form-side animate__animated animate__fadeInLeft">
                 <a href="home" class="brand-header">
-                    <img src="images/logo.png?v=<%=System.currentTimeMillis()%>" alt="SmartRide Logo" class="brand-logo" />
+                    <img src="${pageContext.request.contextPath}/images/newlogo_transparent.png" alt="SmartRide Logo" class="brand-logo" />
                 </a>
 
                 <h1 class="welcome-title">Xác Minh Email</h1>

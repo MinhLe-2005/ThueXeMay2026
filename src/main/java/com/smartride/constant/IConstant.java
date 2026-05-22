@@ -9,9 +9,9 @@ package com.smartride.constant;
  * @author LeQuangMinh
  */
 public interface IConstant {
-    String GOOGLE_CLIENT_ID = "158327451054-1sdvun9trsl75ng2i96pfmr9lsgrjnjb.apps.googleusercontent.com";
+    String GOOGLE_CLIENT_ID = "427529527508-oc10hcpl7tv41q12bhjkk1lpvnupe80k.apps.googleusercontent.com";
 
-    String GOOGLE_CLIENT_SECRET = "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";
+    String GOOGLE_CLIENT_SECRET = "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";
 
     String GOOGLE_REDIRECT_URI = "http://localhost:8080/MotorcyleHiringProject/login-google";
 

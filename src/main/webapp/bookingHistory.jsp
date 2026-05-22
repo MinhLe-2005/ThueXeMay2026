@@ -16,63 +16,12 @@
         <!-- Tailwind CSS -->
         <link href="https://www.loopple.com/css/vendor/tailwind.min.css" rel="stylesheet">
         <link href="https://www.loopple.com/css/tailwind/app.css?v=1.0.0" rel="stylesheet">
+        <link href="${pageContext.request.contextPath}/css/sidebarProfile.css?v=2" rel="stylesheet">
         <style>
             .red { color: red; }
             .orange { color: orange; }
             .green { color: green; }
             .text-error { font-style: italic; }
-            
-            /* Simplified Sidebar */
-            .sidebar-item {
-                padding: 0.75rem 1rem !important;
-                margin: 0.2rem 1rem !important;
-                display: flex !important;
-                align-items: center !important;
-                border-radius: 0.5rem !important;
-                transition: all 0.2s ease !important;
-                color: #1e293b !important; /* Dark Slate-800 for absolute contrast */
-                font-weight: 700 !important; /* Bold, highly readable */
-                font-size: 0.95rem !important; /* Slightly larger */
-                text-decoration: none !important;
-            }
-            .sidebar-item:hover {
-                background-color: #f1f5f9 !important;
-                color: #0f172a !important; /* Slate-900 */
-            }
-            .sidebar-item.active {
-                background-color: #fdf8eb !important; /* very light gold */
-                color: #854d0e !important; /* Deep Golden Amber for maximum readability */
-                font-weight: 800 !important;
-            }
-            .icon-box {
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                margin-right: 1rem !important;
-                width: 32px !important;
-                height: 32px !important;
-                border-radius: 0.5rem !important;
-                background-color: #e2e8f0 !important; /* Deeper gray for contrast */
-                color: #334155 !important; /* Slate-700 */
-                transition: all 0.2s ease !important;
-            }
-            .sidebar-item.active .icon-box {
-                background-color: #b59349 !important;
-                color: #ffffff !important;
-            }
-            .nav-text {
-                font-size: 0.95rem !important;
-            }
-            .sidebar-heading {
-                padding-left: 1.5rem !important;
-                font-weight: 800 !important;
-                text-transform: uppercase !important;
-                font-size: 0.8rem !important; /* Slightly larger */
-                color: #475569 !important; /* Slate-600 */
-                margin-top: 1.5rem !important;
-                margin-bottom: 0.5rem !important;
-                letter-spacing: 0.05em !important;
-            }
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style type="text/css">
@@ -391,59 +340,6 @@
                 border-bottom-color: #b59349 !important;
                 font-weight: 700 !important;
             }
-
-        /* Simplified Sidebar */
-        .sidebar-item {
-            padding: 0.75rem 1rem !important;
-            margin: 0.2rem 1rem !important;
-            display: flex !important;
-            align-items: center !important;
-            border-radius: 0.5rem !important;
-            transition: all 0.2s ease !important;
-            color: #1e293b !important; /* Dark Slate-800 for absolute contrast */
-            font-weight: 700 !important; /* Bold, highly readable */
-            font-size: 0.95rem !important; /* Slightly larger */
-            text-decoration: none !important;
-        }
-        .sidebar-item:hover {
-            background-color: #f1f5f9 !important;
-            color: #0f172a !important; /* Slate-900 */
-        }
-        .sidebar-item.active {
-            background-color: #fdf8eb !important; /* very light gold */
-            color: #854d0e !important; /* Deep Golden Amber for maximum readability */
-            font-weight: 800 !important;
-        }
-        .icon-box {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            margin-right: 1rem !important;
-            width: 32px !important;
-            height: 32px !important;
-            border-radius: 0.5rem !important;
-            background-color: #e2e8f0 !important; /* Deeper gray for contrast */
-            color: #334155 !important; /* Slate-700 */
-            transition: all 0.2s ease !important;
-        }
-        .sidebar-item.active .icon-box {
-            background-color: #b59349 !important;
-            color: #ffffff !important;
-        }
-        .nav-text {
-            font-size: 0.95rem !important;
-        }
-        .sidebar-heading {
-            padding-left: 1.5rem !important;
-            font-weight: 800 !important;
-            text-transform: uppercase !important;
-            font-size: 0.8rem !important; /* Slightly larger */
-            color: #475569 !important; /* Slate-600 */
-            margin-top: 1.5rem !important;
-            margin-bottom: 0.5rem !important;
-            letter-spacing: 0.05em !important;
-        }
-
         </style>
     </head>
     <jsp:include page="/includes/customer/header.jsp" />
@@ -456,52 +352,9 @@
         <link href="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/css/nucleo-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/css/soft-ui-dashboard-tailwind.css">
         <div class="builder-container builder-container-preview font-body">
-            <aside class="max-w-62.5 ease-nav-brand z-990 absolute inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent text-slate-500"
-                   id="sidenav-main">
-                <hr class="h-px mt-0 bg-transparent bg-gradient-horizontal-dark">
-                <div style="margin-top: 6rem" class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
-                    <ul class="flex flex-col pl-0 mb-0">
-                        <li class="w-full">
-                            <div class="sidebar-heading">Quản lý thuê xe</div>
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item" href="transaction">
-                                <div class="icon-box">
-                                    <i class="fas fa-credit-card text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Giao dịch gần đây</span>
-                            </a> 
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item active" href="bookingHistory?status=all">
-                                <div class="icon-box">
-                                    <i class="fas fa-history text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Lịch sử thuê xe</span>
-                            </a> 
-                        </li>
-                        <li class="w-full">
-                            <div class="sidebar-heading">Quản lý tài khoản</div>
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item" href="profileCustomer.jsp">
-                                <div class="icon-box">
-                                    <i class="fas fa-user-circle text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Thông tin cá nhân</span>
-                            </a> 
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item" href="settingsProfile.jsp">
-                                <div class="icon-box">
-                                    <i class="fas fa-shield-alt text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Mật khẩu và bảo mật</span>
-                            </a> 
-                        </li>
-                    </ul>
-                </div>
-            </aside>
+            <jsp:include page="/includes/customer/sidebarProfile.jsp">
+                <jsp:param name="activePage" value="bookingHistory"/>
+            </jsp:include>
             <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
                 <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
                     <div class="relative flex flex-col flex-auto min-w-0 p-4 mx-6 mt-32 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border mb-4">
@@ -510,22 +363,24 @@
                                                 <i class="fas fa-history mr-2 text-amber-500"></i> Lịch sử thuê xe
                                             </h3>
 
-                                            <div class="filters flex gap-6 mb-6 border-b border-slate-200"> 
-                                                <button class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${empty param.status || param.status eq 'all' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}" data-filter="all">Tất cả</button>
-                                                <button class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'pending' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}" data-filter="pending">Chờ xác nhận</button>
-                                                <button class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'confirmed' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}" data-filter="confirmed">Đã xác nhận</button>
-                                                <button class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'cancelled' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}" data-filter="cancelled">Đã hủy</button>
+                                            <div class="filters flex gap-6 mb-6 border-b border-slate-200">
+                                                <a href="bookingHistory?status=all" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${empty param.status || param.status eq 'all' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Tất cả</a>
+                                                <a href="bookingHistory?status=pending" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'pending' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Chờ xác nhận</a>
+                                                <a href="bookingHistory?status=confirmed" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'confirmed' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Đã xác nhận</a>
+                                                <a href="bookingHistory?status=cancelled" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'cancelled' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Đã hủy</a>
                                             </div>
-                                            
-                                            <div class="confirmed-filters mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3" id="confirmed-filters" style="${param.status eq 'confirmed' ? 'display: flex;' : 'display: none;'}">
+
+                                            <c:if test="${param.status eq 'confirmed'}">
+                                            <div class="confirmed-filters mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3" id="confirmed-filters">
                                                 <label for="confirmed-status" class="text-sm font-semibold text-slate-600">Trạng thái giao nhận:</label>
-                                                <select id="confirmed-status" class="ml-2 border border-slate-200 rounded-lg p-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 w-48">
+                                                <select id="confirmed-status" onchange="window.location.href='bookingHistory?status=confirmed&deliveryStatus='+this.value" class="ml-2 border border-slate-200 rounded-lg p-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 w-48">
                                                     <option value="all" <c:if test="${empty deliveryStatus || 'all' eq deliveryStatus}">selected</c:if>>Tất cả trạng thái</option>
                                                     <option value="notDelivered" <c:if test="${'notDelivered' eq deliveryStatus}">selected</c:if>>Chưa giao</option>
                                                     <option value="delivered" <c:if test="${'delivered' eq deliveryStatus}">selected</c:if>>Đã giao</option>
                                                     <option value="returned" <c:if test="${'returned' eq deliveryStatus}">selected</c:if>>Đã trả</option>
                                                 </select>
                                             </div>
+                                            </c:if>
                                             <div class="table-responsive w-full overflow-x-auto rounded-xl border border-slate-100">
                                                 <table class="table min-w-full align-middle mb-0" id="booking-table">
                                                     <thead class="bg-slate-50 border-b border-slate-100">
@@ -658,119 +513,6 @@
         <script
             src="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/js/soft-ui-dashboard-tailwind.js"
         async=""></script>
-        <script>
-            if (document.readyState === 'loading') {
-                document.addEventListener("DOMContentLoaded", () => {
-                    initializeFilters();
-                });
-            } else {
-                initializeFilters();
-            }
-
-            // Initialize filters and add event listeners
-            function initializeFilters() {
-                const confirmedFilters = document.getElementById("confirmed-filters");
-                const confirmedStatusSelect = document.getElementById("confirmed-status");
-
-                // Add event listeners to filter buttons
-                document.querySelectorAll(".filter-btn").forEach(button => {
-                    button.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        const filter = button.getAttribute("data-filter");
-                        const url = "bookingHistory?status=" + filter;
-                        
-                        const panel = document.getElementById("panel");
-                        if (panel) {
-                            panel.style.transition = "opacity 0.15s ease, transform 0.15s ease";
-                            panel.style.opacity = "0";
-                            panel.style.transform = "translateY(5px)";
-                            
-                            fetch(url)
-                                .then(response => response.text())
-                                .then(html => {
-                                    const parser = new DOMParser();
-                                    const doc = parser.parseFromString(html, "text/html");
-                                    const newPanel = doc.getElementById("panel");
-                                    if (newPanel) {
-                                        panel.innerHTML = newPanel.innerHTML;
-                                        setTimeout(() => {
-                                            panel.style.opacity = "1";
-                                            panel.style.transform = "translateY(0)";
-                                        }, 50);
-                                        history.pushState(null, '', url);
-                                        
-                                        // Re-initialize scripts on the new panel
-                                        const scripts = newPanel.querySelectorAll("script");
-                                        scripts.forEach(script => {
-                                            if (script.innerHTML.includes("initializeFilters")) {
-                                                eval(script.innerHTML);
-                                            }
-                                        });
-                                    } else {
-                                        window.location.href = url;
-                                    }
-                                })
-                                .catch(() => { window.location.href = url; });
-                        } else {
-                            window.location.href = url;
-                        }
-                    });
-                });
-                
-                checkURL();
-
-                // Add event listener to confirmed status select
-                if (confirmedStatusSelect) {
-                    confirmedStatusSelect.addEventListener("change", () => {
-                        const filter = confirmedStatusSelect.value;
-                        const url = "bookingHistory?status=confirmed&deliveryStatus=" + filter;
-                        
-                        const panel = document.getElementById("panel");
-                        if (panel) {
-                            panel.style.transition = "opacity 0.15s ease, transform 0.15s ease";
-                            panel.style.opacity = "0";
-                            panel.style.transform = "translateY(5px)";
-                            
-                            fetch(url)
-                                .then(response => response.text())
-                                .then(html => {
-                                    const parser = new DOMParser();
-                                    const doc = parser.parseFromString(html, "text/html");
-                                    const newPanel = doc.getElementById("panel");
-                                    if (newPanel) {
-                                        panel.innerHTML = newPanel.innerHTML;
-                                        setTimeout(() => {
-                                            panel.style.opacity = "1";
-                                            panel.style.transform = "translateY(0)";
-                                        }, 50);
-                                        history.pushState(null, '', url);
-                                        
-                                        // Re-initialize scripts on the new panel
-                                        const scripts = newPanel.querySelectorAll("script");
-                                        scripts.forEach(script => {
-                                            if (script.innerHTML.includes("initializeFilters")) {
-                                                eval(script.innerHTML);
-                                            }
-                                        });
-                                    } else {
-                                        window.location.href = url;
-                                    }
-                                })
-                                .catch(() => { window.location.href = url; });
-                        } else {
-                            window.location.href = url;
-                        }
-                    });
-                }
-            }
-
-            function checkURL() {
-                const currentURL = window.location.href;
-                if (currentURL.includes('bookingHistory?status=confirmed')) {
-                    const confirmedFilters = document.getElementById("confirmed-filters");
-                    if (confirmedFilters) confirmedFilters.style.display = 'block';
-                }
-            }
             </div> <!-- #panel -->
         </div> <!-- .builder-container -->
     </body>

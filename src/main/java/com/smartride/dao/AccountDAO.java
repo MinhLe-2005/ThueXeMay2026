@@ -600,11 +600,18 @@ public class AccountDAO implements Serializable {
     public boolean checkEmailExists(String email, String currentEmail) {
         PreparedStatement st;
         ResultSet rs;
-        String sql = "SELECT COUNT(*) FROM \"Account\" WHERE \"Email\" = ? AND \"Email\" <> ?";
+        String sql;
+        if (currentEmail == null || currentEmail.trim().isEmpty()) {
+            sql = "SELECT COUNT(*) FROM \"Account\" WHERE \"Email\" = ?";
+        } else {
+            sql = "SELECT COUNT(*) FROM \"Account\" WHERE \"Email\" = ? AND \"Email\" <> ?";
+        }
         try {
             st = conn.prepareStatement(sql);
             st.setString(1, email);
-            st.setString(2, currentEmail);
+            if (currentEmail != null && !currentEmail.trim().isEmpty()) {
+                st.setString(2, currentEmail);
+            }
             rs = st.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;
@@ -618,11 +625,18 @@ public class AccountDAO implements Serializable {
     public boolean checkPhoneNumExists(String phoneNumber, String currentPhoneNumber) {
         PreparedStatement st = null;
         ResultSet rs = null;
-        String sql = "SELECT COUNT(*) FROM \"Account\" WHERE \"PhoneNumber\" = ? AND \"PhoneNumber\" <> ?";
+        String sql;
+        if (currentPhoneNumber == null || currentPhoneNumber.trim().isEmpty()) {
+            sql = "SELECT COUNT(*) FROM \"Account\" WHERE \"PhoneNumber\" = ?";
+        } else {
+            sql = "SELECT COUNT(*) FROM \"Account\" WHERE \"PhoneNumber\" = ? AND \"PhoneNumber\" <> ?";
+        }
         try {
             st = conn.prepareStatement(sql);
             st.setString(1, phoneNumber);
-            st.setString(2, currentPhoneNumber);
+            if (currentPhoneNumber != null && !currentPhoneNumber.trim().isEmpty()) {
+                st.setString(2, currentPhoneNumber);
+            }
             rs = st.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;

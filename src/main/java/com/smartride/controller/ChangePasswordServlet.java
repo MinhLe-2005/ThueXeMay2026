@@ -107,8 +107,10 @@ public class ChangePasswordServlet extends HttpServlet {
             }
 
             if (ac.getRoleID() == 1) {
-                request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+                // Khách hàng: forward về settingsProfile.jsp (có sidebar profile)
+                request.getRequestDispatcher("settingsProfile.jsp").forward(request, response);
             } else {
+                // Staff/Admin: forward về profileStaff.jsp
                 request.getRequestDispatcher("profileStaff.jsp").forward(request, response);
             }
         } catch (ServletException | IOException | NumberFormatException ex) {
@@ -117,7 +119,7 @@ public class ChangePasswordServlet extends HttpServlet {
     }
 
     private boolean checkValidPass(String pass) {
-        String passwordRegex = "^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+        String passwordRegex = "^(?=.*[A-Z])(?=.*\\d).{8,}$";
         return pass != null && pass.matches(passwordRegex);
     }
 

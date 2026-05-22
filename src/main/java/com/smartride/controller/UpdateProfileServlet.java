@@ -94,6 +94,19 @@ public class UpdateProfileServlet extends HttpServlet {
                 }
                 return;
             }
+            boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+            if (isAjax) {
+                response.setContentType("application/json;charset=UTF-8");
+                try (PrintWriter out = response.getWriter()) {
+                    if (request.getAttribute("errorProfile") != null) {
+                        out.print("{\"success\": false, \"message\": \"" + request.getAttribute("errorProfile") + "\"}");
+                    } else {
+                        out.print("{\"success\": true, \"message\": \"" + request.getAttribute("mess") + "\"}");
+                    }
+                }
+                return;
+            }
+
             if (ac.getRoleID() == 1) {
                 request.getRequestDispatcher("profileCustomer.jsp").forward(request, response);
             } else {

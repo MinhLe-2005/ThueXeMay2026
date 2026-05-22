@@ -97,7 +97,7 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private boolean checkValidPass(String pass) {
-        String passwordRegex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}$";
+        String passwordRegex = "^(?=.*[A-Z])(?=.*\\d).{8,}$";
         return pass != null && pass.matches(passwordRegex);
     }
 

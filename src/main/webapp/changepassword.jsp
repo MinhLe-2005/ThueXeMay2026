@@ -13,161 +13,141 @@
         <link rel="stylesheet" href="./fonts/themify-icons-font/themify-icons/themify-icons.css">
         <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
         <style type="text/css">
+            @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
             body {
                 margin: 0;
                 padding: 0;
                 height: 100vh;
-                background: url('https://powersports.honda.com/-/media/products/segment/street/sport/category-mp/hero/desktop/2024/sport-segment-hero-01-2400x1350.jpg') no-repeat center center fixed;
+                background: url('images/smartride_premium_bg.png') no-repeat center center fixed;
                 background-size: cover;
-                font-family: 'Poppins', sans-serif;
+                font-family: 'Plus Jakarta Sans', sans-serif;
                 min-height: 100vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background-color: #1C1D22;
+                background-color: #0f172a;
             }
             .mainDiv {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background-color: rgba(249, 249, 249, 0.3);
-                font-family: 'Open Sans', sans-serif;
-                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(15, 23, 42, 0.4);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
             }
             .cardStyle {
-                width: 500px;
-                border-color: white;
-                background: #fff;
-                padding-bottom: 30px;
-                border-radius: 4px;
-                box-shadow: 0px 0 2px 0 rgba(0,0,0,0.25);
-                transform: translateY(-170px);
-                transition: transform 0.3s ease-out, opacity 0.8s ease-out;
+                width: 480px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 24px;
+                padding: 48px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                box-sizing: border-box;
             }
-            .cardStyle.visible {
-                opacity: 0.9;
-                transform: translateY(0);
+            .cardStyle:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6);
             }
             #signupLogo {
-                max-height: 200px;
-                margin: auto;
-                display: flex;
-                flex-direction: column;
-
+                max-height: 100px;
+                margin: 0 auto 24px auto;
+                display: block;
             }
             .formTitle {
-                font-weight: 600;
-                margin-top: 20px;
-                color: #2F2D3B;
                 text-align: center;
-            }
-            .inputLabel {
-                font-size: 13px;
-                margin-bottom: 6px;
-                margin-top: 24px;
+                font-weight: 700;
+                font-size: 26px;
+                color: #0f172a;
+                margin-bottom: 32px;
+                margin-top: 0;
             }
             .inputDiv {
-                width: 70%;
-                display: flex;
-                flex-direction: column;
-                margin: auto;
+                margin-bottom: 24px;
+                position: relative;
             }
-            input {
-                height: 40px;
-                font-size: 16px;
-                border-radius: 4px;
-                border: none;
-                border: solid 1px #ccc;
-                padding: 0 11px;
-            }
-            input:disabled {
-                cursor: not-allowed;
-                border: solid 1px #eee;
-            }
-            .password-eye {
-                position: absolute;
-                right: 88px;
-                top: 54%;
-                bottom: 288px;
-                transform: translateY(-50%);
-                cursor: pointer;
-                font-size: 23px;
-            }
-            .buttonWrapper {
-                margin-top: 40px;
-            }
-            .submitButton:hover{
-                background: linear-gradient(243.4deg, rgb(0, 132, 255) 13%, rgb(8, 126, 120) 98%) !important;
-            }
-            .submitButton {
-                width: 70%;
-                height: 40px;
-                margin-left:  84px ;
-                display: block;
-                color: #fff;
-                background: linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%);
-                border: none;
-                text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
-                box-shadow: 0 2px 0 rgba(0, 0, 0, 0.035);
-                border-radius: 4px;
+            .inputLabel {
                 font-size: 14px;
-                cursor: pointer;
-            }
-            .submitButton:disabled,
-            button[disabled] {
-                border: 1px solid #cccccc;
-                background-color: #cccccc;
-                color: #666666;
-            }
-            #loader {
-                position: absolute;
-                z-index: 1;
-                margin: -2px 0 0 10px;
-                border: 4px solid #f3f3f3;
-                border-radius: 50%;
-                border-top: 4px solid #666666;
-                width: 14px;
-                height: 14px;
-                -webkit-animation: spin 2s linear infinite;
-                animation: spin 2s linear infinite;
-            }
-            @keyframes spin {
-                0% {
-                    transform: rotate(0deg);
-                }
-                100% {
-                    transform: rotate(360deg);
-                }
+                font-weight: 600;
+                color: #475569;
+                margin-bottom: 8px;
+                display: block;
             }
             .input-wrapper {
                 position: relative;
-                display: inline-block;
+                display: block;
+                width: 100%;
             }
             .input-wrapper input {
                 width: 100%;
+                padding: 14px 16px;
+                border: 1.5px solid #cbd5e1;
+                border-radius: 12px;
+                font-size: 15px;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                transition: all 0.3s ease;
+                background: #f8fafc;
+                box-sizing: border-box;
+                color: #0f172a;
+            }
+            .input-wrapper input:focus {
+                outline: none;
+                border-color: #b59349;
+                background: #ffffff;
+                box-shadow: 0 0 0 4px rgba(181, 147, 73, 0.1);
             }
             .input-wrapper span {
                 position: absolute;
                 top: 50%;
-                right: -10px;
+                right: 16px;
                 transform: translateY(-50%);
                 cursor: pointer;
                 font-size: 20px;
+                color: #94a3b8;
+                transition: color 0.3s ease;
             }
-            .red {
-                color: red;
+            .input-wrapper span:hover {
+                color: #475569;
             }
-
-            .orange {
-                color: orange;
+            .submitButton {
+                width: 100%;
+                height: 52px;
+                margin-top: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ffffff;
+                background: #b59349;
+                border: none;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 6px -1px rgba(181, 147, 73, 0.3);
             }
-
-            .green {
-                color: green;
+            .submitButton:hover {
+                background: #9c7c3b;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(181, 147, 73, 0.4);
             }
             .text-error {
-                font-style: italic;
+                display: block;
                 font-size: 13px;
+                margin-top: 6px;
+                font-weight: 500;
+            }
+            .red {
+                color: #ef4444;
+            }
+            .green {
+                color: #10b981;
             }
         </style>
     </head>
@@ -230,8 +210,8 @@
             </div>
         </div>
         <div>
-            <a href="settingsProfile.jsp" style="position: absolute; top: 20px; left: 20px; text-decoration: none; color: #000">
-                <i style="font-size: 60px;" class="ri-arrow-left-line"></i>
+            <a href="settingsProfile.jsp" style="position: absolute; top: 32px; left: 32px; text-decoration: none; color: rgba(255, 255, 255, 0.8); transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.1);" onmouseover="this.style.background='rgba(0, 0, 0, 0.6)'; this.style.color='#ffffff';" onmouseout="this.style.background='rgba(0, 0, 0, 0.4)'; this.style.color='rgba(255, 255, 255, 0.8)';">
+                <i style="font-size: 24px;" class="ri-arrow-left-line"></i>
             </a>
         </div>
 
@@ -243,7 +223,7 @@
                     form.classList.add('visible');
                 }, 100);
             });
-            document.getElementById('signupLogo').src = "images/anh4.png";
+            document.getElementById('signupLogo').src = "images/newlogo_transparent.png";
 
             function showPassword(inputId) {
                 const passInput = document.getElementById(inputId);
@@ -272,7 +252,7 @@
             /////////////////////////////////////////
             const newPassword = document.getElementById("newPassword");
             const newPassText = document.getElementById("newpassword-text");
-            const newpasswordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            const newpasswordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
             const validnewPass = () => {
                 if (newpasswordRegex.test(newPassword.value)) {

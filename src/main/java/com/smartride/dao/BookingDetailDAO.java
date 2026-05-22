@@ -45,7 +45,7 @@ public class BookingDetailDAO {
         ResultSet rs;
         try {
             String sql = "SELECT * FROM \"Booking Detail\"\n"
-                    + "WHERE BookingID = ?";
+                    + "WHERE \"BookingID\" = ?";
             stm = conn.prepareStatement(sql);
             stm.setString(1, bookingId);
             rs = stm.executeQuery();

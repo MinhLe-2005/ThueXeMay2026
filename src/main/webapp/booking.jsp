@@ -157,7 +157,8 @@
             }
 
             .upload-card-wrapper {
-                width: 100%;
+                flex: 1;
+                min-width: 0;
                 position: relative;
             }
             .upload-card {
@@ -175,10 +176,25 @@
                 min-height: 140px;
                 position: relative;
                 overflow: hidden;
+                width: 100%;
+                box-sizing: border-box;
             }
             .upload-card:hover {
                 border-color: #046fd4;
                 background: #f0f7ff;
+            }
+            .upload-card.uploaded {
+                border-color: #16a34a;
+                background: #f0fdf4;
+            }
+            .upload-card.uploaded i {
+                color: #16a34a !important;
+            }
+            .upload-card.uploaded .upload-title {
+                color: #15803d;
+            }
+            .upload-card.uploaded .upload-subtitle {
+                color: #16a34a;
             }
             .upload-card i {
                 font-size: 36px;
@@ -1158,7 +1174,10 @@
             }
             
             label.error{
-                display: none !important;
+                color: #dc3545;
+                font-size: 11px;
+                font-weight: 600;
+                margin-top: 4px;
             }
              .note-star{
                 color: red;
@@ -1392,7 +1411,8 @@
             /* Step Actions Buttons (Prev, Next, Finish) */
             .actions ul {
                 display: flex !important;
-                justify-content: space-between !important;
+                justify-content: flex-end !important;
+                gap: 15px !important;
                 padding: 0 !important;
                 margin: 0 !important;
                 list-style: none !important;
@@ -1400,6 +1420,12 @@
             }
             .actions ul li {
                 float: none !important;
+            }
+            .actions ul li.disabled, .actions ul .disabled {
+                display: none !important;
+            }
+            .actions ul li:first-child {
+                margin-right: auto !important;
             }
             .actions ul li a {
                 display: inline-flex !important;
@@ -1803,6 +1829,7 @@
                                     <div class="form-group">
                                         <label for="pickuptime" class="form-label">Giờ nhận xe <span class="note-star"> *</span></label>
                                         <input type="time" name="pickuptime" id="pickuptime"  />
+                                        <small style="color: #888; font-size: 12px; margin-top: 5px; display: block;">* Giờ hoạt động: 07:00 - 23:00</small>
                                     </div>
                                     <div class="form-group">
                                         <label for="returndate" class="form-label">Ngày trả xe <span class="note-star"> *</span></label>
@@ -1811,6 +1838,7 @@
                                     <div class="form-group">
                                         <label for="returntime" class="form-label">Giờ trả xe <span class="note-star"> *</span></label>
                                         <input type="time" name="returntime" id="returntime" />
+                                        <small style="color: #888; font-size: 12px; margin-top: 5px; display: block;">* Giờ hoạt động: 07:00 - 23:00</small>
                                     </div>
                                 </div>
                             </div>
@@ -1819,17 +1847,33 @@
                                     <div class="form-group">
                                         <label for="pickuplocation" class="form-label">Địa điểm nhận xe <span class="note-star"> *</span></label>
                                         <select name="pickuplocation" id="pickuplocation" class="form-label">
-                                            <option value="Ga Đà Nẵng-Số 202 đường Hải Phòng" >Ga Đà Nẵng-202 Đường Hải Phòng</option>             
-                                            <option value="Da Nang International Airport">Sân bay quốc tế Đà Nẵng </option>
-                                            <option value="Your own address" >Địa chỉ của bạn</option>
+                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng">Ga Đà Nẵng – 202 Hải Phòng, Tam Thuận</option>
+                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng">✈ Sân bay Đà Nẵng – 132 Phan Đình Phùng</option>
+                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng">Bến xe Trung tâm – 33 Tôn Đức Thắng, Hải Châu</option>
+                                            <option value="Chợ Hàn - 119 Trần Phú">Chợ Hàn – 119 Trần Phú, Hải Châu</option>
+                                            <option value="Vincom Plaza - 910A Ngô Quyền">Vincom Plaza – 910A Ngô Quyền, Sơn Trà</option>
+                                            <option value="Cầu Rồng - Trần Hưng Đạo">Cầu Rồng – Trần Hưng Đạo, Hải Châu</option>
+                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa">Ngũ Hành Sơn – Huyền Trân Công Chúa</option>
+                                            <option value="Lotte Mart - 6 Nại Nam">Lotte Mart – 6 Nại Nam, Hải Châu</option>
+                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng">Phố đi bộ Bạch Đằng, Hải Châu</option>
+                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng">Bệnh viện Đà Nẵng – 124 Hải Phòng</option>
+                                            <option value="Your own address">✏️ Địa chỉ của bạn (tự nhập)</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="returnlocation" class="form-label">Địa điểm trả xe <span class="note-star"> *</span></label>
                                         <select name="returnlocation" id="returnlocation" class="form-label">
-                                          <option value="Ga Đà Nẵng-Số 202 đường Hải Phòng" >Ga Đà Nẵng-202 Đường Hải Phòng</option>             
-                                            <option value="Da Nang International Airport">Sân bay quốc tế Đà Nẵng </option>
-                                            <option value="Your own address" >Địa chỉ của bạn</option>
+                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng">Ga Đà Nẵng – 202 Hải Phòng, Tam Thuận</option>
+                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng">✈ Sân bay Đà Nẵng – 132 Phan Đình Phùng</option>
+                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng">Bến xe Trung tâm – 33 Tôn Đức Thắng, Hải Châu</option>
+                                            <option value="Chợ Hàn - 119 Trần Phú">Chợ Hàn – 119 Trần Phú, Hải Châu</option>
+                                            <option value="Vincom Plaza - 910A Ngô Quyền">Vincom Plaza – 910A Ngô Quyền, Sơn Trà</option>
+                                            <option value="Cầu Rồng - Trần Hưng Đạo">Cầu Rồng – Trần Hưng Đạo, Hải Châu</option>
+                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa">Ngũ Hành Sơn – Huyền Trân Công Chúa</option>
+                                            <option value="Lotte Mart - 6 Nại Nam">Lotte Mart – 6 Nại Nam, Hải Châu</option>
+                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng">Phố đi bộ Bạch Đằng, Hải Châu</option>
+                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng">Bệnh viện Đà Nẵng – 124 Hải Phòng</option>
+                                            <option value="Your own address">✏️ Địa chỉ của bạn (tự nhập)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -2065,26 +2109,23 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
+                                        <div class="form-group" style="width: 100%;">
+                                            <label for="address" class="form-label">Địa chỉ <span class="note-star"> *</span></label>
+                                            <input type="text" name="address" id="address" value="${account.address}" oninput="validateForm()" />
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
                                         <div class="form-flex">
                                             <div class="form-group">
-                                                <label for="address" class="form-label">Địa chỉ <span class="note-star"> *</span></label>
-                                                <input type="text" name="address" id="address" value="${account.address}" oninput="validateForm()" />
+                                                 <label for="birth_date" class="form-label">Ngày sinh <span class="note-star"> *</span></label>
+                                                 <input type="date" name="dob" id="dob" value="${account.dob}" oninput="validateForm()" />
                                             </div>
                                             <div class="form-group">
-                                                <div class="form-flex">
-                                                    <div class="form-group">
-                                                         <label for="birth_date" class="form-label">Ngày sinh <span class="note-star"> *</span></label>
-                                                         <input type="date" name="dob" id="dob" value="${account.dob}" oninput="validateForm()" />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="gender" class="form-label">Giới tính <span class="note-star"> *</span></label>
-                                                        <div class="form-radio-group">   
-                                                            <label><input type="radio" name="gender" value="Không muốn tiết lộ" ${account.gender == 'Không muốn tiết lộ' ? 'checked' : ''} onclick="validateForm()">Bí mật</label>
-                                                            <label><input type="radio" name="gender" value="Nam" ${account.gender == 'Nam' ? 'checked' : ''} onclick="validateForm()">Nam</label>
-                                                            <label><input type="radio" name="gender" value="Nữ" ${account.gender == 'Nữ' ? 'checked' : ''} onclick="validateForm()">Nữ</label>
-                                                            
-                                                        </div>
-                                                    </div>
+                                                <label for="gender" class="form-label">Giới tính <span class="note-star"> *</span></label>
+                                                <div class="form-radio-group">   
+                                                    <label><input type="radio" name="gender" value="Không muốn tiết lộ" ${account.gender == 'Không muốn tiết lộ' ? 'checked' : ''} onclick="validateForm()">Bí mật</label>
+                                                    <label><input type="radio" name="gender" value="Nam" ${account.gender == 'Nam' ? 'checked' : ''} onclick="validateForm()">Nam</label>
+                                                    <label><input type="radio" name="gender" value="Nữ" ${account.gender == 'Nữ' ? 'checked' : ''} onclick="validateForm()">Nữ</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -2115,10 +2156,10 @@
                                                     
                                                     <div class="form-row" style="margin-top: 25px;">
                                                         <label class="form-label" style="display: block; margin-bottom: 15px; font-weight: 600;">Hình ảnh CCCD/CMND</label>
-                                                        <div class="form-flex" style="gap: 20px;">
+                                                        <div class="form-flex" style="align-items: flex-start;">
                                                             <c:set var="imagesArr" value="${fn:split(c.identityCardImage, ',')}" />
                                                             
-                                                            <div class="upload-card-wrapper" style="width: 50%;">
+                                                            <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
                                                                 <label for="imageFront" class="upload-card">
                                                                     <i class="bi bi-person-vcard"></i>
                                                                     <span class="upload-title">Cập nhật mặt trước</span>
@@ -2138,12 +2179,12 @@
                                                                     <c:if test="${not fn:startsWith(frontUrl, 'http')}"><c:set var="frontUrl" value="upload/${frontUrl}" /></c:if>
                                                                     <div class="image-preview-container existing-image">
                                                                         <span class="existing-image-label">Mặt trước hiện tại:</span>
-                                                                        <img src="${frontUrl}" class="img-preview" />
+                                                                        <img src="${frontUrl}" class="img-preview" onerror="this.parentElement.style.display='none';"/>
                                                                     </div>
                                                                 </c:if>
                                                             </div>
 
-                                                            <div class="upload-card-wrapper" style="width: 50%;">
+                                                            <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
                                                                 <label for="imageBack" class="upload-card">
                                                                     <i class="bi bi-credit-card-2-back"></i>
                                                                     <span class="upload-title">Cập nhật mặt sau</span>
@@ -2163,7 +2204,7 @@
                                                                     <c:if test="${not fn:startsWith(backUrl, 'http')}"><c:set var="backUrl" value="upload/${backUrl}" /></c:if>
                                                                     <div class="image-preview-container existing-image">
                                                                         <span class="existing-image-label">Mặt sau hiện tại:</span>
-                                                                        <img src="${backUrl}" class="img-preview" />
+                                                                        <img src="${backUrl}" class="img-preview" onerror="this.parentElement.style.display='none';"/>
                                                                     </div>
                                                                 </c:if>
                                                             </div>
@@ -2201,8 +2242,8 @@
                                                 
                                                 <div class="form-row" style="margin-top: 25px;">
                                                     <label class="form-label" style="display: block; margin-bottom: 15px; font-weight: 600;">Hình ảnh CCCD/CMND <span class="note-star"> *</span></label>
-                                                    <div class="form-flex" style="gap: 20px;">
-                                                        <div class="upload-card-wrapper" style="width: 50%;">
+                                                    <div class="form-flex" style="align-items: flex-start;">
+                                                        <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
                                                             <label for="imageFront" class="upload-card">
                                                                 <i class="bi bi-person-vcard"></i>
                                                                 <span class="upload-title">Tải lên mặt trước</span>
@@ -2217,7 +2258,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="upload-card-wrapper" style="width: 50%;">
+                                                        <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
                                                             <label for="imageBack" class="upload-card">
                                                                 <i class="bi bi-credit-card-2-back"></i>
                                                                 <span class="upload-title">Tải lên mặt sau</span>
@@ -2247,40 +2288,30 @@
                             <div class="fieldset-content">
                                 <div class="scrollable-vertical">
                                     <h4>NGÀY & GIỜ</h4>
-                                    <div class="form-box">
-                                        <div class="form-comf-20">
-                                            <div>
-                                                <label for="pickupdatetext" class="form-label">Ngày nhận xe</label>
-                                                <p id="pickupdatetext" ></p>
-                                            </div>
-                                            <div>
-                                                <label for="pickuploctext" class="form-label">Địa điểm nhận xe</label>
-                                                <p id="pickuploctext"></p>
-                                            </div>
-
+                                    <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                        <div class="info-group">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày nhận xe</label>
+                                            <p id="pickupdatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
                                         </div>
-                                        <div class="form-comf-20">
-                                            <div>
-                                                <label for="pickuptimetext" class="form-label">Giờ nhận xe</label>
-                                                <p id="pickuptimetext"></p>
-                                            </div>
-                                            <div>
-                                                <label for="returnloctext" class="form-label">Địa điểm trả xe</label>
-                                                <p id="returnloctext"></p>
-                                            </div>
-
+                                        <div class="info-group">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giờ nhận xe</label>
+                                            <p id="pickuptimetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
                                         </div>
-                                        <div class="form-comf-20">
-                                            <div>
-                                                <label for="returndatetext" class="form-label">Ngày trả xe</label>
-                                                <p id="returndatetext"></p>
-                                            </div>
+                                        <div class="info-group">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày trả xe</label>
+                                            <p id="returndatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
                                         </div>
-                                        <div class="form-comf-20">
-                                            <div>
-                                                <label for="returntimetext" class="form-label">Giờ trả xe</label>
-                                                <p id="returntimetext"></p>
-                                            </div>
+                                        <div class="info-group">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giờ trả xe</label>
+                                            <p id="returntimetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+                                        </div>
+                                        <div class="info-group" style="grid-column: span 2;">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Địa điểm nhận xe</label>
+                                            <p id="pickuploctext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+                                        </div>
+                                        <div class="info-group" style="grid-column: span 2;">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Địa điểm trả xe</label>
+                                            <p id="returnloctext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
                                         </div>
                                     </div>
                                     <h4>ĐÃ CHỌN XE MÁY</h4>
@@ -2289,59 +2320,66 @@
                                     <div id="savedItemsContainer">
                                     </div>
                                     <h4>TỔNG QUAN</h4>
-                                    <div class="form-box">
-                                        <div class="form-comf-50">
-                                            <div class="form-comf-text">
-                                                <label for="firstnametext" class="form-label">Họ</label>
-                                                <p id="firstnametext"></p>
-                                            </div>
-                                            <div class="form-comf-text">
-                                                <label for="emailaddresstext" class="form-label">Email</label>
-                                                <p id="emailaddresstext"> </p>
-                                            </div>
-                                            <div class="form-comf-text">
-                                                <label for="addresstext" class="form-label">Địa chỉ</label>
-                                                <p id="addresstext"> </p>
-                                            </div>
-                                            <div class="form-comf-text">
-                                                <label for="gendertext" class="form-label">Giới tính</label>
-                                                <p id="gendertext"> </p>
-                                            </div>
+                                    <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                        <div class="info-group">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Họ và Tên</label>
+                                            <p style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"><span id="firstnametext"></span> <span id="lastnametext"></span></p>
                                         </div>
-                                        <div class="form-comf-50">
-                                            <div class="form-comf-text">
-                                                <label for="lastnametext" class="form-label">Tên</label>
-                                                <p id="lastnametext"></p>
-                                            </div>
-                                            <div class="form-comf-text">
-                                                <label for="phonetext" class="form-label">Số điện thoại</label>
-                                                <p id="phonetext"> </p>
-                                            </div>
-                                            <div class="form-comf-text">
-                                                <label for="birthdaytext" class="form-label">Ngày sinh</label>
-                                                <p id="birthdaytext"> </p>
-                                            </div>
-                                           
+                                        <div class="info-group">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giới tính</label>
+                                            <p id="gendertext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+                                        </div>
+                                        <div class="info-group">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Email</label>
+                                            <p id="emailaddresstext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+                                        </div>
+                                        <div class="info-group">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Số điện thoại</label>
+                                            <p id="phonetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+                                        </div>
+                                        <div class="info-group">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày sinh</label>
+                                            <p id="birthdaytext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+                                        </div>
+                                        <div class="info-group" style="grid-column: span 2;">
+                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Địa chỉ</label>
+                                            <p id="addresstext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
                                         </div>
                                     </div>
-                                    <h4>THÔNG TIN KHÁC</h4>
-                                     <div class="form-box">
-                                        
-                                         <div class="form-comf-text" style="width: 50%">
-                                                <label for="identityCardtext" class="form-label">CCCD/CMND</label>
-                                                <p id="identityCardtext"></p>
-                                            </div>
-                                            <div class="form-comf-text" style="width: 25%">
-                                                <label for="issuedontext" class="form-label">Ngày cấp</label>
-                                                <p id="issuedontext"> </p>
-                                            </div>
-                                            <div class="form-comf-text" style="width: 25%">
-                                                <label for="expdatetext" class="form-label">Ngày hết hạn</label>
-                                                <p id="expdatetext"> </p>
-                                            </div>                                                                      
+                                    <h4 style="margin-top: 25px;">THÔNG TIN KHÁC</h4>
+                                     <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                         <div class="info-group" style="grid-column: span 2;">
+                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Số CCCD/CMND</label>
+                                             <p id="identityCardtext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+                                         </div>
+                                         <div class="info-group">
+                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày cấp</label>
+                                             <p id="issuedontext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+                                         </div>
+                                         <div class="info-group">
+                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày hết hạn</label>
+                                             <p id="expdatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+                                         </div>                                                                      
                                     </div>
                       
                                     
+                                    <h4>MÃ GIẢM GIÁ</h4>
+                                    <div class="form-box" style="padding: 12px 16px; background: #f9f9f9; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 12px;">
+                                        <div style="display: flex; gap: 10px; align-items: center; width: 100%;">
+                                            <input type="text" id="voucher-code-input" placeholder="Nhập mã voucher..."
+                                                   style="flex:1; padding: 10px 14px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none;"
+                                                   oninput="document.getElementById('voucher-msg').textContent=''; resetVoucher();" />
+                                            <button type="button" id="apply-voucher-btn"
+                                                    onclick="applyVoucher()"
+                                                    style="padding: 10px 20px; background: linear-gradient(135deg, #b59349 0%, #8c6f32 100%); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap;">
+                                                Áp dụng
+                                            </button>
+                                        </div>
+                                        <div id="voucher-msg" style="margin-top: 8px; font-size: 13px;"></div>
+                                        <input type="hidden" id="applied-voucher-id" value="0" />
+                                        <input type="hidden" id="applied-discount" value="0" />
+                                    </div>
+
                                     <h4>TỔNG TIỀN</h4>
                                     <div class="form-box-total" id="form-box-total">
 
@@ -2349,7 +2387,7 @@
                                     <div class="form-check">
                                         <div class="checkbox-container">
                                             <input type="checkbox" id="daily-checkbox-term">
-                                            <label>Đồng ý<a href="policies.jsp" target="_blank"> điều khoản dịch vụ</a></label>
+                                            <label>Đồng ý <a href="policies.jsp" target="_blank" style="color: #b59349; text-decoration: underline; font-weight: 600;">điều khoản dịch vụ</a></label>
                                         </div>
                                     </div>
                                 </div>
@@ -2424,6 +2462,32 @@
 
 
                 var form = $("#signup-form");
+                
+                $.validator.addMethod("minAdvanceTime", function(value, element) {
+                    if (!value) return true;
+                    var dateStr = $("#pickupdate").val();
+                    if (!dateStr) return true;
+                    
+                    var pickupDateTime = new Date(dateStr + "T" + value);
+                    var minTime = new Date();
+                    minTime.setHours(minTime.getHours() + 1);
+                    minTime.setMinutes(minTime.getMinutes() - 5); // 5 min grace period
+                    
+                    return pickupDateTime >= minTime;
+                }, "Vui lòng đặt xe trước 1 tiếng");
+
+                $.validator.addMethod("businessHours", function(value, element) {
+                    if (!value) return true;
+                    var parts = value.split(':');
+                    if (parts.length < 2) return true;
+                    var hour = parseInt(parts[0], 10);
+                    var minute = parseInt(parts[1], 10);
+                    if (hour < 7 || hour > 23 || (hour === 23 && minute > 0)) {
+                        return false;
+                    }
+                    return true;
+                }, "Chỉ nhận/trả xe trong giờ hoạt động (07:00 - 23:00)");
+
                 form.validate({
                     errorPlacement: function errorPlacement(error, element) {
                         element.before(error);
@@ -2431,6 +2495,13 @@
                     rules: {
                         email: {
                             email: true
+                        },
+                        pickuptime: {
+                            businessHours: true,
+                            minAdvanceTime: true
+                        },
+                        returntime: {
+                            businessHours: true
                         }
                     },
                     onfocusout: function (element) {
@@ -2524,13 +2595,13 @@
                             
                         if(currentIndex === 0){
                             nextButton.style.pointerEvents = 'auto';
-                            nextButton.style.color = 'white';
-                            nextButton.style.background = 'linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%)';
+                            nextButton.style.color = '';
+                            nextButton.style.background = ''; nextButton.style.opacity = '1';
                         }
                         if (currentIndex === 1) {
 //                            nextButton.style.pointerEvents = 'none';
-//                            nextButton.style.background = '#e8e8e8';
-//                            nextButton.style.color = '#999';
+//                            nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+//                            nextButton.style.color = '';
                             
                             toggleBikeNextButton();
                             changePrice();
@@ -2613,14 +2684,14 @@
                         if (currentIndex === 3) {
                             validateForm();
 //                            nextButton.style.pointerEvents = 'auto';
-//                            nextButton.style.color = 'white';
-//                            nextButton.style.background = 'linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%)';
+//                            nextButton.style.color = '';
+//                            nextButton.style.background = ''; nextButton.style.opacity = '1';
                         }
                         
                         if (currentIndex === 2) {
                             nextButton.style.pointerEvents = 'auto';
-                            nextButton.style.color = 'white';
-                            nextButton.style.background = 'linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%)';
+                            nextButton.style.color = '';
+                            nextButton.style.background = ''; nextButton.style.opacity = '1';
                             let sum = 0;
                             const checkboxMotorContainer = document.getElementById('motorcyclelist');
                             const selectBoxes = checkboxMotorContainer.querySelectorAll('.form-check-select');
@@ -2690,15 +2761,13 @@
                         if (currentIndex === 4) { // Bước thứ tư (index bắt đầu từ 0)
                             const checkbox = document.getElementById('daily-checkbox-term');
                             nextButton.style.pointerEvents = 'none';
-                            nextButton.style.background = '#e8e8e8';
-                            nextButton.style.color = '#999';
+                            nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+                            nextButton.style.color = '';
                             
                             // Function to toggle the next button based on the checkbox state
                             checkbox.addEventListener('change', toggleNextButton);
                             // Initial check
                             toggleNextButton();
-                             var image = document.getElementById('image').files[0]; // Lấy file ảnh
-                             console.log(image);
                             changePrice();
                             // Lấy dữ liệu đã lưu từ localStorage và thêm lại vào savedItemsContainer
                             
@@ -2838,28 +2907,30 @@
                                 // Create new div elements similar to formBoxTotal structure
                                 const itemContainer = document.createElement('div');
                                 itemContainer.classList.add('item-container');
+                                itemContainer.style.display = 'flex';
+                                itemContainer.style.justifyContent = 'space-between';
+                                itemContainer.style.alignItems = 'center';
+                                itemContainer.style.padding = '15px 0';
+                                itemContainer.style.borderBottom = '1px dashed #eaeaea';
 
-                                const formComf70 = document.createElement('div');
-                                formComf70.classList.add('form-comf-70');
-                                formComf70.innerHTML = `<h4 style="width: 65%;">` + title + `</h4>
-                                                        <h4>x` + quantityDay +  ` Ngày<h4>`;
-
-                                const formComf30 = document.createElement('div');
-                                formComf30.classList.add('form-comf-30');
-                                formComf30.innerHTML = `
-                                    <div style="width= 30%">
-                                        <p>x`+ quantity +`</p>
-                                        </div>
-                                        <div style="width= 30%">
-                                        <p>₫` + price.toLocaleString() + `</p>
-                                        </div>
-                                        <div style="width= 30%">
-                                        <h4>₫` + totalPrice.toLocaleString() + `</h4>
+                                itemContainer.innerHTML = `
+                                    <div style="flex: 2;">
+                                        <h4 style="margin: 0; font-size: 16px; color: #333;">` + title + `</h4>
                                     </div>
-                                    `;
+                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
+                                        x` + quantityDay + ` Ngày
+                                    </div>
+                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
+                                        x` + quantity + ` Xe
+                                    </div>
+                                    <div style="flex: 1; text-align: right; color: #666; font-size: 14px;">
+                                        ₫` + price.toLocaleString() + `/Ngày
+                                    </div>
+                                    <div style="flex: 1.5; text-align: right;">
+                                        <h4 style="margin: 0; font-size: 18px; color: #b59349;">₫` + totalPrice.toLocaleString() + `</h4>
+                                    </div>
+                                `;
 
-                                itemContainer.appendChild(formComf70);
-                                itemContainer.appendChild(formComf30);
                                 formBoxTotal.appendChild(itemContainer);                                  
                             });
                             
@@ -2884,54 +2955,68 @@
                                 // Tạo các thẻ div mới
                                 const itemContainer = document.createElement('div');
                                 itemContainer.classList.add('item-container');
+                                itemContainer.style.display = 'flex';
+                                itemContainer.style.justifyContent = 'space-between';
+                                itemContainer.style.alignItems = 'center';
+                                itemContainer.style.padding = '15px 0';
+                                itemContainer.style.borderBottom = '1px dashed #eaeaea';
 
-                                const formComf70 = document.createElement('div');
-                                formComf70.classList.add('form-comf-70');
-                                formComf70.innerHTML = `<h4>` + title +`</h4>`;
+                                itemContainer.innerHTML = `
+                                    <div style="flex: 2;">
+                                        <h4 style="margin: 0; font-size: 16px; color: #333;">` + title + `</h4>
+                                    </div>
+                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
+                                        x` + quantity + ` Cái
+                                    </div>
+                                    <div style="flex: 1; text-align: right; color: #666; font-size: 14px;">
+                                        ` + priceLabel + `
+                                    </div>
+                                    <div style="flex: 1.5; text-align: right;">
+                                        <h4 style="margin: 0; font-size: 18px; color: #b59349;">₫` + totalPrice.toLocaleString() + `</h4>
+                                    </div>
+                                `;
 
-                                const formComf30 = document.createElement('div');
-                                formComf30.classList.add('form-comf-30');
-                                formComf30.innerHTML = `
-                                    <div style="width= 30%">
-                                    <p>x`+ quantity +`</p>
-                                    </div>
-                                    <div style="width= 30%">
-                                    <p>` + priceLabel + `</p>
-                                    </div>
-                                    <div style="width= 30%">
-                                    <h4>₫` + totalPrice.toLocaleString() + `</h4>
-                                    </div>
-                                    `;
-
-                                itemContainer.appendChild(formComf70);
-                                itemContainer.appendChild(formComf30);
                                 formBoxTotal.appendChild(itemContainer);
                                 
                             });
                             // Tạo thẻ div item-total và thêm vào cuối savedItemsContainer
                             const itemTotalContainer = document.createElement('div');
                             itemTotalContainer.classList.add('item-total');
-                            itemTotalContainer.innerHTML = `
-                                <h4>Tổng :</h4>
-                                <h2 id="dataInput">₫`+ totalAmount.toLocaleString() +`</h2>
-                                `;
-                            formBoxTotal.appendChild(itemTotalContainer);
+                            itemTotalContainer.style.paddingTop = '20px';
+                            itemTotalContainer.style.display = 'flex';
+                            itemTotalContainer.style.flexDirection = 'column';
+                            itemTotalContainer.style.alignItems = 'flex-end';
 
-                           
-                            
-                             
+                            // Apply voucher discount if any
+                            const appliedDiscount = parseInt(document.getElementById('applied-discount').value) || 0;
+                            const finalAmount = Math.max(0, totalAmount - appliedDiscount);
+
+                            let discountHtml = '';
+                            if (appliedDiscount > 0) {
+                                discountHtml = `<div style="display:flex; justify-content:space-between; width: 100%; color:#16a34a; font-size:15px; margin-bottom:12px; font-weight: 600;">
+                                    <span>🎉 Giảm giá voucher:</span>
+                                    <span>-₫${appliedDiscount.toLocaleString()}</span>
+                                </div>`;
+                            }
+
+                            itemTotalContainer.innerHTML = discountHtml +
+                                `<div style="display:flex; justify-content:space-between; width: 100%; align-items: center;">
+                                    <h4 style="margin: 0; font-size: 18px; color: #333;">Tổng thanh toán:</h4>
+                                    <h2 id="dataInput" style="margin: 0; font-size: 26px; color: #b59349; font-weight: 700;">₫`+ finalAmount.toLocaleString() +`</h2>
+                                </div>`;
+                            formBoxTotal.appendChild(itemTotalContainer);
                         }
 
                         function toggleNextButton() {
                                const checkbox =document.getElementById('daily-checkbox-term');
                                if (checkbox.checked) {
                                    nextButton.style.pointerEvents = 'auto';
-                                   nextButton.style.color = 'white';
-                                   nextButton.style.background = 'linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%)';
+                                   nextButton.style.color = '';
+                                   nextButton.style.background = ''; nextButton.style.opacity = '1';
                                } else {
                                    nextButton.style.pointerEvents = 'none';
-                                   nextButton.style.background = '#e8e8e8';
-                                   nextButton.style.color = '#999';
+                                   nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+                                   nextButton.style.color = '';
                                }
                         }
                         
@@ -3034,7 +3119,7 @@
                 const returndate = requiredFields[2];
                 // Set the min attribute for pickupdate
                 const today = new Date();
-                today.setDate(today.getDate() + 1); // Minimum pick-up date is tomorrow
+                // today.setDate(today.getDate() + 1); // Minimum pick-up date is tomorrow
                 pickupdate.min = formatDate(today);
                 returndate.min = formatDate(today);
                 
@@ -3074,12 +3159,12 @@
                     const allFieldsFilled = requiredFields.every(field => field.value.trim() !== '');
                     if (allFieldsFilled) {
                         nextButton.style.pointerEvents = 'auto';
-                        nextButton.style.color = 'white';
-                        nextButton.style.background = 'linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%)';
+                        nextButton.style.color = '';
+                        nextButton.style.background = ''; nextButton.style.opacity = '1';
                     } else {
                         nextButton.style.pointerEvents = 'none';
-                        nextButton.style.background = '#e8e8e8';
-                        nextButton.style.color = '#999';
+                        nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+                        nextButton.style.color = '';
 
                          const currentStepIndex = 1;
                          const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
@@ -3109,10 +3194,20 @@
                     fileInput.addEventListener('change', function(event) {
                         const file = event.target.files[0];
                         const wrapper = fileInput.closest('.upload-card-wrapper');
+                        const card = wrapper.querySelector('.upload-card');
+                        const cardTitle = card ? card.querySelector('.upload-title') : null;
+                        const cardSubtitle = card ? card.querySelector('.upload-subtitle') : null;
+                        const cardIcon = card ? card.querySelector('i') : null;
                         const dynamicPreviewContainer = wrapper.querySelector('.image-preview-container:not(.existing-image)');
                         const existingPreviewContainer = wrapper.querySelector('.existing-image');
-                        
+
                         if (file) {
+                            // Mark card as uploaded (green state)
+                            if (card) card.classList.add('uploaded');
+                            if (cardIcon) { cardIcon.className = 'bi bi-check-circle-fill'; }
+                            if (cardTitle) cardTitle.textContent = '✓ Đã chọn: ' + file.name.substring(0, 20) + (file.name.length > 20 ? '...' : '');
+                            if (cardSubtitle) cardSubtitle.textContent = 'Nhấn để thay đổi ảnh';
+
                             const reader = new FileReader();
                             reader.onload = function(e) {
                                 if (dynamicPreviewContainer) {
@@ -3121,17 +3216,16 @@
                                     dynamicPreviewContainer.style.display = 'flex';
                                 }
                                 if (existingPreviewContainer) {
-                                    existingPreviewContainer.style.display = 'none'; // Hide existing image
+                                    existingPreviewContainer.style.display = 'none';
                                 }
                             };
                             reader.readAsDataURL(file);
                         } else {
-                            if (dynamicPreviewContainer) {
-                                dynamicPreviewContainer.style.display = 'none';
-                            }
-                            if (existingPreviewContainer) {
-                                existingPreviewContainer.style.display = 'flex'; // Show existing image again if selection is cancelled
-                            }
+                            // Reset card state
+                            if (card) card.classList.remove('uploaded');
+                            if (cardIcon) { cardIcon.className = fileInput.name === 'imageFront' ? 'bi bi-person-vcard' : 'bi bi-credit-card-2-back'; }
+                            if (dynamicPreviewContainer) dynamicPreviewContainer.style.display = 'none';
+                            if (existingPreviewContainer) existingPreviewContainer.style.display = 'flex';
                         }
                     });
                 });
@@ -3203,13 +3297,13 @@
                 if (allFieldsFilled && identityCardValid && filesValid) {
                     nextButton.disabled = false;
                     nextButton.style.pointerEvents = 'auto';
-                    nextButton.style.color = 'white';
-                    nextButton.style.background = 'linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%)';
+                    nextButton.style.color = '';
+                    nextButton.style.background = ''; nextButton.style.opacity = '1';
                 } else {
                     nextButton.disabled = true;
                     nextButton.style.pointerEvents = 'none';
-                    nextButton.style.background = '#e8e8e8';
-                    nextButton.style.color = '#999';
+                    nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+                    nextButton.style.color = '';
                     
                     const currentStepIndex = 3;
                     const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
@@ -3238,8 +3332,8 @@
                 // Nếu có ít nhất một select box đã chọn, kích hoạt nút "Next"
                 if (anySelected) {
                     nextButton.style.pointerEvents = 'auto';
-                    nextButton.style.color = 'white';
-                    nextButton.style.background = 'linear-gradient(243.4deg, rgb(2, 184, 175) 13%, rgb(4, 111, 212) 98%)';
+                    nextButton.style.color = '';
+                    nextButton.style.background = ''; nextButton.style.opacity = '1';
                     const checkboxContainer = document.getElementById('protection');
                     // Lấy tất cả các checkbox trong div
                     const checkboxes = checkboxContainer.querySelectorAll('.form-check-select');
@@ -3254,8 +3348,8 @@
                     
                 } else {
                     nextButton.style.pointerEvents = 'none';
-                    nextButton.style.background = '#e8e8e8';
-                    nextButton.style.color = '#999';
+                    nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+                    nextButton.style.color = '';
 
                      const currentStepIndex = 1;
                      const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
@@ -3448,7 +3542,8 @@
                 accessories: accessoriesData,
                 total : total,
                 amount: dataReturn.amount,
-                paymenttime: dataReturn.time              
+                paymenttime: dataReturn.time,
+                voucherId: document.getElementById('applied-voucher-id').value || '0'
             };
             
              // Convert object to JSON and append to formData
@@ -3492,11 +3587,126 @@
         
        
 
+        // ===== VOUCHER FUNCTIONS =====
+        function applyVoucher() {
+            const code = document.getElementById('voucher-code-input').value.trim();
+            const msgEl = document.getElementById('voucher-msg');
+            if (!code) {
+                msgEl.style.color = '#dc2626';
+                msgEl.textContent = 'Vui lòng nhập mã voucher';
+                return;
+            }
+            msgEl.style.color = '#6b7280';
+            msgEl.textContent = 'Đang kiểm tra...';
+
+            fetch('applyVoucher', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'code=' + encodeURIComponent(code)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.valid) {
+                    document.getElementById('applied-voucher-id').value = data.voucherId;
+                    document.getElementById('applied-discount').value = data.discount;
+                    msgEl.style.color = '#16a34a';
+                    msgEl.textContent = '✓ Áp dụng thành công! Giảm ₫' + Number(data.discount).toLocaleString('vi-VN')
+                        + (data.description ? ' — ' + data.description : '');
+                    document.getElementById('apply-voucher-btn').textContent = 'Đã áp dụng';
+                    document.getElementById('apply-voucher-btn').style.background = '#16a34a';
+                    // Refresh total display
+                    const formBoxTotal = document.getElementById('form-box-total');
+                    if (formBoxTotal) { formBoxTotal.dispatchEvent(new Event('refresh')); }
+                    // Re-trigger total calculation by re-rendering
+                    const event4 = new CustomEvent('recalcTotal');
+                    document.dispatchEvent(event4);
+                } else {
+                    msgEl.style.color = '#dc2626';
+                    msgEl.textContent = '✗ ' + data.message;
+                    resetVoucher();
+                }
+            })
+            .catch(() => {
+                msgEl.style.color = '#dc2626';
+                msgEl.textContent = 'Lỗi kết nối, vui lòng thử lại';
+            });
+        }
+
+        function resetVoucher() {
+            document.getElementById('applied-voucher-id').value = '0';
+            document.getElementById('applied-discount').value = '0';
+            const btn = document.getElementById('apply-voucher-btn');
+            if (btn) {
+                btn.textContent = 'Áp dụng';
+                btn.style.background = 'linear-gradient(135deg, #02b8af, #046fd4)';
+            }
+        }
         </script>
         <iframe id="myI" src="vnpay_return.jsp" style="width: 100%; height: 1000px; display:none;"></iframe>
 <!--        <link href="https://pay.vnpay.vn/lib/vnpay/vnpay.css" rel="stylesheet" />
         <script src="https://pay.vnpay.vn/lib/vnpay/vnpay.min.js"></script>-->
          
+        <!-- Pre-fill from hero booking widget -->
+        <script>
+        (function() {
+            try {
+                var startDate = sessionStorage.getItem('hs_startDate');
+                var endDate   = sessionStorage.getItem('hs_endDate');
+                var pickup    = sessionStorage.getItem('hs_pickup');
+                var returnL   = sessionStorage.getItem('hs_returnLoc');
+                if (!startDate) return;
+
+                // Fill date fields (split datetime-local → date + time)
+                function splitDT(dtStr) {
+                    if (!dtStr) return {date:'', time:''};
+                    var parts = dtStr.split('T');
+                    return { date: parts[0] || '', time: parts[1] ? parts[1].substring(0,5) : '' };
+                }
+                var sd = splitDT(startDate);
+                var ed = splitDT(endDate);
+
+                var pickupDateEl  = document.getElementById('pickupdate');
+                var pickupTimeEl  = document.getElementById('pickuptime');
+                var returnDateEl  = document.getElementById('returndate');
+                var returnTimeEl  = document.getElementById('returntime');
+                var pickupLocEl   = document.getElementById('pickuplocation');
+                var returnLocEl   = document.getElementById('returnlocation');
+
+                if (pickupDateEl && sd.date) pickupDateEl.value = sd.date;
+                if (pickupTimeEl && sd.time) pickupTimeEl.value = sd.time;
+                if (returnDateEl && ed.date) returnDateEl.value = ed.date;
+                if (returnTimeEl && ed.time) returnTimeEl.value = ed.time;
+
+                // Set location selects (match value or fallback to last option)
+                function setSelectValue(sel, val) {
+                    if (!sel || !val) return;
+                    for (var i = 0; i < sel.options.length; i++) {
+                        if (sel.options[i].value.toLowerCase().indexOf(val.substring(0,8).toLowerCase()) >= 0) {
+                            sel.selectedIndex = i; return;
+                        }
+                    }
+                }
+                setSelectValue(pickupLocEl, pickup);
+                setSelectValue(returnLocEl, returnL);
+
+                // Clear so it doesn't re-apply on back navigation
+                sessionStorage.removeItem('hs_startDate');
+                sessionStorage.removeItem('hs_endDate');
+                sessionStorage.removeItem('hs_pickup');
+                sessionStorage.removeItem('hs_returnLoc');
+
+                // Auto-advance logic has been removed as per user request
+                // setTimeout(function() {
+                //     var nextBtn = document.querySelector('a[href="#next"]') ||
+                //                   document.querySelector('.actions a[href*="next"]') ||
+                //                   document.querySelector('.wizard-next-btn') ||
+                //                   document.querySelector('[data-action="next"]');
+                //     if (nextBtn) nextBtn.click();
+                // }, 800);
+
+            } catch(ex) {}
+        })();
+        </script>
     </body>
 
 </html>

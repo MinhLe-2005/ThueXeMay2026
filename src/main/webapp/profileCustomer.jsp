@@ -115,53 +115,9 @@
     <jsp:include page="/includes/customer/navbar.jsp" />
     <body class="  font-body " data-framework="tailwind">
         <div class="builder-container builder-container-preview font-body">
-            <aside class="max-w-62.5 ease-nav-brand z-990 absolute inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent text-slate-500"
-                   id="sidenav-main">
-                <hr class="h-px mt-0 bg-transparent bg-gradient-horizontal-dark">
-
-                <div style="margin-top: 6rem" class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
-                    <ul class="flex flex-col pl-0 mb-0">
-                        <li class="w-full">
-                            <div class="sidebar-heading">Quản lý thuê xe</div>
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item" href="transaction">
-                                <div class="icon-box">
-                                    <i class="fas fa-credit-card text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Giao dịch gần đây</span>
-                            </a> 
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item" href="bookingHistory?status=all">
-                                <div class="icon-box">
-                                    <i class="fas fa-history text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Lịch sử thuê xe</span>
-                            </a> 
-                        </li>
-                        <li class="w-full">
-                            <div class="sidebar-heading">Quản lý tài khoản</div>
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item active" href="profileCustomer.jsp">
-                                <div class="icon-box">
-                                    <i class="fas fa-user-circle text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Thông tin cá nhân</span>
-                            </a> 
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item" href="settingsProfile.jsp">
-                                <div class="icon-box">
-                                    <i class="fas fa-shield-alt text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Mật khẩu và bảo mật</span>
-                            </a> 
-                        </li>
-                    </ul>
-                </div>
-            </aside>
+            <jsp:include page="/includes/customer/sidebarProfile.jsp">
+                <jsp:param name="activePage" value="profile"/>
+            </jsp:include>
             <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200"
                  id="panel">
                 <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
@@ -187,10 +143,18 @@
                                                 <h3 class="text-2xl font-bold text-slate-800">${account.firstName} ${account.lastName}</h3>
                                                 <p class="text-slate-500 font-medium mt-1">@${account.userName} <span class="mx-2">|</span> Khách hàng</p>
                                                 <c:if test="${not empty requestScope.mess}">
-                                                    <p class="text-emerald-500 text-sm mt-2"><i class="fas fa-check-circle mr-1"></i> ${mess}</p>
+                                                    <script>
+                                                        document.addEventListener('DOMContentLoaded', () => {
+                                                            setTimeout(() => showToast('${mess}'), 100);
+                                                        });
+                                                    </script>
                                                 </c:if>
                                                 <c:if test="${not empty requestScope.errorProfile}">
-                                                    <p class="text-rose-500 text-sm mt-2"><i class="fas fa-exclamation-circle mr-1"></i> ${requestScope.errorProfile}</p>
+                                                    <script>
+                                                        document.addEventListener('DOMContentLoaded', () => {
+                                                            setTimeout(() => showToast('${requestScope.errorProfile}', true), 100);
+                                                        });
+                                                    </script>
                                                 </c:if>
                                             </div>
 
@@ -275,13 +239,19 @@
         async=""></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-        <!-- Modal -->
-        <div id="editProfileModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-30">
+        <!-- Edit Profile Modal -->
+        <div id="editProfileModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 9999;">
             <div style="width: 56%; margin-top: 5rem" class="bg-white p-8 rounded-lg shadow-lg">
                 <h2 class="text-2xl mb-4">Chỉnh sửa thông tin</h2>
                 <form action="updateprofile" method="post" id="form-update" class="space-y-4">
                     <input hidden id="accountID" name="accountID" value="${account.accountId}">
                     <input hidden name="roleID" value="${account.roleID}">
+
+                    <!-- Error Message Container (Hidden by default) -->
+                    <div id="form-error-container" style="display: none; background-color: #fff1f2; border: 1px solid #fecdd3; color: #e11d48; padding: 0.75rem 1rem; border-radius: 0.5rem; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                        <i class="fas fa-exclamation-circle" style="font-size: 1.125rem;"></i>
+                        <span id="form-error-text" style="font-weight: 500; font-size: 0.875rem;"></span>
+                    </div>
 
                     <div class="flex flex-wrap mb-3">
                         <div class="w-full md:w-1/2 pr-2 mb-3 md:mb-0">
@@ -330,29 +300,47 @@
                             <input style="background-color: #f1f5f9; color: #64748b; cursor: not-allowed;" readonly value="${account.userName}" type="text" id="account-username" name="username" class="form-control mt-1 p-2 border border-gray-300 rounded-md w-full">
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem; border-top: 1px solid #e2e8f0; padding-top: 1.25rem;">
-                        <button type="button" id="closeModalBtn" style="background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; padding: 0.6rem 1.5rem; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; outline: none;">Quay về</button>
-                        <button type="submit" style="background-color: #2563eb; color: white; font-weight: 600; padding: 0.6rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.2s; outline: none;">Lưu thay đổi</button>
+                    
+                    <!-- Modal Footer Buttons -->
+                    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 2rem; border-top: 1px solid #f1f5f9; padding-top: 1.5rem;">
+                        <button type="button" id="closeModalBtn" style="padding: 0.625rem 1.5rem; background-color: #f1f5f9; color: #334155; border-radius: 0.75rem; font-weight: 700; font-size: 0.875rem; border: none; cursor: pointer;">
+                            Quay về
+                        </button>
+                        <button type="submit" id="saveProfileBtn" style="padding: 0.625rem 1.5rem; background-color: #2563eb; color: white; border-radius: 0.75rem; font-weight: 700; font-size: 0.875rem; border: none; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                            <span id="saveProfileBtnText">Lưu thay đổi</span>
+                            <i id="saveProfileBtnSpinner" class="fas fa-spinner fa-spin" style="display: none;"></i>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
         <!--End Modal-->
 
-        <!-- Modal Xác Nhận Ảnh Đại Diện -->
-        <div id="cropImageModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden z-[9999] p-4">
-            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md z-[10000] max-h-screen flex flex-col">
+        <!-- Crop Image Modal -->
+        <div id="cropImageModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 hidden p-4" style="z-index: 9999;">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md max-h-screen flex flex-col">
                 <h3 class="text-xl font-bold mb-4 text-slate-700 text-center">Xác nhận ảnh đại diện</h3>
                 <form action="${pageContext.request.contextPath}/uploadimage" method="post" enctype="multipart/form-data" id="form-upload" class="flex flex-col flex-grow min-h-0">
                     
-                    <!-- Perfect Circular Preview Container -->
-                    <div style="display: flex; justify-content: center; align-items: center; padding: 2rem 0; background-color: #f8fafc; border-radius: 0.75rem;">
-                        <div style="width: 220px; height: 220px; border-radius: 50%; border: 4px solid #3b82f6; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2); overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #e2e8f0;">
-                            <img id="crop-image" src="" alt="Avatar Preview" style="width: 100%; height: 100%; object-fit: cover;">
+                    <!-- Image Cropper Container -->
+                    <div style="display: flex; justify-content: center; align-items: center; padding: 1rem 0;">
+                        <div style="width: 100%; height: 350px; background-color: #e2e8f0; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 0.75rem;">
+                            <img id="crop-image" src="" alt="Avatar Preview" style="max-width: 100%; display: block;">
                         </div>
                     </div>
                     
                     <p class="text-sm text-slate-500 mt-4 text-center">Ảnh của bạn sẽ hiển thị dưới dạng hình tròn trên trang cá nhân.</p>
+
+                    <!-- Zoom Controls -->
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1rem; width: 100%; padding: 0 1rem;">
+                        <button type="button" id="zoom-out" style="width: 32px; height: 32px; border-radius: 50%; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; color: #475569; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'" title="Thu nhỏ">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="range" id="zoom-slider" style="flex: 1; height: 6px; background-color: #e2e8f0; border-radius: 4px; outline: none; cursor: pointer; -webkit-appearance: none; appearance: none;" min="0" max="200" value="0">
+                        <button type="button" id="zoom-in" style="width: 32px; height: 32px; border-radius: 50%; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; color: #475569; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'" title="Phóng to">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
 
                     <!-- Footer Buttons -->
                     <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem; pt: 1rem; border-top: 1px solid #f1f5f9; gap: 0.75rem;">
@@ -488,6 +476,9 @@
         });
     </script>
     <!-- Include Cropper.js library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
     <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/chartjs.min.js"></script>
     <script src="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/js/plugins/perfect-scrollbar.min.js" async=""></script>
     <script async="" defer="" src="https://buttons.github.io/buttons.js"></script>
@@ -500,12 +491,101 @@
         #editProfileModal {
             z-index: 9998 !important;
         }
+        
+        /* Custom Cropper Styles for Circular Crop */
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 50%;
+        }
+        .cropper-modal {
+            opacity: 0.7;
+        }
+        
+        /* Custom Range Slider Thumb */
+        #zoom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+        #zoom-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
     </style>
     <script>
+        // Custom Toast Notification
+        function showToast(message, isError = false) {
+            const toast = document.createElement('div');
+            
+            // Apply inline CSS to guarantee rendering without Tailwind
+            toast.style.position = 'fixed';
+            toast.style.top = '20px';
+            toast.style.right = '20px';
+            toast.style.padding = '16px 24px';
+            toast.style.borderRadius = '12px';
+            toast.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
+            toast.style.display = 'flex';
+            toast.style.alignItems = 'center';
+            toast.style.gap = '12px';
+            toast.style.zIndex = '999999';
+            toast.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            toast.style.transform = 'translateX(150%)';
+            toast.style.opacity = '0';
+            
+            if (isError) {
+                toast.style.backgroundColor = '#fef2f2';
+                toast.style.color = '#dc2626';
+                toast.style.border = '1px solid #fecaca';
+            } else {
+                toast.style.backgroundColor = '#ecfdf5';
+                toast.style.color = '#059669';
+                toast.style.border = '1px solid #a7f3d0';
+            }
+
+            toast.innerHTML = '<i class="fas ' + (isError ? 'fa-exclamation-circle' : 'fa-check-circle') + '" style="font-size: 1.25rem;"></i><span style="font-weight: 700; font-size: 1rem;">' + message + '</span>';
+            
+            document.body.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+                toast.style.opacity = '1';
+            }, 10);
+            
+            // Animate out and remove
+            setTimeout(() => {
+                toast.style.transform = 'translateX(150%)';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Move modals to body to fix z-index stacking issues
+        document.addEventListener('DOMContentLoaded', () => {
+            const editModal = document.getElementById('editProfileModal');
+            const cropModal = document.getElementById('cropImageModal');
+            if (editModal) document.body.appendChild(editModal);
+            if (cropModal) document.body.appendChild(cropModal);
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('cropImageModal');
             const cropImage = document.getElementById('crop-image');
+            const zoomSlider = document.getElementById('zoom-slider');
+            const zoomInBtn = document.getElementById('zoom-in');
+            const zoomOutBtn = document.getElementById('zoom-out');
             let selectedFile = null;
+            let cropper = null;
 
             document.getElementById('image-upload').addEventListener('change', function (event) {
                 const files = event.target.files;
@@ -517,13 +597,34 @@
                     reader.onload = function (e) {
                         cropImage.src = e.target.result;
                         modal.classList.remove('hidden');
+                        
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        
+                        // Initialize cropper after a short delay so the image is rendered
+                        setTimeout(() => {
+                            cropper = new Cropper(cropImage, {
+                                aspectRatio: 1,
+                                viewMode: 1,
+                                dragMode: 'move',
+                                guides: false,
+                                center: false,
+                                highlight: false,
+                                cropBoxMovable: false,
+                                cropBoxResizable: false,
+                                toggleDragModeOnDblclick: false,
+                                minCropBoxWidth: 200,
+                                minCropBoxHeight: 200
+                            });
+                        }, 100);
                     };
                     reader.readAsDataURL(selectedFile);
                 }
             });
 
             document.getElementById('crop-save').addEventListener('click', function () {
-                if (!selectedFile) return;
+                if (!cropper) return;
                 
                 const saveBtn = document.getElementById('crop-save');
                 const cancelBtn = document.getElementById('crop-cancel');
@@ -536,43 +637,166 @@
                 if (btnText) btnText.classList.add('hidden');
                 if (btnSpinner) btnSpinner.classList.remove('hidden');
 
-                const id = document.getElementById("accountID").value;                       
-                const formData = new FormData();
-                formData.append('file', selectedFile);
-                formData.append('id', id);
-                
-                // Gửi dữ liệu tới servlet bằng AJAX
-                $.ajax({
-                    type: "POST",
-                    url: "uploadimage",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        alert("Cập nhật ảnh đại diện thành công!");
-                        modal.classList.add('hidden');
-                        location.reload(); // Reload the page to show the new avatar instantly
-                    },
-                    error: function(xhr, status, error) {
-                        alert("Có lỗi xảy ra khi cập nhật ảnh.");
-                        console.error("Error sending data:", error);
-                        
-                        // Reset spinner
-                        saveBtn.disabled = false;
-                        cancelBtn.disabled = false;
-                        if (btnText) btnText.classList.remove('hidden');
-                        if (btnSpinner) btnSpinner.classList.add('hidden');
-                    }
-                });
+                // Get the cropped canvas
+                cropper.getCroppedCanvas({
+                    width: 400,
+                    height: 400
+                }).toBlob(function (blob) {
+                    const id = document.getElementById("accountID").value;                       
+                    const formData = new FormData();
+                    formData.append('file', blob, 'avatar.png');
+                    formData.append('id', id);
+                    
+                    // Gửi dữ liệu tới servlet bằng AJAX
+                    $.ajax({
+                        type: "POST",
+                        url: "uploadimage",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            showToast("Cập nhật ảnh đại diện thành công!");
+                            modal.classList.add('hidden');
+                            
+                            // Update all avatars dynamically without reloading
+                            const newImgUrl = URL.createObjectURL(blob);
+                            const profileImg = document.getElementById('profile-image');
+                            if(profileImg) profileImg.src = newImgUrl;
+                            
+                            document.querySelectorAll('.mini-photo, img[alt="profile-img"]').forEach(img => {
+                                img.src = newImgUrl;
+                            });
+
+                            // Reset spinner
+                            saveBtn.disabled = false;
+                            cancelBtn.disabled = false;
+                            if (btnText) btnText.classList.remove('hidden');
+                            if (btnSpinner) btnSpinner.classList.add('hidden');
+                        },
+                        error: function(xhr, status, error) {
+                            showToast("Có lỗi xảy ra khi cập nhật ảnh.", true);
+                            console.error("Error sending data:", error);
+                            
+                            // Reset spinner
+                            saveBtn.disabled = false;
+                            cancelBtn.disabled = false;
+                            if (btnText) btnText.classList.remove('hidden');
+                            if (btnSpinner) btnSpinner.classList.add('hidden');
+                        }
+                    });
+                }, 'image/png');
             });
 
             document.getElementById('crop-cancel').addEventListener('click', function () {
                 modal.classList.add('hidden');
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
                 cropImage.src = '';
                 selectedFile = null;
                 document.getElementById('image-upload').value = '';
             });
+
+            // Zoom functionality
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', () => {
+                    if (cropper) cropper.zoom(0.1);
+                });
+            }
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', () => {
+                    if (cropper) cropper.zoom(-0.1);
+                });
+            }
+            if (zoomSlider) {
+                zoomSlider.addEventListener('input', (e) => {
+                    if (cropper) {
+                        const containerData = cropper.getContainerData();
+                        const imageData = cropper.getImageData();
+                        const minZoom = containerData.width / imageData.naturalWidth;
+                        const maxZoom = 2; // 200%
+                        const ratio = minZoom + (maxZoom - minZoom) * (parseFloat(e.target.value) / 200);
+                        cropper.zoomTo(ratio);
+                    }
+                });
+            }
+
+            cropImage.addEventListener('zoom', (e) => {
+                if (zoomSlider && cropper) {
+                    const containerData = cropper.getContainerData();
+                    const imageData = cropper.getImageData();
+                    const minZoom = containerData.width / imageData.naturalWidth;
+                    const maxZoom = 2;
+                    let percentage = ((e.detail.ratio - minZoom) / (maxZoom - minZoom)) * 200;
+                    zoomSlider.value = Math.min(Math.max(percentage, 0), 200);
+                }
+            });
+
+            // Form Update Profile AJAX
+            const formUpdate = document.getElementById('form-update');
+            if (formUpdate) {
+                formUpdate.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const saveBtn = document.getElementById('saveProfileBtn');
+                    const btnText = document.getElementById('saveProfileBtnText');
+                    const btnSpinner = document.getElementById('saveProfileBtnSpinner');
+                    const errorContainer = document.getElementById('form-error-container');
+                    const errorText = document.getElementById('form-error-text');
+                    
+                    // Show spinner
+                    saveBtn.disabled = true;
+                    btnText.style.display = 'none';
+                    btnSpinner.style.display = 'inline-block';
+                    errorContainer.style.display = 'none';
+
+                    const formData = new FormData(formUpdate);
+                    
+                    fetch('updateprofile', {
+                        method: 'POST',
+                        body: new URLSearchParams(formData), // x-www-form-urlencoded
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Reset spinner
+                        saveBtn.disabled = false;
+                        btnText.style.display = 'inline-block';
+                        btnSpinner.style.display = 'none';
+                        
+                        if (data.success) {
+                            showToast(data.message);
+                            const modal = document.getElementById('editProfileModal');
+                            if(modal) modal.classList.add('hidden');
+                            
+                            // Reload page after a short delay to see updated info
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            errorText.textContent = data.message;
+                            errorContainer.style.display = 'flex';
+                            
+                            // Optional: Scroll to error
+                            errorContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        saveBtn.disabled = false;
+                        btnText.style.display = 'inline-block';
+                        btnSpinner.style.display = 'none';
+                        
+                        errorText.textContent = 'Có lỗi xảy ra khi kết nối đến máy chủ.';
+                        errorContainer.style.display = 'flex';
+                    });
+                });
+            }
         });
+    </script>
             </div> <!-- #panel -->
         </div> <!-- .builder-container -->
     </body>

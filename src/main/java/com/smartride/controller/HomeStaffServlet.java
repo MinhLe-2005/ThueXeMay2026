@@ -6,10 +6,12 @@ package com.smartride.controller;
 
 import com.smartride.dao.BrandDAO;
 import com.smartride.dao.CategoryDAO;
+import com.smartride.dao.DashboardDAO;
 import com.smartride.dao.MotorcycleDAO;
 import com.smartride.dao.PriceListDAO;
 import com.smartride.dto.Account;
 import com.smartride.dto.Category;
+import com.smartride.dto.DashboardStatsData;
 import com.smartride.dto.Motorcycle;
 import com.smartride.dto.PriceList;
 import com.google.gson.Gson;
@@ -20,8 +22,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -67,6 +71,9 @@ public class HomeStaffServlet extends HttpServlet {
         String jsonB = gson.toJson(listB);
         request.setAttribute("categoryData", jsonCR);
         request.setAttribute("brandData", jsonB);
+        DashboardDAO dashboardDAO = DashboardDAO.getInstance();
+        DashboardStatsData dsd = dashboardDAO.getDashboardData("30days", null, null);
+        request.setAttribute("dsd", dsd);
         
         request.getRequestDispatcher("homeStaff.jsp").forward(request, response);
         

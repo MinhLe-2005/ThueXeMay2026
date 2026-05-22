@@ -15,7 +15,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý thuê xe</title>
 
-        <link rel="website icon" type="png" href="images/logo.png">
+        
 
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>

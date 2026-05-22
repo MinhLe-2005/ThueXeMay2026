@@ -35,165 +35,45 @@ public class ForgotPasswordServlet extends HttpServlet {
         String email = request.getParameter("email");
         if(dao.createToken(token, email)){
             String link = "<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
+                "<html lang=\"vi\">\n" +
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                "    <title>Reset Your Password</title>\n" +
+                "    <title>Đặt lại mật khẩu - SmartRide</title>\n" +
                 "    <style>\n" +
-                "        body {\n" +
-"            font-family: Arial, sans-serif;\n" +
-"            background-color: #f8f9fa;\n" +
-"            color: #212529;\n" +
-"            margin: 0;\n" +
-"            padding: 0;\n" +
-"            background: white;\n" +
-"        }\n" +
-"        .container {\n" +
-"            margin-top: 50px;\n" +
-"            max-width: 800px;\n" +
-"            margin: 50px auto;\n" +
-"            padding: 0 15px;\n" +
-"        }\n" +
-"        .text-center{\n" +
-"            text-align: center;\n" +
-"        }\n" +
-"        .logo {\n" +
-"            margin: 0 auto -40px;\n" +
-"        }\n" +
-"        .card {\n" +
-"            background: #fff;\n" +
-"            border-radius: 0.25rem;\n" +
-"            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);\n" +
-"            padding: 20px;\n" +
-"            margin-bottom: 20px;\n" +
-"        }\n" +
-"        .card-body {\n" +
-"            padding: 1.25rem;\n" +
-"        }\n" +
-"        .card-title {\n" +
-"            margin-bottom: 0.75rem;\n" +
-"            font-size: 1.25rem;\n" +
-"            font-weight: bold;\n" +
-"        }\n" +
-"        .reset-button {\n" +
-"            background-color: #28a745;\n" +
-"            color: white;\n" +
-"            border: none;\n" +
-"            padding: 10px 20px;\n" +
-"            font-size: 16px;\n" +
-"            cursor: pointer;\n" +
-"            display: block;\n" +
-"            margin: 20px auto;\n" +
-"            text-align: center;\n" +
-"            width: 42%;\n" +
-"            border-radius: 8px;\n" +
-"            text-decoration: none; /* Để liên kết trông giống nút */\n" +
-"        }\n" +
-"        .reset-button:hover {\n" +
-"            background-color: #218838;\n" +
-"        }\n" +
-"        a {\n" +
-"            color: #007bff;\n" +
-"            text-decoration: none;\n" +
-"            background-color: transparent;\n" +
-"        }\n" +
-"        a:hover {\n" +
-"            color: #0056b3;\n" +
-"            text-decoration: underline;\n" +
-"        }" +
+                "        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f5f7; color: #1a1a1a; margin: 0; padding: 40px 0; }\n" +
+                "        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); overflow: hidden; }\n" +
+                "        .header { background: #1a1a1a; padding: 30px 20px; text-align: center; border-bottom: 3px solid #b59349; }\n" +
+                "        .header-logo { color: #b59349; font-size: 28px; font-weight: 800; margin: 0; letter-spacing: -0.5px; }\n" +
+                "        .content { padding: 40px 30px; text-align: center; }\n" +
+                "        .title { font-size: 22px; font-weight: bold; margin-bottom: 20px; color: #1a1a1a; }\n" +
+                "        .message { font-size: 16px; line-height: 1.6; color: #4a4a4a; margin-bottom: 30px; }\n" +
+                "        .btn-reset { display: inline-block; background-color: #b59349; color: #ffffff !important; font-weight: bold; font-size: 16px; text-decoration: none; padding: 14px 32px; border-radius: 8px; margin-bottom: 30px; }\n" +
+                "        .footer { padding: 20px 30px; background-color: #f9f9f9; text-align: center; font-size: 13px; color: #888888; border-top: 1px solid #eeeeee; }\n" +
+                "        .footer a { color: #b59349; text-decoration: none; }\n" +
                 "    </style>\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "    <div class=\"container text-center\">\n" +
-                "        <img src=\"https://i.imgur.com/hi3iwTJ.png\" alt=\"Logo\" class=\"logo\" style=\"width: 12%;\">\n" +
-                "        <div class=\"card mt-4\" style=\"width: 60%;margin: 0 auto; box-shadow: 0 0.125rem 1.25rem rgba(0, 0, 0, 0.075);\">\n" +
-                "            <div class=\"card-body\">\n" +
-                "                <h3 class=\"card-title\">Đặt lại mật khẩu ColorBike</h3>\n" +
-                "                <p>Chúng tôi nghe nói rằng bạn đã mất mật khẩu. Rất tiếc về điều đó!</p>\n" +
-                "                <p>Nhưng đừng lo lắng! Bạn có thể sử dụng nút dưới đây để đặt lại mật khẩu của mình:</p>\n" +
-                "                <a href='http://localhost:8080/MotorcyleHiringProject/verify?token=" + token + "'class=\"reset-button\">Đặt lại mật khẩu của bạn</a>\n" +
-                "                <p>Nếu bạn không sử dụng liên kết này trong vòng 5 phút, nó sẽ hết hạn. Để nhận liên kết đặt lại mật khẩu mới, hãy truy cập: <a href=\"http://localhost:9999/MotorcyleHiringProject/forgotpassword.jsp\">forgot password</a></p>\n" +
-                "                <p>Cảm ơn,<br>Nhóm hỗ trợ ColorBike</p>\n" +
-                "            </div>\n" +
+                "    <div class=\"container\">\n" +
+                "        <div class=\"header\">\n" +
+                "            <h1 class=\"header-logo\">SmartRide</h1>\n" +
                 "        </div>\n" +
-                "        <p class=\"mt-3\">Bạn nhận được email này vì đã có yêu cầu đặt lại mật khẩu cho tài khoản của bạn.</p>\n" +
+                "        <div class=\"content\">\n" +
+                "            <h2 class=\"title\">Yêu cầu đặt lại mật khẩu</h2>\n" +
+                "            <p class=\"message\">Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn tại <strong>SmartRide</strong>. Nếu đây là bạn, vui lòng nhấn vào nút bên dưới để tiến hành đổi mật khẩu mới.</p>\n" +
+                "            <a href='http://localhost:8080/MotorcyleHiringProject/verify?token=" + token + "' class=\"btn-reset\">Đặt lại mật khẩu</a>\n" +
+                "            <p class=\"message\" style=\"font-size: 14px; margin-bottom: 0;\">Liên kết này sẽ hết hạn sau <strong>5 phút</strong>.<br>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>\n" +
+                "        </div>\n" +
+                "        <div class=\"footer\">\n" +
+                "            <p>Đội ngũ hỗ trợ khách hàng SmartRide<br>\n" +
+                "            <a href=\"http://localhost:8080/MotorcyleHiringProject/home\">Truy cập trang chủ</a> | <a href=\"http://localhost:8080/MotorcyleHiringProject/forgotPassword.jsp\">Yêu cầu link mới</a></p>\n" +
+                "        </div>\n" +
                 "    </div>\n" +
                 "</body>\n" +
                 "</html>";
             SendEmail.sendVerificationEmail(email, link);
-            
-            
-            
-            
-            
-            out.println("<!DOCTYPE html>\n" +
-                    "<html lang=\"en\">\n" +
-                    "<head>\n" +
-                    "    <meta charset=\"UTF-8\">\n" +
-                    "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                    "    <title>Reset Password</title>\n" +
-                    "    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n" +
-                    "    <style>\n" +
-                    "        body {\n" +
-                    "            background-color: #f8f9fa;\n" +
-                    "        }\n" +
-                    "        .container {\n" +
-                    "            max-width: 500px;\n" +
-                    "            margin-top: 50px;\n" +
-                    "        }\n" +
-                    "        .form-container {\n" +
-                    "            background-color: #ffffff;\n" +
-                    "            padding: 20px;\n" +
-                    "            border-radius: 10px;\n" +
-                    "            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);\n" +
-                    "        }\n" +
-                    "        .form-container img {\n" +
-                    "            display: block;\n" +
-                    "            margin: 0 auto 20px;\n" +
-                    "             width: 22%;\n" +
-                    "        }\n" +
-                    "        .form-container h2 {\n" +
-                    "            font-size: 16px;\n" +
-                    "            color: #6c757d;\n" +
-                    "            text-align: center;\n" +
-                    "            margin-bottom: 20px;\n" +
-                    "        }\n" +
-                    "        .form-container .btn {\n" +
-                    "            width: 100%;\n" +
-                    "        }\n" +
-                    "        .form-container .links {\n" +
-                    "            display: flex;\n" +
-                    "            justify-content: center;\n" +
-                    "            margin-top: 20px;\n" +
-                    "        }\n" +
-                    "        .form-container .links a {\n" +
-                    "            color: #6c757d;\n" +
-                    "            text-decoration: none;\n" +
-                    "            margin: 0 10px;\n" +
-                    "        }\n" +
-                    "        .form-container .links a:hover {\n" +
-                    "            text-decoration: underline;\n" +
-                    "        }\n" +
-                    "    </style>\n" +
-                    "</head>\n" +
-                    "<body>\n" +
-                    "    <div class=\"container\">\n" +
-                    "        <div class=\"form-container\">\n" +
-                    "            <div class=\"text-center\">\n" +
-                    "                <img src=\"images/logo.png\" width=\"auto\" height=\"52\">\n" +
-                    "            </div>\n" +
-                    "            <h2>Kiểm tra email của bạn để nhận liên kết đặt lại mật khẩu. Nếu không thấy email trong vài phút, hãy kiểm tra thư mục spam của bạn.</h2>\n" +
-                    "            <div class=\"d-grid\">\n" +
-                    "                <button class=\"btn btn-primary\" type=\"button\" onclick=\"location.href='login.jsp'\">Trở về đăng nhập</button>\n" +
-                    "            </div>\n" +          
-                    "        </div>\n" +
-                    "    </div>\n" +
-                    "    <script src=\"https://code.jquery.com/jquery-3.5.1.slim.min.js\"></script>\n" +
-                    "    <script src=\"https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js\"></script>\n" +
-                    "    <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js\"></script>\n" +
-                    "</body>\n" +
-                    "</html>");
+            request.setAttribute("message", "Kiểm tra email của bạn để nhận liên kết đặt lại mật khẩu. Nếu không thấy email trong vài phút, hãy kiểm tra thư mục spam của bạn.");
+            request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
         }
         else{
             request.setAttribute("message", "Email không tồn tại");

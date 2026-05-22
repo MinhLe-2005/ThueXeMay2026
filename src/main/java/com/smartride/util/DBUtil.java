@@ -21,7 +21,7 @@ public class DBUtil {
     // KẾT NỐI SUPABASE (PostgreSQL)
     // =============================================
     // Transaction Pooler - IPv4 compatible
-    private static final String DB_URL  = "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?sslmode=require";
+    private static final String DB_URL = "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?sslmode=require";
     private static final String DB_USER = "postgres.zfvgigfjmbtgwgirdify";
     private static final String DB_PASS = "Bimdiendie1@";
 
@@ -39,16 +39,13 @@ public class DBUtil {
     public static Connection makeConnection() {
         try {
             Connection raw = getRawConnection();
-            if (raw == null) {
-                return null;
-            }
-            
-            // Return a dynamic proxy connection that transparently reconnects if stale/closed
+
+            // Return a dynamic proxy connection that transparently reconnects if
+            // stale/closed/null
             return (Connection) Proxy.newProxyInstance(
-                DBUtil.class.getClassLoader(),
-                new Class<?>[]{Connection.class},
-                new ConnectionProxyHandler(raw)
-            );
+                    DBUtil.class.getClassLoader(),
+                    new Class<?>[] { Connection.class },
+                    new ConnectionProxyHandler(raw));
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -70,7 +67,7 @@ public class DBUtil {
                 }
                 return null;
             }
-            
+
             // Auto-reconnect if the connection was closed or has become stale
             try {
                 if (realConn == null || realConn.isClosed() || !realConn.isValid(2)) {
@@ -86,6 +83,10 @@ public class DBUtil {
                 if (newConn != null) {
                     realConn = newConn;
                 }
+            }
+
+            if (realConn == null) {
+                throw new SQLException("Database connection is currently unavailable.");
             }
 
             try {

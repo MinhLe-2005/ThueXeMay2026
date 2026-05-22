@@ -2,247 +2,414 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <link rel="icon" type="image/png" href="images/logo.png"> <!-- Fixed the typo in rel attribute -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="utf-8">
-        <title>FAQs</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"> <!-- Thư viện animate.css -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css"/>
-        <!-- Thêm thư viện AOS (Animate on Scroll) để tăng hiệu ứng animation khi cuộn -->
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-        <style type="text/css">
-            body {
-                background-color: #fbfaf8 !important;
-                color: #2b2824 !important;
-                font-family: 'Plus Jakarta Sans', sans-serif;
-            }
-            .faq_area {
-                padding-top: 120px;
-                padding-bottom: 100px;
-                position: relative;
-                z-index: 1;
-                background: #fbfaf8 !important;
-            }
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Câu Hỏi Thường Gặp - SmartRide</title>
+    <meta name="description" content="Giải đáp mọi thắc mắc về dịch vụ thuê xe máy SmartRide – giá cả, thủ tục, giao nhận, chất lượng xe và an toàn.">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <jsp:include page="/includes/customer/header.jsp" />
+    <style>
+        body {
+            background: #f9f8f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #2b2824;
+        }
 
-            .section-title h2 {
-                color: #1a1816 !important;
-                font-family: 'Playfair Display', Georgia, serif !important;
-                font-weight: 800;
-                letter-spacing: 2px;
-                text-transform: uppercase;
-                margin-top: 10px;
-            }
-            .section-title span {
-                color: rgba(181, 147, 73, 0.08) !important;
-                font-family: 'Playfair Display', Georgia, serif !important;
-                font-weight: 800;
-                font-size: 52px;
-                text-transform: uppercase;
-                letter-spacing: 4px;
-                display: block;
-            }
-            .section-title p {
-                color: #666666 !important;
-            }
+        /* ── Hero Banner ── */
+        .faq-hero {
+            background: linear-gradient(135deg, #1a1816 0%, #2d2520 60%, #3a2e1e 100%);
+            padding: 130px 0 70px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .faq-hero::before {
+            content: 'FAQ';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 220px;
+            font-weight: 900;
+            color: rgba(181,147,73,0.04);
+            pointer-events: none;
+            white-space: nowrap;
+            font-family: 'Poppins', sans-serif;
+        }
+        .faq-hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .faq-hero h1 span {
+            background: linear-gradient(135deg, #b59349, #d4a843);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .faq-hero p {
+            color: rgba(255,255,255,0.65);
+            font-size: 1.1rem;
+            max-width: 540px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        .faq-search-bar {
+            position: relative;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .faq-search-bar input {
+            width: 100%;
+            padding: 16px 55px 16px 24px;
+            border-radius: 50px;
+            border: none;
+            font-size: 15px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            outline: none;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .faq-search-bar i {
+            position: absolute;
+            right: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #b59349;
+            font-size: 18px;
+        }
 
-            .faq-accordian .card {
-                background: #ffffff !important;
-                border: 1px solid #eae6df !important;
-                border-radius: 12px !important;
-                margin-bottom: 15px;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
-                transition: all 0.3s ease;
-                overflow: hidden;
-            }
-            .faq-accordian .card:hover {
-                border-color: #b59349 !important;
-                box-shadow: 0 10px 40px rgba(181, 147, 73, 0.08);
-            }
+        /* ── Main Section ── */
+        .faq-section {
+            padding: 70px 0 100px;
+        }
 
-            .faq-accordian .card-header {
-                background: transparent !important;
-                padding: 0;
-                border-bottom: none !important;
-            }
+        /* ── Category Block ── */
+        .faq-category {
+            margin-bottom: 56px;
+        }
+        .faq-category-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .faq-category-header h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            color: #1a1816;
+            white-space: nowrap;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .faq-dashed {
+            flex: 1;
+            border: none;
+            border-top: 2px dashed rgba(181,147,73,0.35);
+            margin: 0;
+        }
 
-            .faq-accordian .card-header h6 {
-                cursor: pointer;
-                padding: 1.75rem 2rem;
-                color: #1a1816 !important;
-                display: flex;
-                align-items: center;
-                font-size: 16px;
-                font-weight: 600;
-                margin: 0;
-            }
+        /* ── FAQ Grid (2 columns) ── */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 40px;
+        }
+        @media (max-width: 768px) {
+            .faq-grid { grid-template-columns: 1fr; }
+            .faq-hero h1 { font-size: 2rem; }
+        }
 
-            .faq-accordian .card-header h6.collapsed {
-                color: #4a4744 !important;
-            }
-            .faq-accordian .card-header h6:hover {
-                color: #b59349 !important;
-            }
+        /* ── FAQ Item ── */
+        .faq-item {
+            border-bottom: 1px dashed #ddd;
+            padding: 18px 0;
+            cursor: pointer;
+        }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 14.5px;
+            font-weight: 500;
+            color: #2b2824;
+            line-height: 1.5;
+            transition: color 0.2s;
+        }
+        .faq-item:hover .faq-question,
+        .faq-item.open .faq-question {
+            color: #b59349;
+        }
+        .faq-chevron {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 13px;
+            transition: transform 0.3s ease, color 0.2s;
+        }
+        .faq-item.open .faq-chevron {
+            transform: rotate(180deg);
+            color: #b59349;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.3s;
+            font-size: 14px;
+            color: #5a5653;
+            line-height: 1.7;
+        }
+        .faq-item.open .faq-answer {
+            max-height: 500px;
+            padding-top: 12px;
+        }
 
-            .faq-accordian .card-header h6.collapsed .fa-caret-down {
-                transform: rotate(0deg);
-                transition: transform 0.3s ease;
-            }
-            
-            .faq-accordian .card-header h6 .fa-question-circle {
-                color: #b59349 !important;
-            }
+        /* ── CTA Bottom ── */
+        .faq-cta {
+            background: linear-gradient(135deg, #1a1816, #2d2520);
+            border-radius: 20px;
+            padding: 48px 40px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        .faq-cta h4 {
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .faq-cta p {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+        .faq-cta a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #b59349, #d4a843);
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 14px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(181,147,73,0.35);
+        }
+        .faq-cta a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(181,147,73,0.45);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
 
-            .faq-accordian .card .collapse {
-                background-color: transparent !important;
-            }
+<jsp:include page="/includes/customer/navbar.jsp" />
 
-            .faq-accordian .card .card-body p,
-            .faq-accordian .card .collapse p {
-                padding: 1.5rem 2rem !important;
-                color: #4a4744 !important;
-                line-height: 1.6;
-                margin: 0;
-            }
+<!-- Hero Banner -->
+<div class="faq-hero" data-aos="fade-in">
+    <div class="container">
+        <h1>Câu Hỏi <span>Thường Gặp</span></h1>
+        <p>Giải đáp mọi thắc mắc về dịch vụ thuê xe máy tại SmartRide</p>
+        <div class="faq-search-bar" data-aos="fade-up" data-aos-delay="150">
+            <input type="text" id="faqSearch" placeholder="Tìm câu hỏi bạn cần..." />
+            <i class="fas fa-search"></i>
+        </div>
+    </div>
+</div>
 
-            .support-button p {
-                color: #2b2824 !important;
-            }
-            .support-button a {
-                color: #b59349 !important;
-                border: 1px solid #b59349 !important;
-                border-radius: 5px;
-                padding: 8px 16px;
-                font-weight: 600;
-                text-decoration: none;
-                transition: all 0.3s ease;
-                background-color: transparent;
-            }
-            .support-button a:hover {
-                background-color: #b59349 !important;
-                color: #ffffff !important;
-                box-shadow: 0 4px 15px rgba(181, 147, 73, 0.2) !important;
-            }
+<!-- FAQ Main -->
+<section class="faq-section">
+    <div class="container">
 
-            @media only screen and (max-width: 575px) {
-                .support-button p {
-                    font-size: 14px;
-                }
-
-                .support-button a {
-                    font-size: 13px;
-                }
-            }
-            .noidung {
-                margin-top: 5%;
-            }
-            .scrollup1 {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                width: 40px;
-                height: 40px;
-                background: #b59349;
-                border-radius: 50%;
-                text-align: center;
-                line-height: 40px;
-                color: #ffffff;
-                font-size: 24px;
-                text-decoration: none;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            }
-
-            .scrollup1:hover {
-                background-color: #a38241;
-                color: #ffffff;
-                transform: translateY(-3px);
-            }
-
-            .scrollup1 .ri-arrow-up-fill {
-                vertical-align: middle;
-            }
-        </style>
-        <jsp:include page="/includes/customer/header.jsp" />
-    </head>
-    <body>
-
-        <jsp:include page="/includes/customer/navbar.jsp" />
-
-        <div class="faq_area section_padding_130" id="faq">
-            <div class="container noidung" data-aos="fade-up">
-                <div class="row justify-content-center topDetail" data-aos="fade-up">
-                    <div class="col-12 col-sm-8 col-lg-6">
-                        <!--                        <div class="section_heading text-center">
-                                                    <h3>Các câu hỏi thường gặp</h3>
-                                                    <p style="margin-top: 3%; font-size: 20px; color:#001973;">ColorBike sẽ mang đến trải nghiệm xứng đáng với những gì bạn kì vọng.</p>
-                                                    <div class="line"></div>
-                                                </div>-->
-                        <div class="container section-title" data-aos="fade-up">
-                            <span>FAQs Questions</span>
-                            <h2>Các Câu Hỏi Thường Gặp</h2>
-                            <p>Điều gì khiến SmartRide là lựa chọn tốt nhất cho
-                                "hành trình mới, xe cũng mới"?</p>
-                        </div>
+        <!-- Category: Giá thuê xe -->
+        <div class="faq-category" data-aos="fade-up">
+            <div class="faq-category-header">
+                <hr class="faq-dashed">
+                <h3>Giá thuê xe máy</h3>
+                <hr class="faq-dashed">
+            </div>
+            <div class="faq-grid" id="faqGridPrice">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Giá thuê xe máy tại SmartRide là bao nhiêu?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
                     </div>
+                    <div class="faq-answer">Giá thuê xe dao động từ 150.000đ đến 350.000đ/ngày tùy loại xe. Bạn có thể xem bảng giá chi tiết trong mục Bảng Giá trên trang chủ.</div>
                 </div>
-                <div class="row justify-content-center">
-                    <div class="col-12 col-sm-10 col-lg-8" data-aos="fade-up">
-                        <div class="accordion faq-accordian" id="faqAccordion">
-                            <c:forEach var="faq" items="${sessionScope.FAQ}" varStatus="status">
-                                <div class="card border-0" data-aos="fade-in" data-aos-delay="${status.index * 100}">
-                                    <div class="card-header" id="heading${status.index}">
-                                        <h6 class="mb-0 collapsed" data-toggle="collapse" data-target="#collapse${status.index}" aria-expanded="false" aria-controls="collapse${status.index}">
-                                            <i class="fas fa-question-circle" style="font-size:40px; margin-right: 1%;"></i>
-                                            ${faq.question}
-                                            <i class="fas fa-caret-down ml-auto rotate-icon"></i>
-                                        </h6>
-                                    </div>
-                                    <div class="collapse" id="collapse${status.index}" aria-labelledby="heading${status.index}" data-parent="#faqAccordion">
-                                        <div class="animate__animated animate__backInDown" style="margin-top: 10px; margin-bottom: 10px;">
-                                            <p>${faq.answer}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                        </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Giá thuê xe có thay đổi theo ngày lễ không?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
                     </div>
+                    <div class="faq-answer">Giá thuê xe có thể thay đổi trong các dịp lễ, Tết. SmartRide sẽ thông báo trước ít nhất 7 ngày nếu có điều chỉnh giá.</div>
                 </div>
-                <div class="row justify-content-center">
-                    <div class="col-12 col-sm-10 col-lg-8">
-                        <div class="support-button text-center d-flex align-items-center justify-content-center mt-4" data-aos="zoom-in" data-aos-delay="500">
-                            <i class="lni-emoji-sad"></i>
-                            <p class="mb-0 px-2">Bạn không tìm thấy câu trả lời</p>
-                            <a style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 1%; color: #0482C8;" href="contact.jsp">Hãy liên hệ với chúng tôi!</a>
-                        </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Thuê xe theo tháng có được giảm giá không?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
                     </div>
+                    <div class="faq-answer">Có! Thuê xe theo tháng được giảm từ 20-30% so với giá ngày. Liên hệ trực tiếp với chúng tôi để được báo giá ưu đãi.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Giá thuê xe đã bao gồm xăng chưa?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Giá thuê chưa bao gồm xăng. Xe sẽ được giao với bình xăng đầy và bạn vui lòng đổ đầy bình khi trả xe.</div>
                 </div>
             </div>
         </div>
 
-        <jsp:include page="/includes/customer/footer.jsp" />
+        <!-- Category: Thủ tục thuê xe -->
+        <div class="faq-category" data-aos="fade-up">
+            <div class="faq-category-header">
+                <hr class="faq-dashed">
+                <h3>Thủ tục thuê xe</h3>
+                <hr class="faq-dashed">
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Cần giấy tờ gì để thuê xe?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Bạn cần có: CMND/CCCD còn hiệu lực, bằng lái xe phù hợp (A1/A2). Một số trường hợp có thể yêu cầu đặt cọc xe máy hoặc giấy tờ tùy thân.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Tôi có thể thuê xe nếu không phải công dân Việt Nam không?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Có, khách nước ngoài cần có hộ chiếu còn hiệu lực và bằng lái xe quốc tế hoặc bằng lái được công nhận tại Việt Nam.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Có cần đặt cọc không?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Tùy theo loại xe và thời gian thuê, SmartRide có thể yêu cầu đặt cọc từ 500.000đ đến 2.000.000đ. Tiền cọc sẽ được hoàn trả khi trả xe đúng hạn và nguyên vẹn.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Thời gian làm thủ tục mất bao lâu?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Thủ tục thuê xe chỉ mất khoảng 5-10 phút nếu bạn đã chuẩn bị đủ giấy tờ cần thiết. Đặt xe online trước giúp rút ngắn thời gian hơn nữa.</div>
+                </div>
+            </div>
+        </div>
 
-        <!-- Các tệp JS -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
-        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"></script>-->
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script>
-            AOS.init({
-                duration: 500, // Duration of the animations in milliseconds
-                once: true, // Whether animation should happen only once - while scrolling down
-            });
+        <!-- Category: Giao nhận xe -->
+        <div class="faq-category" data-aos="fade-up">
+            <div class="faq-category-header">
+                <hr class="faq-dashed">
+                <h3>Giao nhận xe</h3>
+                <hr class="faq-dashed">
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>SmartRide có giao xe tận nơi không?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Có, SmartRide hỗ trợ giao xe tận nơi trong phạm vi nội thành Đà Nẵng với phí giao hàng từ 30.000đ – 80.000đ tùy khoảng cách.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Thời gian giao nhận xe hoạt động trong khung giờ nào?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">SmartRide hoạt động từ 7:00 – 21:00 mỗi ngày kể cả cuối tuần và ngày lễ. Giao xe ngoài giờ vui lòng liên hệ trước để được sắp xếp.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Có thể trả xe ở địa điểm khác với nơi nhận không?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Hiện tại SmartRide yêu cầu trả xe tại địa điểm ban đầu hoặc có thể thỏa thuận thêm phí trả xe một chiều. Vui lòng liên hệ để biết thêm chi tiết.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Cần đặt lịch trước để giao nhận xe không?</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">Chúng tôi khuyến khích đặt trước ít nhất 2-4 giờ để đảm bảo có xe và nhân viên sẵn sàng phục vụ bạn đúng giờ.</div>
+                </div>
+            </div>
+        </div>
 
-            $(document).ready(function () {
-                $('.accordion .card-header h6').click(function () {
-                    $(this).find('.fa-caret-down').toggleClass('fa-caret-up');
-                });
-            });
-        </script>
+        <!-- Category: Dynamic FAQs from DB -->
+        <c:if test="${not empty sessionScope.FAQ}">
+        <div class="faq-category" data-aos="fade-up">
+            <div class="faq-category-header">
+                <hr class="faq-dashed">
+                <h3>Chất lượng & An toàn</h3>
+                <hr class="faq-dashed">
+            </div>
+            <div class="faq-grid" id="dynamicFaqGrid">
+                <c:forEach var="faq" items="${sessionScope.FAQ}" varStatus="status">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>${faq.question}</span>
+                        <i class="faq-chevron fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">${faq.answer}</div>
+                </div>
+                </c:forEach>
+            </div>
+        </div>
+        </c:if>
 
-    </body>
+        <!-- CTA Bottom -->
+        <div class="faq-cta" data-aos="fade-up">
+            <h4>Vẫn còn thắc mắc?</h4>
+            <p>Đội ngũ hỗ trợ SmartRide luôn sẵn sàng giải đáp mọi câu hỏi của bạn 24/7</p>
+            <a href="contact.jsp"><i class="fas fa-headset"></i> Liên hệ với chúng tôi</a>
+        </div>
+
+    </div>
+</section>
+
+<jsp:include page="/includes/customer/footer.jsp" />
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+    AOS.init({ duration: 600, once: true });
+
+    function toggleFaq(el) {
+        el.classList.toggle('open');
+    }
+
+    // Search filter
+    document.getElementById('faqSearch').addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('.faq-item').forEach(item => {
+            const text = item.querySelector('.faq-question span').textContent.toLowerCase();
+            item.style.display = text.includes(q) ? '' : 'none';
+        });
+    });
+</script>
+</body>
 </html>

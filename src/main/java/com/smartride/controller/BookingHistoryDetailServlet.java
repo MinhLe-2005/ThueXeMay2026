@@ -45,6 +45,26 @@ public class BookingHistoryDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String bookingId = request.getParameter("bookingId");
+        String paymentDateText = request.getParameter("paymentTime");
+        String amountStr = request.getParameter("amount");
+        
+        try {
+            long amount = Long.parseLong(amountStr);
+            // Convert paymentDate yyyyMMddHHmmss to yyyy-MM-dd HH:mm:ss
+            java.time.format.DateTimeFormatter inputFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            java.time.LocalDateTime dateTime = java.time.LocalDateTime.parse(paymentDateText, inputFormatter);
+            java.time.format.DateTimeFormatter outputFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedPaymentDate = dateTime.format(outputFormatter);
+            
+            PaymentDAO.getInstance().addPayment(bookingId, "Ngân hàng", formattedPaymentDate, (int)(amount / 100000), "Giao dịch thành công");
+            
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"status\":\"success\"}");
+        } catch (NumberFormatException | java.time.format.DateTimeParseException | java.io.IOException e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"status\":\"error\",\"message\":\"" + e.getMessage() + "\"}");
+        }
     }
-
 }

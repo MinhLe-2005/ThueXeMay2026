@@ -25,6 +25,13 @@ public class PaymentDAO implements Serializable {
     private static PaymentDAO instance;
     private Connection conn = DBUtil.makeConnection();
 
+    private Connection getConnection() {
+        if (conn == null) {
+            conn = DBUtil.makeConnection();
+        }
+        return conn;
+    }
+
     private PaymentDAO() {
     }
 
@@ -39,9 +46,9 @@ public class PaymentDAO implements Serializable {
     public Payment getPayMentbyBookingId(String bookingId) {
         PreparedStatement stm;
         ResultSet rs;
-        String sql = "Select * from Payment where BookingID = ?";
+        String sql = "Select * from \"Payment\" where \"BookingID\" = ?";
         try {
-            stm = conn.prepareStatement(sql);
+            stm = getConnection().prepareStatement(sql);
             stm.setString(1, bookingId);
             rs = stm.executeQuery();
             if (rs.next()) {
@@ -61,12 +68,12 @@ public class PaymentDAO implements Serializable {
     }
 
     public void addPayment(String bookingId, String method, String paymentDate, int amount, String status) {
-        String sql = "INSERT INTO [dbo].[Payment] \n"
-                + "    ([BookingID], [PaymentMethod], [PaymentDate], [PaymentAmount], [PaymentStatus])\n"
+        String sql = "INSERT INTO \"Payment\" \n"
+                + "    (\"BookingID\", \"PaymentMethod\", \"PaymentDate\", \"PaymentAmount\", \"PaymentStatus\")\n"
                 + "VALUES \n"
                 + "    (?,?, ?, ?, ?);";
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.setString(1, bookingId);
             ps.setString(2, method);
             ps.setString(3, paymentDate);
@@ -83,8 +90,8 @@ public class PaymentDAO implements Serializable {
         PreparedStatement stm;
         ResultSet rs;
         try {
-            String sql = "Select * from Payment where BookingID = ?";
-            stm = conn.prepareStatement(sql);
+            String sql = "Select * from \"Payment\" where \"BookingID\" = ?";
+            stm = getConnection().prepareStatement(sql);
             stm.setString(1, id);
             rs = stm.executeQuery();
             while (rs.next()) {
@@ -100,13 +107,13 @@ public class PaymentDAO implements Serializable {
         PreparedStatement stm;
         ResultSet rs;
         List<Payment> list = new ArrayList<>();
-        String sql = "select PaymentID, Payment.BookingID, PaymentMethod, FORMAT(PaymentDate, 'dd-MM-yyyy HH:mm:ss') AS PaymentDate, PaymentAmount, PaymentStatus\n"
-                + "from Payment\n"
-                + "JOIN Booking b on b.BookingID = Payment.BookingID\n"
-                + "WHERE CustomerID = (Select CustomerID from Customer where AccountID = ?)\n"
-                + "order by Payment.BookingID asc";
+        String sql = "select \"PaymentID\", p.\"BookingID\", \"PaymentMethod\", to_char(\"PaymentDate\", 'DD-MM-YYYY HH24:MI:SS') AS \"PaymentDate\", \"PaymentAmount\", \"PaymentStatus\"\n"
+                + "from \"Payment\" p\n"
+                + "JOIN \"Booking\" b on b.\"BookingID\" = p.\"BookingID\"\n"
+                + "WHERE \"CustomerID\" = (Select \"CustomerID\" from \"Customer\" where \"AccountID\" = ?)\n"
+                + "order by p.\"BookingID\" asc";
         try {
-            stm = conn.prepareStatement(sql);
+            stm = getConnection().prepareStatement(sql);
             stm.setInt(1, accountId); 
             rs = stm.executeQuery();
             while (rs.next()) {

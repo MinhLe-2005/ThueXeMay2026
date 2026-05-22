@@ -10,7 +10,7 @@
 
     <head>
         <title>Chính sách & Điều Khoản</title>
-        <link rel="website icon" type="png" href="images\logo.png">
+        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 

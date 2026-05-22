@@ -16,7 +16,7 @@
         <meta charset="utf-8">
         <title>Manage Staff</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="website icon" type="png" href="images/logo.png">
+        
 
         <style type="text/css">
             body {

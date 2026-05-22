@@ -88,53 +88,9 @@
     <jsp:include page="/includes/customer/navbar.jsp" />
     <body class="  font-body " data-framework="tailwind">
         <div class="builder-container builder-container-preview font-body">
-            <aside class="max-w-62.5 ease-nav-brand z-990 absolute inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent text-slate-500"
-                   id="sidenav-main">
-                <hr class="h-px mt-0 bg-transparent bg-gradient-horizontal-dark">
-
-                <div style="margin-top: 6rem" class="items-center block w-auto max-h-screen overflow-auto grow basis-full">
-                    <ul class="flex flex-col pl-0 mb-0">
-                        <li class="w-full">
-                            <div class="sidebar-heading">Quản lý thuê xe</div>
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item" href="transaction">
-                                <div class="icon-box">
-                                    <i class="fas fa-credit-card text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Giao dịch gần đây</span>
-                            </a> 
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item" href="bookingHistory?status=all">
-                                <div class="icon-box">
-                                    <i class="fas fa-history text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Lịch sử thuê xe</span>
-                            </a> 
-                        </li>
-                        <li class="w-full">
-                            <div class="sidebar-heading">Quản lý tài khoản</div>
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item" href="profileCustomer.jsp">
-                                <div class="icon-box">
-                                    <i class="fas fa-user-circle text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Thông tin cá nhân</span>
-                            </a> 
-                        </li>
-                        <li class="w-full"> 
-                            <a class="sidebar-item active" href="settingsProfile.jsp">
-                                <div class="icon-box">
-                                    <i class="fas fa-shield-alt text-xs"></i>
-                                </div> 
-                                <span class="nav-text">Mật khẩu và bảo mật</span>
-                            </a> 
-                        </li>
-                    </ul>
-                </div>
-            </aside>
+            <jsp:include page="/includes/customer/sidebarProfile.jsp">
+                <jsp:param name="activePage" value="security"/>
+            </jsp:include>
             <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200"
                  id="panel">
                 <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
@@ -158,7 +114,7 @@
 
                                         <!-- Security Actions -->
                                         <div>
-                                            <div onclick="changePass()" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors rounded-xl cursor-pointer">
+                                            <a href="changepassword" style="text-decoration:none;" class="flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors rounded-xl cursor-pointer">
                                                 <div class="flex items-center space-x-4">
                                                     <div style="background-color: #e2e8f0; color: #475569; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                                         <i class="fas fa-key text-lg"></i>
@@ -168,8 +124,7 @@
                                                         <p class="text-sm text-slate-500 mb-0">Cập nhật mật khẩu định kỳ để duy trì tính bảo mật</p>
                                                     </div>
                                                 </div>
-                                                <i class="fas fa-chevron-right text-slate-400"></i>
-                                            </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -185,12 +140,6 @@
         <script
             src="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/js/soft-ui-dashboard-tailwind.js"
         async=""></script>
-    </body>
-    <script>
-                                            function changePass() {
-                                                window.location.href = "changepassword";
-                                            }
-
             </div> <!-- #panel -->
         </div> <!-- .builder-container -->
     </body>

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="icon" type="image/png" href="images/favicon.png?v=<%=System.currentTimeMillis()%>">
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
@@ -100,16 +100,30 @@
             .brand-header {
                 display: flex;
                 align-items: center;
+                gap: 10px;
                 margin-bottom: 2rem;
                 text-decoration: none;
             }
 
             .brand-logo {
-                height: 45px;
+                height: 52px;
                 width: auto;
                 object-fit: contain;
                 filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.05));
             }
+
+            .brand-name-text {
+                font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif;
+                font-size: 26px;
+                font-weight: 800;
+                letter-spacing: -0.5px;
+                background: linear-gradient(135deg, #b59349 0%, #d4a843 50%, #8c6f32 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                line-height: 1;
+            }
+
 
             /* Headings */
             .welcome-title {
@@ -348,8 +362,9 @@
         <div class="login-wrapper">
             <!-- Form Side -->
             <div class="login-form-side animate__animated animate__fadeInLeft">
-                <a href="home" class="brand-header">
-                    <img src="images/logo.png?v=<%=System.currentTimeMillis()%>" alt="SmartRide Logo" class="brand-logo" />
+                <a href="home" class="brand-header" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="${pageContext.request.contextPath}/images/newlogo_transparent.png" alt="SmartRide Logo" class="brand-logo" />
+                    <span class="brand-name-text">SmartRide</span>
                 </a>
 
                 <h1 class="welcome-title">Tạo Tài Khoản</h1>

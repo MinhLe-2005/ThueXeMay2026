@@ -262,10 +262,23 @@ public class BookingInforHander extends HttpServlet {
         // Generate booking ID
         String bookingid = generateBookingCode();
 
+        // Read voucherID (0 = no voucher)
+        int voucherId = 0;
+        try {
+            String voucherIdStr = (String) dataMap.get("voucherId");
+            if (voucherIdStr != null && !voucherIdStr.trim().isEmpty()) {
+                voucherId = Integer.parseInt(voucherIdStr.trim());
+            }
+        } catch (NumberFormatException ignored) {}
+
         // Save booking data to database
-        // Assume BookingDAO is a class to handle database operations
         BookingDAO dao = BookingDAO.getInstance();
-        dao.addBooking(bookingid, formattedDateTime, pickupDate, returnDate, pickupLocation, returnLocation, 0, daoC.getCustomerbyAccountID(accountId).getCustomerId());
+        dao.addBooking(bookingid, formattedDateTime, pickupDate, returnDate, pickupLocation, returnLocation, voucherId == 0 ? 0 : voucherId, daoC.getCustomerbyAccountID(accountId).getCustomerId());
+
+        // Mark voucher as used
+        if (voucherId > 0) {
+            com.smartride.dao.VoucherDAO.getInstance().markVoucherUsed(voucherId);
+        }
 
         // Process bike details
         Type bikeListType = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();

@@ -94,7 +94,13 @@ public class LoginServlet extends HttpServlet {
 
             // Điều chỉnh logic chuyển hướng dựa trên RoleID
             if (account.getRoleID() == 1) {
-                response.sendRedirect("home");
+                String redirect = (String) session.getAttribute("redirectAfterLogin");
+                if (redirect != null) {
+                    session.removeAttribute("redirectAfterLogin");
+                    response.sendRedirect(redirect);
+                } else {
+                    response.sendRedirect("home");
+                }
             } else if (account.getRoleID() == 2 || account.getRoleID() == 3) {
                 response.sendRedirect("homeStaff");
             } else {
