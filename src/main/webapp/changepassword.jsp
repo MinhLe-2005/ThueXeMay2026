@@ -149,6 +149,10 @@
             .green {
                 color: #10b981;
             }
+            input[type="password"]::-ms-reveal,
+            input[type="password"]::-ms-clear {
+                display: none;
+            }
         </style>
     </head>
     <body>
@@ -169,7 +173,6 @@
                         </div>
                     </c:if>
                     <div class="inputDiv">
-                        <input type="hidden" value="${account.passWord}" id="currentPassword">
                         <label class="inputLabel" for="password">Mật khẩu hiện tại</label>
                         <div class="input-wrapper">
                             <input type="password" id="password" name="password" required>
@@ -238,18 +241,6 @@
                 }
             }
             /////////////////////////////////////////
-            const password = document.getElementById("password");
-            const passwordText = document.getElementById("password-text");
-            const currentPassword = document.getElementById("currentPassword");
-            const validPass = () => {
-                if (password.value !== currentPassword.value) {
-                    passwordText.textContent = "Mật khẩu hiện tại không đúng";
-                    passwordText.className = "text-error red";
-                } else {
-                    passwordText.textContent = "";
-                }
-            };
-            /////////////////////////////////////////
             const newPassword = document.getElementById("newPassword");
             const newPassText = document.getElementById("newpassword-text");
             const newpasswordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -277,7 +268,6 @@
                 }
             };
 
-            password.addEventListener("input", validPass);
             newPassword.addEventListener("input", validnewPass);
             confirmPass.addEventListener("input", validConfirmPass);
         </script>

@@ -81,7 +81,7 @@ public class ChangePasswordServlet extends HttpServlet {
         String confirmPassword = request.getParameter("confirmPassword");
         try {
             if (ac != null) {
-                if (!ac.getPassWord().equals(password)) {
+                if (!com.smartride.util.PasswordUtil.checkPassword(password, ac.getPassWord())) {
                     request.setAttribute("errorPass", "Mật khẩu hiện tại không đúng.");
                 } else if (password.equals(newPassword)) {
                     request.setAttribute("errorPass", "Mật khẩu hiện tại và mật khẩu cũ không được giống nhau.");
@@ -90,10 +90,14 @@ public class ChangePasswordServlet extends HttpServlet {
                 } else if (!checkValidPass(newPassword)) {
                     request.setAttribute("errorPass", "Password phải chứa ít nhất 8 ký tự, bao gồm ít nhất 1 ký tự in hoa và 1 chữ số.");
                 } else {
-                    AccountDAO.getInstance().changePassword(ac.getAccountId(), newPassword);
-                    ac.setPassWord(newPassword);
-                    session.setAttribute("account", ac);
-                    request.setAttribute("successChange", "Thay đổi mật khẩu thành công.");
+                    boolean isChanged = AccountDAO.getInstance().changePassword(ac.getAccountId(), newPassword);
+                    if (isChanged) {
+                        ac.setPassWord(com.smartride.util.PasswordUtil.hashPassword(newPassword));
+                        session.setAttribute("account", ac);
+                        request.setAttribute("successChange", "Thay đổi mật khẩu thành công.");
+                    } else {
+                        request.setAttribute("errorPass", "Lỗi CSDL: Cột Password trong DB không đủ dài để chứa mã hóa BCrypt (cần ít nhất 60 ký tự). Bạn hãy vào Supabase sửa kiểu dữ liệu cột Password thành VARCHAR(255).");
+                    }
                 }
             } else {
                 response.setContentType("text/html;charset=UTF-8");
@@ -106,13 +110,8 @@ public class ChangePasswordServlet extends HttpServlet {
                 return;
             }
 
-            if (ac.getRoleID() == 1) {
-                // Khách hàng: forward về settingsProfile.jsp (có sidebar profile)
-                request.getRequestDispatcher("settingsProfile.jsp").forward(request, response);
-            } else {
-                // Staff/Admin: forward về profileStaff.jsp
-                request.getRequestDispatcher("profileStaff.jsp").forward(request, response);
-            }
+            // Always forward back to the change password page so the user can see the success or error message.
+            request.getRequestDispatcher("changepassword.jsp").forward(request, response);
         } catch (ServletException | IOException | NumberFormatException ex) {
             System.out.println(ex);
         }

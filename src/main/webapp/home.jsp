@@ -818,31 +818,12 @@
 
                     <!-- 2-column FAQ grid -->
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap: 0 50px; max-width:960px; margin:0 auto;" data-aos="fade-up" data-aos-delay="100">
-
-                        <div class="home-faq-item" onclick="this.classList.toggle('open')">
-                            <div class="home-faq-q"><span>Giá thuê xe máy tại SmartRide là bao nhiêu?</span><i class="fas fa-chevron-down"></i></div>
-                            <div class="home-faq-a">Giá dao động từ 150.000đ – 350.000đ/ngày tùy loại xe, chưa bao gồm xăng.</div>
-                        </div>
-                        <div class="home-faq-item" onclick="this.classList.toggle('open')">
-                            <div class="home-faq-q"><span>Cần giấy tờ gì để thuê xe?</span><i class="fas fa-chevron-down"></i></div>
-                            <div class="home-faq-a">CMND/CCCD còn hiệu lực và bằng lái xe phù hợp (A1/A2). Khách nước ngoài cần hộ chiếu và bằng lái quốc tế.</div>
-                        </div>
-                        <div class="home-faq-item" onclick="this.classList.toggle('open')">
-                            <div class="home-faq-q"><span>SmartRide có giao xe tận nơi không?</span><i class="fas fa-chevron-down"></i></div>
-                            <div class="home-faq-a">Có! SmartRide giao xe tận nơi trong nội thành với phí từ 30.000đ – 80.000đ tùy khoảng cách.</div>
-                        </div>
-                        <div class="home-faq-item" onclick="this.classList.toggle('open')">
-                            <div class="home-faq-q"><span>Có thể gia hạn thời gian thuê không?</span><i class="fas fa-chevron-down"></i></div>
-                            <div class="home-faq-a">Có, bạn có thể gia hạn bằng cách liên hệ trước ít nhất 2 giờ trước giờ trả xe. Tính thêm phí theo ngày phát sinh.</div>
-                        </div>
-                        <div class="home-faq-item" onclick="this.classList.toggle('open')">
-                            <div class="home-faq-q"><span>Thuê xe theo tháng có được giảm giá không?</span><i class="fas fa-chevron-down"></i></div>
-                            <div class="home-faq-a">Có! Thuê theo tháng giảm 20–30% so với giá ngày. Liên hệ để được báo giá ưu đãi.</div>
-                        </div>
-                        <div class="home-faq-item" onclick="this.classList.toggle('open')">
-                            <div class="home-faq-q"><span>Xe bị hỏng giữa đường thì SmartRide có hỗ trợ không?</span><i class="fas fa-chevron-down"></i></div>
-                            <div class="home-faq-a">Có, SmartRide hỗ trợ 24/7 trong trường hợp xe gặp sự cố. Gọi hotline để được xử lý nhanh nhất.</div>
-                        </div>
+                        <c:forEach items="${listFAQ}" var="faq" begin="0" end="9">
+                            <div class="home-faq-item" onclick="this.classList.toggle('open')">
+                                <div class="home-faq-q"><span>${faq.question}</span><i class="fas fa-chevron-down"></i></div>
+                                <div class="home-faq-a">${faq.answer}</div>
+                            </div>
+                        </c:forEach>
                     </div>
 
                     <!-- View all link -->

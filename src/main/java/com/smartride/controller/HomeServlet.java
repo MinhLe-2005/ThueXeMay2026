@@ -67,6 +67,10 @@ public class HomeServlet extends HttpServlet {
                 request.removeAttribute("statusBooking");
             }
         }
+        
+        List<com.smartride.dto.FAQ> listFAQ = com.smartride.dao.FAQDAO.getInstance().getAllFAQ();
+        request.setAttribute("listFAQ", listFAQ);
+
         session.setAttribute("account", account);
         request.setAttribute("listF", listF);
         session.setAttribute("listM", listM);

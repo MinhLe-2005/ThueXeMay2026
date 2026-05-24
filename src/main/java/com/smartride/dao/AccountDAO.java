@@ -47,15 +47,17 @@ public class AccountDAO implements Serializable {
         PreparedStatement stm;
         ResultSet rs;
         try {
-            String sql = "SELECT * FROM \"Account\" WHERE \"Username\" = ? AND \"Password\" = ?";
+            String sql = "SELECT * FROM \"Account\" WHERE \"Username\" = ?";
             stm = conn.prepareStatement(sql);
             stm.setString(1, userName);
-            stm.setString(2, passWord);
             rs = stm.executeQuery();
             if (rs.next()) {
-                return new Account(rs.getInt("AccountID"), rs.getString("FirstName"), rs.getString("LastName"),
-                        rs.getString("Gender"), rs.getString("DayOfBirth"), rs.getString("Address"), rs.getString("PhoneNumber"),
-                        rs.getString("Image"), rs.getString("Email"), rs.getString("Username"), rs.getString("Password"), rs.getInt("RoleID"));
+                String storedPassword = rs.getString("Password");
+                if (com.smartride.util.PasswordUtil.checkPassword(passWord, storedPassword)) {
+                    return new Account(rs.getInt("AccountID"), rs.getString("FirstName"), rs.getString("LastName"),
+                            rs.getString("Gender"), rs.getString("DayOfBirth"), rs.getString("Address"), rs.getString("PhoneNumber"),
+                            rs.getString("Image"), rs.getString("Email"), rs.getString("Username"), rs.getString("Password"), rs.getInt("RoleID"));
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,7 +72,7 @@ public class AccountDAO implements Serializable {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, email);
-            ps.setString(3, password);
+            ps.setString(3, com.smartride.util.PasswordUtil.hashPassword(password));
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
@@ -97,7 +99,7 @@ public class AccountDAO implements Serializable {
             ps.setString(4, phone);
             ps.setString(5, email);
             ps.setString(6, userName);
-            ps.setString(7, password);
+            ps.setString(7, com.smartride.util.PasswordUtil.hashPassword(password));
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
@@ -174,7 +176,7 @@ public class AccountDAO implements Serializable {
         String sql = "UPDATE \"Account\" SET \"Password\" = ? WHERE \"Email\" = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, password);
+            ps.setString(1, com.smartride.util.PasswordUtil.hashPassword(password));
             ps.setString(2, email);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -224,7 +226,7 @@ public class AccountDAO implements Serializable {
         String sql = "UPDATE \"Account\" SET \"Password\" = ? WHERE \"AccountID\" = ?";
         try {
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setString(1, password);
+            st.setString(1, com.smartride.util.PasswordUtil.hashPassword(password));
             st.setInt(2, AccountID);
             int rowAffect = st.executeUpdate();
             if (rowAffect > 0) {
@@ -696,5 +698,35 @@ public class AccountDAO implements Serializable {
         AccountDAO dao = getInstance();
         Map<Account, Booking> account = dao.getAccountOverdue();
         System.out.println(account);
+    }
+
+    public boolean checkUsernameExist(String username) {
+        String sql = "SELECT * FROM \"Account\" WHERE \"Username\" = ?";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, username);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkPhoneExist(String phone) {
+        String sql = "SELECT * FROM \"Account\" WHERE \"PhoneNumber\" = ?";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, phone);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 }

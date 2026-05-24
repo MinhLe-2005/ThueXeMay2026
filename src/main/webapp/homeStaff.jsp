@@ -510,51 +510,103 @@
                                 { name: 'Khách Hàng', type: 'area', data: newCus }
                             ]);
                             
-                            // Update Brand Chart to Radar Chart (NiceAdmin default)
+                            // Update Brand Chart to Bar Chart
                             let brandKeys = Object.keys(data.charts.radarChart);
                             let brandRevenues = Object.values(data.charts.radarChart);
                             
                             window.budgetChart.setOption({
-                                tooltip: { trigger: 'item' },
-                                legend: {
-                                    data: ['Doanh Thu'],
-                                    bottom: 0
+                                tooltip: { 
+                                    trigger: 'axis',
+                                    axisPointer: { type: 'shadow' },
+                                    formatter: function(params) {
+                                        var val = params[0].value;
+                                        return '<strong>' + params[0].name + '</strong><br/>Doanh Thu: ' + new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val).replace('₫', 'VNĐ');
+                                    }
                                 },
-                                radar: {
-                                    indicator: brandKeys.map(k => ({ name: k })),
-                                    radius: '65%' // Làm radar chart nhỏ gọn, cân đối hơn
+                                grid: { left: '5%', right: '5%', bottom: '5%', containLabel: true },
+                                xAxis: {
+                                    type: 'category',
+                                    data: brandKeys,
+                                    axisLabel: {
+                                        interval: 0,
+                                        rotate: 30
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value',
+                                    axisLabel: {
+                                        formatter: function(val) {
+                                            if(val >= 1000000) return (val/1000000) + ' Tr';
+                                            if(val >= 1000) return (val/1000) + ' K';
+                                            return val;
+                                        }
+                                    }
                                 },
                                 series: [{
-                                    name: 'Thống Kê Theo Hãng Xe',
-                                    type: 'radar',
-                                    data: [{
-                                        value: brandRevenues,
-                                        name: 'Doanh Thu',
-                                        areaStyle: {
-                                            color: 'rgba(65, 84, 241, 0.4)'
-                                        },
-                                        lineStyle: {
-                                            color: '#4154f1'
-                                        },
+                                    name: 'Doanh Thu',
+                                    type: 'bar',
+                                    barWidth: '45%',
+                                    data: brandRevenues,
+                                    itemStyle: {
+                                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                            { offset: 0, color: '#83bff6' },
+                                            { offset: 0.5, color: '#188df0' },
+                                            { offset: 1, color: '#188df0' }
+                                        ]),
+                                        borderRadius: [4, 4, 0, 0]
+                                    },
+                                    emphasis: {
                                         itemStyle: {
-                                            color: '#4154f1'
+                                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                                { offset: 0, color: '#2378f7' },
+                                                { offset: 0.7, color: '#2378f7' },
+                                                { offset: 1, color: '#83bff6' }
+                                            ])
                                         }
-                                    }]
+                                    }
                                 }]
                             }, true);
                             
                             // Update Pie Chart (Category)
                             let pieSeries = Object.keys(data.charts.pieChart).map(k => ({ value: data.charts.pieChart[k], name: k }));
                             window.trafficChart.setOption({
-                                tooltip: { trigger: 'item' },
-                                legend: { top: '5%', left: 'center' },
+                                tooltip: { 
+                                    trigger: 'item',
+                                    formatter: '<strong>{b}</strong> <br/>Số lượng: {c} chiếc ({d}%)'
+                                },
+                                legend: { 
+                                    bottom: '0%', 
+                                    left: 'center',
+                                    icon: 'circle'
+                                },
+                                color: ['#4154f1', '#2eca6a', '#ff771d', '#C09D62', '#0dcaf0', '#6610f2'],
                                 series: [{
-                                    name: 'Số Lượng', type: 'pie', radius: ['40%', '70%'],
-                                    avoidLabelOverlap: false, label: { show: false, position: 'center' },
-                                    emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
-                                    labelLine: { show: false }, data: pieSeries
+                                    name: 'Đã thuê', 
+                                    type: 'pie', 
+                                    radius: ['25%', '75%'],
+                                    center: ['50%', '45%'],
+                                    roseType: 'radius',
+                                    itemStyle: {
+                                        borderRadius: 10,
+                                        borderColor: '#fff',
+                                        borderWidth: 2,
+                                        shadowBlur: 15,
+                                        shadowColor: 'rgba(0, 0, 0, 0.1)'
+                                    },
+                                    label: { 
+                                        show: true,
+                                        formatter: '{b}\n({c})'
+                                    },
+                                    emphasis: { 
+                                        label: { show: true, fontSize: '15', fontWeight: 'bold' },
+                                        itemStyle: {
+                                            shadowBlur: 25,
+                                            shadowColor: 'rgba(0, 0, 0, 0.2)'
+                                        }
+                                    },
+                                    data: pieSeries.sort(function (a, b) { return a.value - b.value; })
                                 }]
-                            });
+                            }, true);
                             
                             // Update Top Motorcycles Table
                             let topTbody = document.getElementById('top-motorcycles-body');

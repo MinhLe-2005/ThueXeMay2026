@@ -45,10 +45,23 @@ public class RegisterServlet extends HttpServlet {
                     String gender = request.getParameter("gender");
                     String phone = request.getParameter("phone");
                     String username = request.getParameter("username");
+
+                    if (dao.checkUsernameExist(username)) {
+                        request.setAttribute("errorInput", "*Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác!");
+                        request.getRequestDispatcher("register2.jsp").forward(request, response);
+                        return;
+                    }
+                    if (dao.checkPhoneExist(phone)) {
+                        request.setAttribute("errorInput", "*Số điện thoại đã được sử dụng. Vui lòng thử lại!");
+                        request.getRequestDispatcher("register2.jsp").forward(request, response);
+                        return;
+                    }
+
                     if ((checkNull(firstname) || checkNull(lastname) || checkNull(gender)
                             || checkNull(phone) || checkNull(username) || checkNull(email))) {
                         request.setAttribute("errorInput", "Vui lòng nhập đúng định dạng trước khi tiếp tục.");
                         request.getRequestDispatcher("register2.jsp").forward(request, response);
+                        return;
                     }
                     HttpSession session = request.getSession();
                     session.setAttribute("firstname", firstname);
