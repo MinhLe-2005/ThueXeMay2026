@@ -948,3 +948,5 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
 // Minor update 26
 
 // fix patch 0
+
+// fix patch 18
