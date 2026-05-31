@@ -604,18 +604,26 @@
                         
                         // Initialize cropper after a short delay so the image is rendered
                         setTimeout(() => {
+                            const minZoom = 0.1;
+                            const maxZoom = 3;
                             cropper = new Cropper(cropImage, {
                                 aspectRatio: 1,
                                 viewMode: 1,
                                 dragMode: 'move',
-                                guides: false,
-                                center: false,
-                                highlight: false,
-                                cropBoxMovable: false,
-                                cropBoxResizable: false,
+                                autoCropArea: 1,
+                                zoomOnWheel: false,
+                                guides: true,
+                                center: true,
+                                highlight: true,
+                                cropBoxMovable: true,
+                                cropBoxResizable: true,
                                 toggleDragModeOnDblclick: false,
-                                minCropBoxWidth: 200,
-                                minCropBoxHeight: 200
+                                ready: function() {
+                                    const imageData = cropper.getImageData();
+                                    const currentZoom = imageData.width / imageData.naturalWidth;
+                                    let percentage = ((currentZoom - minZoom) / (maxZoom - minZoom)) * 200;
+                                    if(zoomSlider) zoomSlider.value = percentage;
+                                }
                             });
                         }, 100);
                     };
@@ -712,10 +720,8 @@
             if (zoomSlider) {
                 zoomSlider.addEventListener('input', (e) => {
                     if (cropper) {
-                        const containerData = cropper.getContainerData();
-                        const imageData = cropper.getImageData();
-                        const minZoom = containerData.width / imageData.naturalWidth;
-                        const maxZoom = 2; // 200%
+                        const minZoom = 0.1;
+                        const maxZoom = 3;
                         const ratio = minZoom + (maxZoom - minZoom) * (parseFloat(e.target.value) / 200);
                         cropper.zoomTo(ratio);
                     }
@@ -724,10 +730,8 @@
 
             cropImage.addEventListener('zoom', (e) => {
                 if (zoomSlider && cropper) {
-                    const containerData = cropper.getContainerData();
-                    const imageData = cropper.getImageData();
-                    const minZoom = containerData.width / imageData.naturalWidth;
-                    const maxZoom = 2;
+                    const minZoom = 0.1;
+                    const maxZoom = 3;
                     let percentage = ((e.detail.ratio - minZoom) / (maxZoom - minZoom)) * 200;
                     zoomSlider.value = Math.min(Math.max(percentage, 0), 200);
                 }

@@ -76,7 +76,7 @@ public class UpdateMotorcycleServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         MotorcycleDAO md = MotorcycleDAO.getInstance();
-        FileUploaded fileUploaded = new FileUploaded("D:\\ailaithuexeha\\MotorcycleRental\\src\\main\\webapp\\images");
+        FileUploaded fileUploaded = new FileUploaded(getServletContext().getRealPath("/images"));
         String id = request.getParameter("id");
         String model = request.getParameter("modelName");
 

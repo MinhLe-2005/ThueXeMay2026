@@ -25,38 +25,55 @@
                 data-block-id="5331c43e-593a-4933-bcf2-96beb7ea5e25"
                 data-block-updated
                 style="position: relative;">
-                <div class="container MuiBox-root css-0">
+                <div class="container">
+                    <div class="page-header animate__animated animate__fadeInDown">
+                        <h2>Khám phá không giới hạn</h2>
+                        <p>Trải nghiệm từng khoảnh khắc tuyệt vời tại các địa danh nổi tiếng cùng SmartRide</p>
+                    </div>
 
-                                    <div class="event-container animate__animated animate__bounceIn">
-                                        <h2>"Khám phá không giới hạn, trải nghiệm từng khoảnh khắc!"</h2>
-                                        <p>Bạn có thể tham khảo những địa điểm du lịch này cùng chúng tôi nhé!!!</p>
-                                    </div>
-                    <div
-                        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 features-container css-1ajnodb row animate__animated animate__zoomIn">
+                    <div class="row g-4">
                         <c:forEach var="touristLocations" items="${touristLocation}">
-                            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-4 css-1ay72je event">
-                                <div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-1o5yux1 image-container">
-                                    <img style="width: 90%;" class="sw-width-xs sw-height-xs sw-margin-bottom-2xs MuiBox-root css-0" src="${empty touristLocations.locationImage ? 'images/default.jpg' : (touristLocations.locationImage.startsWith('http') ? touristLocations.locationImage : 'images/'.concat(touristLocations.locationImage))}" alt="Shedule">
-                                    <h3 class="colorWord sw-font-size-xl sw-text-color-default sw-font-family-arvo sw-font-weight-medium sw-letter-spacing-normal sw-margin-top-6xs sw-margin-bottom-6xs mt-3">
-                                        ${touristLocations.locationName}
-                                    </h3>
-                                    <p class="sw-font-size-m sw-text-color-default sw-font-family-default sw-font-weight-default sw-line-height-normal sw-letter-spacing-normal">
-                                        ${touristLocations.description}
-                                    </p>
-                                    <a href="${touristLocations.urlArticle}" target="_blank" class="sw-font-size-m sw-text-color-f2501b sw-font-family-default sw-font-weight-normal sw-margin-top-6xs sw-margin-bottom-none sw-letter-spacing-normal sw-text-decoration-no-underline hover:sw-text-decoration-no-underline sw-display-inline-block event-link no-border">
+                            <div class="col-lg-4 col-md-6 animate__animated animate__zoomIn">
+                                <div class="tour-card" onclick="window.open('${touristLocations.urlArticle}', '_blank')">
+                                    <div class="tour-img-wrapper">
+                                        <img src="${empty touristLocations.locationImage ? 'images/default.jpg' : (touristLocations.locationImage.startsWith('http') ? touristLocations.locationImage : 'images/'.concat(touristLocations.locationImage))}" alt="${touristLocations.locationName}">
+                                    </div>
+                                    <div class="tour-content">
+                                        <h3>${touristLocations.locationName}</h3>
+                                        <p>${touristLocations.description}</p>
+                                        
+                                        <!-- Recommendations section -->
+                                        <c:if test="${not empty recommendMap[touristLocations.locationId]}">
+                                            <div class="recommendations mt-3 mb-3">
+                                                <h5 style="font-size: 0.95rem; font-weight: 700; color: #1a1816; margin-bottom: 10px;">
+                                                    <i class="bi bi-star-fill text-warning"></i> Gợi ý xe phù hợp
+                                                </h5>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <c:forEach var="rec" items="${recommendMap[touristLocations.locationId]}">
+                                                        <div class="recommendation-item d-flex align-items-center bg-light rounded p-2 border">
+                                                            <img src="images/${rec.image}" alt="${rec.model}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 12px;">
+                                                            <div>
+                                                                <strong style="font-size: 0.85rem; color: #1a1816; display: block;">${rec.model}</strong>
+                                                                <span style="font-size: 0.75rem; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                                                    ${rec.reason}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </c:forEach>
+                                                </div>
+                                            </div>
+                                        </c:if>
 
-                                        <span>Go to article</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                                        <rect width="256" height="256" fill="none"></rect>
-                                        <line x1="40" y1="128" x2="216" y2="128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line>
-                                        <polyline points="144 56 216 128 144 200" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline>
-                                        </svg>
-                                    </a>
+                                        <a href="${touristLocations.urlArticle}" target="_blank" class="btn-read-more" onclick="event.stopPropagation();">
+                                            Khám phá thêm <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </c:forEach>
                     </div>
-                    <div class="pagination-container">
+                    
+                    <div class="pagination-container animate__animated animate__fadeInUp">
                         <ul class="pagination">
                             <c:if test="${tag > 1}">
                                 <li><a href="touristLocation?index=${tag - 1}">&laquo;</a></li>
@@ -94,184 +111,168 @@
     </body>
 
     <style>
-        .body{
-            font-family: "Tahoma", sans-serif;
+        :root {
+            --primary: #b59349;
+            --text-dark: #1a1816;
+            --text-body: #666666;
+            --bg-light: #fbfaf8;
         }
 
-        .noidung{
-            margin-top: 5%;
-        }
-        @keyframes fadeInEffect {
-            from {
-                opacity: 0; /* Bắt đầu với độ trong suốt 0 */
-                transform: translateY(20px); /* Dịch chuyển lên trên 20px */
-            }
-            to {
-                opacity: 1; /* Kết thúc với độ trong suốt 100% */
-                transform: translateY(0); /* Trở về vị trí ban đầu */
-            }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            background-color: var(--bg-light);
+            color: var(--text-body);
         }
 
-        .event-container {
-            margin-bottom: 15px;
-            padding: 20px;
+        .noidung {
+            padding-top: 120px;
+            padding-bottom: 80px;
+        }
+
+        .page-header {
             text-align: center;
-        }
-        .event-container h2 {
-            /*font-size: 2.5rem;*/
-            font-weight: bold;
-            color: #001973;
-            margin-bottom: 20px;
-        }
-        .event-container p {
-            font-size: 1.25rem;
-            color: #666;
+            margin-bottom: 60px;
         }
 
-        .event {
-            padding: 15px;
-            text-align: justify;
-            position: relative;
-            background: white;
+        .page-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            color: var(--text-body);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tour-card {
+            background: #ffffff;
             border-radius: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            width: 30%;
-            margin: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center; /* Căn giữa các phần tử trong .event */
+            border: 1px solid rgba(0,0,0,0.03);
+            cursor: pointer;
         }
 
-
-        .image-container {
-            width: 100%;
-            text-align: center; /* Căn chỉnh hình ảnh trong container */
-        }
-
-        .image-container img {
-            max-width: 100%; /* Đảm bảo hình ảnh không vượt quá kích thước container */
-            border-radius: 8px;
-        }
-
-        .event:hover {
+        .tour-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(181, 147, 73, 0.15);
         }
 
-        .event p {
-            font-size: 1rem;
-            color: #555;
-            margin-bottom: 15px;
-            height: 1.0em; /* Giới hạn chiều cao ban đầu */
-            overflow: hidden; /* Ẩn phần nội dung tràn */
-            text-overflow: ellipsis; /* Thêm dấu chấm lửng */
-            white-space: nowrap; /* Ngăn không cho ngắt dòng */
-            transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Thêm hiệu ứng chuyển đổi */
-            cursor: pointer; /* Thêm con trỏ chỉ tay */
-            position: relative; /* Giữ vị trí tương đối */
-            opacity: 1; /* Mặc định hiện đầy đủ */
-        }
-
-        .event p:hover {
-            height: auto; /* Thay đổi chiều cao để hiển thị toàn bộ nội dung */
-            max-height: none; /* Loại bỏ giới hạn chiều cao */
-            white-space: normal; /* Cho phép nội dung ngắt dòng */
-            overflow: visible; /* Hiển thị phần nội dung bị ẩn */
-            opacity: 1; /* Đảm bảo đoạn văn bản luôn trong suốt 100% khi hover */
-            background-color: rgba(255, 255, 255, 0.9); /* Tùy chọn: Thêm nền để dễ đọc hơn */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Tùy chọn: Thêm đổ bóng để nổi bật */
-            position: relative; /* Giữ vị trí tương đối để đảm bảo hiệu ứng đúng */
-            z-index: 1; /* Đảm bảo rằng đoạn văn được hiển thị trên các phần tử khác */
-            transition: height 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Đảm bảo hiệu ứng chuyển đổi cũng áp dụng cho hover */
-        }
-
-        .event p::before {
-            content: ""; /* Thêm một phần tử giả */
-            display: block; /* Hiển thị như một khối */
-            height: 0; /* Đảm bảo chiều cao ban đầu là 0 */
-            transition: height 0.5s ease-in-out; /* Hiệu ứng chuyển đổi mượt mà cho chiều cao */
-        }
-
-        .event p:hover::before {
-            height: auto; /* Thay đổi chiều cao khi hover để hiển thị toàn bộ nội dung */
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0; /* Bắt đầu với độ trong suốt 0 */
-                transform: translateY(-10px); /* Dịch chuyển lên trên 10px */
-            }
-            to {
-                opacity: 1; /* Kết thúc với độ trong suốt 100% */
-                transform: translateY(0); /* Trở về vị trí ban đầu */
-            }
-        }
-
-        .event p:hover {
-            animation: fadeIn 0.5s ease-in-out; /* Thêm animation fade-in khi hover */
-        }
-
-
-        .event a {
-            font-size: 1rem;
-            color: #007bff;
-            text-decoration: none;
-            margin-top: auto; /* Đẩy liên kết xuống đáy */
+        .tour-img-wrapper {
             position: relative;
-            bottom: 0;
-            transition: color 0.3s ease;
-            white-space: nowrap; /* Ngăn ngắt dòng */
-            margin-top: 10px; /* Tạo khoảng cách phía trên liên kết */
-            display: inline-block; /* Đảm bảo liên kết nằm trên một dòng */
+            width: 100%;
+            padding-top: 75%; /* 4:3 Aspect Ratio */
+            overflow: hidden;
         }
 
-
-        .event a:hover {
-            color: red;
+        .tour-img-wrapper img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
         }
 
-        .row {
+        .tour-card:hover .tour-img-wrapper img {
+            transform: scale(1.08);
+        }
+
+        .tour-content {
+            padding: 30px;
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            flex-direction: column;
+            flex-grow: 1;
         }
-        
+
+        .tour-content h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .tour-content p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-body);
+            margin-bottom: 25px;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .btn-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .btn-read-more i {
+            transition: transform 0.3s ease;
+        }
+
+        .tour-card:hover .btn-read-more {
+            color: #8c6f32;
+        }
+
+        .tour-card:hover .btn-read-more i {
+            transform: translateX(5px);
+        }
+
         .pagination-container {
+            margin-top: 50px;
             display: flex;
             justify-content: center;
-            margin-top: 30px;
         }
-        
+
         .pagination {
             display: flex;
+            gap: 10px;
             list-style: none;
             padding: 0;
+            margin: 0;
         }
-        
-        .pagination li {
-            margin: 0 5px;
-        }
-        
+
         .pagination li a {
-            display: block;
-            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffffff;
+            color: var(--text-dark);
+            font-weight: 600;
             text-decoration: none;
-            color: #001973;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
-        
-        .pagination li.active a {
-            background-color: #001973;
-            color: white;
-            border-color: #001973;
-        }
-        
-        .pagination li a:hover:not(.active) {
-            background-color: #ddd;
+
+        .pagination li.active a,
+        .pagination li a:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(181, 147, 73, 0.3);
         }
     </style>
     <script>

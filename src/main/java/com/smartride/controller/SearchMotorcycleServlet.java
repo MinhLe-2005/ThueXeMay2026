@@ -12,6 +12,7 @@ import com.smartride.dto.Demand;
 import com.smartride.dto.Motorcycle;
 import com.smartride.dto.PriceList;
 import com.smartride.dto.SearchCriteria;
+import com.smartride.util.CacheHelper;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -41,18 +42,8 @@ public class SearchMotorcycleServlet extends HttpServlet {
         String key = request.getParameter("textSearch");
 
         MotorcycleDAO motorcycleDAO = MotorcycleDAO.getInstance();
-        CategoryDAO categoryDAO = CategoryDAO.getInstance();
-        PriceListDAO priceListDAO = PriceListDAO.getInstance();
-        BrandDAO brandDAO = BrandDAO.getInstance();
-        DemandDAO demandDAO = DemandDAO.getInstance();
-        DemandPriceRangeDAO demandPriceRangeDAO = DemandPriceRangeDAO.getInstance();
 
-        List<Category> categories = categoryDAO.getAllCategory();
-        List<PriceList> priceLists = priceListDAO.getAllPriceList();
-        List<Brand> brandLists = brandDAO.getAllBrand();
-        List<String> listDisplacement = motorcycleDAO.getListDisplacements();
-        List<Demand> listDemand = demandDAO.getAllDemand();
-        List<SearchCriteria.PriceRange> listPriceRange = demandPriceRangeDAO.getListDemandPriceRanges();
+        CacheHelper.loadCache(getServletContext());
         
         int total = motorcycleDAO.getTotalMotorcyclesCountByName(key);
         int endPage = total / 9;
@@ -63,15 +54,7 @@ public class SearchMotorcycleServlet extends HttpServlet {
         List<Motorcycle> motorcycles = motorcycleDAO.getPagingMotorcyclesByName(key, index);
         request.setAttribute("key", key);
 
-        Map<Integer, String> categoryMap = new HashMap<>();
-        for (Category category : categories) {
-            categoryMap.put(category.getCategoryID(), category.getCategoryName());
-        }
 
-        Map<Integer, Double> priceMap = new HashMap<>();
-        for (PriceList priceList : priceLists) {
-            priceMap.put(priceList.getPriceListId(), priceList.getDailyPriceForDay());
-        }
         if (motorcycles.isEmpty()) {
             request.setAttribute("noResults", true);
         }
@@ -79,15 +62,7 @@ public class SearchMotorcycleServlet extends HttpServlet {
         LinkedHashMap<String, String> listMA = motorcycleDAO.getAllAvailableMotorCycle();
         request.setAttribute("listMA", listMA);
         request.setAttribute("search", "searchName");
-        request.setAttribute("listPriceRange", listPriceRange);
-        request.setAttribute("listDisplacement", listDisplacement);
-        request.setAttribute("listBrand", brandLists);
-        request.setAttribute("listDemand", listDemand);
         request.setAttribute("motorcycles", motorcycles);
-        request.setAttribute("categories", categories);
-        request.setAttribute("priceLists", priceLists);
-        request.setAttribute("categoryMap", categoryMap);
-        request.setAttribute("priceMap", priceMap);
         request.setAttribute("endP", endPage);
         request.setAttribute("tag", index);
         request.setAttribute("totalMotorcycles", total);

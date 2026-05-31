@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.smartride.dto.LocationRecommendationDTO;
 
 /**
  *
@@ -86,17 +87,46 @@ public class TouristLocationDAO implements Serializable, DAO<TouristLocation> {
     }
 
     public int getTotalTouristLocation() {
-        String sql = "SELECT COUNT(*) FROM \"TouristLocation\"";
+        int total = 0;
         try {
-            PreparedStatement stm = conn.prepareStatement(sql);
-            ResultSet rs = stm.executeQuery();
+            String sql = "SELECT COUNT(*) FROM \"TouristLocation\"";
+            Connection conn = DBUtil.makeConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                total = rs.getInt(1);
             }
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(TouristLocationDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return total;
+    }
+
+    public List<LocationRecommendationDTO> getRecommendationsByLocation(int locationId) {
+        List<LocationRecommendationDTO> list = new ArrayList<>();
+        String sql = "SELECT r.\"MotorcycleID\", m.\"Model\", m.\"Image\", r.\"Reason\", r.\"Priority\" " +
+                     "FROM \"LocationMotorcycleRecommendation\" r " +
+                     "JOIN \"Motorcycle\" m ON r.\"MotorcycleID\" = m.\"MotorcycleID\" " +
+                     "WHERE r.\"LocationID\" = ? " +
+                     "ORDER BY r.\"Priority\" ASC";
+        try {
+            Connection conn = DBUtil.makeConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, locationId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new LocationRecommendationDTO(
+                    rs.getString("MotorcycleID"),
+                    rs.getString("Model"),
+                    rs.getString("Image"),
+                    rs.getString("Reason"),
+                    rs.getInt("Priority")
+                ));
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(TouristLocationDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return list;
     }
 
     public TouristLocation getTouristLocationbyID(int id) {

@@ -26,7 +26,7 @@ import com.smartride.util.SupabaseStorageUtil;
  * @author LeQuangMinh
  */
 @WebServlet(name = "UploadImageServlet", urlPatterns = {"/uploadimage"})
-@MultipartConfig // Thêm annotation này
+@MultipartConfig // ThÃªm annotation nÃ y
 public class UploadImageServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -34,7 +34,7 @@ public class UploadImageServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        fileUploadHandler = new FileUploaded("D:\\ailaithuexeha\\MotorcycleRental\\src\\main\\webapp\\images");
+        fileUploadHandler = new FileUploaded(getServletContext().getRealPath("/images"));
     }
 
     @Override
@@ -66,10 +66,10 @@ public class UploadImageServlet extends HttpServlet {
             AccountDAO dao = AccountDAO.getInstance();
             dao.updateProfileImage(Integer.parseInt(id), publicUrl);
             
-            // Cập nhật thuộc tính image trong đối tượng account
+            // Cáº­p nháº­t thuá»™c tÃ­nh image trong Ä‘á»‘i tÆ°á»£ng account
             account.setImage(publicUrl);
 
-            // Cập nhật lại đối tượng account trong session
+            // Cáº­p nháº­t láº¡i Ä‘á»‘i tÆ°á»£ng account trong session
             session.setAttribute("account", account);
 
             
@@ -101,13 +101,13 @@ public class UploadImageServlet extends HttpServlet {
     }
     
     private String generateBookingCode() {
-          //Khởi tạo một đối tượng Random
+          //Khá»Ÿi táº¡o má»™t Ä‘á»‘i tÆ°á»£ng Random
         Random random = new Random();
 
-        // Sinh ra 6 số ngẫu nhiên từ 0 đến 999999
+        // Sinh ra 6 sá»‘ ngáº«u nhiÃªn tá»« 0 Ä‘áº¿n 999999
         int randomNumber = random.nextInt(1000000);
 
-        // Format số ngẫu nhiên thành chuỗi, thêm vào "BOOK"
+        // Format sá»‘ ngáº«u nhiÃªn thÃ nh chuá»—i, thÃªm vÃ o "BOOK"
         String bookingCode = String.format("%06d", randomNumber);
 
         return bookingCode;

@@ -1808,7 +1808,7 @@
           
             <div class="container-booking">
                 <!-- Sleek Exit Booking Button -->
-                <a href="motorcycle" class="btn-exit-booking" title="Hủy đặt xe và quay lại danh sách">
+                <a href="javascript:void(0)" onclick="let ref = document.referrer; if(ref.includes('login') || ref.includes('register')) { window.location.href='home'; } else if(ref.includes(window.location.host)) { window.location.href=ref; } else { window.location.href='home'; }" class="btn-exit-booking" title="Hủy đặt xe và quay lại">
                     <i class="bi bi-x-lg"></i> Hủy đặt xe
                 </a>
               

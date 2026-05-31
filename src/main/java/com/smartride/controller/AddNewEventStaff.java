@@ -27,7 +27,7 @@ public class AddNewEventStaff extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         EventDAO eventDAO = EventDAO.getInstance();
-        FileUploaded fileUploaded = new FileUploaded("D:\\ailaithuexeha\\MotorcycleRental\\src\\main\\webapp\\images");
+        FileUploaded fileUploaded = new FileUploaded(getServletContext().getRealPath("/images"));
 
         try {
             // Retrieve form data

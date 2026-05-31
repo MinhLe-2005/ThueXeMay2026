@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import com.smartride.dto.LocationRecommendationDTO;
 
 /**
  *
@@ -36,7 +39,14 @@ public class TouristLocationServlet extends HttpServlet {
         
         List<TouristLocation> touristLocations = touristLocationDAO.getPagingTouristLocation(index);
         
+        // Fetch recommendations for these locations
+        Map<Integer, List<LocationRecommendationDTO>> recommendMap = new HashMap<>();
+        for (TouristLocation loc : touristLocations) {
+            recommendMap.put(loc.getLocationId(), touristLocationDAO.getRecommendationsByLocation(loc.getLocationId()));
+        }
+        
         request.setAttribute("touristLocation", touristLocations);
+        request.setAttribute("recommendMap", recommendMap);
         request.setAttribute("endP", endPage);
         request.setAttribute("tag", index);
         request.getRequestDispatcher("touristLocation.jsp").forward(request, response);

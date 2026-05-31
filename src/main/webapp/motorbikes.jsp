@@ -24,16 +24,18 @@
             @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
 
             .filter-module {
-                background: #fdfcf7;
-                padding-bottom: 10px;
-                margin: 5% 0 0 5%;
+                background: #ffffff;
+                margin: 40px auto;
+                max-width: 1200px;
                 box-sizing: border-box;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-                border: 1px solid rgba(181, 147, 73, 0.15);
-                border-radius: 16px;
-                padding-top: 3%;
-                padding-left: 5%;
-                width: 90%;
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+                border: 1px solid rgba(0, 0, 0, 0.04);
+                border-radius: 20px;
+                padding: 24px 32px;
+                width: 95%;
+                position: relative;
+                z-index: 99999;
+                overflow: visible !important;
             }
 
             .xemketqua {
@@ -54,59 +56,78 @@
             .filter-container {
                 display: flex;
                 flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 20px;
             }
 
             .filter-group {
-                margin-bottom: 35px;
                 position: relative;
-                margin-right: 30px;
+                z-index: 9999;
+                overflow: visible !important;
             }
 
             .filter-button {
-                padding: 10px 20px;
-                border: 1px solid rgba(181, 147, 73, 0.3);
+                padding: 12px 24px;
+                border: 1px solid rgba(181, 147, 73, 0.2);
                 font-family: 'Plus Jakarta Sans', sans-serif;
-                font-weight: 700;
-                background: #fff;
+                font-weight: 600;
+                background: #fcfbf9;
                 color: #1a1816;
                 cursor: pointer;
-                border-radius: 5px;
+                border-radius: 30px;
                 transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
             }
 
             .filter-button:hover, .filter-button.has-active-filter {
-                color: #fff;
+                color: #fff !important;
                 background: #b59349;
                 border-color: #b59349;
             }
 
             .filter-options {
                 color: #1a1816;
-                margin-top: 10px;
+                top: calc(100% + 15px);
+                left: 50%;
+                transform: translateX(-50%);
                 position: absolute;
-                z-index: 100;
+                z-index: 9999;
                 background-color: #fff;
                 border: 1px solid rgba(181, 147, 73, 0.15);
-                border-radius: 8px;
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+                border-radius: 16px;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
                 opacity: 0;
-                padding: 20px 20px;
+                padding: 20px;
                 transition: all 0.3s ease;
-                width: 380px;
+                width: 340px;
                 display: none;
-                text-align: center;
             }
 
             .filter-options button {
-                padding: 12px;
-                border: 1px solid #eee;
-                background: #fafaf8;
+                width: 100%;
+                padding: 12px 20px;
+                border: 1px solid rgba(181, 147, 73, 0.15);
+                background: #ffffff;
                 cursor: pointer;
-                border-radius: 5px;
+                border-radius: 30px;
                 font-family: 'Plus Jakarta Sans', sans-serif;
                 font-weight: 500;
                 transition: all 0.2s ease;
                 color: #1a1816;
+            }
+
+            .filter-options:before {
+                border-bottom: 10px solid rgba(181, 147, 73, 0.15);
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                content: "";
+                left: 50%;
+                transform: translateX(-50%);
+                position: absolute;
+                top: -10px;
             }
 
             .filter-options:after {
@@ -114,14 +135,15 @@
                 border-left: 10px solid transparent;
                 border-right: 10px solid transparent;
                 content: "";
-                left: 30px;
+                left: 50%;
+                transform: translateX(-50%);
                 position: absolute;
-                top: -10px;
+                top: -9px;
             }
 
             .filter-options button:hover {
-                background-color: #f5f3eb;
-                border-color: rgba(181, 147, 73, 0.3);
+                background-color: rgba(181, 147, 73, 0.05);
+                border-color: #b59349;
             }
 
             .filter-options button.selected {
@@ -132,16 +154,24 @@
             }
 
             .show-options {
-                display: block !important;
+                display: flex !important;
+                flex-direction: column;
+                gap: 8px;
                 opacity: 1 !important;
-                z-index: 1000 !important;
             }
 
             .filter-group .filter-button:after {
                 content: ' ▼';
+                font-size: 0.8em;
+                opacity: 0.7;
             }
             .filter-group .filter-button.open:after {
                 content: ' ▲';
+                font-size: 0.8em;
+                opacity: 0.7;
+            }
+            .filter-group .filter-button.xemketqua:after {
+                content: none;
             }
 
             /* Selected Filters Premium Badges Styling */
@@ -156,6 +186,13 @@
                 align-items: center !important;
                 gap: 12px !important;
                 animation: fadeIn 0.4s ease-out !important;
+            }
+
+            .selected-filters:empty {
+                display: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
             }
 
             @keyframes fadeIn {
@@ -238,9 +275,7 @@
             }
 
             .button-item-option {
-                margin-bottom: 12px;
-                margin-right: 12px;
-                width: 45%;
+                /* Removed width constraint so it uses flex layout from .show-options */
             }
 
             /* Container & Grid cards */
@@ -274,12 +309,21 @@
             }
 
             .list h1 {
-                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-family: 'Playfair Display', serif !important;
                 color: #1a1816 !important;
-                font-weight: 800 !important;
+                font-weight: 600 !important;
+                font-size: 3rem !important;
+                margin: 15px 0 30px 0;
+            }
+            .list-subtitle {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 0.9rem;
+                letter-spacing: 3px;
                 text-transform: uppercase;
-                font-size: 2.8rem !important;
-                margin: 5% 0 3% 0;
+                color: #b59349;
+                font-weight: 600;
+                display: block;
+                text-align: center;
             }
 
             .box p {
@@ -437,14 +481,24 @@
 
     <body>
         <jsp:include page="/includes/customer/navbar.jsp" />
-        <div style="margin-top: 3%;">
-
+        <div style="margin-top: 3%; overflow: visible !important;">
             <!-- thanh search -->
-            <section>
+            <section style="overflow: visible !important;">
                 <div class="filter-module">
-                    <div class="filter-container" style="display: flex; justify-content: space-between">
-                        <div style="display: flex">
-                            <div class="filter-group">
+                    <!-- HÀNG 1: Ô Tìm Kiếm Từ Khóa -->
+                    <div class="filter-search-row" style="margin-bottom: 20px;">
+                        <form action="searchMotorcycle" method="get" style="display: flex; gap: 15px; align-items: center; width: 100%;">
+                            <div style="flex: 1; position: relative;">
+                                <input id="textSearch" style="width: 100%; padding: 16px 24px; padding-left: 50px; border-radius: 50px; border: 1px solid rgba(181,147,73,0.3); font-size: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);" value="${key}" name="textSearch" class="form-control" type="search" placeholder="Nhập tên xe, dòng xe bạn muốn tìm..." aria-label="Search">
+                                <i class="fa fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #b59349; font-size: 1.2rem;"></i>
+                            </div>
+                            <button class="btn xemketqua" style="border-radius: 50px; padding: 16px 36px; white-space: nowrap; font-weight: bold; color: white; font-size: 1rem; box-shadow: 0 4px 15px rgba(181,147,73,0.3);" type="submit">Tìm kiếm</button>
+                        </form>
+                    </div>
+
+                    <!-- HÀNG 2: Các Dropdown Lọc Kết Quả -->
+                    <div class="filter-dropdowns-row" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: center; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.05);">
+                        <div class="filter-group">
 
                                 <button class="filter-button price" onclick="toggleOptions('priceOptions')">Giá</button>
                                 <div class="filter-options" id="priceOptions">
@@ -463,10 +517,6 @@
                                             </c:if>
                                         </button>
                                     </c:forEach>
-                                    <div class="btn-filter-group open">
-                                        <button class="xemketqua" onclick="closeOptions('priceOptions')">Đóng</button>
-                                        <button class="xemketqua" onclick="showResults()">Xem kết quả</button>
-                                    </div>
                                 </div>
                             </div>
                             <div class="filter-group">
@@ -477,10 +527,6 @@
                                         <button class="button-item-option" data-id="${o.brandID}" 
                                                 onclick="toggleSelection(this)">${o.brandName}</button>
                                     </c:forEach>
-                                    <div class="btn-filter-group open">
-                                        <button class="xemketqua" onclick="closeOptions('brandOptions')">Đóng</button>
-                                        <button class="xemketqua" onclick="showResults()">Xem kết quả</button>
-                                    </div>
                                 </div>
                             </div>
 
@@ -492,10 +538,6 @@
                                         <button class="button-item-option"  data-id="${o.categoryID}" 
                                                 onclick="toggleSelection(this)">${o.categoryName}</button>
                                     </c:forEach>
-                                    <div class="btn-filter-group open">
-                                        <button class="xemketqua" onclick="closeOptions('categoryOptions')">Đóng</button>
-                                        <button class="xemketqua" onclick="showResults()">Xem kết quả</button>
-                                    </div>
                                 </div>
                             </div>
 
@@ -507,10 +549,6 @@
                                         <button class="button-item-option" data-id="${o}" 
                                                 onclick="toggleSelection(this)">${o}</button>
                                     </c:forEach>
-                                    <div class="btn-filter-group open">
-                                        <button class="xemketqua" onclick="closeOptions('massOptions')">Đóng</button>
-                                        <button class="xemketqua" onclick="showResults()">Xem kết quả</button>
-                                    </div>
                                 </div>
                             </div>
 
@@ -521,23 +559,12 @@
                                         <input hidden name="demands" value="${o.demandId}" id="searchDemand">
                                         <button class="button-item-option" data-id="${o.demandId}" onclick="toggleSelection(this)">${o.demand}</button>
                                     </c:forEach>
-                                    <div class="btn-filter-group open">
-                                        <button class="xemketqua" onclick="closeOptions('needOptions')">Đóng</button>
-                                        <button class="xemketqua" onclick="showResults()">Xem kết quả</button>
-                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <button class="filter-button xemketqua" onclick="showResults()">Xem kết quả</button>
-                            </div>
+                        <div class="filter-group">
+                            <button class="filter-button xemketqua" style="color: white; border-radius: 30px; padding: 12px 24px;" onclick="showResults()">Lọc kết quả</button>
                         </div>
-
-                        <div class="filter-search filter-group">
-                            <form action="searchMotorcycle" method="get" class="d-flex" style="width: 110%; padding-right: 10%;">
-                                <input id="textSearch" style="padding: 10px 20px;" value="${key}" name="textSearch" class="form-control me-2" type="search" placeholder="Từ khóa" aria-label="Search">
-                                <button class="btn xemketqua" style="color: white; font-weight: bold; width: 52%" type="submit">Tìm kiếm</button>
-                            </form>
-                        </div>
+                    </div>
 
                     </div>
 
@@ -546,7 +573,10 @@
                     </div>
                 </div>
                 <div class="list">
-                    <h1 class="animate__animated animate__backInDown" style="text-align: center; font-weight: bold; ">Danh Sách Xe Máy</h1>
+                    <div style="text-align: center; margin-top: 40px;">
+                        <span class="list-subtitle animate__animated animate__fadeIn">Bộ Sưu Tập Xe</span>
+                        <h1 class="animate__animated animate__backInDown">Danh Sách Xe Máy</h1>
+                    </div>
                     <div class="container-haha animate__animated animate__zoomIn">
                         <div class="wrapper row" id="motorcycleContent">
                             <c:if test="${not empty noResults}">
@@ -566,14 +596,8 @@
                                     </p>
                                     <div class="button-wrapper" style="display: flex; gap: 10px; justify-content: center; width: 100%; margin-top: 18px;">
                                         <a href="motorcycleDetail?id=${motorbike.motorcycleId}" class="btn outline-huhu" style="flex: 1; text-align: center; display: inline-flex; align-items: center; justify-content: center;">CHI TIẾT</a>
-                                        <c:set var="found" value="false" />
-                                        <c:forEach var="entry" items="${listMA}">
-                                            <c:if test="${entry.key eq motorbike.motorcycleId}">
-                                                <c:set var="found" value="true" />                                            
-                                            </c:if>
-                                        </c:forEach>
                                         <c:choose>
-                                            <c:when test="${found eq true}">
+                                            <c:when test="${not empty listMA[motorbike.motorcycleId]}">
                                                 <a href="booking?motorcycleid=${motorbike.motorcycleId}" class="btn fill" style="flex: 1; text-align: center; display: inline-flex; align-items: center; justify-content: center;">THUÊ NGAY</a>
                                             </c:when>
                                             <c:otherwise>
@@ -664,10 +688,7 @@
     <script src="js/bootstrap-datepicker.js"></script>
     <script src="js/jquery.timepicker.min.js"></script>
     <script src="js/scrollax.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="js/google-map.js"></script>
     <script src="js/main.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
                                                  var totalMotorcycles = ${not empty totalMotorcycles ? totalMotorcycles : 9999};
                                                 var currentAmount = document.getElementsByClassName("motorcycle").length;
@@ -748,6 +769,7 @@
                                                         }
                                                     });
                                                 }
+                                                var currentOpenOptions = null;
                                                 function toggleOptions(id) {
                                                     var options = document.getElementById(id);
                                                     var button = options.previousElementSibling;
@@ -769,7 +791,27 @@
                                                 function toggleSelection(button) {
                                                     button.classList.toggle('selected');
                                                     updateSelectedFilters();
+                                                    
+                                                    // Auto-close dropdown when an option is selected
+                                                    if (currentOpenOptions) {
+                                                        currentOpenOptions.classList.remove('show-options');
+                                                        currentOpenOptions.previousElementSibling.classList.remove('open');
+                                                        currentOpenOptions = null;
+                                                    }
                                                 }
+
+                                                // Auto-close dropdown when clicking outside
+                                                document.addEventListener('click', function(event) {
+                                                    if (typeof currentOpenOptions !== 'undefined' && currentOpenOptions !== null) {
+                                                        var isClickInsideFilter = event.target.closest('.filter-group');
+                                                        // if clicked outside any filter group
+                                                        if (!isClickInsideFilter) {
+                                                            currentOpenOptions.classList.remove('show-options');
+                                                            currentOpenOptions.previousElementSibling.classList.remove('open');
+                                                            currentOpenOptions = null;
+                                                        }
+                                                    }
+                                                });
 
                                                 function updateSelectedFilters() {
                                                     var selectedButtons = document.querySelectorAll('.filter-options button.selected');

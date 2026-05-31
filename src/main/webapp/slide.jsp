@@ -36,221 +36,271 @@
                 font-family: 'Plus Jakarta Sans', sans-serif !important;
                 overflow: hidden;
             }
-            
-            .swiper-container-wrapper {
-                padding: 20px 0 60px 0;
+            .centered-slide-carousel {
+                padding: 20px 15px 50px 15px !important;
             }
             
             .swiper-slide {
-                border-radius: 16px !important;
-                background: #f8f9fa !important;
-                border: 1px solid rgba(0, 0, 0, 0.04) !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
-                transition: all 0.3s ease !important;
+                border-radius: 20px !important;
+                background: #ffffff !important;
+                border: 1px solid rgba(181, 147, 73, 0.15) !important;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04) !important;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
                 overflow: hidden;
                 box-sizing: border-box;
-                padding: 30px 20px;
+                padding: 25px 20px;
                 display: flex;
                 flex-direction: column;
                 position: relative;
             }
 
             .swiper-slide:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08) !important;
-                border-color: #b59349 !important;
+                transform: translateY(-8px);
+                box-shadow: 0 20px 50px rgba(181, 147, 73, 0.1) !important;
+                border-color: rgba(181, 147, 73, 0.4) !important;
             }
 
-            /* The Featured "Best Choice" Card */
             .swiper-slide.best-choice {
-                background: #b59349 !important;
-                border-color: #b59349 !important;
-                box-shadow: 0 15px 35px rgba(181, 147, 73, 0.3) !important;
-                transform: scale(1.02);
+                background: #fffcf8 !important;
+                border: 2px solid #b59349 !important;
+                box-shadow: 0 15px 40px rgba(181, 147, 73, 0.15) !important;
                 z-index: 2;
             }
             .swiper-slide.best-choice:hover {
-                transform: scale(1.02) translateY(-5px);
+                transform: translateY(-8px);
+                box-shadow: 0 25px 50px rgba(181, 147, 73, 0.25) !important;
             }
 
             .best-badge {
                 position: absolute;
-                top: 15px;
+                top: 0;
                 left: 50%;
                 transform: translateX(-50%);
-                background: #16a34a;
+                background: linear-gradient(135deg, #c4a14b, #b59349);
                 color: #fff;
-                font-size: 12px;
-                font-weight: 600;
-                padding: 5px 12px;
-                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                padding: 6px 20px;
+                border-radius: 0 0 12px 12px;
                 display: flex;
                 align-items: center;
-                gap: 5px;
+                gap: 6px;
+                box-shadow: 0 4px 10px rgba(196, 161, 75, 0.3);
             }
 
             .card-title {
                 text-align: center;
-                font-size: 20px;
+                font-family: 'Times New Roman', serif;
+                font-size: 24px;
                 font-weight: 700;
                 color: #1a1a1a;
                 margin: 20px 0 15px 0;
+            }
+            .best-choice .card-title {
+                color: #b59349;
             }
             
             .card-img-wrapper {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 180px;
-                margin-bottom: 20px;
+                height: 160px;
+                margin-bottom: 15px;
+                position: relative;
+            }
+            
+            .card-img-wrapper::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 70%;
+                height: 20px;
+                background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 70%);
+                border-radius: 50%;
+                z-index: 1;
+            }
+            .best-choice .card-img-wrapper::after {
+                background: radial-gradient(ellipse at center, rgba(181, 147, 73, 0.25) 0%, rgba(0,0,0,0) 70%);
             }
             
             .card-img {
-                max-width: 90%;
+                max-width: 95%;
                 max-height: 100%;
                 object-fit: contain;
-                filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+                position: relative;
+                z-index: 2;
+                transition: transform 0.5s ease;
+            }
+            .swiper-slide:hover .card-img {
+                transform: scale(1.08) rotate(2deg);
             }
             
-            /* Features List */
             .features-list {
                 list-style: none;
-                padding: 0;
-                margin: 0 0 20px 0;
+                padding: 10px 0;
+                margin: 0 0 15px 0;
+                border-top: 1px dashed rgba(0,0,0,0.08);
+                border-bottom: 1px dashed rgba(0,0,0,0.08);
             }
+            .best-choice .features-list {
+                border-color: rgba(181, 147, 73, 0.3);
+            }
+            
             .features-list li {
                 display: flex;
                 align-items: center;
-                gap: 10px;
-                font-size: 13.5px;
-                color: #4a4a4a;
-                margin-bottom: 10px;
+                gap: 12px;
+                font-size: 14px;
+                color: #555;
+                margin-bottom: 8px;
             }
-            .features-list li i {
-                color: #b59349;
-                font-size: 16px;
-            }
-            /* Colors for best choice */
             .best-choice .features-list li {
                 color: #1a1a1a;
-                font-weight: 500;
+                font-weight: 600;
             }
-            .best-choice .features-list li i {
-                color: #1a1a1a;
+            
+            .features-list li i {
+                color: #c4a14b;
+                font-size: 18px;
             }
-
-            /* Price Section */
+            
             .price-wrap {
                 margin-top: auto;
-                margin-bottom: 20px;
+                margin-bottom: 15px;
+                text-align: center;
             }
             .price-val {
                 font-size: 26px;
                 font-weight: 800;
                 color: #1a1a1a;
             }
+            .best-choice .price-val {
+                color: #b59349;
+            }
             .price-unit {
                 font-size: 14px;
                 font-weight: 500;
-                color: #666;
+                color: #888;
             }
             .best-choice .price-unit {
-                color: #333;
+                color: #555;
             }
 
-            /* Action Buttons */
             .action-row {
                 display: flex;
-                gap: 10px;
+                gap: 12px;
             }
             .btn-book {
                 flex: 1;
-                background: #b59349;
+                background: linear-gradient(135deg, #c4a14b, #b59349);
                 color: #ffffff;
                 font-weight: 700;
                 font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
                 text-decoration: none;
                 border: none;
-                border-radius: 8px;
-                padding: 12px 15px;
+                border-radius: 30px;
+                padding: 10px 15px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 gap: 8px;
                 cursor: pointer;
-                transition: all 0.2s;
+                transition: all 0.3s;
+                box-shadow: 0 4px 15px rgba(181, 147, 73, 0.3);
             }
             .btn-book:hover {
-                background: #9c7c3b;
+                background: linear-gradient(135deg, #b59349, #9c7c3b);
                 color: #ffffff;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(181, 147, 73, 0.4);
             }
             .btn-msg {
-                background: #334155;
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                width: 44px;
+                background: #ffffff;
+                color: #1a1a1a;
+                border: 1px solid rgba(0,0,0,0.1);
+                border-radius: 50%;
+                width: 42px;
+                height: 42px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 font-size: 18px;
                 cursor: pointer;
-                transition: all 0.2s;
+                transition: all 0.3s;
             }
             .btn-msg:hover {
-                background: #1e293b;
+                background: #f8f9fa;
+                border-color: #b59349;
+                color: #b59349;
+                transform: rotate(15deg);
             }
 
-            /* Button variations for best-choice */
             .best-choice .btn-book {
-                background: #ffffff;
-                color: #b59349;
+                background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+                color: #ffffff;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             }
             .best-choice .btn-book:hover {
-                background: #f8f9fa;
-                color: #9c7c3b;
+                background: linear-gradient(135deg, #000000, #1a1a1a);
+                color: #c4a14b;
+            }
+            .best-choice .btn-msg {
+                background: #ffffff;
+                border-color: #1a1a1a;
+                color: #1a1a1a;
+            }
+            .best-choice .btn-msg:hover {
+                background: #1a1a1a;
+                color: #ffffff;
             }
             
-            /* Bottom View All Button */
             .view-all-wrapper {
                 text-align: center;
-                margin-top: 10px;
+                margin-top: 20px;
             }
             .btn-view-all {
-                background: #b59349;
-                color: #ffffff;
+                background: transparent;
+                color: #c4a14b;
                 font-weight: 700;
                 font-size: 15px;
                 padding: 12px 30px;
-                border-radius: 8px;
+                border-radius: 30px;
+                border: 2px solid #c4a14b;
                 text-decoration: none;
                 display: inline-flex;
                 align-items: center;
                 gap: 8px;
-                transition: all 0.2s;
+                transition: all 0.3s;
             }
             .btn-view-all:hover {
-                background: #9c7c3b;
+                background: #c4a14b;
                 color: #ffffff;
             }
 
             .swiper-button-next, .swiper-button-prev {
-                color: #333 !important;
-                background: rgba(255, 255, 255, 0.6) !important;
-                backdrop-filter: blur(4px);
-                width: 38px !important;
-                height: 38px !important;
+                color: #1a1a1a !important;
+                background: #ffffff !important;
+                border: 1px solid rgba(0,0,0,0.05);
+                width: 44px !important;
+                height: 44px !important;
                 border-radius: 50%;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
                 transition: all 0.3s ease;
             }
             .swiper-button-next:hover, .swiper-button-prev:hover {
-                background: rgba(181, 147, 73, 0.9) !important;
+                background: #c4a14b !important;
+                border-color: #c4a14b !important;
                 color: #ffffff !important;
                 transform: scale(1.05);
             }
             .swiper-button-next::after, .swiper-button-prev::after {
-                font-size: 16px !important;
+                font-size: 18px !important;
                 font-weight: 700;
             }
         </style>
@@ -297,11 +347,11 @@
 
                             <div class="action-row">
                                 <a href="booking" class="btn-book" onclick="redirectToBooking(event,'${m.motorcycleId}')">
-                                    <i class="ri-phone-line"></i> GỌI ĐẶT XE
+                                    <i class="ri-key-2-line"></i> THUÊ XE NGAY
                                 </a>
-                                <button class="btn-msg" onclick="window.top.location.href='motorcycleDetail?id=${m.motorcycleId}'">
-                                    <i class="ri-message-3-line"></i>
-                                </button>
+                                <a href="motorcycleDetail?id=${m.motorcycleId}" target="_top" class="btn-msg" title="Xem chi tiết" style="width: auto; padding: 0 15px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: 600;">
+                                    Chi tiết
+                                </a>
                             </div>
                         </div>
                     </c:forEach>

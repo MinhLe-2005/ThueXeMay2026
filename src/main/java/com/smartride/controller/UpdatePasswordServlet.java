@@ -71,8 +71,12 @@ public class UpdatePasswordServlet extends HttpServlet {
             } else if (!checkValidPass(newPassword)) {
                 request.setAttribute("errorPass", "Password phải chứa ít nhất 8 ký tự, bao gồm ít nhất 1 ký tự in hoa và 1 chữ số.");
             } else {
-                AccountDAO.getInstance().changePassword(AccountID, newPassword);
-                request.setAttribute("successChange", "Thay đổi mật khẩu thành công.");
+                boolean isChanged = AccountDAO.getInstance().changePassword(AccountID, newPassword);
+                if (isChanged) {
+                    request.setAttribute("successChange", "Thay đổi mật khẩu thành công.");
+                } else {
+                    request.setAttribute("errorPass", "Lỗi CSDL: Không lưu được mật khẩu. Hãy kiểm tra Supabase xem cột Password đã đổi thành VARCHAR(255) chưa nhé!");
+                }
             }
 
             

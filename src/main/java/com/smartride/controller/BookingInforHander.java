@@ -114,7 +114,7 @@ public class BookingInforHander extends HttpServlet {
 
          //Initialize FileUploaded with upload directory
 //        String uploadPath = getServletContext().getRealPath("/upload");
-        FileUploaded fileUploaded = new FileUploaded("D:\\ailaithuexeha\\MotorcycleRental\\src\\main\\webapp\\upload");
+        FileUploaded fileUploaded = new FileUploaded(getServletContext().getRealPath("/upload"));
         // Initialize FileUploaded with a relative directory path
 //        String uploadPath = getServletContext().getInitParameter("UPLOAD_DIRECTORY");
 //        String absoluteUploadPath = getServletContext().getRealPath(File.separator + uploadPath);
@@ -292,7 +292,7 @@ public class BookingInforHander extends HttpServlet {
         BookingDetailDAO daoBD = BookingDetailDAO.getInstance();
         Random random = new Random();
         
-        // Map để lưu số lượng xe theo tên
+        // Map Ä‘á»ƒ lÆ°u sá»‘ lÆ°á»£ng xe theo tÃªn
         LinkedHashMap<String, Integer> bikeCounts = new LinkedHashMap<>();
 
         for (HashMap<String, String> bikeDetail : bikeDetails) {
@@ -301,7 +301,7 @@ public class BookingInforHander extends HttpServlet {
             bikeCounts.put(bikeName, bikeCounts.getOrDefault(bikeName, 0) + 1);
             List<Integer> list = daoMD.getListAvailableMotorcycleDetailIdByMotorcycleName(bikeName);
             int randomElement = list.get(random.nextInt(list.size()));
-            daoMS.insertMotorcycleStatus(randomElement, "STAFF00001", "Không có sẵn", formattedDateString, "Chờ nhân viên xác nhận");
+            daoMS.insertMotorcycleStatus(randomElement, "STAFF00001", "KhÃ´ng cÃ³ sáºµn", formattedDateString, "Chá» nhÃ¢n viÃªn xÃ¡c nháº­n");
             daoBD.addBookingDetail(randomElement, bookingid, bikePrice);
         }
 
@@ -319,19 +319,19 @@ public class BookingInforHander extends HttpServlet {
         }
         
         //Payment
-        // Định dạng chuỗi đầu vào
+        // Äá»‹nh dáº¡ng chuá»—i Ä‘áº§u vÃ o
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         
-        // Chuyển đổi chuỗi thành LocalDateTime
+        // Chuyá»ƒn Ä‘á»•i chuá»—i thÃ nh LocalDateTime
         LocalDateTime dateTime = LocalDateTime.parse(paymentDate, inputFormatter);
         
-        // Định dạng chuỗi đầu ra
+        // Äá»‹nh dáº¡ng chuá»—i Ä‘áº§u ra
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         
-        // Chuyển đổi LocalDateTime thành chuỗi định dạng mới
+        // Chuyá»ƒn Ä‘á»•i LocalDateTime thÃ nh chuá»—i Ä‘á»‹nh dáº¡ng má»›i
         String paymentDateText = dateTime.format(outputFormatter);
         PaymentDAO daoP = PaymentDAO.getInstance();
-        daoP.addPayment(bookingid, "Ngân hàng", paymentDateText, amount/100000, "Giao dịch thành công");
+        daoP.addPayment(bookingid, "NgÃ¢n hÃ ng", paymentDateText, amount/100000, "Giao dá»‹ch thÃ nh cÃ´ng");
         
         // Send confirmation email
        StringBuilder emailContent = new StringBuilder();
@@ -339,7 +339,7 @@ public class BookingInforHander extends HttpServlet {
         emailContent.append("<html lang=\"vi\">\n");
         emailContent.append("<head>\n");
         emailContent.append("    <meta charset=\"UTF-8\">\n");
-        emailContent.append("    <title>Thông tin đặt xe</title>\n");
+        emailContent.append("    <title>ThÃ´ng tin Ä‘áº·t xe</title>\n");
         emailContent.append("    <style>\n");
         emailContent.append("        body {\n");
         emailContent.append("            font-family: Arial, sans-serif;\n");
@@ -376,34 +376,34 @@ public class BookingInforHander extends HttpServlet {
         emailContent.append("</head>\n");
         emailContent.append("<body>\n");
         emailContent.append("<div class=\"container\">\n");
-        emailContent.append("    <div class=\"header\">Thông tin đặt xe của bạn</div>\n");
+        emailContent.append("    <div class=\"header\">ThÃ´ng tin Ä‘áº·t xe cá»§a báº¡n</div>\n");
         emailContent.append("    <div class=\"info\">\n");
-        emailContent.append("        <div><span>Họ tên:</span> ").append(firstname).append(" ").append(lastname).append("</div>\n");
-        emailContent.append("        <div><span>Số điện thoại:</span> ").append(phone).append("</div>\n");
+        emailContent.append("        <div><span>Há» tÃªn:</span> ").append(firstname).append(" ").append(lastname).append("</div>\n");
+        emailContent.append("        <div><span>Sá»‘ Ä‘iá»‡n thoáº¡i:</span> ").append(phone).append("</div>\n");
         emailContent.append("        <div><span>Email:</span> ").append(email).append("</div>\n");
-        emailContent.append("        <div><span>Ngày nhận xe:</span> ").append(pickupDate).append("</div>\n");
-        emailContent.append("        <div><span>Ngày trả xe:</span> ").append(returnDate).append("</div>\n");
-        emailContent.append("        <div><span>Địa điểm nhận xe:</span> ").append(pickupLocation).append("</div>\n");
-        emailContent.append("        <div><span>Địa điểm trả xe:</span> ").append(returnLocation).append("</div>\n");
+        emailContent.append("        <div><span>NgÃ y nháº­n xe:</span> ").append(pickupDate).append("</div>\n");
+        emailContent.append("        <div><span>NgÃ y tráº£ xe:</span> ").append(returnDate).append("</div>\n");
+        emailContent.append("        <div><span>Äá»‹a Ä‘iá»ƒm nháº­n xe:</span> ").append(pickupLocation).append("</div>\n");
+        emailContent.append("        <div><span>Äá»‹a Ä‘iá»ƒm tráº£ xe:</span> ").append(returnLocation).append("</div>\n");
         emailContent.append("    </div>\n");
         emailContent.append("    <div class=\"vehicle-info\">\n");
-        emailContent.append("        <div class=\"header\">Thông tin xe:</div>\n");
+        emailContent.append("        <div class=\"header\">ThÃ´ng tin xe:</div>\n");
 
-        // Lặp qua danh sách xe và thêm thông tin vào email
+        // Láº·p qua danh sÃ¡ch xe vÃ  thÃªm thÃ´ng tin vÃ o email
         for (Map.Entry<String, Integer> entry : bikeCounts.entrySet()) {
             String bikeName = entry.getKey();
             int quantity = entry.getValue();
-            emailContent.append("        <div><span>Tên xe:</span> ").append(bikeName).append("             x").append(quantity).append("</div>\n");
-//            emailContent.append("        <div><span>Số lượng:</span> x").append(quantity).append(" VND</div>\n");
+            emailContent.append("        <div><span>TÃªn xe:</span> ").append(bikeName).append("             x").append(quantity).append("</div>\n");
+//            emailContent.append("        <div><span>Sá»‘ lÆ°á»£ng:</span> x").append(quantity).append(" VND</div>\n");
         }
-        emailContent.append("<div><span>Phí thuê xe dự tính:</span> ").append(total).append(" VND</div>");
+        emailContent.append("<div><span>PhÃ­ thuÃª xe dá»± tÃ­nh:</span> ").append(total).append(" VND</div>");
         emailContent.append("    </div>\n");
         emailContent.append("    <div class=\"note\">\n");
-        emailContent.append("        <div class=\"header\">Lưu ý:</div>\n");
+        emailContent.append("        <div class=\"header\">LÆ°u Ã½:</div>\n");
         emailContent.append("        <ul>\n");
-        emailContent.append("            <li>Vui lòng mang theo giấy tờ tùy thân khi nhận xe.</li>\n");
-        emailContent.append("            <li>Kiểm tra kỹ thông tin xe trước khi nhận.</li>\n");
-        emailContent.append("            <li>Liên hệ với chúng tôi nếu có bất kỳ thắc mắc nào.</li>\n");
+        emailContent.append("            <li>Vui lÃ²ng mang theo giáº¥y tá» tÃ¹y thÃ¢n khi nháº­n xe.</li>\n");
+        emailContent.append("            <li>Kiá»ƒm tra ká»¹ thÃ´ng tin xe trÆ°á»›c khi nháº­n.</li>\n");
+        emailContent.append("            <li>LiÃªn há»‡ vá»›i chÃºng tÃ´i náº¿u cÃ³ báº¥t ká»³ tháº¯c máº¯c nÃ o.</li>\n");
         emailContent.append("        </ul>\n");
         emailContent.append("    </div>\n");
         emailContent.append("</div>\n");
@@ -418,13 +418,13 @@ public class BookingInforHander extends HttpServlet {
     }
 
     private String generateBookingCode() {
-          //Khởi tạo một đối tượng Random
+          //Khá»Ÿi táº¡o má»™t Ä‘á»‘i tÆ°á»£ng Random
         Random random = new Random();
 
-        // Sinh ra 6 số ngẫu nhiên từ 0 đến 999999
+        // Sinh ra 6 sá»‘ ngáº«u nhiÃªn tá»« 0 Ä‘áº¿n 999999
         int randomNumber = random.nextInt(1000000);
 
-        // Format số ngẫu nhiên thành chuỗi, thêm vào "BOOK"
+        // Format sá»‘ ngáº«u nhiÃªn thÃ nh chuá»—i, thÃªm vÃ o "BOOK"
         String bookingCode = "BOOK" + String.format("%06d", randomNumber);
 
         return bookingCode;

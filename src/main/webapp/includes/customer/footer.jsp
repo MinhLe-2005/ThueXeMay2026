@@ -184,7 +184,7 @@
 .floating-contact {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 30px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -196,15 +196,16 @@
 .floating-contact.dragging {
     transition: max-height 0.4s ease !important;
 }
-.floating-contact:not(.is-active-drag):hover {
+.floating-contact:not(.is-active-drag):hover,
+.floating-contact.force-hover {
     max-height: 320px;
 }
 /* Snap Right (default behavior) */
 .floating-contact, .floating-contact.snap-right {
-    align-items: flex-end !important;
+    align-items: flex-start !important;
 }
 .floating-contact .contact-sub-buttons, .floating-contact.snap-right .contact-sub-buttons {
-    align-items: flex-end !important;
+    align-items: flex-start !important;
 }
 /* Snap Left (when snapped to the left side) */
 .floating-contact.snap-left {
@@ -239,17 +240,19 @@
 .contact-sub-buttons {
     position: absolute;
     bottom: 68px;
-    right: 0;
+    left: 0;
+    right: auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    align-items: flex-end;
+    align-items: flex-start;
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
-.floating-contact:not(.is-active-drag):hover .contact-sub-buttons {
+.floating-contact:not(.is-active-drag):hover .contact-sub-buttons,
+.floating-contact.force-hover .contact-sub-buttons {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -312,6 +315,18 @@
 </style>
 
 <script>
+window.toggleChatWidget = function() {
+    const popup = document.getElementById('chatbot-iframe-container');
+    const bubble = document.querySelector('.custom-chatbot-bubble');
+    if (popup && popup.style.display === 'none') {
+        popup.style.display = 'flex';
+        if (bubble) bubble.style.display = 'none';
+    } else if (popup) {
+        popup.style.display = 'none';
+        if (bubble) bubble.style.display = 'flex';
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const fabContainer = document.querySelector('.floating-contact');
     const fabButton = document.querySelector('.main-contact-fab');
@@ -429,5 +444,143 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 100);
         }
     }
+    
+    // Make Chatbot Bubble Draggable
+    const botBubble = document.querySelector('.custom-chatbot-bubble');
+    if (botBubble) {
+        let isBotDragging = false;
+        let bStartX, bStartY;
+        let bInitialLeft, bInitialTop;
+        let bHasMoved = false;
+        
+        botBubble.addEventListener('mousedown', startBotDrag);
+        botBubble.addEventListener('touchstart', startBotDrag, { passive: true });
+        
+        function startBotDrag(e) {
+            bHasMoved = false;
+            isBotDragging = true;
+            
+            const rect = botBubble.getBoundingClientRect();
+            bInitialLeft = rect.left;
+            bInitialTop = rect.top;
+            
+            botBubble.style.transition = 'none';
+            
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            
+            bStartX = clientX - bInitialLeft;
+            bStartY = clientY - bInitialTop;
+            
+            document.addEventListener('mousemove', dragBot);
+            document.addEventListener('touchmove', dragBot, { passive: false });
+            document.addEventListener('mouseup', endBotDrag);
+            document.addEventListener('touchend', endBotDrag);
+        }
+        
+        function dragBot(e) {
+            if (!isBotDragging) return;
+            
+            if (e.cancelable) e.preventDefault();
+            
+            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            
+            let newLeft = clientX - bStartX;
+            let newTop = clientY - bStartY;
+            
+            const padding = 20;
+            const maxLeft = window.innerWidth - 60 - padding;
+            const maxTop = window.innerHeight - 60 - padding;
+            
+            newLeft = Math.max(padding, Math.min(newLeft, maxLeft));
+            newTop = Math.max(padding, Math.min(newTop, maxTop));
+            
+            const bottomVal = window.innerHeight - newTop - 60;
+            
+            botBubble.style.bottom = bottomVal + 'px';
+            botBubble.style.top = 'auto';
+            botBubble.style.right = 'auto';
+            botBubble.style.left = newLeft + 'px';
+            
+            if (Math.abs(newLeft - bInitialLeft) > 5 || Math.abs(newTop - bInitialTop) > 5) {
+                bHasMoved = true;
+            }
+        }
+        
+        function endBotDrag(e) {
+            if (!isBotDragging) return;
+            isBotDragging = false;
+            
+            document.removeEventListener('mousemove', dragBot);
+            document.removeEventListener('touchmove', dragBot);
+            document.removeEventListener('mouseup', endBotDrag);
+            document.removeEventListener('touchend', endBotDrag);
+            
+            botBubble.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            
+            if (bHasMoved) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }
+        
+        // Prevent click if dragged
+        botBubble.addEventListener('click', function(e) {
+            if (bHasMoved) {
+                e.stopPropagation();
+                e.preventDefault();
+            } else {
+                window.toggleChatWidget();
+            }
+        });
+        
+        // Remove the inline onclick from the div later.
+    }
 });
 </script>
+
+<!-- Custom Chatbot UI (Bulletproof Iframe) -->
+<div class="custom-chatbot-bubble" title="Chat với AI">
+    <i class="bi bi-robot"></i>
+</div>
+
+<div id="chatbot-iframe-container" style="display: none; position: fixed; bottom: 30px; right: 30px; width: 400px; height: 600px; z-index: 9999; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.2); border: 1px solid rgba(181, 147, 73, 0.2); background: #fff; flex-direction: column;">
+    <div style="background: #1a1a1a; color: #fff; padding: 12px 20px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #b59349; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="bi bi-robot" style="color: #b59349; font-size: 20px;"></i>
+            <span>Trợ Lý AI SmartRide</span>
+        </div>
+        <i class="bi bi-x-lg" style="cursor: pointer; font-size: 18px; transition: color 0.3s;" onmouseover="this.style.color='#b59349'" onmouseout="this.style.color='#fff'" onclick="window.toggleChatWidget()"></i>
+    </div>
+    <iframe src="https://www.chatbase.co/chatbot-iframe/HNBmb5fk-wSlCm4pwAPS6" style="flex-grow: 1; border: none; width: 100%; height: 100%;"></iframe>
+</div>
+
+<style>
+.custom-chatbot-bubble {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 9999;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid #b59349;
+}
+.custom-chatbot-bubble:hover {
+    transform: translateY(-5px) scale(1.08);
+    box-shadow: 0 15px 35px rgba(181, 147, 73, 0.4);
+    background: #b59349;
+    color: #fff;
+    border-color: #1a1a1a;
+}
+</style>

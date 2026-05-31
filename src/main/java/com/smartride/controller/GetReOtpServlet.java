@@ -24,7 +24,7 @@ public class GetReOtpServlet extends HttpServlet {
         String email = (String) session.getAttribute("email");
 
         // Generate verification code
-        String verificationCode = SendEmail.generateRandomFourDigits();
+        String verificationCode = SendEmail.generateRandomSixDigits();
         // Save verification code in session
         session.setAttribute("verificationCode", verificationCode);
         // Send verification email

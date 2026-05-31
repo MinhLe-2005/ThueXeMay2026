@@ -33,7 +33,7 @@ public class AddTouristLocationServletStaff extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         TouristLocationDAO touristLocationDAO = TouristLocationDAO.getInstance();
-        FileUploaded fileUploaded = new FileUploaded("D:\\ailaithuexeha\\MotorcycleRental\\src\\main\\webapp\\images");
+        FileUploaded fileUploaded = new FileUploaded(getServletContext().getRealPath("/images"));
         try {
             String locationName = request.getParameter("locationName");
             

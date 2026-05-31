@@ -12,6 +12,7 @@ import com.smartride.dto.Demand;
 import com.smartride.dto.Motorcycle;
 import com.smartride.dto.PriceList;
 import com.smartride.dto.SearchCriteria.PriceRange;
+import com.smartride.util.CacheHelper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -48,12 +49,7 @@ public class MotorcycleServlet extends HttpServlet {
         }
         int index = Integer.parseInt(indexPage);
 
-        List<Category> categories = categoryDAO.getAllCategory();
-        List<PriceList> priceLists = priceListDAO.getAllPriceList();
-        List<Brand> brandLists = brandDAO.getAllBrand();
-        List<String> listDisplacement = motorcycleDAO.getListDisplacements();
-        List<Demand> listDemand = demandDAO.getAllDemand();
-        List<PriceRange> listPriceRange = demandPriceRangeDAO.getListDemandPriceRanges();
+        CacheHelper.loadCache(getServletContext());
         
         int total = motorcycleDAO.getTotalMotorcyclesCount();
         int endPage = total / 9;
@@ -63,28 +59,12 @@ public class MotorcycleServlet extends HttpServlet {
         
         List<Motorcycle> motorcycles = motorcycleDAO.getPagingMotorcycles(index);
 
-        Map<Integer, String> categoryMap = new HashMap<>();
-        for (Category category : categories) {
-            categoryMap.put(category.getCategoryID(), category.getCategoryName());
-        }
 
-        Map<Integer, Double> priceMap = new HashMap<>();
-        for (PriceList p : priceLists) {
-            priceMap.put(p.getPriceListId(), p.getDailyPriceForDay());
-        }
         
         LinkedHashMap<String, String> listMA = motorcycleDAO.getAllAvailableMotorCycle();
         request.setAttribute("listMA", listMA);
 
-        request.setAttribute("listPriceRange", listPriceRange);
-        request.setAttribute("listDisplacement", listDisplacement);
-        request.setAttribute("listBrand", brandLists);
-        request.setAttribute("listDemand", listDemand);
         request.setAttribute("motorcycles", motorcycles);
-        request.setAttribute("categories", categories);
-        request.setAttribute("priceLists", priceLists);
-        request.setAttribute("categoryMap", categoryMap);
-        request.setAttribute("priceMap", priceMap);
         
         request.setAttribute("endP", endPage);
         request.setAttribute("tag", index);

@@ -192,7 +192,7 @@
                                         <div class="icon mr-3">
                                             <i class="fas fa-map-marker-alt"></i> <!-- Font Awesome class -->
                                         </div>
-                                        <p class="info"><span>Địa Chỉ:</span> 198 West 21th Street, Suite 721 New York NY 10016</p>
+                                        <p class="info"><span>Địa Chỉ:</span> Số 01 Đại lộ Tự Do, Quận Hành Trình, TP. SmartRide</p>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -200,7 +200,7 @@
                                         <div class="icon mr-3">
                                             <i class="fas fa-mobile-alt"></i> <!-- Font Awesome class -->
                                         </div>
-                                        <p class="info"><span>Số Điện Thoại:</span> <a href="tel://0941121748">+84 941 121 748</a></p>
+                                        <p class="info"><span>Số Điện Thoại:</span> <a href="tel://0824551789">0824 551 789</a></p>
                                     </div>
                                 </div>
                                 <div class="col-md-12">

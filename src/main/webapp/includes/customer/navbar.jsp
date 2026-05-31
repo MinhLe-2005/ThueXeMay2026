@@ -541,8 +541,8 @@
 // Thiết lập hàm để thực hiện sau mỗi 10 giây
     setInterval(yourFunction, 1 * 60 * 60 * 1000);
 
-// Thực hiện ngay lập tức lần đầu tiên nếu cần thiết
-    yourFunction();
+// Thực hiện lần đầu tiên sau khi trang load xong 5 giây để tránh lag trang
+    setTimeout(yourFunction, 5000);
     
     // Auto-detect current page and apply .active class with gold underline transition
     document.addEventListener("DOMContentLoaded", function() {
@@ -607,10 +607,12 @@
 
 </script>
 
+<!--
 <script
     src="https://www.chatbase.co/embed.min.js"
     chatbotId="qUNf-UR7ycIWmYS6ZiWCL"
     domain="www.chatbase.co"
     defer>
 </script>
+-->
 

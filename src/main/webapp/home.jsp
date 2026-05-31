@@ -548,60 +548,74 @@
             </section><!-- /Hero Section -->
 
             <!-- Featured Services Section -->
-            <section id="featured-services" class="featured-services section" style="background-color: #fafafa; padding: 70px 0; border-top: 1px solid #f0f0f0;">
+            <section id="featured-services" class="featured-services section" style="background-color: #fafafa; padding: 90px 0;">
                 <div class="container">
-                    <div class="text-center" style="position: relative; margin-bottom: 60px;">
-                        <h1 style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 7vw; font-weight: 800; color: rgba(0,0,0,0.04); white-space: nowrap; z-index: 0; text-transform: uppercase; margin: 0; font-family: 'Times New Roman', serif; letter-spacing: 5px;">VÌ SAO CHỌN CHÚNG TÔI</h1>
-                        <h2 style="position: relative; z-index: 1; font-size: 36px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px; font-family: 'Times New Roman', serif; text-transform: uppercase;">VÌ SAO CHỌN CHÚNG TÔI</h2>
-                        <p style="position: relative; z-index: 1; color: #666; font-size: 15px;">Sắc màu hành trình, chọn chúng tôi để khởi đầu</p>
+                    <div class="text-center" style="margin-bottom: 60px;" data-aos="fade-up">
+                        <span style="color: #c4a14b; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif;">Dịch vụ nổi bật</span>
+                        <h2 style="font-family: 'Times New Roman', serif; font-size: 42px; font-weight: 700; color: #1a1a1a; margin: 15px 0;">VÌ SAO CHỌN CHÚNG TÔI</h2>
+                        <p style="color: #666; max-width: 750px; margin: 0 auto; font-size: 15.5px; line-height: 1.8;">
+                            Sắc màu hành trình, chọn chúng tôi để khởi đầu một trải nghiệm thuê xe máy hoàn hảo và đáng nhớ nhất tại Đà Nẵng.
+                        </p>
                     </div>
 
                     <div class="row gy-4 justify-content-center">
                         <!-- Item 1 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.04); border: 1px solid #eaeaea; border-radius: 4px; height: 100%; transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gem" style="color: #c4a14b; font-size: 18px; margin-bottom: 25px; display: block;"></i>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Lựa chọn đa dạng</h4>
+                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
+                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
+                                    <i class="fa-solid fa-motorcycle" style="color: #c4a14b; font-size: 24px;"></i>
+                                </div>
+                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Lựa chọn đa dạng</h4>
                                 <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Hàng trăm loại xe đa dạng ở nhiều địa điểm tại Đà Nẵng, phù hợp với mọi mục đích của bạn.</p>
                             </div>
                         </div>
                         <!-- Item 2 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.04); border: 1px solid #eaeaea; border-radius: 4px; height: 100%; transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gem" style="color: #c4a14b; font-size: 18px; margin-bottom: 25px; display: block;"></i>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Thuận lợi</h4>
+                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
+                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
+                                    <i class="fa-solid fa-location-dot" style="color: #c4a14b; font-size: 24px;"></i>
+                                </div>
+                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Thuận lợi</h4>
                                 <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Dễ dàng tìm kiếm, so sánh và đặt xe máy bạn muốn chỉ với vài cú nhấp chuột.</p>
                             </div>
                         </div>
                         <!-- Item 3 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.04); border: 1px solid #eaeaea; border-radius: 4px; height: 100%; transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gem" style="color: #c4a14b; font-size: 18px; margin-bottom: 25px; display: block;"></i>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Giá cả cạnh tranh</h4>
+                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
+                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
+                                    <i class="fa-solid fa-tags" style="color: #c4a14b; font-size: 24px;"></i>
+                                </div>
+                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Giá cả cạnh tranh</h4>
                                 <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Giá thuê được niêm yết công khai và rẻ hơn tới 10% so với giá truyền thống.</p>
                             </div>
                         </div>
                         <!-- Item 4 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.04); border: 1px solid #eaeaea; border-radius: 4px; height: 100%; transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gem" style="color: #c4a14b; font-size: 18px; margin-bottom: 25px; display: block;"></i>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Đáng tin cậy</h4>
+                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
+                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
+                                    <i class="fa-solid fa-shield-halved" style="color: #c4a14b; font-size: 24px;"></i>
+                                </div>
+                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Đáng tin cậy</h4>
                                 <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Tất cả các xe đều có tuổi thọ dưới 3 năm và được bảo dưỡng định kỳ.</p>
                             </div>
                         </div>
                         <!-- Item 5 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.04); border: 1px solid #eaeaea; border-radius: 4px; height: 100%; transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gem" style="color: #c4a14b; font-size: 18px; margin-bottom: 25px; display: block;"></i>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Dịch vụ hỗ trợ 24/7</h4>
+                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
+                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
+                                    <i class="fa-solid fa-headset" style="color: #c4a14b; font-size: 24px;"></i>
+                                </div>
+                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Dịch vụ hỗ trợ 24/7</h4>
                                 <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Có nhân viên hỗ trợ khách hàng trong suốt quá trình thuê xe.</p>
                             </div>
                         </div>
                         <!-- Item 6 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.04); border: 1px solid #eaeaea; border-radius: 4px; height: 100%; transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gem" style="color: #c4a14b; font-size: 18px; margin-bottom: 25px; display: block;"></i>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Thời gian thuê linh hoạt</h4>
+                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
+                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
+                                    <i class="fa-regular fa-clock" style="color: #c4a14b; font-size: 24px;"></i>
+                                </div>
+                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Thời gian linh hoạt</h4>
                                 <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Bạn có thể đặt xe máy trong bất kỳ khoảng thời gian nào và gia hạn nếu muốn.</p>
                             </div>
                         </div>
@@ -611,10 +625,11 @@
 
 
             <hr style="border: 0; height: 1px; background: #eaeaea; margin: 0; padding: 0;">
-            <div class="container section-title text-center" data-aos="fade-up" style="padding-top: 80px; margin-bottom: 40px;">
-                <h2 style="font-family: 'Times New Roman', serif; font-size: 40px; font-weight: 700; color: #1a1a1a; margin: 15px 0 20px 0; text-transform: uppercase;">DANH MỤC XE MÁY</h2>
-                <p style="font-size: 15.5px; color: #666; max-width: 900px; margin: 0 auto; line-height: 1.8;">
-                    Toàn bộ xe máy tại SmartRide đều là xe mới 100%, được mua mới và đăng ký chính chủ ngay từ đầu. Sau mỗi hợp đồng thuê, xe sẽ được kiểm tra toàn diện, bảo dưỡng định kỳ và thay thế các bộ phận có dấu hiệu hao mòn hoặc hư hỏng. Chỉ những xe đáp ứng đầy đủ tiêu chuẩn an toàn kỹ thuật mới được bàn giao cho khách hàng tiếp theo.
+            <div class="container text-center" data-aos="fade-up" style="padding-top: 90px; margin-bottom: 50px;">
+                <span style="color: #c4a14b; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif;">Bộ sưu tập xe</span>
+                <h2 style="font-family: 'Times New Roman', serif; font-size: 42px; font-weight: 700; color: #1a1a1a; margin: 15px 0 20px 0; text-transform: uppercase;">DANH MỤC XE MÁY</h2>
+                <p style="font-size: 15.5px; color: #666; max-width: 800px; margin: 0 auto; line-height: 1.8; position: relative;">
+                    Toàn bộ xe máy tại SmartRide đều là xe mới 100%, được mua mới và đăng ký chính chủ. Sau mỗi hợp đồng thuê, xe sẽ được kiểm tra toàn diện và bảo dưỡng định kỳ, đảm bảo tiêu chuẩn an toàn kỹ thuật cao nhất trước khi bàn giao.
                 </p>
             </div>
             <iframe src="slide.jsp" style="width: 100%; height: 680px; padding: 0; margin: 0; border: none; overflow: hidden;" scrolling="no"></iframe>

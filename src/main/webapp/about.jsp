@@ -6,320 +6,446 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>About Us - SmartRide</title>
+        <title>Về Chúng Tôi - SmartRide</title>
         <link rel="stylesheet"
               href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-        <link rel="stylesheet"
-              href="https://unpkg.com/bs-brain@2.0.4/components/abouts/about-4/assets/css/about-4.css">
-
-
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+        <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+        
         <style>
-            
-            body, .body {
-                background-color: #fbfaf8 !important;
-                color: #2b2824 !important;
+            :root {
+                --primary: #b59349;
+                --text-dark: #1a1816;
+                --text-body: #666666;
+                --bg-light: #ffffff;
+                --white: #ffffff;
+            }
+
+            body {
+                background-color: var(--bg-light) !important;
+                color: var(--text-body) !important;
                 font-family: 'Plus Jakarta Sans', sans-serif !important;
-            }
-            .noidung{
-                margin-top: 8%;
+                overflow-x: hidden;
             }
 
-            img:hover {
-                transform: scale(1.05);
-                box-shadow: 0 8px 24px rgba(181, 147, 73, 0.15);
+            h1, h2, h3, h4, h5, h6 {
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                color: var(--text-dark) !important;
+                font-weight: 800;
+                letter-spacing: -0.5px;
             }
-            /* Header Section */
-            .about-header {
+
+            .noidung {
+                padding-top: 0;
+                margin-top: 75px; 
+            }
+
+            /* --- HERO SECTION --- */
+            .hero-wedding-style {
+                position: relative;
+                width: 100%;
+                height: 80vh;
+                min-height: 600px;
+                /* Sử dụng ảnh đen tĩnh mịch tạo sự sang trọng */
+                background: url('images/gen_gallery_2.png') center/cover no-repeat;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 text-align: center;
-                margin-bottom: 3rem;
             }
 
-            .about-header h2 {
-                margin-bottom: 1.5rem;
-                color: #1a1816 !important;
-                font-family: 'Playfair Display', serif !important;
+            .hero-fade-bottom {
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 300px;
+                background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+                z-index: 2;
             }
 
-            .btn-primary {
-                background: #b59349 !important;
-                border: none;
-                color: #ffffff !important;
-                font-weight: 600;
-                padding: 12px 30px;
+            /* Lớp phủ tối hơn cho ảnh Hero nổi bật chữ trắng */
+            .hero-overlay {
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                z-index: 1;
+            }
+
+            .hero-content {
+                position: relative;
+                z-index: 3;
+                max-width: 800px;
+                padding: 0 20px;
+                color: var(--white);
+            }
+            
+            .hero-subtitle {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 0.9rem;
+                letter-spacing: 4px;
                 text-transform: uppercase;
-                transition: background-color 0.3s ease, transform 0.3s ease;
-                border-radius: 50px;
+                margin-bottom: 20px;
+                display: block;
+                color: var(--primary);
+                font-weight: 500;
             }
 
-            .btn-primary:hover {
-                background: #a38241 !important;
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(181, 147, 73, 0.2);
+            .hero-content h1 {
+                font-size: 4rem;
+                font-weight: 800;
+                color: var(--white) !important;
+                margin-bottom: 15px;
+                text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+                text-transform: uppercase;
             }
 
-            /* Card Styles */
-            .card {
-                background-color: #ffffff !important;
-                border: 1px solid #eae6df !important;
-                border-radius: 10px;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            .hero-divider {
+                width: 40px;
+                height: 2px;
+                background-color: var(--primary);
+                margin: 20px auto 30px auto;
+            }
+
+            .hero-content p {
+                font-size: 1.1rem;
+                font-weight: 300;
+                letter-spacing: 1px;
+                color: rgba(255,255,255,0.9);
+                text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+            }
+
+
+            /* --- MASONRY & GENERAL --- */
+            .section-padding {
+                padding: 100px 0;
+            }
+
+            .story-subtitle {
+                font-size: 0.8rem;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: var(--primary);
+                margin-bottom: 15px;
+                display: block;
+            }
+
+            .story-title {
+                font-size: 3rem;
+                line-height: 1.2;
+                margin-bottom: 30px;
+                font-weight: 800;
+            }
+
+            .story-text {
+                font-size: 1.05rem;
+                line-height: 1.8;
+                font-weight: 300;
+                margin-bottom: 20px;
+            }
+
+            /* Fix lỗi cắt ảnh: Dùng object-fit contain cho các ảnh xe trên nền trắng để không bị mất góc */
+            .masonry-grid {
+                display: grid;
+                grid-template-columns: 1.5fr 1fr;
+                gap: 20px;
+                height: 600px;
+            }
+
+            .masonry-main {
+                width: 100%;
                 height: 100%;
-            }
-
-            .card:hover {
-                transform: translateY(-10px);
-                box-shadow: 0 10px 40px rgba(181, 147, 73, 0.08);
-                border-color: #b59349 !important;
-            }
-
-            .card img {
-                border-top-left-radius: 10px;
-                border-bottom-left-radius: 10px;
                 object-fit: cover;
+                border-radius: 4px;
+            }
+
+            .masonry-side {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
                 height: 100%;
             }
 
-            .card-body {
-                padding: 1.5rem;
+            .masonry-side img {
+                width: 100%;
+                height: calc(50% - 10px);
+                /* Contain giúp ảnh xe ko bị cắt đầu/đuôi */
+                object-fit: contain; 
+                border-radius: 4px;
+                background-color: #fbfaf8; /* Tạo nền nhẹ cho ảnh xe */
             }
 
-            .card-title {
-                font-size: 1.75rem;
-                margin-bottom: 1rem;
-                color: #b59349 !important;
-                font-family: 'Playfair Display', serif !important;
-                font-weight: 600;
+
+            /* --- MINIMALIST VALUES (3 Columns) with Hover --- */
+            .values-section {
+                padding: 80px 0 120px;
+                background-color: #faf9f7; 
+                text-align: center;
             }
 
-            .card-text {
-                font-size: 1rem;
-                color: #4a4744 !important;
+            .values-header {
+                margin-bottom: 80px;
             }
 
-            /* Feature Styles */
-            .feature-icon {
-                flex-shrink: 0;
-                font-size: 2.5rem;
-                color: #b59349 !important;
-                margin-right: 1rem;
+            /* Hiệu ứng Đổi màu khi Trỏ chuột (Hover Invert) */
+            .value-item {
+                padding: 40px 30px;
+                text-align: left;
+                border-left: 1px solid rgba(0,0,0,0.08);
+                height: 100%;
+                transition: all 0.4s ease;
+                background-color: transparent;
+                cursor: default;
             }
 
-            .feature-text h2 {
+            .value-item:hover {
+                background-color: #000000;
+            }
+
+            .value-number {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-weight: 800;
+                font-size: 3rem;
+                color: rgba(181, 147, 73, 0.4);
+                margin-bottom: 15px;
+                display: block;
+                transition: color 0.4s ease;
+            }
+
+            .value-title {
                 font-size: 1.5rem;
-                color: #b59349 !important;
-                font-family: 'Playfair Display', serif !important;
+                margin-bottom: 15px;
+                font-weight: 700;
+                transition: color 0.4s ease;
+                letter-spacing: -0.5px;
             }
 
-            .feature-text p {
-                color: #4a4744 !important;
+            .value-desc {
+                font-size: 0.95rem;
+                line-height: 1.8;
+                font-weight: 300;
+                transition: color 0.4s ease;
             }
 
-            /* Responsive Styles */
-            @media (max-width: 768px) {
-                .about-header {
-                    padding: 0 1rem;
-                }
-
-                .row {
-                    margin: 0;
-                }
-
-                .col-12,
-                .col-md-6,
-                .col-lg-6,
-                .col-xl-5,
-                .col-xl-7 {
-                    padding: 0;
-                }
-
-                .mb-5 {
-                    margin-bottom: 2rem;
-                }
+            .value-item:hover .value-number {
+                color: var(--primary);
+            }
+            .value-item:hover .value-title, 
+            .value-item:hover .value-desc {
+                color: #ffffff !important;
             }
 
-            @media (min-width: 768px) {
-                .order-md-1 {
-                    order: 1;
-                }
+            @media (min-width: 992px) {
+                .col-lg-4:first-child .value-item { border-left: none; }
+            }
 
-                .order-md-2 {
-                    order: 2;
-                }
+
+            /* --- FULL WIDTH GALLERY --- */
+            .gallery-container {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                width: 100%;
+                gap: 15px;
+                padding: 0 15px;
+                margin-bottom: 60px;
             }
-            
-            .card{
-                height: 250px !important;
-                
+
+            .gallery-img-wrapper {
+                position: relative;
+                overflow: hidden;
+                padding-top: 130%; 
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+                background-color: #f8f9fa;
             }
-            
-           
+
+            .gallery-img-wrapper img {
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                object-fit: cover !important;
+                border-radius: 0 !important; /* Force reset any inline border radius */
+                transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+
+            .gallery-img-wrapper:hover img {
+                transform: scale(1.08);
+            }
+
+            .btn-book {
+                display: inline-block;
+                background: #1a1816;
+                color: #fff !important;
+                padding: 15px 40px;
+                letter-spacing: 2px;
+                font-size: 0.85rem;
+                text-transform: uppercase;
+                text-decoration: none;
+                margin-top: 30px;
+                transition: all 0.3s;
+            }
+
+            .btn-book:hover {
+                background: var(--primary);
+            }
+
+            @media (max-width: 991px) {
+                .masonry-grid { grid-template-columns: 1fr; height: auto; }
+                .masonry-side { flex-direction: row; height: 300px; }
+                .value-item { border-left: none; border-bottom: 1px solid rgba(0,0,0,0.08); padding: 30px; margin-bottom: 0; text-align: center; }
+                .gallery-container { grid-template-columns: repeat(2, 1fr); }
+            }
         </style>
 
         <jsp:include page="/includes/customer/header.jsp" />
     </head>
     <body>
         <jsp:include page="/includes/customer/navbar.jsp" />
+        
         <div class="noidung">
-            <section class="py-3 py-md-5 py-xl-8">
-                <div class="container about-header" data-aos="fade-up">
-                    <h3>Chào Mừng Đến Với SmartRide!</h3>
-                    <h2 style="font-size: small;">SmartRide không chỉ là một dịch vụ cho thuê xe máy, mà còn là người bạn đồng hành đáng tin cậy của bạn trong mỗi chuyến phiêu lưu khám phá thành phố Đà Nẵng xinh đẹp. 
-                        Chúng tôi tự hào là đơn vị cho thuê xe máy chính chủ với dịch vụ chất lượng cao, giúp bạn dễ dàng và thuận tiện trong việc di chuyển, 
-                        khám phá mọi ngóc ngách của thành phố mà không phải lo lắng về vấn đề giao thông.</h2>
-                    <a href="home" class="btn btn-lg btn-primary mt-4" data-aos="zoom-in">Tham Gia Ngay</a>
+            
+            <!-- 1. HERO SECTION -->
+            <section class="hero-wedding-style">
+                <div class="hero-overlay"></div>
+                <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
+                    <span class="hero-subtitle">Về Chúng Tôi</span>
+                    <h1>Trải Nghiệm SmartRide</h1>
+                    <div class="hero-divider"></div>
+                    <p>Dịch vụ cho thuê xe máy cao cấp tại Đà Nẵng</p>
                 </div>
+                <div class="hero-fade-bottom"></div>
+            </section>
 
-                <div class="container mt-5">
-                    <div class="row gy-4">
-                        <div class="col-12 col-lg-6" data-aos="fade-right">
-                            <div class="card bg-light p-3">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-md-5">
-                                        <img src="images/logo.png?v=<%=System.currentTimeMillis()%>" class="img-fluid"
-                                             alt="Why Choose Us?">
-                                    </div>
-                                    <div class="col-md-7">
-                                        <div class="card-body">
-                                            <h2 class="card-title">Tại sao chọn chúng tôi?</h2>
-                                            <p class="card-text">SmartRide được thành lập từ niềm đam mê với xe máy và du lịch của đội ngũ sáng lập. 
-                                                Chúng tôi hiểu rằng, để có một chuyến du lịch trọn vẹn, việc di chuyển không chỉ cần thuận tiện mà còn phải an toàn và đáng tin cậy.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            <!-- 2. STORY SECTION -->
+            <section class="section-padding bg-white">
+                <div class="container">
+                    <div class="row align-items-center gy-5">
+                        <div class="col-lg-6 pe-lg-5" data-aos="fade-right">
+                            <span class="story-subtitle">Câu chuyện của chúng tôi</span>
+                            <h2 class="story-title">Hơn 5 năm đồng hành trên mọi cung đường</h2>
+                            <p class="story-text">SmartRide được thành lập với một niềm tin đơn giản: Mỗi chuyến đi đều mang một câu chuyện riêng và xứng đáng được trải nghiệm trọn vẹn nhất. Từ những chiếc xe đầu tiên, chúng tôi đã không ngừng theo đuổi sự hoàn hảo trong từng dịch vụ.</p>
+                            <p class="story-text">Với hàng ngàn khách hàng đã tin tưởng, chúng tôi tự hào mang đến những dòng xe đẳng cấp, giúp bạn tự do khám phá Đà Nẵng, Hội An và khắp miền Trung Việt Nam.</p>
+                            
+                            <a href="home" class="btn-book">Khám Phá Xe Ngay</a>
                         </div>
-
-                        <div class="col-12 col-lg-6" data-aos="fade-left">
-                            <div class="card bg-light p-3">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-md-5">
-                                        <img src="assets/img/about.jpg" class="img-fluid"
-                                             alt="Visionary Team">
-                                    </div>
-                                    <div class="col-md-7">
-                                        <div class="card-body">
-                                            <h2 class="card-title">Đội ngũ của chúng tôi</h2>
-                                            <p class="card-text">Đội ngũ của chúng tôi là những người trẻ tuổi, nhiệt huyết và đầy kinh nghiệm. 
-                                                Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7, từ việc tư vấn lựa chọn xe phù hợp cho đến hỗ trợ kỹ thuật trong suốt quá trình thuê xe.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container mt-5">
-                    <div class="row gy-4 align-items-flex-start">
-                        <div class="col-12 col-lg-6 col-xl-5" data-aos="zoom-in">
-                            <img class="img-fluid rounded" loading="lazy"
-                                 src="images/image_1.jpg" alt="About 1">
-                        </div>
-                        <div class="col-12 col-lg-6 col-xl-7" data-aos="fade-up">
-                            <div>
-                                <h2 class="mb-3">Tại Sao Chọn SmartRide?</h2>
-                                <p class="lead fs-5 text-secondary mb-3">Chúng tôi không chỉ cho thuê xe máy, mà còn cung cấp cho bạn những lời khuyên và hướng dẫn du lịch tốt nhất để bạn có thể tận hưởng trọn vẹn chuyến đi của mình.</p>
-                                <p class="mb-5">Hãy đến với SmartRide để khám phá Đà Nẵng theo cách hoàn toàn mới! Chúng tôi mong được đồng hành cùng bạn trong mỗi chuyến phiêu lưu.</p>
-                                <div class="row gy-4">
-                                    <div class="col-12 col-md-6">
-                                        <div class="d-flex" data-aos="flip-left">
-                                            <div class="feature-icon me-3">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="32"
-                                                     height="32" fill="currentColor" class="bi bi-gear-fill"
-                                                     viewBox="0 0 16 16">
-                                                <path
-                                                    d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
-                                                </svg>
-                                            </div>
-                                            <div class="feature-text">
-                                                <h2 class="h4 mb-3">Chất lượng xe máy</h2>
-                                                <p class="mb-0">Tất cả xe máy của chúng tôi đều được bảo dưỡng định kỳ để đảm bảo an toàn.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12 col-md-6">
-                                        <div class="d-flex" data-aos="flip-right">
-                                            <div class="feature-icon me-3">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="32"
-                                                     height="32" fill="currentColor" class="bi bi-fire"
-                                                     viewBox="0 0 16 16">
-                                                <path
-                                                    d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16Zm0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15Z" />
-                                                </svg>
-                                            </div>
-                                            <div class="feature-text">
-                                                <h2 class="h4 mb-3">Đội ngũ nhiệt huyết</h2>
-                                                <p class="mb-0">Đội ngũ hỗ trợ khách hàng của chúng tôi luôn sẵn lòng giúp đỡ bạn bất cứ lúc nào.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container" style="margin-top: 5%;">
-                    <div class="row gx-4 align-items-flex-start justify-content-between">
-                        <div class="col-md-5 order-2 order-md-1" data-aos="fade-right">
-                            <div class="mt-5 mt-md-0">
-                                <h2 class="display4 fw-bold">Sứ Mệnh Của Chúng Tôi</h2>
-                                <p class="lead">Mục tiêu của SmartRide là không chỉ cung cấp xe máy chất lượng cho khách hàng, mà còn tạo ra những trải nghiệm du lịch đáng nhớ và thoải mái nhất cho mỗi khách hàng.</p>
-                                <p class="lead">Chúng tôi luôn lắng nghe và phản hồi mọi yêu cầu, đảm bảo rằng mỗi chuyến đi của bạn sẽ là những kỷ niệm đáng nhớ nhất.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6 offset-md-1 order-1 order-md-2">
-                            <div class="row gx-2 gx-lg-3">
-                                <div class="col-6" data-aos="zoom-in">
-                                    <div class="mb-2"><img class="img-fluid rounded-3"
-                                                           src="images/imageM11.jpg" alt="Image 3"></div>
-                                </div>
-                                <div class="col-6" data-aos="zoom-in">
-                                    <div class="mb-2"><img class="img-fluid rounded-3"
-                                                           src="images/imageM9.jpg" alt="Image 1"></div>
-                                </div>
-                                <div class="col-6" data-aos="zoom-in">
-                                    <div class="mb-2"><img class="img-fluid rounded-3"
-                                                           src="images/imageM7.jpg" alt="Image 2"></div>
-                                </div>
-                                <div class="col-6" data-aos="zoom-in">
-                                    <div class="mb-2"><img class="img-fluid rounded-3"
-                                                           src="images/imageM5.jpg" alt="Image 1"></div>
+                        <div class="col-lg-6" data-aos="fade-left">
+                            <div class="masonry-grid">
+                                <!-- Trả lại các ảnh phong cảnh / xe gốc có sẵn trên web để căn chỉnh lại -->
+                                <img src="images/imageTour1.jpg" class="masonry-main shadow-sm" alt="SmartRide Experience" onerror="this.src='images/imageM12.jpg'">
+                                <div class="masonry-side">
+                                    <!-- Dùng object-fit: contain trong CSS để không bị cắt xén xe -->
+                                    <img src="images/imageM12.jpg" class="shadow-sm" alt="SmartRide Suzuki" onerror="this.src='images/imageM5.jpg'">
+                                    <img src="images/xe1.jpg" class="shadow-sm" alt="SmartRide Yamaha" onerror="this.src='images/imageM9.jpg'">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <!-- 3. TEAM SECTION (Đội Ngũ - Bổ sung theo yêu cầu) -->
+            <section class="section-padding bg-white pt-0">
+                <div class="container text-center">
+                    <div data-aos="fade-up">
+                        <span class="story-subtitle">Đội Ngũ</span>
+                        <h2 class="story-title">Những người đứng sau tay lái</h2>
+                        <p class="story-text mx-auto" style="max-width: 700px; margin-bottom: 50px;">Đội ngũ SmartRide không chỉ là những kỹ thuật viên hay nhân viên hỗ trợ. Chúng tôi là những người bạn đồng hành, am hiểu từng góc phố, từng cung đèo, luôn sẵn sàng hỗ trợ bạn 24/7 trên mọi hành trình.</p>
+                    </div>
+                    
+                    <div class="row gy-4 justify-content-center">
+                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <img src="images/team_mechanic.png" alt="Team Member - Mechanic" class="img-fluid rounded-2 shadow-sm" style="height: 400px; object-fit: cover; width: 100%;">
+                        </div>
+                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                            <img src="images/team_support.png" alt="Team Member - Support" class="img-fluid rounded-2 shadow-sm" style="height: 400px; object-fit: cover; width: 100%;">
+                        </div>
+                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                            <img src="images/team_guide.png" alt="Team Member - Guide" class="img-fluid rounded-2 shadow-sm" style="height: 400px; object-fit: cover; width: 100%;">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. MINIMALIST VALUES (Hover effects) -->
+            <section class="values-section">
+                <div class="container">
+                    <div class="values-header" data-aos="fade-up">
+                        <span class="story-subtitle">Triết lý dịch vụ</span>
+                        <h2 class="story-title" style="font-size: 3rem;">Chúng tôi tin vào điều gì</h2>
+                    </div>
+                    
+                    <div class="row gy-0 align-items-stretch">
+                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                            <div class="value-item">
+                                <span class="value-number">01</span>
+                                <h3 class="value-title">Nhanh Chóng & <i>Tiện Lợi</i></h3>
+                                <p class="value-desc">Chúng tôi hiểu thời gian của bạn là quý giá. Thủ tục thuê xe được tối giản hóa đến mức tối đa, giúp bạn nhận xe nhanh chóng chỉ trong 5 phút và sẵn sàng cho hành trình.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="value-item">
+                                <span class="value-number">02</span>
+                                <h3 class="value-title">An Toàn <i>Tuyệt Đối</i></h3>
+                                <p class="value-desc">Mỗi chiếc xe trước khi giao đến tay khách hàng đều phải trải qua quy trình kiểm tra bảo dưỡng nghiêm ngặt. Động cơ mượt mà, phanh lốp hoàn hảo — tất cả vì sự an tâm của bạn.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                            <div class="value-item">
+                                <span class="value-number">03</span>
+                                <h3 class="value-title">Hỗ Trợ <i>Tận Tâm</i></h3>
+                                <p class="value-desc">Đội ngũ của chúng tôi luôn đồng hành cùng bạn 24/7. Dù bạn đang ở bán đảo Sơn Trà hay trên đỉnh đèo Hải Vân, chúng tôi luôn sẵn sàng hỗ trợ mọi vấn đề phát sinh trên đường.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. FULL WIDTH GALLERY -->
+            <section>
+                <div class="gallery-container">
+                    <div class="gallery-img-wrapper" data-aos="fade-in" data-aos-delay="0">
+                        <!-- Sử dụng ảnh xe máy / phong cảnh gốc dự án -->
+                        <img src="images/imageTour5.jpg" loading="lazy" alt="Gallery 1" onerror="this.src='images/imageM12.jpg'">
+                    </div>
+                    <div class="gallery-img-wrapper" data-aos="fade-in" data-aos-delay="150">
+                        <img src="images/imageTour6.jpg" loading="lazy" alt="Gallery 2" onerror="this.src='images/imageM11.jpg'">
+                    </div>
+                    <div class="gallery-img-wrapper" data-aos="fade-in" data-aos-delay="300">
+                        <img src="images/imageTour7.jpg" loading="lazy" alt="Gallery 3" onerror="this.src='images/imageM5.jpg'">
+                    </div>
+                    <div class="gallery-img-wrapper" data-aos="fade-in" data-aos-delay="450">
+                        <img src="images/imageTour8.jpg" loading="lazy" alt="Gallery 4" onerror="this.src='images/imageM9.jpg'">
+                    </div>
+                </div>
+            </section>
+
         </div>
+
         <jsp:include page="/includes/customer/footer.jsp" />
+        
         <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="assets/vendor/php-email-form/validate.js"></script>
         <script src="assets/vendor/aos/aos.js"></script>
         <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
         <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
         <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-        <!-- Main JS File -->
         <script src="assets/js/main.js"></script>
 
-        <!-- Khởi tạo AOS -->
         <script>
-            AOS.init({
-                duration: 600, // Thời gian diễn ra animation (1000ms = 1s)
-                easing: 'ease-in-out', // Hiệu ứng easing (có nhiều tùy chọn như 'linear', 'ease-in', 'ease-out', 'ease-in-out')
-                once: true, // Animation sẽ chỉ chạy một lần khi cuộn đến phần tử
+            document.addEventListener('DOMContentLoaded', function() {
+                if(typeof AOS !== 'undefined') {
+                    AOS.init({
+                        duration: 1000,
+                        easing: 'ease-out-cubic',
+                        once: true,
+                        offset: 50
+                    });
+                }
             });
         </script>
     </body>
-
 </html>
-
-
