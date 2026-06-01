@@ -5,7 +5,13 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="com.smartride.dao.EventDAO" %>
+<%@ page import="com.smartride.dto.Event" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    Event activeEvent = EventDAO.getInstance().getActiveEvent();
+    request.setAttribute("activeEvent", activeEvent);
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -98,25 +104,28 @@
                 background-color: #fff;
                 border: 1px solid rgba(181, 147, 73, 0.15);
                 border-radius: 16px;
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
                 opacity: 0;
-                padding: 20px;
-                transition: all 0.3s ease;
-                width: 340px;
+                padding: 12px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                min-width: 220px;
+                max-width: 280px;
                 display: none;
             }
 
             .filter-options button {
                 width: 100%;
-                padding: 12px 20px;
-                border: 1px solid rgba(181, 147, 73, 0.15);
-                background: #ffffff;
+                padding: 10px 16px;
+                border: none;
+                background: transparent;
                 cursor: pointer;
-                border-radius: 30px;
+                border-radius: 8px;
                 font-family: 'Plus Jakarta Sans', sans-serif;
                 font-weight: 500;
+                font-size: 0.95rem;
                 transition: all 0.2s ease;
                 color: #1a1816;
+                text-align: left;
             }
 
             .filter-options:before {
@@ -142,21 +151,20 @@
             }
 
             .filter-options button:hover {
-                background-color: rgba(181, 147, 73, 0.05);
-                border-color: #b59349;
+                background-color: rgba(181, 147, 73, 0.08);
+                color: #b59349;
             }
 
             .filter-options button.selected {
-                background: #b59349 !important;
-                color: #fff !important;
-                border-color: #b59349 !important;
-                box-shadow: 0 4px 10px rgba(181, 147, 73, 0.2) !important;
+                background: rgba(181, 147, 73, 0.1) !important;
+                color: #b59349 !important;
+                font-weight: 600;
             }
 
             .show-options {
                 display: flex !important;
                 flex-direction: column;
-                gap: 8px;
+                gap: 2px;
                 opacity: 1 !important;
             }
 
@@ -481,10 +489,10 @@
 
     <body>
         <jsp:include page="/includes/customer/navbar.jsp" />
-        <div style="margin-top: 3%; overflow: visible !important;">
+        <div class="container" style="margin-top: 130px; margin-bottom: 40px; position: relative; z-index: 99; overflow: visible !important;">
             <!-- thanh search -->
             <section style="overflow: visible !important;">
-                <div class="filter-module">
+                <div class="filter-module" style="background: white; border-radius: 20px; padding: 25px 35px; box-shadow: 0 15px 40px rgba(0,0,0,0.06); border: 1px solid rgba(181,147,73,0.1);">
                     <!-- HÀNG 1: Ô Tìm Kiếm Từ Khóa -->
                     <div class="filter-search-row" style="margin-bottom: 20px;">
                         <form action="searchMotorcycle" method="get" style="display: flex; gap: 15px; align-items: center; width: 100%;">
@@ -561,6 +569,7 @@
                                     </c:forEach>
                                 </div>
                             </div>
+
                         <div class="filter-group">
                             <button class="filter-button xemketqua" style="color: white; border-radius: 30px; padding: 12px 24px;" onclick="showResults()">Lọc kết quả</button>
                         </div>
@@ -572,10 +581,78 @@
                         <!-- Selected filters will be displayed here -->
                     </div>
                 </div>
+
+                <!-- SMART ASSISTANT BANNER -->
+                <div class="container" style="margin-top: 40px; margin-bottom: 20px;">
+                    <div style="background: linear-gradient(135deg, #1a1816 0%, #362f27 100%); border-radius: 24px; padding: 40px; color: white; box-shadow: 0 20px 40px rgba(0,0,0,0.15); position: relative; overflow: hidden;">
+                        <!-- Decorative circle -->
+                        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(181,147,73,0.3) 0%, rgba(255,255,255,0) 70%); border-radius: 50%;"></div>
+                        
+                        <div class="row align-items-center position-relative" style="z-index: 1;">
+                            <div class="col-lg-6 mb-4 mb-lg-0">
+                                <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 2rem; margin-bottom: 15px; color: #b59349;">
+                                    <i class="bi bi-stars"></i> Trợ Lý SmartRide
+                                </h3>
+                                <p style="font-size: 1.1rem; color: #e0e0e0; margin-bottom: 0;">Bạn dự định khám phá những địa điểm tuyệt đẹp nào tại Đà Nẵng? Hệ thống sẽ gợi ý cho bạn chiếc xe hoàn hảo nhất!</p>
+                            </div>
+                            <div class="col-lg-6">
+                                <form action="searchCriteria" method="get" onsubmit="return handleSmartSearch(event, this)">
+                                    <div class="d-flex gap-2">
+                                        <div class="flex-grow-1 position-relative">
+                                            <i class="bi bi-geo-alt position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%); color: #b59349; font-size: 1.2rem; pointer-events: none;"></i>
+                                            <select name="locations" class="form-select form-select-lg" style="border-radius: 12px; border: none; background: #ffffff; color: #1a1816; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; padding-left: 45px; height: 56px;" required>
+                                                <option value="" selected disabled>-- Chọn địa điểm du lịch --</option>
+                                                <c:forEach items="${listLocations}" var="loc">
+                                                    <option value="${loc.locationId}">${loc.locationName}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn" style="background: #b59349; color: white; border-radius: 12px; font-weight: 700; padding: 0 30px; height: 56px; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 5px 15px rgba(181,147,73,0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
+                                            Gợi ý ngay <i class="bi bi-magic ms-1"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                function handleSmartSearch(e, form) {
+                    e.preventDefault();
+                    
+                    const btn = form.querySelector('button');
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+                    
+                    setTimeout(() => {
+                        form.submit();
+                    }, 1000);
+                }
+                </script>
+
                 <div class="list">
                     <div style="text-align: center; margin-top: 40px;">
                         <span class="list-subtitle animate__animated animate__fadeIn">Bộ Sưu Tập Xe</span>
-                        <h1 class="animate__animated animate__backInDown">Danh Sách Xe Máy</h1>
+                        <c:choose>
+                            <c:when test="${not empty param.locations and param.locations != 'all'}">
+                                <c:set var="locName" value="" />
+                                <c:forEach items="${listLocations}" var="loc">
+                                    <c:if test="${loc.locationId == param.locations}">
+                                        <c:set var="locName" value="${loc.locationName}" />
+                                    </c:if>
+                                </c:forEach>
+                                <c:if test="${not empty locName}">
+                                    <h1 class="animate__animated animate__backInDown">Gợi ý xe cho <span style="color: #b59349;">${locName}</span></h1>
+                                </c:if>
+                                <c:if test="${empty locName}">
+                                    <h1 class="animate__animated animate__backInDown">Danh Sách Xe Máy</h1>
+                                </c:if>
+                            </c:when>
+                            <c:otherwise>
+                                <h1 class="animate__animated animate__backInDown">Danh Sách Xe Máy</h1>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     <div class="container-haha animate__animated animate__zoomIn">
                         <div class="wrapper row" id="motorcycleContent">
@@ -592,7 +669,22 @@
                                     </div>
                                     <h2 style="margin: 16px;" href="motorcycleDetail?id=${motorbike.motorcycleId}"><strong>${motorbike.model}</strong></h2>
                                     <p style="font-weight: bold;">${categoryMap[motorbike.categoryID]}<br/>
-                                        <fmt:formatNumber value="${priceMap[motorbike.priceListID] * 1000}" type="number" maxFractionDigits="0"/>₫/ngày
+                                        <c:choose>
+                                            <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                <div style="display: flex; gap: 8px; justify-content: center; align-items: baseline; margin-top: 5px;">
+                                                    <span style="font-size: 14px; color: #999; text-decoration: line-through;">
+                                                        <fmt:formatNumber value="${priceMap[motorbike.priceListID] * 1000}" type="number" maxFractionDigits="0"/>₫
+                                                    </span>
+                                                    <span style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px;">
+                                                        -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                    </span>
+                                                </div>
+                                                <span style="font-size: 18px; color: #b59349;"><fmt:formatNumber value="${priceMap[motorbike.priceListID] * (1 - activeEvent.discount) * 1000}" type="number" maxFractionDigits="0"/>₫/ngày</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <fmt:formatNumber value="${priceMap[motorbike.priceListID] * 1000}" type="number" maxFractionDigits="0"/>₫/ngày
+                                            </c:otherwise>
+                                        </c:choose>
                                     </p>
                                     <div class="button-wrapper" style="display: flex; gap: 10px; justify-content: center; width: 100%; margin-top: 18px;">
                                         <a href="motorcycleDetail?id=${motorbike.motorcycleId}" class="btn outline-huhu" style="flex: 1; text-align: center; display: inline-flex; align-items: center; justify-content: center;">CHI TIẾT</a>

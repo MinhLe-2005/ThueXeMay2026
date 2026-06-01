@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import com.smartride.dao.TouristLocationDAO;
+import com.smartride.dto.TouristLocation;
 
 /**
  *
@@ -63,6 +65,9 @@ public class MotorcycleServlet extends HttpServlet {
         
         LinkedHashMap<String, String> listMA = motorcycleDAO.getAllAvailableMotorCycle();
         request.setAttribute("listMA", listMA);
+
+        List<TouristLocation> listLocations = TouristLocationDAO.getInstance().getAllTouristLocation();
+        request.setAttribute("listLocations", listLocations);
 
         request.setAttribute("motorcycles", motorcycles);
         

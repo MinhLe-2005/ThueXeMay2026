@@ -6,7 +6,13 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.smartride.dao.EventDAO" %>
+<%@ page import="com.smartride.dto.Event" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    Event activeEvent = EventDAO.getInstance().getActiveEvent();
+    request.setAttribute("activeEvent", activeEvent);
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -344,7 +350,20 @@
                                                     <td class="price rentalNow">
                                                         <div class="price-rate">
                                                             <div style="margin-bottom: 8px;">
-                                                                <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForDay * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                        <div style="font-size: 14px; color: #999; text-decoration: line-through;">
+                                                                            <fmt:formatNumber value="${p.dailyPriceForDay * 1000}" type="number" groupingUsed="true" /> VNĐ
+                                                                        </div>
+                                                                        <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
+                                                                            Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                                        </div><br/>
+                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForDay * (1 - activeEvent.discount) * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForDay * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                                 <span style="font-size: 14px; color: #7a756c; font-weight: 500; margin-left: 2px;">/ ngày</span>
                                                             </div>
                                                             <span class="subheading-badge badge-day">Thuê ngày lẻ</span>
@@ -355,10 +374,23 @@
                                                     <td class="price rentalNow">
                                                         <div class="price-rate">
                                                             <div style="margin-bottom: 8px;">
-                                                                <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForWeek * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                        <div style="font-size: 14px; color: #999; text-decoration: line-through;">
+                                                                            <fmt:formatNumber value="${p.dailyPriceForWeek * 1000}" type="number" groupingUsed="true" /> VNĐ
+                                                                        </div>
+                                                                        <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
+                                                                            Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                                        </div><br/>
+                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForWeek * (1 - activeEvent.discount) * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForWeek * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                                 <span style="font-size: 14px; color: #7a756c; font-weight: 500; margin-left: 2px;">/ ngày</span>
                                                             </div>
-                                                            <span class="subheading-badge badge-week">Tổng: <fmt:formatNumber value="${p.dailyPriceForWeek * 1000 * 7}" type="number" groupingUsed="true" /> VNĐ/tuần</span>
+                                                            <span class="subheading-badge badge-week">Tổng: <c:choose><c:when test="${not empty activeEvent and activeEvent.discount > 0}"><fmt:formatNumber value="${p.dailyPriceForWeek * (1 - activeEvent.discount) * 1000 * 7}" type="number" groupingUsed="true" /></c:when><c:otherwise><fmt:formatNumber value="${p.dailyPriceForWeek * 1000 * 7}" type="number" groupingUsed="true" /></c:otherwise></c:choose> VNĐ/tuần</span>
                                                         </div>
                                                         <p class="btn-custom rentalButton" style="margin-top: 15px !important;"><a href="booking?motorcycleid=${m.motorcycleId}">Thuê xe máy</a></p>
                                                     </td>
@@ -366,10 +398,23 @@
                                                     <td class="price rentalNow">
                                                         <div class="price-rate">
                                                             <div style="margin-bottom: 8px;">
-                                                                <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForMonth * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                        <div style="font-size: 14px; color: #999; text-decoration: line-through;">
+                                                                            <fmt:formatNumber value="${p.dailyPriceForMonth * 1000}" type="number" groupingUsed="true" /> VNĐ
+                                                                        </div>
+                                                                        <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
+                                                                            Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                                        </div><br/>
+                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForMonth * (1 - activeEvent.discount) * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForMonth * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                                 <span style="font-size: 14px; color: #7a756c; font-weight: 500; margin-left: 2px;">/ ngày</span>
                                                             </div>
-                                                            <span class="subheading-badge badge-month">Tổng: <fmt:formatNumber value="${p.dailyPriceForMonth * 1000 * 30}" type="number" groupingUsed="true" /> VNĐ/tháng</span>
+                                                            <span class="subheading-badge badge-month">Tổng: <c:choose><c:when test="${not empty activeEvent and activeEvent.discount > 0}"><fmt:formatNumber value="${p.dailyPriceForMonth * (1 - activeEvent.discount) * 1000 * 30}" type="number" groupingUsed="true" /></c:when><c:otherwise><fmt:formatNumber value="${p.dailyPriceForMonth * 1000 * 30}" type="number" groupingUsed="true" /></c:otherwise></c:choose> VNĐ/tháng</span>
                                                         </div>
                                                         <p class="btn-custom rentalButton" style="margin-top: 15px !important;"><a href="booking?motorcycleid=${m.motorcycleId}">Thuê xe máy</a></p>
                                                     </td>

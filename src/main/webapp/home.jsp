@@ -547,76 +547,229 @@
                 </c:if>
             </section><!-- /Hero Section -->
 
-            <!-- Featured Services Section -->
-            <section id="featured-services" class="featured-services section" style="background-color: #fafafa; padding: 90px 0;">
+            <!-- SMART ASSISTANT BANNER (HOME) -->
+            <section style="background-color: #fafafa; padding: 60px 0;">
                 <div class="container">
-                    <div class="text-center" style="margin-bottom: 60px;" data-aos="fade-up">
-                        <span style="color: #c4a14b; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif;">Dịch vụ nổi bật</span>
-                        <h2 style="font-family: 'Times New Roman', serif; font-size: 42px; font-weight: 700; color: #1a1a1a; margin: 15px 0;">VÌ SAO CHỌN CHÚNG TÔI</h2>
-                        <p style="color: #666; max-width: 750px; margin: 0 auto; font-size: 15.5px; line-height: 1.8;">
-                            Sắc màu hành trình, chọn chúng tôi để khởi đầu một trải nghiệm thuê xe máy hoàn hảo và đáng nhớ nhất tại Đà Nẵng.
+                    <div style="background: linear-gradient(135deg, #1a1816 0%, #362f27 100%); border-radius: 24px; padding: 40px; color: white; box-shadow: 0 20px 40px rgba(0,0,0,0.15); position: relative; overflow: hidden;" data-aos="fade-up">
+                        <!-- Decorative circle -->
+                        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(181,147,73,0.3) 0%, rgba(255,255,255,0) 70%); border-radius: 50%;"></div>
+                        
+                        <div class="row align-items-center position-relative" style="z-index: 1;">
+                            <div class="col-lg-6 mb-4 mb-lg-0">
+                                <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 2rem; margin-bottom: 15px; color: #b59349;">
+                                    <i class="bi bi-stars"></i> Trợ Lý SmartRide
+                                </h3>
+                                <p style="font-size: 1.1rem; color: #e0e0e0; margin-bottom: 0;">Bạn dự định khám phá những địa điểm tuyệt đẹp nào tại Đà Nẵng? Hệ thống sẽ gợi ý cho bạn chiếc xe hoàn hảo nhất!</p>
+                            </div>
+                            <div class="col-lg-6">
+                                <form action="searchCriteria" method="get" onsubmit="return handleSmartSearch(event, this)">
+                                    <div class="d-flex gap-2">
+                                        <div class="flex-grow-1 position-relative">
+                                            <i class="bi bi-geo-alt position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%); color: #b59349; font-size: 1.2rem; pointer-events: none;"></i>
+                                            <select name="locations" class="form-select form-select-lg" style="border-radius: 12px; border: none; background: #ffffff; color: #1a1816; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; padding-left: 45px; height: 56px;" required>
+                                                <option value="" selected disabled>-- Chọn điểm đến của bạn --</option>
+                                                <c:forEach items="${listLocations}" var="loc">
+                                                    <option value="${loc.locationId}">${loc.locationName}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn" style="background: #b59349; color: white; border-radius: 12px; font-weight: 700; padding: 0 30px; height: 56px; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 5px 15px rgba(181,147,73,0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
+                                            Tìm xe <i class="bi bi-magic ms-1"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <script>
+            function handleSmartSearch(e, form) {
+                e.preventDefault();
+                
+                const btn = form.querySelector('button');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+                
+                setTimeout(() => {
+                    form.submit();
+                }, 1000);
+            }
+            </script>
+
+            <!-- Featured Services Section (Premium Light Theme) -->
+            <style>
+                .featured-premium-section {
+                    background: linear-gradient(135deg, #fdfcfb 0%, #f4f0e6 100%);
+                    padding: 100px 0;
+                    position: relative;
+                    overflow: hidden;
+                    color: #1a1a1a;
+                }
+                .featured-bg-glow {
+                    position: absolute;
+                    top: -10%; left: -10%;
+                    width: 40%; height: 40%;
+                    background: radial-gradient(circle, rgba(196, 161, 75, 0.12) 0%, rgba(196, 161, 75, 0) 70%);
+                    border-radius: 50%;
+                    z-index: 1;
+                }
+                .featured-bg-glow-2 {
+                    position: absolute;
+                    bottom: -10%; right: -10%;
+                    width: 50%; height: 50%;
+                    background: radial-gradient(circle, rgba(196, 161, 75, 0.08) 0%, rgba(196, 161, 75, 0) 70%);
+                    border-radius: 50%;
+                    z-index: 1;
+                }
+                .featured-card-premium {
+                    background: #ffffff;
+                    border: 1px solid rgba(196, 161, 75, 0.15);
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+                    padding: 45px 35px;
+                    border-radius: 20px;
+                    height: 100%;
+                    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                    position: relative;
+                    z-index: 2;
+                    overflow: hidden;
+                }
+                .featured-card-premium::before {
+                    content: '';
+                    position: absolute;
+                    top: 0; left: 0; right: 0; bottom: 0;
+                    border-radius: 20px;
+                    padding: 2px;
+                    background: linear-gradient(135deg, rgba(196, 161, 75, 0.4), rgba(196, 161, 75, 0));
+                    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                    -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+                    opacity: 0;
+                    transition: opacity 0.4s ease;
+                }
+                .featured-card-premium:hover {
+                    transform: translateY(-10px);
+                    box-shadow: 0 20px 40px rgba(196, 161, 75, 0.15);
+                    border-color: rgba(196, 161, 75, 0.3);
+                }
+                .featured-card-premium:hover::before {
+                    opacity: 1;
+                }
+                .featured-icon-box {
+                    width: 70px;
+                    height: 70px;
+                    border-radius: 16px;
+                    background: rgba(196, 161, 75, 0.08);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 30px;
+                    border: 1px solid rgba(196, 161, 75, 0.15);
+                    transition: all 0.4s ease;
+                }
+                .featured-card-premium:hover .featured-icon-box {
+                    background: linear-gradient(135deg, #c4a14b, #b59349);
+                    transform: scale(1.1) rotate(5deg);
+                    box-shadow: 0 10px 20px rgba(196, 161, 75, 0.3);
+                }
+                .featured-card-premium:hover .featured-icon-box i {
+                    color: #ffffff !important;
+                }
+                .featured-card-premium h4 {
+                    font-family: 'Times New Roman', serif;
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: #1a1a1a;
+                    margin-bottom: 15px;
+                    letter-spacing: 0.5px;
+                }
+                .featured-card-premium p {
+                    color: #666666;
+                    font-size: 15px;
+                    line-height: 1.8;
+                    margin: 0;
+                    font-family: 'Plus Jakarta Sans', sans-serif;
+                }
+            </style>
+            <section id="featured-services" class="featured-premium-section section">
+                <div class="featured-bg-glow"></div>
+                <div class="featured-bg-glow-2"></div>
+                <div class="container" style="position: relative; z-index: 2;">
+                    
+                    <div class="text-center" style="margin-bottom: 70px;" data-aos="fade-up">
+                        <div style="display: inline-flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                            <div style="height: 1px; width: 40px; background: rgba(196, 161, 75, 0.5);"></div>
+                            <span style="color: #c4a14b; font-size: 13px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif;">Dịch vụ nổi bật</span>
+                            <div style="height: 1px; width: 40px; background: rgba(196, 161, 75, 0.5);"></div>
+                        </div>
+                        <h2 style="font-family: 'Times New Roman', serif; font-size: 46px; font-weight: 800; color: #1a1a1a; margin: 0 0 25px 0; text-transform: uppercase; letter-spacing: 1px;">
+                            VÌ SAO CHỌN CHÚNG TÔI
+                        </h2>
+                        <p style="color: #666666; max-width: 750px; margin: 0 auto; font-size: 16px; line-height: 1.9;">
+                            Sắc màu hành trình, chọn chúng tôi để khởi đầu một trải nghiệm thuê xe máy hoàn hảo và đáng nhớ nhất tại Đà Nẵng. Chất lượng, an toàn và dịch vụ tận tâm là cam kết hàng đầu.
                         </p>
                     </div>
 
                     <div class="row gy-4 justify-content-center">
                         <!-- Item 1 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
-                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
-                                    <i class="fa-solid fa-motorcycle" style="color: #c4a14b; font-size: 24px;"></i>
+                            <div class="featured-card-premium">
+                                <div class="featured-icon-box">
+                                    <i class="fa-solid fa-motorcycle" style="color: #c4a14b; font-size: 30px; transition: color 0.4s ease;"></i>
                                 </div>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Lựa chọn đa dạng</h4>
-                                <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Hàng trăm loại xe đa dạng ở nhiều địa điểm tại Đà Nẵng, phù hợp với mọi mục đích của bạn.</p>
+                                <h4>Lựa chọn đa dạng</h4>
+                                <p>Hàng trăm loại xe đa dạng ở nhiều địa điểm tại Đà Nẵng, phù hợp với mọi mục đích của bạn.</p>
                             </div>
                         </div>
                         <!-- Item 2 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
-                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
-                                    <i class="fa-solid fa-location-dot" style="color: #c4a14b; font-size: 24px;"></i>
+                            <div class="featured-card-premium">
+                                <div class="featured-icon-box">
+                                    <i class="fa-solid fa-location-dot" style="color: #c4a14b; font-size: 30px; transition: color 0.4s ease;"></i>
                                 </div>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Thuận lợi</h4>
-                                <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Dễ dàng tìm kiếm, so sánh và đặt xe máy bạn muốn chỉ với vài cú nhấp chuột.</p>
+                                <h4>Thuận lợi</h4>
+                                <p>Dễ dàng tìm kiếm, so sánh và đặt xe máy bạn muốn chỉ với vài cú nhấp chuột.</p>
                             </div>
                         </div>
                         <!-- Item 3 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
-                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
-                                    <i class="fa-solid fa-tags" style="color: #c4a14b; font-size: 24px;"></i>
+                            <div class="featured-card-premium">
+                                <div class="featured-icon-box">
+                                    <i class="fa-solid fa-tags" style="color: #c4a14b; font-size: 30px; transition: color 0.4s ease;"></i>
                                 </div>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Giá cả cạnh tranh</h4>
-                                <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Giá thuê được niêm yết công khai và rẻ hơn tới 10% so với giá truyền thống.</p>
+                                <h4>Giá cả cạnh tranh</h4>
+                                <p>Giá thuê được niêm yết công khai và rẻ hơn tới 10% so với giá truyền thống.</p>
                             </div>
                         </div>
                         <!-- Item 4 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
-                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
-                                    <i class="fa-solid fa-shield-halved" style="color: #c4a14b; font-size: 24px;"></i>
+                            <div class="featured-card-premium">
+                                <div class="featured-icon-box">
+                                    <i class="fa-solid fa-shield-halved" style="color: #c4a14b; font-size: 30px; transition: color 0.4s ease;"></i>
                                 </div>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Đáng tin cậy</h4>
-                                <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Tất cả các xe đều có tuổi thọ dưới 3 năm và được bảo dưỡng định kỳ.</p>
+                                <h4>Đáng tin cậy</h4>
+                                <p>Tất cả các xe đều có tuổi thọ dưới 3 năm và được bảo dưỡng định kỳ cực kỳ khắt khe.</p>
                             </div>
                         </div>
                         <!-- Item 5 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
-                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
-                                    <i class="fa-solid fa-headset" style="color: #c4a14b; font-size: 24px;"></i>
+                            <div class="featured-card-premium">
+                                <div class="featured-icon-box">
+                                    <i class="fa-solid fa-headset" style="color: #c4a14b; font-size: 30px; transition: color 0.4s ease;"></i>
                                 </div>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Dịch vụ hỗ trợ 24/7</h4>
-                                <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Có nhân viên hỗ trợ khách hàng trong suốt quá trình thuê xe.</p>
+                                <h4>Dịch vụ hỗ trợ 24/7</h4>
+                                <p>Có đội ngũ nhân viên kỹ thuật hỗ trợ khách hàng trong suốt quá trình thuê xe, kể cả nửa đêm.</p>
                             </div>
                         </div>
                         <!-- Item 6 -->
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(181, 147, 73, 0.1); border-radius: 16px; height: 100%; transition: all 0.4s ease;">
-                                <div style="width: 60px; height: 60px; background: rgba(181, 147, 73, 0.08); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
-                                    <i class="fa-regular fa-clock" style="color: #c4a14b; font-size: 24px;"></i>
+                            <div class="featured-card-premium">
+                                <div class="featured-icon-box">
+                                    <i class="fa-regular fa-clock" style="color: #c4a14b; font-size: 30px; transition: color 0.4s ease;"></i>
                                 </div>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Thời gian linh hoạt</h4>
-                                <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Bạn có thể đặt xe máy trong bất kỳ khoảng thời gian nào và gia hạn nếu muốn.</p>
+                                <h4>Thời gian linh hoạt</h4>
+                                <p>Bạn có thể đặt xe máy trong bất kỳ khoảng thời gian nào và gia hạn trực tuyến rất nhanh chóng.</p>
                             </div>
                         </div>
                     </div>
@@ -625,15 +778,63 @@
 
 
             <hr style="border: 0; height: 1px; background: #eaeaea; margin: 0; padding: 0;">
-            <div class="container text-center" data-aos="fade-up" style="padding-top: 90px; margin-bottom: 50px;">
-                <span style="color: #c4a14b; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif;">Bộ sưu tập xe</span>
-                <h2 style="font-family: 'Times New Roman', serif; font-size: 42px; font-weight: 700; color: #1a1a1a; margin: 15px 0 20px 0; text-transform: uppercase;">DANH MỤC XE MÁY</h2>
-                <p style="font-size: 15.5px; color: #666; max-width: 800px; margin: 0 auto; line-height: 1.8; position: relative;">
-                    Toàn bộ xe máy tại SmartRide đều là xe mới 100%, được mua mới và đăng ký chính chủ. Sau mỗi hợp đồng thuê, xe sẽ được kiểm tra toàn diện và bảo dưỡng định kỳ, đảm bảo tiêu chuẩn an toàn kỹ thuật cao nhất trước khi bàn giao.
-                </p>
-            </div>
-            <iframe src="slide.jsp" style="width: 100%; height: 680px; padding: 0; margin: 0; border: none; overflow: hidden;" scrolling="no"></iframe>
+            <div class="container-fluid" style="background: linear-gradient(to bottom, #fcfcfc, #ffffff); padding: 90px 0 30px 0; position: relative; overflow: hidden;">
+                <!-- Decorative background elements -->
+                <div style="position: absolute; top: -50px; left: -50px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(196, 161, 75, 0.05) 0%, rgba(255,255,255,0) 70%); border-radius: 50%;"></div>
+                <div style="position: absolute; bottom: 0; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(196, 161, 75, 0.03) 0%, rgba(255,255,255,0) 70%); border-radius: 50%;"></div>
 
+                <div class="container text-center" data-aos="fade-up" style="position: relative; z-index: 2;">
+                    <div style="display: inline-flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="height: 1px; width: 40px; background: #c4a14b;"></div>
+                        <span style="color: #c4a14b; font-size: 13px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif;">Bộ sưu tập xe</span>
+                        <div style="height: 1px; width: 40px; background: #c4a14b;"></div>
+                    </div>
+                    
+                    <h2 style="font-family: 'Times New Roman', serif; font-size: 46px; font-weight: 800; color: #1a1a1a; margin: 0 0 25px 0; text-transform: uppercase; letter-spacing: 1px;">
+                        DANH MỤC XE MÁY
+                    </h2>
+                    
+                    <div style="position: relative; max-width: 850px; margin: 0 auto;">
+                        <i class="fa-solid fa-quote-left" style="color: rgba(196, 161, 75, 0.15); font-size: 32px; position: absolute; left: 0; top: -10px;"></i>
+                        <p style="font-size: 16px; color: #555; margin: 0 auto; line-height: 1.9; padding: 0 45px; position: relative; z-index: 2;">
+                            Toàn bộ xe máy tại <strong style="color: #b59349; font-weight: 700;">SmartRide</strong> đều là xe mới 100%, được mua mới và đăng ký chính chủ. Sau mỗi hợp đồng thuê, xe sẽ được kiểm tra toàn diện và bảo dưỡng định kỳ, đảm bảo tiêu chuẩn an toàn kỹ thuật cao nhất trước khi bàn giao.
+                        </p>
+                        <i class="fa-solid fa-quote-right" style="color: rgba(196, 161, 75, 0.15); font-size: 32px; position: absolute; right: 0; bottom: -10px;"></i>
+                    </div>
+
+                    <!-- Quick feature badges -->
+                    <div style="display: flex; justify-content: center; gap: 25px; margin-top: 40px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 12px; background: #fff; padding: 10px 25px; border-radius: 50px; box-shadow: 0 5px 20px rgba(0,0,0,0.04); border: 1px solid rgba(196, 161, 75, 0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, rgba(196, 161, 75, 0.15), rgba(196, 161, 75, 0.05)); display: flex; align-items: center; justify-content: center; color: #b59349; font-size: 16px;">
+                                <i class="fa-solid fa-motorcycle"></i>
+                            </div>
+                            <span style="font-weight: 700; font-size: 14.5px; color: #222;">Đa dạng dòng xe</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; background: #fff; padding: 10px 25px; border-radius: 50px; box-shadow: 0 5px 20px rgba(0,0,0,0.04); border: 1px solid rgba(196, 161, 75, 0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, rgba(196, 161, 75, 0.15), rgba(196, 161, 75, 0.05)); display: flex; align-items: center; justify-content: center; color: #b59349; font-size: 16px;">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <span style="font-weight: 700; font-size: 14.5px; color: #222;">Bảo dưỡng định kỳ</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; background: #fff; padding: 10px 25px; border-radius: 50px; box-shadow: 0 5px 20px rgba(0,0,0,0.04); border: 1px solid rgba(196, 161, 75, 0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, rgba(196, 161, 75, 0.15), rgba(196, 161, 75, 0.05)); display: flex; align-items: center; justify-content: center; color: #b59349; font-size: 16px;">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <span style="font-weight: 700; font-size: 14.5px; color: #222;">Hỗ trợ 24/7</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <iframe src="slide.jsp" style="width: 100%; height: 720px; padding: 0; margin: 0; border: none; overflow: hidden;" scrolling="no"></iframe>
+
+            <!-- Link to Pricing Page -->
+            <div style="background-color: #fcfcfc; padding: 40px 0 60px 0; text-align: center;">
+                <div class="container" data-aos="fade-up">
+                    <a href="pricing" style="display:inline-flex; align-items:center; gap:12px; background:linear-gradient(135deg, #b59349, #a38241); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:16px; text-transform:uppercase; letter-spacing:1px; padding:16px 45px; border-radius:50px; text-decoration:none; box-shadow:0 10px 30px rgba(181, 147, 73, 0.3); transition:all 0.3s ease;">
+                        Xem Chi Tiết Bảng Giá <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
 
             <!-- Call To Action Section -->
             <section id="call-to-action" class="call-to-action section">
@@ -659,52 +860,130 @@
 
             <!-- About Section -->
             <hr style="border: 0; height: 1px; background: #eaeaea; margin: 0; padding: 0;">
-            <section id="about" class="about section" style="padding: 90px 0; background: #ffffff;">
-                <div class="container">
+            <style>
+                .about-section-premium {
+                    padding: 100px 0;
+                    background: linear-gradient(to bottom, #ffffff, #fdfcf9);
+                    position: relative;
+                }
+                .about-card-premium {
+                    background: #ffffff;
+                    padding: 50px 40px;
+                    border-radius: 24px;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+                    border: 1px solid rgba(196, 161, 75, 0.1);
+                    height: 100%;
+                    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                    position: relative;
+                    overflow: hidden;
+                    z-index: 1;
+                }
+                .about-card-premium::before {
+                    content: '';
+                    position: absolute;
+                    top: 0; left: 0; right: 0;
+                    height: 4px;
+                    background: linear-gradient(90deg, #c4a14b, #b59349);
+                    transform: scaleX(0);
+                    transform-origin: left;
+                    transition: transform 0.4s ease;
+                    z-index: 2;
+                }
+                .about-card-premium:hover {
+                    transform: translateY(-10px);
+                    box-shadow: 0 20px 50px rgba(181, 147, 73, 0.12);
+                    border-color: rgba(181, 147, 73, 0.3);
+                }
+                .about-card-premium:hover::before {
+                    transform: scaleX(1);
+                }
+                .about-icon-wrapper {
+                    width: 70px;
+                    height: 70px;
+                    background: linear-gradient(135deg, rgba(196, 161, 75, 0.15), rgba(196, 161, 75, 0.05));
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 30px;
+                    transition: all 0.4s ease;
+                }
+                .about-card-premium:hover .about-icon-wrapper {
+                    background: linear-gradient(135deg, #c4a14b, #b59349);
+                }
+                .about-card-premium:hover .about-icon-wrapper i {
+                    color: #ffffff !important;
+                    transform: scale(1.1);
+                }
+                .about-card-premium h4 {
+                    font-family: 'Times New Roman', serif;
+                    font-size: 24px;
+                    font-weight: 800;
+                    color: #1a1a1a;
+                    margin-bottom: 20px;
+                }
+                .about-card-premium p {
+                    color: #555;
+                    font-size: 15px;
+                    line-height: 1.8;
+                    margin: 0;
+                }
+            </style>
+            <section id="about" class="about-section-premium section">
+                <div class="container" style="position: relative; z-index: 2;">
                     
                     <!-- Elegant Header -->
-                    <div class="text-center" style="margin-bottom: 60px;" data-aos="fade-up">
-                        <span style="color: #c4a14b; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif;">Cam kết của chúng tôi</span>
-                        <h2 style="font-family: 'Times New Roman', serif; font-size: 42px; font-weight: 700; color: #1a1a1a; margin: 15px 0;">Về SmartRide</h2>
-                        <p style="color: #666; max-width: 750px; margin: 0 auto; font-size: 15.5px; line-height: 1.8;">
-                            Chúng tôi là đối tác lý tưởng của bạn trong mọi chuyến đi bằng xe máy tại Đà Nẵng. Với sứ mệnh mang đến sự thuận tiện và trải nghiệm đáng nhớ, chúng tôi cung cấp dịch vụ cho thuê xe máy với đội ngũ phương tiện đa dạng và chất lượng hàng đầu.
-                        </p>
+                    <div class="text-center" style="margin-bottom: 70px;" data-aos="fade-up">
+                        <div style="display: inline-flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                            <div style="height: 1px; width: 40px; background: #c4a14b;"></div>
+                            <span style="color: #c4a14b; font-size: 13px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif;">Cam kết của chúng tôi</span>
+                            <div style="height: 1px; width: 40px; background: #c4a14b;"></div>
+                        </div>
+                        <h2 style="font-family: 'Times New Roman', serif; font-size: 46px; font-weight: 800; color: #1a1a1a; margin: 0 0 25px 0; text-transform: uppercase; letter-spacing: 1px;">
+                            Về SmartRide
+                        </h2>
+                        <div style="position: relative; max-width: 800px; margin: 0 auto;">
+                            <i class="fa-solid fa-quote-left" style="color: rgba(196, 161, 75, 0.15); font-size: 32px; position: absolute; left: 0; top: -10px;"></i>
+                            <p style="font-size: 16px; color: #555; margin: 0 auto; line-height: 1.9; padding: 0 45px; position: relative; z-index: 2;">
+                                Chúng tôi là đối tác lý tưởng của bạn trong mọi chuyến đi bằng xe máy tại Đà Nẵng. Với sứ mệnh mang đến sự thuận tiện và trải nghiệm đáng nhớ, chúng tôi cung cấp dịch vụ cho thuê xe máy với đội ngũ phương tiện đa dạng và chất lượng hàng đầu.
+                            </p>
+                            <i class="fa-solid fa-quote-right" style="color: rgba(196, 161, 75, 0.15); font-size: 32px; position: absolute; right: 0; bottom: -10px;"></i>
+                        </div>
                     </div>
 
-                    <!-- Cards Row (Inspired by Doanlee) -->
+                    <!-- Cards Row -->
                     <div class="row gy-4 justify-content-center mb-5 pb-4" data-aos="fade-up" data-aos-delay="100">
                         <!-- Card 1 -->
                         <div class="col-lg-4 col-md-6">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.04); border: 1px solid #eaeaea; border-radius: 4px; height: 100%; transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gem" style="color: #c4a14b; font-size: 18px; margin-bottom: 25px; display: block;"></i>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Đa dạng sản phẩm</h4>
-                                <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Từ các loại xe máy tiện dụng đến những mẫu xe cao cấp, chúng tôi luôn có sự lựa chọn phù hợp với nhu cầu của bạn.</p>
+                            <div class="about-card-premium">
+                                <div class="about-icon-wrapper">
+                                    <i class="fa-solid fa-motorcycle" style="color: #b59349; font-size: 28px; transition: all 0.3s ease;"></i>
+                                </div>
+                                <h4>Đa dạng sản phẩm</h4>
+                                <p>Từ các loại xe máy tiện dụng đến những mẫu xe cao cấp, chúng tôi luôn có sự lựa chọn phù hợp với nhu cầu của bạn để mang lại trải nghiệm tối ưu nhất.</p>
                             </div>
                         </div>
                         <!-- Card 2 -->
                         <div class="col-lg-4 col-md-6">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.04); border: 1px solid #eaeaea; border-radius: 4px; height: 100%; transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gem" style="color: #c4a14b; font-size: 18px; margin-bottom: 25px; display: block;"></i>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Dịch vụ chuyên nghiệp</h4>
-                                <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Đội ngũ nhân viên tận tâm sẵn sàng phục vụ, từ việc tư vấn cho đến hỗ trợ kỹ thuật, để bạn có một chuyến đi suôn sẻ và an toàn.</p>
+                            <div class="about-card-premium">
+                                <div class="about-icon-wrapper">
+                                    <i class="fa-solid fa-user-tie" style="color: #b59349; font-size: 28px; transition: all 0.3s ease;"></i>
+                                </div>
+                                <h4>Dịch vụ chuyên nghiệp</h4>
+                                <p>Đội ngũ nhân viên tận tâm sẵn sàng phục vụ, từ việc tư vấn lộ trình cho đến hỗ trợ kỹ thuật 24/7, đảm bảo chuyến đi của bạn luôn suôn sẻ và an toàn.</p>
                             </div>
                         </div>
                         <!-- Card 3 -->
                         <div class="col-lg-4 col-md-6">
-                            <div class="about-card" style="background: #fff; padding: 40px 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.04); border: 1px solid #eaeaea; border-radius: 4px; height: 100%; transition: all 0.3s ease;">
-                                <i class="fa-solid fa-gem" style="color: #c4a14b; font-size: 18px; margin-bottom: 25px; display: block;"></i>
-                                <h4 style="font-family: 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px;">Chất lượng cao</h4>
-                                <p style="color: #666; font-size: 14.5px; line-height: 1.7; margin: 0;">Tất cả các xe đều được bảo trì thường xuyên và kiểm tra kỹ lưỡng trước khi cho thuê, đảm bảo sự an toàn và tin cậy tuyệt đối.</p>
+                            <div class="about-card-premium">
+                                <div class="about-icon-wrapper">
+                                    <i class="fa-solid fa-medal" style="color: #b59349; font-size: 28px; transition: all 0.3s ease;"></i>
+                                </div>
+                                <h4>Chất lượng cao cấp</h4>
+                                <p>Tất cả xe đều được bảo dưỡng định kỳ và kiểm tra kỹ lưỡng trước khi bàn giao. Bạn hoàn toàn có thể yên tâm về sự an toàn và tin cậy trên mọi cung đường.</p>
                             </div>
                         </div>
                     </div>
-
-                    <style>
-                        .about-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(0,0,0,0.06) !important; border-color: rgba(196, 161, 75, 0.2) !important; }
-                        .about-img-wrap { position: relative; overflow: hidden; border-radius: 8px; box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
-                        .about-img-wrap img { transition: transform 0.7s ease; }
-                        .about-img-wrap:hover img { transform: scale(1.05); }
-                    </style>
 
                     <!-- Tourist Locations (Inspired by User Reference) -->
                     <style>
@@ -723,95 +1002,118 @@
                             <a href="touristLocation" style="color: #c4a14b; font-weight: 700; font-size: 14px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">Xem Tất Cả <i class="fa-solid fa-arrow-right ms-1"></i></a>
                         </div>
                         <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3">
-                            <div class="col">
-                                <a href="touristLocation" class="loc-card-wrap">
-                                    <div class="loc-card">
-                                        <img src="https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=600&q=80" onerror="this.src='assets/img/about.jpg'" alt="Bán Đảo Sơn Trà">
-                                        <div class="loc-overlay">
-                                            <h4 class="loc-title">Bán Đảo Sơn Trà</h4>
-                                            <p class="loc-desc">Cung đường ven biển</p>
+                            <c:forEach items="${listLocations}" var="loc" begin="0" end="4">
+                                <div class="col">
+                                    <a href="touristLocation" class="loc-card-wrap">
+                                        <div class="loc-card">
+                                            <img src="${empty loc.locationImage ? 'images/default.jpg' : (loc.locationImage.startsWith('http') ? loc.locationImage : 'images/'.concat(loc.locationImage))}?t=<%= System.currentTimeMillis() %>" onerror="this.src='assets/img/about.jpg'" alt="${loc.locationName}">
+                                            <div class="loc-overlay">
+                                                <h4 class="loc-title">${loc.locationName}</h4>
+                                                <p class="loc-desc" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0;">${loc.description}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a href="touristLocation" class="loc-card-wrap">
-                                    <div class="loc-card">
-                                        <img src="https://images.unsplash.com/photo-1532054992984-7eb3e284f67c?auto=format&fit=crop&w=600&q=80" onerror="this.src='assets/img/about.jpg'" alt="Đèo Hải Vân">
-                                        <div class="loc-overlay">
-                                            <h4 class="loc-title">Đèo Hải Vân</h4>
-                                            <p class="loc-desc">Thiên hạ đệ nhất hùng quan</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a href="touristLocation" class="loc-card-wrap">
-                                    <div class="loc-card">
-                                        <img src="https://images.unsplash.com/photo-1549488344-c71c4c9fae8b?auto=format&fit=crop&w=600&q=80" onerror="this.src='assets/img/about.jpg'" alt="Hội An">
-                                        <div class="loc-overlay">
-                                            <h4 class="loc-title">Phố Cổ Hội An</h4>
-                                            <p class="loc-desc">Di sản văn hóa</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a href="touristLocation" class="loc-card-wrap">
-                                    <div class="loc-card">
-                                        <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&w=600&q=80" onerror="this.src='assets/img/about.jpg'" alt="Bà Nà Hills">
-                                        <div class="loc-overlay">
-                                            <h4 class="loc-title">Bà Nà Hills</h4>
-                                            <p class="loc-desc">Đường lên tiên cảnh</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a href="touristLocation" class="loc-card-wrap">
-                                    <div class="loc-card">
-                                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80" onerror="this.src='assets/img/about.jpg'" alt="Ngũ Hành Sơn">
-                                        <div class="loc-overlay">
-                                            <h4 class="loc-title">Ngũ Hành Sơn</h4>
-                                            <p class="loc-desc">Khám phá hang động</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
+                                    </a>
+                                </div>
+                            </c:forEach>
                         </div>
                     </div>
 
                     <!-- Sleek Premium Full-width Horizontal Stats Row -->
-                    <div class="row pt-5 mt-4 border-top text-center" style="border-color: #f0f0f0 !important;" data-aos="fade-up" data-aos-delay="150">
-                        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0" style="position: relative;">
-                            <div class="d-flex flex-column align-items-center">
-                                <i class="fa-solid fa-users" style="font-size: 1.8rem; color: #c4a14b; margin-bottom: 15px;"></i>
-                                <div style="font-size: 2.8rem; font-weight: 400; color: #1a1a1a; line-height: 1; margin-bottom: 10px; font-family: 'Times New Roman', serif;">2,324<span style="font-size: 1.5rem; color: #c4a14b; font-weight: 600; vertical-align: super;">+</span></div>
-                                <div style="font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 2px; font-family: 'Plus Jakarta Sans', sans-serif;">Khách Hàng</div>
+                    <style>
+                        .stats-premium-wrap {
+                            background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
+                            border-radius: 20px;
+                            padding: 60px 40px;
+                            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+                            position: relative;
+                            overflow: hidden;
+                            margin: 60px 0;
+                            border: 1px solid rgba(196, 161, 75, 0.15);
+                        }
+                        .stats-glow {
+                            position: absolute;
+                            top: 50%; left: 50%;
+                            transform: translate(-50%, -50%);
+                            width: 100%; height: 100%;
+                            background: radial-gradient(circle, rgba(196, 161, 75, 0.1) 0%, rgba(196, 161, 75, 0) 60%);
+                            pointer-events: none;
+                        }
+                        .stat-item-premium {
+                            text-align: center;
+                            position: relative;
+                            z-index: 2;
+                        }
+                        .stat-icon-wrap {
+                            width: 65px; height: 65px;
+                            background: rgba(196, 161, 75, 0.1);
+                            border-radius: 50%;
+                            display: flex; justify-content: center; align-items: center;
+                            margin: 0 auto 20px;
+                            border: 1px solid rgba(196, 161, 75, 0.2);
+                        }
+                        .stat-number {
+                            font-size: 3.5rem;
+                            font-weight: 700;
+                            font-family: 'Times New Roman', serif;
+                            background: linear-gradient(to right, #ffffff, #c4a14b);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            line-height: 1;
+                            margin-bottom: 10px;
+                        }
+                        .stat-number span {
+                            font-size: 2rem;
+                            color: #c4a14b;
+                            -webkit-text-fill-color: #c4a14b;
+                            vertical-align: top;
+                        }
+                        .stat-label {
+                            font-size: 0.85rem;
+                            font-weight: 800;
+                            color: #a0a0a0;
+                            text-transform: uppercase;
+                            letter-spacing: 3px;
+                            font-family: 'Plus Jakarta Sans', sans-serif;
+                        }
+                        .stat-divider {
+                            position: absolute;
+                            right: 0; top: 15%; height: 70%; width: 1px;
+                            background: linear-gradient(to bottom, rgba(196,161,75,0), rgba(196,161,75,0.3), rgba(196,161,75,0));
+                        }
+                    </style>
+                    <div class="stats-premium-wrap" data-aos="fade-up" data-aos-delay="150">
+                        <div class="stats-glow"></div>
+                        <div class="row position-relative z-2">
+                            <div class="col-lg-3 col-md-6 mb-5 mb-lg-0 position-relative">
+                                <div class="stat-item-premium">
+                                    <div class="stat-icon-wrap"><i class="fa-solid fa-users" style="font-size: 26px; color: #c4a14b;"></i></div>
+                                    <div class="stat-number">2,324<span>+</span></div>
+                                    <div class="stat-label">Khách Hàng</div>
+                                </div>
+                                <div class="d-none d-lg-block stat-divider"></div>
                             </div>
-                            <div class="d-none d-lg-block" style="position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background-color: #f5f5f5;"></div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0" style="position: relative;">
-                            <div class="d-flex flex-column align-items-center">
-                                <i class="fa-solid fa-calendar-check" style="font-size: 1.8rem; color: #c4a14b; margin-bottom: 15px;"></i>
-                                <div style="font-size: 2.8rem; font-weight: 400; color: #1a1a1a; line-height: 1; margin-bottom: 10px; font-family: 'Times New Roman', serif;">20<span style="font-size: 1.5rem; color: #c4a14b; font-weight: 600; vertical-align: super;">+</span></div>
-                                <div style="font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 2px; font-family: 'Plus Jakarta Sans', sans-serif;">Năm Hoạt Động</div>
+                            <div class="col-lg-3 col-md-6 mb-5 mb-lg-0 position-relative">
+                                <div class="stat-item-premium">
+                                    <div class="stat-icon-wrap"><i class="fa-solid fa-calendar-check" style="font-size: 26px; color: #c4a14b;"></i></div>
+                                    <div class="stat-number">20<span>+</span></div>
+                                    <div class="stat-label">Năm Hoạt Động</div>
+                                </div>
+                                <div class="d-none d-lg-block stat-divider"></div>
                             </div>
-                            <div class="d-none d-lg-block" style="position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background-color: #f5f5f5;"></div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 mb-4 mb-md-0" style="position: relative;">
-                            <div class="d-flex flex-column align-items-center">
-                                <i class="fa-solid fa-handshake" style="font-size: 1.8rem; color: #c4a14b; margin-bottom: 15px;"></i>
-                                <div style="font-size: 2.8rem; font-weight: 400; color: #1a1a1a; line-height: 1; margin-bottom: 10px; font-family: 'Times New Roman', serif;">55<span style="font-size: 1.5rem; color: #c4a14b; font-weight: 600; vertical-align: super;">+</span></div>
-                                <div style="font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 2px; font-family: 'Plus Jakarta Sans', sans-serif;">Đối Tác</div>
+                            <div class="col-lg-3 col-md-6 mb-5 mb-md-0 position-relative">
+                                <div class="stat-item-premium">
+                                    <div class="stat-icon-wrap"><i class="fa-solid fa-handshake" style="font-size: 26px; color: #c4a14b;"></i></div>
+                                    <div class="stat-number">55<span>+</span></div>
+                                    <div class="stat-label">Đối Tác</div>
+                                </div>
+                                <div class="d-none d-lg-block stat-divider"></div>
                             </div>
-                            <div class="d-none d-lg-block" style="position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background-color: #f5f5f5;"></div>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="d-flex flex-column align-items-center">
-                                <i class="fa-solid fa-user-tie" style="font-size: 1.8rem; color: #c4a14b; margin-bottom: 15px;"></i>
-                                <div style="font-size: 2.8rem; font-weight: 400; color: #1a1a1a; line-height: 1; margin-bottom: 10px; font-family: 'Times New Roman', serif;">150<span style="font-size: 1.5rem; color: #c4a14b; font-weight: 600; vertical-align: super;">+</span></div>
-                                <div style="font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 2px; font-family: 'Plus Jakarta Sans', sans-serif;">Nhân Viên</div>
+                            <div class="col-lg-3 col-md-6 position-relative">
+                                <div class="stat-item-premium">
+                                    <div class="stat-icon-wrap"><i class="fa-solid fa-user-tie" style="font-size: 26px; color: #c4a14b;"></i></div>
+                                    <div class="stat-number">150<span>+</span></div>
+                                    <div class="stat-label">Nhân Viên</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -821,30 +1123,124 @@
 
             <!-- Services Section -->
 
-            <!-- ══ FAQ Preview Section ══ -->
-            <section id="faq-preview" style="padding: 80px 0; background: #f9f8f6;">
-                <div class="container">
+            <!-- ══ FAQ Premium Section ══ -->
+            <style>
+                .faq-premium-section {
+                    padding: 100px 0;
+                    background: linear-gradient(to bottom, #ffffff, #fcfcfc);
+                    position: relative;
+                }
+                .faq-bg-pattern {
+                    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                    background-image: radial-gradient(#c4a14b 1px, transparent 1px);
+                    background-size: 40px 40px; opacity: 0.03; pointer-events: none;
+                }
+                .faq-premium-container {
+                    max-width: 1100px;
+                    margin: 0 auto;
+                    position: relative; z-index: 2;
+                }
+                .faq-item-premium {
+                    background: #ffffff;
+                    border: 1px solid rgba(0,0,0,0.05);
+                    border-radius: 12px;
+                    margin-bottom: 15px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+                    transition: all 0.3s ease;
+                    overflow: hidden;
+                    height: 100%;
+                }
+                .faq-item-premium:hover {
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+                    border-color: rgba(196, 161, 75, 0.3);
+                }
+                .faq-q-premium {
+                    padding: 22px 30px;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-family: 'Plus Jakarta Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 16px;
+                    color: #1a1a1a;
+                    transition: all 0.3s ease;
+                }
+                .faq-item-premium.open .faq-q-premium {
+                    color: #b59349;
+                    background: rgba(196, 161, 75, 0.02);
+                }
+                .faq-icon-wrapper {
+                    width: 30px; height: 30px;
+                    border-radius: 50%;
+                    background: #f5f5f5;
+                    display: flex; justify-content: center; align-items: center;
+                    transition: all 0.3s ease;
+                    flex-shrink: 0;
+                    margin-left: 15px;
+                }
+                .faq-item-premium.open .faq-icon-wrapper {
+                    background: #b59349;
+                    transform: rotate(180deg);
+                }
+                .faq-icon-wrapper i {
+                    color: #888; font-size: 12px; transition: color 0.3s ease;
+                }
+                .faq-item-premium.open .faq-icon-wrapper i {
+                    color: #fff;
+                }
+                .faq-a-premium {
+                    max-height: 0;
+                    opacity: 0;
+                    overflow: hidden;
+                    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    padding: 0 30px;
+                    color: #666;
+                    font-size: 15px;
+                    line-height: 1.7;
+                    border-top: 1px solid transparent;
+                }
+                .faq-item-premium.open .faq-a-premium {
+                    max-height: 300px;
+                    opacity: 1;
+                    padding: 0 30px 25px 30px;
+                    border-top-color: rgba(0,0,0,0.03);
+                    margin-top: 15px;
+                }
+            </style>
+            <section id="faq-preview" class="faq-premium-section">
+                <div class="faq-bg-pattern"></div>
+                <div class="container faq-premium-container">
                     <!-- Header -->
-                    <div style="text-align:center; margin-bottom: 50px;" data-aos="fade-up">
-                        <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:#b59349;">Giải đáp thắc mắc</span>
-                        <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:2rem; color:#1a1816; margin:10px 0 0; letter-spacing:-0.5px;">Câu Hỏi Thường Gặp</h2>
-                        <p style="color:#888; font-size:14px; margin-top:10px;">Tìm câu trả lời nhanh cho những thắc mắc phổ biến nhất</p>
+                    <div style="text-align:center; margin-bottom: 60px;" data-aos="fade-up">
+                        <div style="display: inline-flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                            <div style="height: 1px; width: 30px; background: rgba(196, 161, 75, 0.5);"></div>
+                            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:800; letter-spacing:4px; text-transform:uppercase; color:#c4a14b;">Giải đáp thắc mắc</span>
+                            <div style="height: 1px; width: 30px; background: rgba(196, 161, 75, 0.5);"></div>
+                        </div>
+                        <h2 style="font-family:'Times New Roman', serif; font-weight:800; font-size:46px; color:#1a1a1a; margin:0; text-transform:uppercase;">Câu Hỏi Thường Gặp</h2>
+                        <p style="color:#666; font-size:16px; margin-top:20px; max-width: 600px; margin-left: auto; margin-right: auto;">Tìm câu trả lời nhanh cho những thắc mắc phổ biến nhất khi bạn thuê xe máy tại SmartRide</p>
                     </div>
 
                     <!-- 2-column FAQ grid -->
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap: 0 50px; max-width:960px; margin:0 auto;" data-aos="fade-up" data-aos-delay="100">
+                    <div class="row g-3" data-aos="fade-up" data-aos-delay="100">
                         <c:forEach items="${listFAQ}" var="faq" begin="0" end="9">
-                            <div class="home-faq-item" onclick="this.classList.toggle('open')">
-                                <div class="home-faq-q"><span>${faq.question}</span><i class="fas fa-chevron-down"></i></div>
-                                <div class="home-faq-a">${faq.answer}</div>
+                            <div class="col-lg-6">
+                                <div class="faq-item-premium" onclick="this.classList.toggle('open')">
+                                    <div class="faq-q-premium">
+                                        <span>${faq.question}</span>
+                                        <div class="faq-icon-wrapper"><i class="fas fa-chevron-down"></i></div>
+                                    </div>
+                                    <div class="faq-a-premium">${faq.answer}</div>
+                                </div>
                             </div>
                         </c:forEach>
                     </div>
 
                     <!-- View all link -->
-                    <div style="text-align:center; margin-top:44px;" data-aos="fade-up" data-aos-delay="200">
-                        <a href="FAQ" style="display:inline-flex;align-items:center;gap:8px;border:2px solid #b59349;color:#b59349;font-weight:700;font-size:14px;padding:13px 32px;border-radius:50px;text-decoration:none;letter-spacing:0.5px;transition:all 0.3s;" onmouseover="this.style.background='#b59349';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#b59349'">
-                            Xem tất cả câu hỏi <i class="fas fa-arrow-right"></i>
+                    <div style="text-align:center; margin-top:50px;" data-aos="fade-up" data-aos-delay="200">
+                        <a href="FAQ" style="display:inline-flex; align-items:center; gap:10px; background:linear-gradient(135deg, #c4a14b, #a58032); color:#fff; font-weight:700; font-size:15px; padding:15px 35px; border-radius:50px; text-decoration:none; box-shadow:0 10px 20px rgba(196,161,75,0.3); transition:all 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 25px rgba(196,161,75,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 20px rgba(196,161,75,0.3)';">
+                            XEM TẤT CẢ CÂU HỎI <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>

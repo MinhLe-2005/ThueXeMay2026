@@ -149,6 +149,38 @@ public class EventDAO implements Serializable {
         return null;
     }
 
+    public Event getActiveEvent() {
+        String sql = "SELECT \"EventID\", \"EventTitle\", \n"
+                + "    TO_CHAR(\"CreatedDate\", 'DD-MM-YYYY'), \n"
+                + "    TO_CHAR(\"StartDate\", 'DD-MM-YYYY'), \n"
+                + "    TO_CHAR(\"EndDate\", 'DD-MM-YYYY'), \n"
+                + "    \"Content\", \"EventImage\", \"Discount\", \"StaffID\" \n"
+                + "FROM \"Event\" \n"
+                + "WHERE CURRENT_DATE >= \"StartDate\" AND CURRENT_DATE <= \"EndDate\" \n"
+                + "ORDER BY \"Discount\" DESC LIMIT 1;";
+
+        try {
+            PreparedStatement st = conn.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Event event = new Event();
+                event.setEventID(rs.getInt(1));
+                event.setEventTitle(rs.getString(2));
+                event.setCreatedDate(rs.getString(3));
+                event.setStartDate(rs.getString(4));
+                event.setEndDate(rs.getString(5));
+                event.setContent(rs.getString(6));
+                event.setEventImage(rs.getString(7));
+                event.setDiscount(rs.getDouble(8));
+                event.setStaffID(rs.getString(9));
+                return event;
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return null;
+    }
+
     public List<Event> searchEventByName(String textSearch) {
         List<Event> list = new ArrayList<>();
         String sql = "SELECT \"EventID\", \"EventTitle\", \n"

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.smartride.dto.LocationRecommendationDTO;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  *
@@ -48,12 +50,16 @@ public class TouristLocationDAO implements Serializable, DAO<TouristLocation> {
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
             while (rs.next()) {
+                String url = rs.getString("UrlArticle");
+                if (url != null && url.contains("Đạo_Hải_Vân")) {
+                    url = url.replace("Đạo_Hải_Vân", "Đèo_Hải_Vân");
+                }
                 list.add(new TouristLocation(
                     rs.getInt("LocationID"), 
                     rs.getString("LocationName"), 
                     rs.getString("LocationImage"), 
                     rs.getString("Description"), 
-                    rs.getString("UrlArticle"), 
+                    url, 
                     rs.getString("StaffID")
                 ));
             }
@@ -71,12 +77,16 @@ public class TouristLocationDAO implements Serializable, DAO<TouristLocation> {
             stm.setInt(1, (index - 1) * 9);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
+                String url = rs.getString("UrlArticle");
+                if (url != null && url.contains("Đạo_Hải_Vân")) {
+                    url = url.replace("Đạo_Hải_Vân", "Đèo_Hải_Vân");
+                }
                 list.add(new TouristLocation(
                     rs.getInt("LocationID"), 
                     rs.getString("LocationName"), 
                     rs.getString("LocationImage"), 
                     rs.getString("Description"), 
-                    rs.getString("UrlArticle"), 
+                    url, 
                     rs.getString("StaffID")
                 ));
             }
@@ -114,14 +124,19 @@ public class TouristLocationDAO implements Serializable, DAO<TouristLocation> {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, locationId);
             ResultSet rs = ps.executeQuery();
+            Set<String> seenModels = new HashSet<>();
             while (rs.next()) {
-                list.add(new LocationRecommendationDTO(
-                    rs.getString("MotorcycleID"),
-                    rs.getString("Model"),
-                    rs.getString("Image"),
-                    rs.getString("Reason"),
-                    rs.getInt("Priority")
-                ));
+                String model = rs.getString("Model");
+                if (!seenModels.contains(model)) {
+                    seenModels.add(model);
+                    list.add(new LocationRecommendationDTO(
+                        rs.getString("MotorcycleID"),
+                        model,
+                        rs.getString("Image"),
+                        rs.getString("Reason"),
+                        rs.getInt("Priority")
+                    ));
+                }
             }
         } catch (SQLException e) {
             Logger.getLogger(TouristLocationDAO.class.getName()).log(Level.SEVERE, null, e);

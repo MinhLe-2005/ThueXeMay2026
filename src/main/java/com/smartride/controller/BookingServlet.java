@@ -14,6 +14,8 @@ import com.smartride.dto.Account;
 import com.smartride.dto.Customer;
 import com.smartride.dto.Motorcycle;
 import com.smartride.dto.PriceList;
+import com.smartride.dto.Event;
+import com.smartride.dao.EventDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -77,6 +79,9 @@ public class BookingServlet extends HttpServlet {
             CustomerDAO daoC = CustomerDAO.getInstance();
             List<Customer> listC = daoC.getAll();
             request.setAttribute("listC", listC);
+
+            Event activeEvent = EventDAO.getInstance().getActiveEvent();
+            request.setAttribute("activeEvent", activeEvent);
 
             request.getRequestDispatcher("booking.jsp").forward(request, response);  
         } else if(account != null && account.getRoleID() != 1) {

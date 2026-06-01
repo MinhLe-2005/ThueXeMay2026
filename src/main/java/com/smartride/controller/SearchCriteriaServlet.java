@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import com.smartride.dao.TouristLocationDAO;
+import com.smartride.dto.TouristLocation;
 
 @WebServlet(name = "SearchCriteriaServlet", urlPatterns = {"/searchCriteria"})
 public class SearchCriteriaServlet extends HttpServlet {
@@ -50,17 +52,18 @@ public class SearchCriteriaServlet extends HttpServlet {
         String[] categories = request.getParameterValues("categories");
         String[] displacements = request.getParameterValues("displacements");
         String[] demands = request.getParameterValues("demands");
+        String[] locations = request.getParameterValues("locations");
         
         HttpSession session = request.getSession();
         SearchCriteria criteria = null;
 
         // If all parameters are null, it might be a pagination request, so try to get from session
-        if (priceRanges == null && brands == null && categories == null && displacements == null && demands == null) {
+        if (priceRanges == null && brands == null && categories == null && displacements == null && demands == null && locations == null) {
             criteria = (SearchCriteria) session.getAttribute("criteria");
         }
 
         // If criteria is still null or it's a new search (at least one parameter is not null)
-        if (criteria == null || (priceRanges != null || brands != null || categories != null || displacements != null || demands != null)) {
+        if (criteria == null || (priceRanges != null || brands != null || categories != null || displacements != null || demands != null || locations != null)) {
             criteria = new SearchCriteria();
             if (priceRanges != null) {
                 for (String range : priceRanges) {
@@ -93,6 +96,11 @@ public class SearchCriteriaServlet extends HttpServlet {
                     criteria.addDemandID(Integer.parseInt(demandId));
                 }
             }
+            if (locations != null) {
+                for (String locationId : locations) {
+                    criteria.addLocationID(Integer.parseInt(locationId));
+                }
+            }
             session.setAttribute("criteria", criteria);
         }
         
@@ -108,6 +116,9 @@ public class SearchCriteriaServlet extends HttpServlet {
         LinkedHashMap<String, String> listMA = motorcycleDAO.getAllAvailableMotorCycle();
         request.setAttribute("listMA", listMA);
         request.setAttribute("search", "searchCriteria");
+
+        List<TouristLocation> listLocations = TouristLocationDAO.getInstance().getAllTouristLocation();
+        request.setAttribute("listLocations", listLocations);
 
         request.setAttribute("motorcycles", motorcycles);
         request.setAttribute("endP", endPage);

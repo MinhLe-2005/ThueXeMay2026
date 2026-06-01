@@ -3,6 +3,8 @@
 <%@ page import="com.smartride.dao.PriceListDAO" %>
 <%@ page import="com.smartride.dto.Motorcycle" %>
 <%@ page import="com.smartride.dto.PriceList" %>
+<%@ page import="com.smartride.dao.EventDAO" %>
+<%@ page import="com.smartride.dto.Event" %>
 <%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -15,6 +17,8 @@
         List<PriceList> listP = PriceListDAO.getInstance().getAllPriceList();
         session.setAttribute("listP", listP);
     }
+    Event activeEvent = EventDAO.getInstance().getActiveEvent();
+    request.setAttribute("activeEvent", activeEvent);
 %>
 <!DOCTYPE html>
 <html>
@@ -37,38 +41,40 @@
                 overflow: hidden;
             }
             .centered-slide-carousel {
-                padding: 20px 15px 50px 15px !important;
+                padding: 30px 15px 60px 15px !important;
             }
             
             .swiper-slide {
-                border-radius: 20px !important;
-                background: #ffffff !important;
-                border: 1px solid rgba(181, 147, 73, 0.15) !important;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04) !important;
+                border-radius: 24px !important;
+                background: linear-gradient(145deg, #ffffff, #f8f9fa) !important;
+                border: 1px solid rgba(181, 147, 73, 0.2) !important;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06) !important;
                 transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
                 overflow: hidden;
                 box-sizing: border-box;
-                padding: 25px 20px;
+                padding: 30px 25px;
                 display: flex;
                 flex-direction: column;
                 position: relative;
+                height: auto;
             }
 
             .swiper-slide:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 20px 50px rgba(181, 147, 73, 0.1) !important;
-                border-color: rgba(181, 147, 73, 0.4) !important;
+                transform: translateY(-10px);
+                box-shadow: 0 25px 50px rgba(181, 147, 73, 0.15) !important;
+                border-color: rgba(181, 147, 73, 0.5) !important;
             }
 
             .swiper-slide.best-choice {
-                background: #fffcf8 !important;
+                background: linear-gradient(145deg, #fffcf8, #fdf6e9) !important;
                 border: 2px solid #b59349 !important;
-                box-shadow: 0 15px 40px rgba(181, 147, 73, 0.15) !important;
+                box-shadow: 0 20px 45px rgba(181, 147, 73, 0.2) !important;
                 z-index: 2;
+                transform: scale(1.02);
             }
             .swiper-slide.best-choice:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 25px 50px rgba(181, 147, 73, 0.25) !important;
+                transform: scale(1.02) translateY(-10px);
+                box-shadow: 0 30px 60px rgba(181, 147, 73, 0.3) !important;
             }
 
             .best-badge {
@@ -76,55 +82,77 @@
                 top: 0;
                 left: 50%;
                 transform: translateX(-50%);
-                background: linear-gradient(135deg, #c4a14b, #b59349);
+                background: linear-gradient(135deg, #d4af37, #b59349);
                 color: #fff;
-                font-size: 11px;
+                font-size: 12px;
                 font-weight: 800;
                 text-transform: uppercase;
-                letter-spacing: 1.5px;
-                padding: 6px 20px;
-                border-radius: 0 0 12px 12px;
+                letter-spacing: 2px;
+                padding: 8px 24px;
+                border-radius: 0 0 15px 15px;
                 display: flex;
                 align-items: center;
-                gap: 6px;
-                box-shadow: 0 4px 10px rgba(196, 161, 75, 0.3);
+                gap: 8px;
+                box-shadow: 0 5px 15px rgba(181, 147, 73, 0.4);
             }
 
             .card-title {
                 text-align: center;
                 font-family: 'Times New Roman', serif;
-                font-size: 24px;
-                font-weight: 700;
+                font-size: 26px;
+                font-weight: 800;
                 color: #1a1a1a;
-                margin: 20px 0 15px 0;
+                margin: 25px 0 10px 0;
+                letter-spacing: 0.5px;
             }
             .best-choice .card-title {
                 color: #b59349;
             }
             
+            .card-tags {
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+            .card-tag {
+                background: #f0f0f0;
+                color: #555;
+                font-size: 11px;
+                font-weight: 700;
+                padding: 4px 10px;
+                border-radius: 20px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            .best-choice .card-tag {
+                background: rgba(181, 147, 73, 0.1);
+                color: #b59349;
+            }
+
             .card-img-wrapper {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 160px;
-                margin-bottom: 15px;
+                height: 180px;
+                margin-bottom: 25px;
                 position: relative;
             }
             
             .card-img-wrapper::after {
                 content: '';
                 position: absolute;
-                bottom: -10px;
+                bottom: -15px;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 70%;
-                height: 20px;
-                background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 70%);
+                width: 80%;
+                height: 25px;
+                background: radial-gradient(ellipse at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 70%);
                 border-radius: 50%;
                 z-index: 1;
             }
             .best-choice .card-img-wrapper::after {
-                background: radial-gradient(ellipse at center, rgba(181, 147, 73, 0.25) 0%, rgba(0,0,0,0) 70%);
+                background: radial-gradient(ellipse at center, rgba(181, 147, 73, 0.3) 0%, rgba(0,0,0,0) 70%);
             }
             
             .card-img {
@@ -133,48 +161,53 @@
                 object-fit: contain;
                 position: relative;
                 z-index: 2;
-                transition: transform 0.5s ease;
+                transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             }
             .swiper-slide:hover .card-img {
-                transform: scale(1.08) rotate(2deg);
+                transform: scale(1.1) rotate(2deg);
             }
             
-            .features-list {
-                list-style: none;
-                padding: 10px 0;
-                margin: 0 0 15px 0;
-                border-top: 1px dashed rgba(0,0,0,0.08);
-                border-bottom: 1px dashed rgba(0,0,0,0.08);
+            .features-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-bottom: 25px;
+                padding: 15px 0;
+                border-top: 1px dashed rgba(0,0,0,0.1);
+                border-bottom: 1px dashed rgba(0,0,0,0.1);
             }
-            .best-choice .features-list {
+            .best-choice .features-grid {
                 border-color: rgba(181, 147, 73, 0.3);
             }
             
-            .features-list li {
+            .feature-item {
                 display: flex;
                 align-items: center;
-                gap: 12px;
-                font-size: 14px;
+                gap: 8px;
+                font-size: 13px;
                 color: #555;
-                margin-bottom: 8px;
             }
-            .best-choice .features-list li {
-                color: #1a1a1a;
-                font-weight: 600;
-            }
-            
-            .features-list li i {
+            .feature-item i {
                 color: #c4a14b;
-                font-size: 18px;
+                font-size: 16px;
             }
             
             .price-wrap {
                 margin-top: auto;
-                margin-bottom: 15px;
+                margin-bottom: 20px;
                 text-align: center;
+                background: #fdfdfd;
+                padding: 15px;
+                border-radius: 12px;
+                border: 1px solid #f0f0f0;
             }
+            .best-choice .price-wrap {
+                background: #fff;
+                border-color: rgba(181, 147, 73, 0.2);
+            }
+            
             .price-val {
-                font-size: 26px;
+                font-size: 30px;
                 font-weight: 800;
                 color: #1a1a1a;
             }
@@ -183,67 +216,70 @@
             }
             .price-unit {
                 font-size: 14px;
-                font-weight: 500;
+                font-weight: 600;
                 color: #888;
-            }
-            .best-choice .price-unit {
-                color: #555;
             }
 
             .action-row {
                 display: flex;
-                gap: 12px;
+                gap: 15px;
             }
             .btn-book {
                 flex: 1;
                 background: linear-gradient(135deg, #c4a14b, #b59349);
                 color: #ffffff;
-                font-weight: 700;
+                font-weight: 800;
                 font-size: 14px;
                 text-transform: uppercase;
-                letter-spacing: 0.5px;
+                letter-spacing: 1px;
                 text-decoration: none;
                 border: none;
-                border-radius: 30px;
-                padding: 10px 15px;
+                border-radius: 50px;
+                padding: 14px 15px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 gap: 8px;
                 cursor: pointer;
                 transition: all 0.3s;
-                box-shadow: 0 4px 15px rgba(181, 147, 73, 0.3);
+                box-shadow: 0 8px 20px rgba(181, 147, 73, 0.3);
             }
             .btn-book:hover {
-                background: linear-gradient(135deg, #b59349, #9c7c3b);
+                background: linear-gradient(135deg, #b59349, #82662c);
                 color: #ffffff;
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(181, 147, 73, 0.4);
+                transform: translateY(-3px);
+                box-shadow: 0 12px 25px rgba(181, 147, 73, 0.4);
             }
             .btn-msg {
                 background: #ffffff;
                 color: #1a1a1a;
-                border: 1px solid rgba(0,0,0,0.1);
-                border-radius: 50%;
-                width: 42px;
-                height: 42px;
+                border: 2px solid #eaeaea;
+                border-radius: 50px;
+                padding: 0 20px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                font-size: 18px;
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
                 cursor: pointer;
                 transition: all 0.3s;
+                text-decoration: none;
             }
             .btn-msg:hover {
-                background: #f8f9fa;
-                border-color: #b59349;
-                color: #b59349;
-                transform: rotate(15deg);
+                background: #1a1a1a;
+                border-color: #1a1a1a;
+                color: #ffffff;
             }
 
             .best-choice .btn-book {
-                background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-                color: #ffffff;
+                background: linear-gradient(135deg, #1a1a1a, #333);
+                box-shadow: 0 8px 20px rgba(26, 26, 26, 0.3);
+            }
+            .best-choice .btn-book:hover {
+                background: linear-gradient(135deg, #333, #000);
+                box-shadow: 0 12px 25px rgba(26, 26, 26, 0.4);
+            }
                 box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             }
             .best-choice .btn-book:hover {
@@ -321,6 +357,10 @@
                             </c:if>
 
                             <h3 class="card-title">${m.model}</h3>
+                            <div class="card-tags">
+                                <span class="card-tag">Mới 100%</span>
+                                <span class="card-tag">Chính chủ</span>
+                            </div>
                             
                             <a href="motorcycleDetail?id=${m.motorcycleId}" target="_top" class="card-img-wrapper">
                                 <img class="card-img"
@@ -328,28 +368,42 @@
                                      alt="${m.model}" />
                             </a>
                             
-                            <ul class="features-list">
-                                <li><i class="ri-checkbox-circle-line"></i> Mũ bảo hiểm tiêu chuẩn</li>
-                                <li><i class="ri-checkbox-circle-line"></i> Giá đỡ điện thoại</li>
-                                <li><i class="ri-checkbox-circle-line"></i> Dụng cụ vá xe mini</li>
-                                <li><i class="ri-checkbox-circle-line"></i> Áo mưa / Bao bọc giày</li>
-                            </ul>
+                            <div class="features-grid">
+                                <div class="feature-item"><i class="ri-checkbox-circle-fill"></i> Mũ bảo hiểm x2</div>
+                                <div class="feature-item"><i class="ri-smartphone-line"></i> Giá đỡ ĐT</div>
+                                <div class="feature-item"><i class="ri-tools-fill"></i> Vá xe mini</div>
+                                <div class="feature-item"><i class="ri-drop-fill"></i> Áo mưa dự phòng</div>
+                            </div>
 
                             <c:forEach items="${sessionScope.listP}" var="p">
                                 <c:if test="${m.priceListID == p.priceListId}">
                                     <div class="price-wrap">
-                                        <!-- Formatted without decimal fraction if 0 -->
-                                        <span class="price-val"><fmt:formatNumber value="${p.dailyPriceForDay * 1000}" pattern="#,###"/></span>
-                                        <span class="price-unit">đ/ngày</span>
+                                        <c:choose>
+                                            <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                <div style="font-size: 14px; color: #999; text-decoration: line-through; display: inline-block;">
+                                                    <fmt:formatNumber value="${p.dailyPriceForDay * 1000}" pattern="#,###"/>đ
+                                                </div>
+                                                <div style="display: inline-block; color: #dc2626; font-size: 11px; font-weight: bold; background: #fee2e2; padding: 2px 5px; border-radius: 4px; margin-left: 4px; transform: translateY(-2px);">
+                                                    -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                </div>
+                                                <br>
+                                                <span class="price-val"><fmt:formatNumber value="${(p.dailyPriceForDay * (1 - activeEvent.discount)) * 1000}" pattern="#,###"/></span>
+                                                <span class="price-unit">đ/ngày</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="price-val"><fmt:formatNumber value="${p.dailyPriceForDay * 1000}" pattern="#,###"/></span>
+                                                <span class="price-unit">đ/ngày</span>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </c:if>
                             </c:forEach>
 
                             <div class="action-row">
-                                <a href="booking" class="btn-book" onclick="redirectToBooking(event,'${m.motorcycleId}')">
-                                    <i class="ri-key-2-line"></i> THUÊ XE NGAY
+                                <a href="booking?motorcycleid=${m.motorcycleId}" target="_top" class="btn-book" onclick="redirectToBooking(event,'${m.motorcycleId}')">
+                                    <i class="ri-key-2-line"></i> THUÊ NGAY
                                 </a>
-                                <a href="motorcycleDetail?id=${m.motorcycleId}" target="_top" class="btn-msg" title="Xem chi tiết" style="width: auto; padding: 0 15px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: 600;">
+                                <a href="motorcycleDetail?id=${m.motorcycleId}" target="_top" class="btn-msg" title="Xem chi tiết">
                                     Chi tiết
                                 </a>
                             </div>

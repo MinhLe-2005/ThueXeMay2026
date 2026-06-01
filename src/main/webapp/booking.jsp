@@ -1902,9 +1902,25 @@
                                                 <div class="form-check"> 
                                                     <c:forEach items="${listP}" var="p">
                                                         <c:if test="${p.priceListId eq o.priceListID}">
-                                                            <h2 class="main-price price-day" >₫${p.dailyPriceForDay}00/Ngày</h2>
-                                                            <h2 class="main-price price-week" >₫${p.dailyPriceForWeek}00/Ngày</h2>
-                                                            <h2 class="main-price price-month" >₫${p.dailyPriceForMonth}00/Ngày</h2>
+                                                            <c:choose>
+                                                                <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                    <div style="display: flex; gap: 8px; align-items: baseline;">
+                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${p.dailyPriceForDay}00</span>
+                                                                        <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
+                                                                    </div>
+                                                                    <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <h2 class="main-price price-day" >₫${discountedDay}00/Ngày</h2>
+                                                                    <h2 class="main-price price-week" >₫${discountedWeek}00/Ngày</h2>
+                                                                    <h2 class="main-price price-month" >₫${discountedMonth}00/Ngày</h2>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <h2 class="main-price price-day" >₫${p.dailyPriceForDay}00/Ngày</h2>
+                                                                    <h2 class="main-price price-week" >₫${p.dailyPriceForWeek}00/Ngày</h2>
+                                                                    <h2 class="main-price price-month" >₫${p.dailyPriceForMonth}00/Ngày</h2>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </c:if>
                                                     </c:forEach>                                             
                                                     <p class="price-note">Không bao gồm thuế và bảo hiểm</p>                                                    
@@ -1946,9 +1962,25 @@
                                                 <div class="form-check"> 
                                                     <c:forEach items="${listP}" var="p">
                                                         <c:if test="${p.priceListId eq o.priceListID}">
-                                                            <h2 class="main-price price-day" >₫${p.dailyPriceForDay}00/Ngày</h2>
-                                                            <h2 class="main-price price-week" >₫${p.dailyPriceForWeek}00/Ngày</h2>
-                                                            <h2 class="main-price price-month" >₫${p.dailyPriceForMonth}00/Ngày</h2>
+                                                            <c:choose>
+                                                                <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                    <div style="display: flex; gap: 8px; align-items: baseline;">
+                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${p.dailyPriceForDay}00</span>
+                                                                        <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
+                                                                    </div>
+                                                                    <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <h2 class="main-price price-day" >₫${discountedDay}00/Ngày</h2>
+                                                                    <h2 class="main-price price-week" >₫${discountedWeek}00/Ngày</h2>
+                                                                    <h2 class="main-price price-month" >₫${discountedMonth}00/Ngày</h2>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <h2 class="main-price price-day" >₫${p.dailyPriceForDay}00/Ngày</h2>
+                                                                    <h2 class="main-price price-week" >₫${p.dailyPriceForWeek}00/Ngày</h2>
+                                                                    <h2 class="main-price price-month" >₫${p.dailyPriceForMonth}00/Ngày</h2>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </c:if>
                                                     </c:forEach>                                             
                                                     <p class="price-note">Không bao gồm thuế và bảo hiểm</p>                                                                                             

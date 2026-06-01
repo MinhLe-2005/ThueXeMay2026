@@ -21,6 +21,7 @@ public class SearchCriteria implements Serializable{
     private List<Integer> categoryIDs = new ArrayList<>();
     private List<Integer> demandIDs = new ArrayList<>();
     private List<String> displacements = new ArrayList<>();
+    private List<Integer> locationIDs = new ArrayList<>();
 
     public void addPriceRange(double minPrice, double maxPrice) {
         this.priceRanges.add(new PriceRange(minPrice, maxPrice));
@@ -40,6 +41,10 @@ public class SearchCriteria implements Serializable{
 
     public void addDemandID(int demandID) {
         this.demandIDs.add(demandID);
+    }
+
+    public void addLocationID(int locationID) {
+        this.locationIDs.add(locationID);
     }
 
     @NoArgsConstructor

@@ -5,7 +5,13 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="com.smartride.dao.EventDAO" %>
+<%@ page import="com.smartride.dto.Event" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    Event activeEvent = EventDAO.getInstance().getActiveEvent();
+    request.setAttribute("activeEvent", activeEvent);
+%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -413,19 +419,58 @@
                                             <div class="pricing-item">
                                                 <span class="pricing-label">Giá thuê theo ngày:</span>
                                                 <span class="pricing-value">
-                                                    <fmt:formatNumber value="${priceList.dailyPriceForDay * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                    <c:choose>
+                                                        <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                            <div style="font-size: 14px; color: #999; text-decoration: line-through; text-align: right;">
+                                                                <fmt:formatNumber value="${priceList.dailyPriceForDay * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                            </div>
+                                                            <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
+                                                                Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                            </div><br/>
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForDay * (1 - activeEvent.discount) * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForDay * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </div>
                                             <div class="pricing-item">
                                                 <span class="pricing-label">Giá thuê theo tuần:</span>
                                                 <span class="pricing-value">
-                                                    <fmt:formatNumber value="${priceList.dailyPriceForWeek * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                    <c:choose>
+                                                        <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                            <div style="font-size: 14px; color: #999; text-decoration: line-through; text-align: right;">
+                                                                <fmt:formatNumber value="${priceList.dailyPriceForWeek * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                            </div>
+                                                            <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
+                                                                Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                            </div><br/>
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForWeek * (1 - activeEvent.discount) * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForWeek * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </div>
                                             <div class="pricing-item">
                                                 <span class="pricing-label">Giá thuê theo tháng:</span>
                                                 <span class="pricing-value">
-                                                    <fmt:formatNumber value="${priceList.dailyPriceForMonth * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                    <c:choose>
+                                                        <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                            <div style="font-size: 14px; color: #999; text-decoration: line-through; text-align: right;">
+                                                                <fmt:formatNumber value="${priceList.dailyPriceForMonth * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                            </div>
+                                                            <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
+                                                                Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                            </div><br/>
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForMonth * (1 - activeEvent.discount) * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForMonth * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </div>
                                         </div>

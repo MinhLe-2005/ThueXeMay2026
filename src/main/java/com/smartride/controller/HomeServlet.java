@@ -10,8 +10,14 @@ import com.smartride.dao.BrandDAO;
 import com.smartride.dao.FeedbackDAO;
 import com.smartride.dao.MotorcycleDAO;
 import com.smartride.dao.PriceListDAO;
+import com.smartride.dao.TouristLocationDAO;
 import com.smartride.dto.Account;
 import com.smartride.dto.Booking;
+import com.smartride.dto.Brand;
+import com.smartride.dto.Feedback;
+import com.smartride.dto.Motorcycle;
+import com.smartride.dto.PriceList;
+import com.smartride.dto.TouristLocation;
 import com.smartride.dto.Brand;
 import com.smartride.dto.Feedback;
 import com.smartride.dto.Motorcycle;
@@ -71,11 +77,14 @@ public class HomeServlet extends HttpServlet {
         List<com.smartride.dto.FAQ> listFAQ = com.smartride.dao.FAQDAO.getInstance().getAllFAQ();
         request.setAttribute("listFAQ", listFAQ);
 
+        List<TouristLocation> listLocations = TouristLocationDAO.getInstance().getAllTouristLocation();
+
         session.setAttribute("account", account);
         request.setAttribute("listF", listF);
         session.setAttribute("listM", listM);
         session.setAttribute("listB", listB);
         session.setAttribute("listP", listP);
+        session.setAttribute("listLocations", listLocations);
 
         request.getRequestDispatcher("home.jsp").forward(request, response);
     }

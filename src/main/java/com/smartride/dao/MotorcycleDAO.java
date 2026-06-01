@@ -503,6 +503,13 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     .append(")");
             params.addAll(criteria.getDemandIDs());
         }
+
+        if (criteria.getLocationIDs() != null && !criteria.getLocationIDs().isEmpty()) {
+            sql.append(" AND m.\"MotorcycleID\" IN (SELECT \"MotorcycleID\" FROM \"LocationMotorcycleRecommendation\" WHERE \"LocationID\" IN (")
+                    .append(generateParameterPlaceholders(criteria.getLocationIDs().size()))
+                    .append("))");
+            params.addAll(criteria.getLocationIDs());
+        }
     }
 
     //Thanh lọc (giá, hãng, loại, phân khối, nhu cầu) 
@@ -547,6 +554,12 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     .append(")");
         }
 
+        if (criteria.getLocationIDs() != null && !criteria.getLocationIDs().isEmpty()) {
+            sql.append(" AND m.\"MotorcycleID\" IN (SELECT \"MotorcycleID\" FROM \"LocationMotorcycleRecommendation\" WHERE \"LocationID\" IN (")
+                    .append(generateParameterPlaceholders(criteria.getLocationIDs().size()))
+                    .append("))");
+        }
+
         sql.append("\nORDER BY \"MotorcycleID\"");
 
         try {
@@ -581,6 +594,12 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
             if (criteria.getDemandIDs() != null) {
                 for (int demandID : criteria.getDemandIDs()) {
                     stm.setInt(parameterIndex++, demandID);
+                }
+            }
+
+            if (criteria.getLocationIDs() != null) {
+                for (int locationID : criteria.getLocationIDs()) {
+                    stm.setInt(parameterIndex++, locationID);
                 }
             }
 
@@ -823,6 +842,12 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     .append(")");
         }
 
+        if (criteria.getLocationIDs() != null && !criteria.getLocationIDs().isEmpty()) {
+            sql.append(" AND m.\"MotorcycleID\" IN (SELECT \"MotorcycleID\" FROM \"LocationMotorcycleRecommendation\" WHERE \"LocationID\" IN (")
+                    .append(generateParameterPlaceholders(criteria.getLocationIDs().size()))
+                    .append("))");
+        }
+
         sql.append("\nORDER BY \"MotorcycleID\"");
         sql.append("\nLIMIT 3 OFFSET ?;");
 
@@ -860,7 +885,14 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     stm.setInt(parameterIndex++, demandID);
                 }
             }
-            stm.setInt(parameterIndex++, iAmount);
+
+            if (criteria.getLocationIDs() != null) {
+                for (int locationID : criteria.getLocationIDs()) {
+                    stm.setInt(parameterIndex++, locationID);
+                }
+            }
+
+            stm.setInt(parameterIndex, iAmount);
             rs = stm.executeQuery();
             while (rs.next()) {
                 list.add(new Motorcycle(rs.getString(1), rs.getString(2), rs.getString(3),

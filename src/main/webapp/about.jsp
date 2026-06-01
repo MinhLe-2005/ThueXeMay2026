@@ -326,21 +326,59 @@
                     <div class="row align-items-center gy-5">
                         <div class="col-lg-6 pe-lg-5" data-aos="fade-right">
                             <span class="story-subtitle">Câu chuyện của chúng tôi</span>
-                            <h2 class="story-title">Hơn 5 năm đồng hành trên mọi cung đường</h2>
-                            <p class="story-text">SmartRide được thành lập với một niềm tin đơn giản: Mỗi chuyến đi đều mang một câu chuyện riêng và xứng đáng được trải nghiệm trọn vẹn nhất. Từ những chiếc xe đầu tiên, chúng tôi đã không ngừng theo đuổi sự hoàn hảo trong từng dịch vụ.</p>
-                            <p class="story-text">Với hàng ngàn khách hàng đã tin tưởng, chúng tôi tự hào mang đến những dòng xe đẳng cấp, giúp bạn tự do khám phá Đà Nẵng, Hội An và khắp miền Trung Việt Nam.</p>
+                            <h2 class="story-title">Khởi nguồn từ một chuyến đi</h2>
+                            <blockquote class="blockquote" style="font-style: italic; border-left: 4px solid var(--primary); padding-left: 15px; margin-bottom: 25px;">
+                                "Sau này, điều ta nhớ nhất không phải là đích đến, mà là những hành trình đã đi qua. Dù là một chuyến đi, một quãng đời trưởng thành hay những đổi thay nội tâm, tất cả đều để lại dấu ấn bằng trải nghiệm và ký ức đẹp đẽ."
+                                <footer class="blockquote-footer mt-2" style="font-size: 0.85rem;">Nhà Sáng Lập SmartRide</footer>
+                            </blockquote>
+                            <p class="story-text">Ý tưởng về SmartRide bắt nguồn từ một khoảnh khắc bất ngờ cách đây vài năm, trong chuyến công tác của nhà sáng lập đến thành phố Đà Nẵng xinh đẹp.</p>
+                            <p class="story-text">Do đến sớm hơn dự kiến, anh quyết định khám phá thành phố bằng cách tìm dịch vụ cho thuê xe máy tự lái trên Internet. Tuy nhiên, phải mất hơn 30 phút loay hoay khó khăn mới tìm được một đơn vị cung cấp dịch vụ xe đáng tin cậy tại địa phương.</p>
+                            <p class="story-text">Từ trải nghiệm đó, SmartRide chính thức ra đời với một nền tảng website hiện đại. Chúng tôi cam kết mang đến dịch vụ cho thuê xe máy minh bạch, chuyên nghiệp, định hướng trở thành người bạn đồng hành đáng tin cậy của mọi du khách.</p>
                             
-                            <a href="home" class="btn-book">Khám Phá Xe Ngay</a>
+                            <a href="home" class="btn-book" style="margin-top: 10px;">Khám Phá Xe Ngay</a>
                         </div>
                         <div class="col-lg-6" data-aos="fade-left">
                             <div class="masonry-grid">
                                 <!-- Trả lại các ảnh phong cảnh / xe gốc có sẵn trên web để căn chỉnh lại -->
-                                <img src="images/imageTour1.jpg" class="masonry-main shadow-sm" alt="SmartRide Experience" onerror="this.src='images/imageM12.jpg'">
+                                <img src="images/caurong_danang.png" class="masonry-main shadow-sm" alt="SmartRide Experience" style="object-fit: cover;" onerror="this.src='images/gen_masonry_main.png'">
                                 <div class="masonry-side">
-                                    <!-- Dùng object-fit: contain trong CSS để không bị cắt xén xe -->
-                                    <img src="images/imageM12.jpg" class="shadow-sm" alt="SmartRide Suzuki" onerror="this.src='images/imageM5.jpg'">
-                                    <img src="images/xe1.jpg" class="shadow-sm" alt="SmartRide Yamaha" onerror="this.src='images/imageM9.jpg'">
+                                    <!-- Dùng object-fit: cover vì đây là ảnh có nền đẹp -->
+                                    <img src="images/gen_masonry_side1.png" class="shadow-sm" alt="SmartRide Premium Bike 1" style="object-fit: cover;" onerror="this.src='images/imageM5.jpg'">
+                                    <img src="images/gen_masonry_side2.png" class="shadow-sm" alt="SmartRide Premium Bike 2" style="object-fit: cover;" onerror="this.src='images/imageM9.jpg'">
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2.5 MISSION & VISION SECTION -->
+            <section style="background-color: #faf9f7; padding: 60px 0 100px 0;">
+                <div class="container">
+                    <div class="row gy-4 justify-content-center">
+                        <div class="col-md-5" data-aos="fade-up">
+                            <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.04); height: 100%; border-top: 4px solid var(--primary); transition: transform 0.3s ease;">
+                                <div style="width: 70px; height: 70px; background: rgba(181, 147, 73, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <circle cx="12" cy="12" r="6"></circle>
+                                        <circle cx="12" cy="12" r="2"></circle>
+                                    </svg>
+                                </div>
+                                <h3 class="mb-3 text-center" style="color: var(--text-dark); font-weight: 800;">Sứ Mệnh</h3>
+                                <p class="story-text text-center mb-0" style="font-size: 1.05rem;">Cung cấp dịch vụ thuê xe máy an toàn – minh bạch – dễ tiếp cận, đồng hành cùng mọi hành trình khám phá Việt Nam của khách hàng với trải nghiệm chuyên nghiệp và tin cậy nhất.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-5" data-aos="fade-up" data-aos-delay="100">
+                            <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.04); height: 100%; border-top: 4px solid #1a1816; transition: transform 0.3s ease;">
+                                <div style="width: 70px; height: 70px; background: rgba(26, 24, 22, 0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a1816" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </div>
+                                <h3 class="mb-3 text-center" style="color: var(--text-dark); font-weight: 800;">Tầm Nhìn</h3>
+                                <p class="story-text text-center mb-0" style="font-size: 1.05rem;">Trở thành thương hiệu dẫn đầu trong lĩnh vực cho thuê xe máy tự lái tại miền Trung Việt Nam, xây dựng tiêu chuẩn mới về chất lượng dịch vụ trong ngành du lịch và di chuyển cá nhân.</p>
                             </div>
                         </div>
                     </div>
@@ -353,7 +391,7 @@
                     <div data-aos="fade-up">
                         <span class="story-subtitle">Đội Ngũ</span>
                         <h2 class="story-title">Những người đứng sau tay lái</h2>
-                        <p class="story-text mx-auto" style="max-width: 700px; margin-bottom: 50px;">Đội ngũ SmartRide không chỉ là những kỹ thuật viên hay nhân viên hỗ trợ. Chúng tôi là những người bạn đồng hành, am hiểu từng góc phố, từng cung đèo, luôn sẵn sàng hỗ trợ bạn 24/7 trên mọi hành trình.</p>
+                        <p class="story-text mx-auto" style="max-width: 800px; margin-bottom: 50px;">SmartRide sở hữu đội ngũ nhân sự dày dặn kinh nghiệm trong lĩnh vực vận hành và dịch vụ khách hàng, đặc biệt am hiểu nhu cầu và hành vi di chuyển của khách du lịch. Chúng tôi không ngừng cập nhật công nghệ và nâng cấp trải nghiệm người dùng trên cả nền tảng online lẫn offline.</p>
                     </div>
                     
                     <div class="row gy-4 justify-content-center">
@@ -379,46 +417,83 @@
                     </div>
                     
                     <div class="row gy-0 align-items-stretch">
-                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
                             <div class="value-item">
                                 <span class="value-number">01</span>
-                                <h3 class="value-title">Nhanh Chóng & <i>Tiện Lợi</i></h3>
-                                <p class="value-desc">Chúng tôi hiểu thời gian của bạn là quý giá. Thủ tục thuê xe được tối giản hóa đến mức tối đa, giúp bạn nhận xe nhanh chóng chỉ trong 5 phút và sẵn sàng cho hành trình.</p>
+                                <h3 class="value-title" style="font-size: 1.3rem;">Chất Lượng & An Toàn</h3>
+                                <p class="value-desc">Xe luôn được bảo dưỡng định kỳ, đảm bảo vận hành ổn định và an toàn tuyệt đối cho mọi hành trình khám phá.</p>
                             </div>
                         </div>
-                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
                             <div class="value-item">
                                 <span class="value-number">02</span>
-                                <h3 class="value-title">An Toàn <i>Tuyệt Đối</i></h3>
-                                <p class="value-desc">Mỗi chiếc xe trước khi giao đến tay khách hàng đều phải trải qua quy trình kiểm tra bảo dưỡng nghiêm ngặt. Động cơ mượt mà, phanh lốp hoàn hảo — tất cả vì sự an tâm của bạn.</p>
+                                <h3 class="value-title" style="font-size: 1.3rem;">Đồng Hành & Tận Tâm</h3>
+                                <p class="value-desc">Hỗ trợ khách hàng nhanh chóng, chu đáo từ lúc đặt xe đến khi kết thúc chuyến đi, cứu hộ 24/7 trên mọi nẻo đường.</p>
                             </div>
                         </div>
-                        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
                             <div class="value-item">
                                 <span class="value-number">03</span>
-                                <h3 class="value-title">Hỗ Trợ <i>Tận Tâm</i></h3>
-                                <p class="value-desc">Đội ngũ của chúng tôi luôn đồng hành cùng bạn 24/7. Dù bạn đang ở bán đảo Sơn Trà hay trên đỉnh đèo Hải Vân, chúng tôi luôn sẵn sàng hỗ trợ mọi vấn đề phát sinh trên đường.</p>
+                                <h3 class="value-title" style="font-size: 1.3rem;">Linh Hoạt & Tiện Lợi</h3>
+                                <p class="value-desc">Giao – nhận xe linh hoạt tại nhiều điểm, thủ tục tối giản, dễ dàng đặt xe và thanh toán theo cách bạn muốn.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                            <div class="value-item">
+                                <span class="value-number">04</span>
+                                <h3 class="value-title" style="font-size: 1.3rem;">Minh Bạch & Đáng Tin</h3>
+                                <p class="value-desc">Giá cả rõ ràng, không phụ phí ẩn. Cam kết trung thực trong mọi thông tin và dịch vụ để khách hàng hoàn toàn an tâm.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- 4.5 COMMITMENT SECTION -->
+            <section class="section-padding bg-white" style="border-top: 1px solid #eee;">
+                <div class="container text-center">
+                    <div data-aos="fade-up">
+                        <span class="story-subtitle">Lời Hứa Từ SmartRide</span>
+                        <h2 class="story-title">Không chỉ là dịch vụ – đó là lời cam kết</h2>
+                        <p class="story-text mx-auto" style="max-width: 800px; margin-bottom: 40px;">Với triết lý hoạt động đặt trải nghiệm khách hàng làm trọng tâm, SmartRide tự hào mang đến những chiếc xe chất lượng, dịch vụ chuyên nghiệp và những câu chuyện thành công đầy cảm hứng. Chúng tôi cam kết:</p>
+                    </div>
+                    <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="100">
+                        <div class="col-md-8 col-lg-6 text-start">
+                            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px;">
+                                <li style="font-size: 1.1rem; display: flex; align-items: flex-start;">
+                                    <span style="color: var(--primary); font-weight: bold; margin-right: 15px; font-size: 1.2rem;">✓</span> 
+                                    <span>Giao xe đúng loại – đúng hẹn – đúng địa điểm.</span>
+                                </li>
+                                <li style="font-size: 1.1rem; display: flex; align-items: flex-start;">
+                                    <span style="color: var(--primary); font-weight: bold; margin-right: 15px; font-size: 1.2rem;">✓</span> 
+                                    <span>Hỗ trợ nhanh chóng mọi sự cố trong hành trình.</span>
+                                </li>
+                                <li style="font-size: 1.1rem; display: flex; align-items: flex-start;">
+                                    <span style="color: var(--primary); font-weight: bold; margin-right: 15px; font-size: 1.2rem;">✓</span> 
+                                    <span>Cung cấp thông tin đầy đủ, minh bạch về dịch vụ.</span>
+                                </li>
+                                <li style="font-size: 1.1rem; display: flex; align-items: flex-start;">
+                                    <span style="color: var(--primary); font-weight: bold; margin-right: 15px; font-size: 1.2rem;">✓</span> 
+                                    <span>Không ngừng cải tiến để mang lại giá trị cao nhất cho khách hàng.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
             <!-- 5. FULL WIDTH GALLERY -->
             <section>
                 <div class="gallery-container">
                     <div class="gallery-img-wrapper" data-aos="fade-in" data-aos-delay="0">
-                        <!-- Sử dụng ảnh xe máy / phong cảnh gốc dự án -->
-                        <img src="images/imageTour5.jpg" loading="lazy" alt="Gallery 1" onerror="this.src='images/imageM12.jpg'">
+                        <img src="images/haivan_pass.png" loading="lazy" alt="Đèo Hải Vân" style="object-fit: cover;" onerror="this.src='images/imageM12.jpg'">
                     </div>
                     <div class="gallery-img-wrapper" data-aos="fade-in" data-aos-delay="150">
-                        <img src="images/imageTour6.jpg" loading="lazy" alt="Gallery 2" onerror="this.src='images/imageM11.jpg'">
+                        <img src="images/hoian_ancient.png" loading="lazy" alt="Phố cổ Hội An" style="object-fit: cover;" onerror="this.src='images/imageM11.jpg'">
                     </div>
                     <div class="gallery-img-wrapper" data-aos="fade-in" data-aos-delay="300">
-                        <img src="images/imageTour7.jpg" loading="lazy" alt="Gallery 3" onerror="this.src='images/imageM5.jpg'">
+                        <img src="images/nguhanhson.png" loading="lazy" alt="Ngũ Hành Sơn" style="object-fit: cover;" onerror="this.src='images/imageM5.jpg'">
                     </div>
                     <div class="gallery-img-wrapper" data-aos="fade-in" data-aos-delay="450">
-                        <img src="images/imageTour8.jpg" loading="lazy" alt="Gallery 4" onerror="this.src='images/imageM9.jpg'">
+                        <img src="images/sontra_peninsula.png" loading="lazy" alt="Bán Đảo Sơn Trà" style="object-fit: cover;" onerror="this.src='images/imageM9.jpg'">
                     </div>
                 </div>
             </section>
