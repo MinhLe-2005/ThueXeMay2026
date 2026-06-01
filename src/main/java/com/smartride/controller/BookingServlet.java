@@ -108,3 +108,5 @@ public class BookingServlet extends HttpServlet {
 // Minor update 32
 
 // fix patch 10
+
+// fix patch 21
