@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package com.smartride.controller;
 
 import com.smartride.dao.ContactDAO;
@@ -17,20 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name="ContactServlet", urlPatterns={"/contact"})
 public class ContactServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -49,26 +32,11 @@ public class ContactServlet extends HttpServlet {
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
-
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -86,20 +54,33 @@ public class ContactServlet extends HttpServlet {
         
         if(acc != null){
             cd.insertContact(name, phone, email, title, message, acc.getAccountId());
-            request.setAttribute("msg", "Nhập thông tin thành công! Chúng tôi sẽ phản hồi bạn nhanh nhất có thể!");
-            request.getRequestDispatcher("contact.jsp").forward(request, response);
         } else {
             cd.insertContact(name, phone, email, title, message, null);
-            request.setAttribute("msg", "Nhập thông tin thành công! Chúng tôi sẽ phản hồi bạn nhanh nhất có thể!");
-            request.getRequestDispatcher("contact.jsp").forward(request, response);
         }
+        
+        // Gửi email thông báo về mail hệ thống
+        String to = "smartride.system@gmail.com";
+        String content = "<h3>Bạn vừa nhận được một liên hệ mới từ khách hàng trên hệ thống SmartRide.</h3>"
+                + "<p><strong>Thông tin khách hàng:</strong></p>"
+                + "<ul>"
+                + "<li><strong>Tên:</strong> " + name + "</li>"
+                + "<li><strong>Số điện thoại:</strong> " + phone + "</li>"
+                + "<li><strong>Email:</strong> " + email + "</li>"
+                + "<li><strong>Tiêu đề:</strong> " + title + "</li>"
+                + "</ul>"
+                + "<p><strong>Nội dung:</strong><br/>" + message.replace("\n", "<br>") + "</p>";
+        
+        try {
+            com.smartride.constant.SendEmail.sendVerificationEmail(to, content);
+            request.setAttribute("msg", "Gửi yêu cầu thành công! Cảm ơn bạn đã liên hệ, đội ngũ SmartRide sẽ phản hồi bạn trong vòng 24h làm việc.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("msg", "Đã lưu thông tin liên hệ nhưng có lỗi khi gửi email thông báo: " + e.getMessage());
+        }
+        
+        request.getRequestDispatcher("contact.jsp").forward(request, response);
        
     }
-
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";

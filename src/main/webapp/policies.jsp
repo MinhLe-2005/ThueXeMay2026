@@ -1,9 +1,3 @@
-<%-- 
-    Document   : policies
-    Created on : May 25, 2024, 4:59:04 PM
-    Author     : DiepTCNN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!doctype html>
 <html lang="en">

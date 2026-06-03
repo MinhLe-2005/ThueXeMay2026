@@ -12,10 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name="PriceListServlet", urlPatterns={"/pricing"})
 public class PriceListServlet extends HttpServlet {
    

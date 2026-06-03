@@ -1,8 +1,3 @@
-<%-- 
-    Document   : faqsManagement
-    Created on : May 25, 2024, 5:45:19 PM
-    Author     : DiepTCNN
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -257,17 +252,24 @@
             <div class="col-md-2">
 
                 <jsp:include page="/includes/staff/sidebar.jsp" /> 
-            </div>
 
-            <div style="margin-top: 6rem" class="col-md-10">
+            <div style="margin-top: 5rem" class="col-md-12">
                 <div class="container col-md-8">
+                    <div class="pagetitle" style="margin-bottom: 20px;">
+                        <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ CÂU HỎI THƯỜNG GẶP</h1>
+                        <nav>
+                            <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
+                                <li class="breadcrumb-item"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
+                                <li class="breadcrumb-item active" style="font-weight: 500; color: #6c757d;">Quản lý câu hỏi thường gặp</li>
+                            </ol>
+                        </nav>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="wrapper wrapper-content animated fadeInRight">
 
                                 <div class="ibox-content m-b-sm border-bottom">
                                     <div class="text-center p-lg">
-                                        <h2>Quản lý Câu hỏi thường gặp của công ty SmartRide</h2>
                                         <span>Nếu bạn muốn thêm một câu hỏi, bấm vào đây </span>
 
                                         <button type="button" class="btn btn-primary" id="launchModalBtn" data-mdb-toggle="modal"

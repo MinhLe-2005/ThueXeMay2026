@@ -1,8 +1,3 @@
-<%-- 
-    Document   : profileStaff
-    Created on : May 25, 2024, 5:50:03 PM
-    Author     : DiepTCNN
---%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

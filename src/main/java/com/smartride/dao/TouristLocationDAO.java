@@ -15,10 +15,6 @@ import com.smartride.dto.LocationRecommendationDTO;
 import java.util.Set;
 import java.util.HashSet;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class TouristLocationDAO implements Serializable, DAO<TouristLocation> {
 
     private static TouristLocationDAO instance;
@@ -142,6 +138,36 @@ public class TouristLocationDAO implements Serializable, DAO<TouristLocation> {
             Logger.getLogger(TouristLocationDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return list;
+    }
+
+    public boolean addRecommendation(int locationId, String motorcycleId, String reason, int priority) {
+        String sql = "INSERT INTO \"LocationMotorcycleRecommendation\" (\"LocationID\", \"MotorcycleID\", \"Reason\", \"Priority\") VALUES (?, ?, ?, ?)";
+        try {
+            Connection conn = DBUtil.makeConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, locationId);
+            ps.setString(2, motorcycleId);
+            ps.setString(3, reason);
+            ps.setInt(4, priority);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(TouristLocationDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    public boolean deleteRecommendation(int locationId, String motorcycleId) {
+        String sql = "DELETE FROM \"LocationMotorcycleRecommendation\" WHERE \"LocationID\" = ? AND \"MotorcycleID\" = ?";
+        try {
+            Connection conn = DBUtil.makeConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, locationId);
+            ps.setString(2, motorcycleId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(TouristLocationDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
     }
 
     public TouristLocation getTouristLocationbyID(int id) {

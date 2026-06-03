@@ -1,11 +1,3 @@
-<%-- 
-    Document   : contactStaff
-    Created on : Jun 14, 2024, 9:11:22 PM
-    Author     : ADMIN
---%>
-
-
-
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -168,10 +160,7 @@
 </head>
 
 <body>
-    <div class="col-md-2">
-        <jsp:include page="/includes/staff/sidebar.jsp" />
-    </div>
-    <div class="container-fluid tab-container">
+    <div class="container-fluid tab-container col-md-12">
         <!-- Danh sách tab ngang -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">

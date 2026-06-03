@@ -10,10 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.io.IOException;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name = "ViewEventServlet", urlPatterns = {"/event"})
 public class ViewEventServlet extends HttpServlet {
 

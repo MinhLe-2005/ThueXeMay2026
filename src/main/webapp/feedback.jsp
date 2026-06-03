@@ -1,8 +1,3 @@
-<%-- 
-    Document   : feedback
-    Created on : 16 thg 6, 2024, 07:01:43
-    Author     : MINH TUAN
---%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

@@ -13,11 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-/**
- * AJAX endpoint to validate and apply a voucher code during booking.
- * Returns JSON: { "valid": true, "voucherId": 1, "discount": 50000, "description": "..." }
- *          or  { "valid": false, "message": "Mã voucher không hợp lệ" }
- */
 @WebServlet(name = "ApplyVoucherServlet", urlPatterns = {"/applyVoucher"})
 public class ApplyVoucherServlet extends HttpServlet {
 

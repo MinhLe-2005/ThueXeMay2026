@@ -1,9 +1,3 @@
- <%-- 
-    Document   : staff2
-    Created on : Jun 29, 2024, 1:25:34 PM
-    Author     : DiepTCNN
---%>
-
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -135,35 +129,124 @@
                         </ol>
                     </nav>
                 </div>
-                <div class="global-filter-group" role="group">
-                    <button type="button" class="btn global-filter-btn" data-period="today">Hôm nay</button>
-                    <button type="button" class="btn global-filter-btn active" data-period="30days">30 Ngày</button>
-                    <button type="button" class="btn global-filter-btn" data-period="90days">90 Ngày</button>
-                    <button type="button" class="btn global-filter-btn" data-period="180days">180 Ngày</button>
-                    <button type="button" class="btn global-filter-btn" data-period="all">Tất cả</button>
-                    <button type="button" class="btn global-filter-btn" data-period="custom" data-bs-toggle="modal" data-bs-target="#customDateModal">
-                        <i class="bi bi-calendar3 me-1"></i> Tùy chọn...
-                    </button>
+                <div class="col-md-8 text-end">
+                    <ul class="nav custom-tabs justify-content-end" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link global-filter-btn" id="pills-today-tab" data-period="today" type="button" role="tab">Hôm nay</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link global-filter-btn active" id="pills-30d-tab" data-period="30days" type="button" role="tab">30 Ngày</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link global-filter-btn" id="pills-90d-tab" data-period="90days" type="button" role="tab">90 Ngày</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link global-filter-btn" id="pills-180d-tab" data-period="180days" type="button" role="tab">180 Ngày</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link global-filter-btn" id="pills-all-tab" data-period="all" type="button" role="tab">Tất cả</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link global-filter-btn" data-period="custom" type="button" data-bs-toggle="modal" data-bs-target="#customDateModal">
+                                <i class="bi bi-calendar3 me-1"></i> Tùy chọn...
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div><!-- End Page Title -->
 
 
 
             <style>
-                .dashboard .info-card {
-                    height: 100%;
-                    min-height: 150px;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.08);
-                    border-radius: 10px;
+                body, main#main {
+                    background-color: #f4f6f9;
                 }
-                .dashboard .info-card .card-body {
-                    flex: 1;
+                .dashboard .card {
+                    border: none;
+                    border-radius: 20px;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+                    transition: transform 0.25s ease, box-shadow 0.25s ease;
+                    background: #ffffff;
+                    margin-bottom: 25px;
+                }
+                .dashboard .card:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+                }
+                .dashboard .card-title {
+                    font-weight: 700;
+                    color: #1a1816;
+                    font-family: 'Be Vietnam Pro', sans-serif;
+                    padding: 20px 0 15px 0;
+                    font-size: 1.05rem;
+                }
+                .dashboard .info-card {
+                    padding-bottom: 5px;
+                }
+                .dashboard .info-card h6 {
+                    font-size: 26px;
+                    color: #112a46;
+                    font-weight: 800;
+                    margin: 0;
+                    padding: 0;
+                    font-family: 'Be Vietnam Pro', sans-serif;
+                    letter-spacing: -0.5px;
+                }
+                .dashboard .card-icon {
+                    font-size: 28px;
+                    line-height: 0;
+                    width: 56px;
+                    height: 56px;
+                    flex-shrink: 0;
+                    flex-grow: 0;
+                    border-radius: 16px !important;
                     display: flex;
-                    flex-direction: column;
+                    align-items: center;
                     justify-content: center;
+                }
+                .sales-card .card-icon {
+                    color: #4154f1;
+                    background: #f0f3ff;
+                }
+                .revenue-card .card-icon {
+                    color: #2eca6a;
+                    background: #e6f9ed;
+                }
+                .customers-card .card-icon {
+                    color: #ff771d;
+                    background: #fff0e6;
+                }
+                /* Premium Filter Tabs */
+                .custom-tabs {
+                    background: #eef2f6;
+                    border-radius: 50px;
+                    padding: 6px;
+                    display: inline-flex;
+                }
+                .custom-tabs .nav-item {
+                    margin: 0;
+                }
+                .custom-tabs .nav-link {
+                    border-radius: 50px;
+                    color: #6c757d;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    padding: 8px 24px;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    border: none;
+                    background: transparent;
+                }
+                .custom-tabs .nav-link.active {
+                    background: #c09d62;
+                    color: #fff !important;
+                    box-shadow: 0 4px 15px rgba(192, 157, 98, 0.35);
+                }
+                .custom-tabs .nav-link:hover:not(.active) {
+                    background: rgba(192, 157, 98, 0.1);
+                    color: #c09d62;
+                }
+                #top-motorcycles-body td {
+                    vertical-align: middle;
                 }
             </style>
 
@@ -171,26 +254,24 @@
                 <div class="row">
 
                     <!-- Left side columns -->
-                    <div class="col-lg-8">
+                    <div class="col-lg-12">
                         <div class="row">
 
                             <!-- Sales Card -->
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="card info-card sales-card">
-
-
+                            <div class="col-md-4">
+                                <div class="card info-card sales-card h-100 mb-0">
 
                                     <div class="card-body">
                                         <h5 class="card-title">Đơn Hàng</h5>
 
                                         <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-cart"></i>
+                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                                <i class="bi bi-cart" style="font-size: 24px;"></i>
                                             </div>
-                                            <div class="ps-3" id="orders-container">
-                                                <h6 id="stat-orders">${dsd.stats.orders != null ? dsd.stats.orders : '0'}</h6>
+                                            <div class="ps-2" id="orders-container">
+                                                <h6 id="stat-orders" style="white-space: nowrap; font-size: 24px; margin-bottom: 0;">...</h6>
                                                 <span id="trend-orders">
-                                                    ${dsd.stats.trends.o != null ? dsd.stats.trends.o : '<span class="text-secondary small pt-1 fw-bold">0%</span> <span class="text-muted small pt-2 ps-1">Bằng</span>'}
+                                                    <span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> <span class="text-muted small pt-2 ps-1">Đang tải...</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -200,22 +281,20 @@
                             </div><!-- End Sales Card -->
 
                             <!-- Revenue Card -->
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="card info-card revenue-card">
-
-
+                            <div class="col-md-4">
+                                <div class="card info-card revenue-card h-100 mb-0">
 
                                     <div class="card-body">
                                         <h5 class="card-title">Doanh Thu</h5>
 
                                         <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-currency-dollar"></i>
+                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                                <i class="bi bi-currency-dollar" style="font-size: 24px;"></i>
                                             </div>
-                                            <div class="ps-3" id="revenue-container">
-                                                <h6 id="stat-revenue">${dsd.stats.revenue != null ? dsd.stats.revenue : '0 VNĐ'}</h6>
+                                            <div class="ps-2" id="revenue-container">
+                                                <h6 id="stat-revenue" style="white-space: nowrap; font-size: 24px; margin-bottom: 0; font-weight: 700;">...</h6>
                                                 <span id="trend-revenue">
-                                                    ${dsd.stats.trends.r != null ? dsd.stats.trends.r : '<span class="text-secondary small pt-1 fw-bold">0%</span> <span class="text-muted small pt-2 ps-1">Bằng</span>'}
+                                                    <span class="spinner-border spinner-border-sm text-success" role="status" aria-hidden="true"></span> <span class="text-muted small pt-2 ps-1">Đang tải...</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -225,9 +304,9 @@
                             </div><!-- End Revenue Card -->
 
                             <!-- Customers Card -->
-                            <div class="col-xxl-4 col-xl-12">
+                            <div class="col-md-4">
 
-                                <div class="card info-card customers-card">
+                                <div class="card info-card customers-card h-100 mb-0">
 
 
 
@@ -235,13 +314,13 @@
                                         <h5 class="card-title">Khách Hàng</h5>
 
                                         <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-people"></i>
+                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                                <i class="bi bi-people" style="font-size: 24px;"></i>
                                             </div>
-                                            <div class="ps-3" id="customers-container">
-                                                <h6 id="stat-customers">${dsd.stats.customers != null ? dsd.stats.customers : '0'}</h6>
+                                            <div class="ps-2" id="customers-container">
+                                                <h6 id="stat-customers" style="white-space: nowrap; font-size: 24px; margin-bottom: 0;">...</h6>
                                                 <span id="trend-customers">
-                                                    ${dsd.stats.trends.c != null ? dsd.stats.trends.c : '<span class="text-secondary small pt-1 fw-bold">0%</span> <span class="text-muted small pt-2 ps-1">Bằng</span>'}
+                                                    <span class="spinner-border spinner-border-sm text-warning" role="status" aria-hidden="true"></span> <span class="text-muted small pt-2 ps-1">Đang tải...</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -252,16 +331,14 @@
                             </div><!-- End Customers Card -->
 
                             <!-- Reports -->
-                            <div class="col-12">
-                                <div class="card">
+                            <div class="col-lg-8 mt-4 d-flex flex-column">
+                                <div class="card flex-grow-1 mb-0 d-flex flex-column">
 
-
-
-                                    <div class="card-body">
+                                    <div class="card-body d-flex flex-column flex-grow-1">
                                         <h5 class="card-title">Báo Cáo Doanh Thu &amp; Hoạt Động</h5>
 
                                         <!-- Line Chart -->
-                                        <div id="reportsChart"></div>
+                                        <div id="reportsChart" class="flex-grow-1" style="min-height: 350px;"></div>
 
                                         <!-- End Line Chart -->
 
@@ -270,14 +347,32 @@
                                 </div>
                             </div><!-- End Reports -->
 
+                            <!-- Right side charts (Moved next to Line Chart) -->
+                            <div class="col-lg-4 mt-4 d-flex flex-column gap-4">
+                                <!-- Budget Report -->
+                                <div class="card flex-grow-1 mb-0 d-flex flex-column">
+                                    <div class="card-body pb-0 d-flex flex-column flex-grow-1">
+                                        <h5 class="card-title">Thống Kê Doanh Thu Theo Hãng</h5>
+                                        <div id="budgetChart" style="min-height: 220px;" class="echart flex-grow-1"></div>
+                                    </div>
+                                </div><!-- End Budget Report -->
+
+                                <!-- Website Traffic -->
+                                <div class="card flex-grow-1 mb-0 d-flex flex-column">
+                                    <div class="card-body pb-0 d-flex flex-column flex-grow-1">
+                                        <h5 class="card-title">Thống Kê Số Lượng Xe Được Thuê</h5>
+                                        <div id="trafficChart" style="min-height: 220px;" class="echart flex-grow-1"></div>
+                                    </div>
+                                </div><!-- End Website Traffic -->
+                            </div><!-- End Right side charts -->
+
 
 
                             <!-- Top Selling -->
-                            <div class="col-12">
-                                <div class="card overflow-auto shadow-sm border-0" style="border-radius: 12px;">
-
-                                    <div class="card-body pb-0">
-                                        <h5 class="card-title fw-bold text-dark mb-4">Top Xe Được Thuê Nhiều Nhất</h5>
+                            <div class="col-12 mt-4">
+                                <div class="card border-0 shadow-sm custom-card">
+                                    <div class="card-body p-4 pb-0">
+                                        <h5 class="card-title text-dark fw-bold mb-4" style="font-family: 'Be Vietnam Pro', sans-serif;">Danh Sách Xe Được Thuê</h5>
 
                                         <table class="table table-hover table-borderless align-middle">
                                             <thead class="table-light text-muted" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
@@ -302,41 +397,7 @@
                         </div>
                     </div><!-- End Left side columns -->
 
-                    <!-- Right side columns -->
-                    <div class="col-lg-4">
-
-
-
-                        <!-- Budget Report -->
-                        <div class="card">
-
-
-                            <div class="card-body pb-0">
-                                <h5 class="card-title">Thống Kê Doanh Thu Theo Hãng </h5>
-
-                                <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
-
-                                <!-- Inline budget script removed for AJAX -->
-
-                            </div>
-                        </div><!-- End Budget Report -->
-
-                        <!-- Website Traffic -->
-                        <div class="card">
-
-
-                            <div class="card-body pb-0">
-                                <h5 class="card-title">Thống Kê Số Lượng Xe Được Thuê</h5>
-
-                                <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
-
-                                <!-- Inline traffic script removed for AJAX -->
-
-                            </div>
-                        </div><!-- End Website Traffic -->
-
-
-                    </div><!-- End Right side columns -->
+                    <!-- Right side columns removed for cleaner layout -->
 
                 </div>
             </section>
@@ -398,7 +459,7 @@
                 window.reportsChart = new ApexCharts(document.querySelector("#reportsChart"), {
                     series: [],
                     chart: { 
-                        height: 350, 
+                        height: '100%', 
                         type: 'area',
                         toolbar: { show: true },
                         fontFamily: 'Be Vietnam Pro'
@@ -467,6 +528,7 @@
                 });
                 window.reportsChart.render();
 
+                // Right side charts logic restored
                 window.budgetChart = echarts.init(document.querySelector("#budgetChart"));
                 window.trafficChart = echarts.init(document.querySelector("#trafficChart"));
 
@@ -483,7 +545,13 @@
                         .then(data => {
                             // Update Stats Cards
                             if(document.getElementById('stat-orders')) document.getElementById('stat-orders').textContent = data.stats.orders;
-                            if(document.getElementById('stat-revenue')) document.getElementById('stat-revenue').textContent = data.stats.revenue;
+                            
+                            if(document.getElementById('stat-revenue')) {
+                                let rev = data.stats.revenue;
+                                rev = rev.replace(' VNĐ', ' <span style="font-size: 15px; font-weight: 600; color: #8c98a4; margin-left: 4px;">VNĐ</span>');
+                                document.getElementById('stat-revenue').innerHTML = rev;
+                            }
+                            
                             if(document.getElementById('stat-customers')) document.getElementById('stat-customers').textContent = data.stats.customers;
                             
                             if(document.getElementById('trend-orders')) document.getElementById('trend-orders').innerHTML = data.stats.trends.o;
@@ -549,18 +617,18 @@
                                     data: brandRevenues,
                                     itemStyle: {
                                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                                            { offset: 0, color: '#83bff6' },
-                                            { offset: 0.5, color: '#188df0' },
-                                            { offset: 1, color: '#188df0' }
+                                            { offset: 0, color: '#C09D62' },
+                                            { offset: 0.5, color: '#A6854F' },
+                                            { offset: 1, color: '#8A6D3B' }
                                         ]),
                                         borderRadius: [4, 4, 0, 0]
                                     },
                                     emphasis: {
                                         itemStyle: {
                                             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                                                { offset: 0, color: '#2378f7' },
-                                                { offset: 0.7, color: '#2378f7' },
-                                                { offset: 1, color: '#83bff6' }
+                                                { offset: 0, color: '#E4CC9C' },
+                                                { offset: 0.7, color: '#C09D62' },
+                                                { offset: 1, color: '#A6854F' }
                                             ])
                                         }
                                     }
@@ -568,7 +636,10 @@
                             }, true);
                             
                             // Update Pie Chart (Category)
-                            let pieSeries = Object.keys(data.charts.pieChart).map(k => ({ value: data.charts.pieChart[k], name: k }));
+                            let pieSeries = Object.keys(data.charts.pieChart)
+                                .map(k => ({ value: data.charts.pieChart[k], name: k }))
+                                .filter(item => item.value > 0); // Lọc bỏ các xe có số lượng bằng 0
+                            
                             window.trafficChart.setOption({
                                 tooltip: { 
                                     trigger: 'item',
@@ -584,7 +655,7 @@
                                     name: 'Đã thuê', 
                                     type: 'pie', 
                                     radius: ['25%', '75%'],
-                                    center: ['50%', '45%'],
+                                    center: ['50%', '50%'],
                                     roseType: 'radius',
                                     itemStyle: {
                                         borderRadius: 10,
@@ -594,7 +665,7 @@
                                         shadowColor: 'rgba(0, 0, 0, 0.1)'
                                     },
                                     label: { 
-                                        show: true,
+                                        show: false,
                                         formatter: '{b}\n({c})'
                                     },
                                     emphasis: { 

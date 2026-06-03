@@ -26,10 +26,6 @@ import java.util.Map;
 import com.smartride.dao.TouristLocationDAO;
 import com.smartride.dto.TouristLocation;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name = "MotorcycleServlet", urlPatterns = {"/motorcycle"})
 public class MotorcycleServlet extends HttpServlet {
 

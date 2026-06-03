@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.smartride.dao;
 
 import com.smartride.dto.Customer;
@@ -19,10 +15,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class CustomerDAO implements Serializable, DAO<Customer> {
 
     private static CustomerDAO instance;
@@ -51,7 +43,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
             rs = stm.executeQuery();
             while (rs.next()) {
                 list.add(new Customer(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getInt(8)));
+                        rs.getString(4), rs.getString(5), rs.getString(6), 0, rs.getInt(7)));
             }
         } catch (Exception ex) {
             Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -66,10 +58,9 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
                 + "    \"IssuedOnDate\",\n"
                 + "    \"ExpDate\",\n"
                 + "    \"TypeCard\",\n"
-                + "    \"TypeID\",\n"
                 + "    \"AccountID\"\n"
                 + ") VALUES (\n"
-                + "  ?,?,?,?,?,?,? );";
+                + "  ?,?,?,?,?,? );";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -78,8 +69,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
             ps.setString(3, IssuedOnDate);
             ps.setString(4, ExpDate);
             ps.setString(5, TypeCard);
-            ps.setInt(6, TypeID);
-            ps.setInt(7, AccountID);
+            ps.setInt(6, AccountID);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
@@ -143,7 +133,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 Customer customer = new Customer(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getInt(8));
+                        rs.getString(4), rs.getString(5), rs.getString(6), 0, rs.getInt(7));
                 return customer;
             }
         } catch (SQLException ex) {
@@ -161,7 +151,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 Customer customer = new Customer(rs.getInt(1), rs.getString(2), rs.getString(3),
-                        rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getInt(8));
+                        rs.getString(4), rs.getString(5), rs.getString(6), 0, rs.getInt(7));
                 return customer;
             }
         } catch (SQLException ex) {
@@ -178,7 +168,6 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
                 + "TO_CHAR(\"IssuedOnDate\", 'DD-MM-YYYY') AS \"IssuedOnDate\",\n"
                 + "TO_CHAR(\"ExpDate\", 'DD-MM-YYYY') AS \"ExpDate\",\n"
                 + "\"TypeCard\",\n"
-                + "\"TypeID\",\n"
                 + "\"AccountID\"\n"
                 + "FROM \n"
                 + "\"Customer\"";
@@ -195,8 +184,8 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
                         rs.getString(4),
                         rs.getString(5),
                         rs.getString(6),
-                        rs.getInt(7),
-                        rs.getInt(8)
+                        0,
+                        rs.getInt(7)
                 );
                 customerMap.put(customer.getAccountId(), customer);
             }

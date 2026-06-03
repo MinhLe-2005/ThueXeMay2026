@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class FAQDAO implements Serializable, DAO<FAQDAO> {
 
     private static FAQDAO instance;

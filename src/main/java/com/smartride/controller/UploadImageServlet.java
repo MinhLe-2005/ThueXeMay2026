@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package com.smartride.controller;
 
 import com.smartride.dao.AccountDAO;
@@ -21,12 +17,8 @@ import java.nio.file.Paths;
 import java.util.Random;
 import com.smartride.util.SupabaseStorageUtil;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name = "UploadImageServlet", urlPatterns = {"/uploadimage"})
-@MultipartConfig // ThÃªm annotation nÃ y
+@MultipartConfig 
 public class UploadImageServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

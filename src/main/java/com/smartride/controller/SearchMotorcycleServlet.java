@@ -24,10 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name = "SearchMotorcycleServlet", urlPatterns = {"/searchMotorcycle"})
 public class SearchMotorcycleServlet extends HttpServlet {
 

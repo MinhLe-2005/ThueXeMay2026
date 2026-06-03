@@ -1,9 +1,3 @@
-<%-- 
-    Document   : pricingManagement
-    Created on : Jun 20, 2024, 8:28:02 PM
-    Author     : DiepTCNN
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -204,10 +198,20 @@
         </style>
     </head>
     <body>
-        <div class="col-md-2">
+        <!-- ======= Header ======= -->
+        <jsp:include page="/includes/staff/header-staff.jsp" />
+        <jsp:include page="/includes/staff/sidebar.jsp" />
 
-        </div>
-        <div class="container-fluid tab-container">
+        <div class="container-fluid tab-container col-md-12">
+            <div class="pagetitle" style="padding-left: 3%; margin-bottom: 20px;">
+                <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ BẢNG GIÁ</h1>
+                <nav>
+                    <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
+                        <li class="breadcrumb-item"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
+                        <li class="breadcrumb-item active" style="font-weight: 500; color: #6c757d;">Quản lý bảng giá</li>
+                    </ol>
+                </nav>
+            </div>
             <!-- Danh sách tab ngang -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#Section1"

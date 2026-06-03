@@ -1,8 +1,3 @@
-<%-- 
-    Document   : touristLocationStaff
-    Created on : Jun 13, 2024, 7:58:19 AM
-    Author     : ADMIN
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
@@ -172,10 +167,7 @@
     </head>
 
     <body>
-        <div class="col-md-2">
-
-        </div>
-        <div class="container-fluid tab-container col-md-10">
+        <div class="container-fluid tab-container col-md-12">
             <!-- Danh sách tab ngang -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active">
@@ -204,6 +196,7 @@
                                             <th scope="col">Mô Tả</th>
                                             <th scope="col">Đường Dẫn Bài Viết</th>
                                             <th scope="col">Nhân Viên</th>
+                                            <th scope="col">Gợi Ý Xe</th>
                                             <th scope="col">Hành Động</th>
 
                                         </tr>
@@ -219,6 +212,11 @@
                                                 <td>${touristLocations.description}</td>
                                                 <td>${touristLocations.urlArticle}</td>
                                                 <td>${touristLocations.staffID}</td>
+                                                <td>
+                                                    <button class="btn btn-warning btn-sm" onclick="manageRecommendations('${touristLocations.locationId}', '${touristLocations.locationName}')">
+                                                        <i class="fa fa-motorcycle text-white"></i> Quản lý
+                                                    </button>
+                                                </td>
                                                 <td class="action-buttons">
                                                     <div class="buttons">
                                                         <button class="btn btn-primary btn-sm" onclick="editTouristLocation('${touristLocations.locationId}', '${touristLocations.locationName}', '${touristLocations.locationImage}', '${touristLocations.description}', '${touristLocations.urlArticle}', '${touristLocations.staffID}')">
@@ -334,7 +332,156 @@
             </div>
         </div>
 
+        <!-- Modal Quản lý Gợi ý Xe -->
+        <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog" aria-labelledby="recommendationModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #b8860b 0%, #f1c40f 100%);">
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="recommendationModalLabel" style="color: #fff; font-weight: bold;"><i class="fa fa-motorcycle me-2"></i> Quản lý Gợi ý Xe - <span id="recLocationName"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form Thêm Gợi ý -->
+                        <div class="well well-sm" style="background-color: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h5 style="font-weight: bold; margin-top: 0;">Thêm Gợi ý Mới</h5>
+                            <form id="addRecForm" class="form-inline d-flex justify-content-between" style="display: flex; gap: 10px;">
+                                <input type="hidden" id="recLocationId">
+                                <div class="form-group" style="flex: 3;">
+                                    <select class="form-control" id="recMotorcycleId" required style="width: 100%;">
+                                        <option value="">-- Chọn Xe Khả Dụng --</option>
+                                        <c:forEach var="motor" items="${allMotorcycles}">
+                                            <option value="${motor.motorcycleId}">${motor.model} (${motor.motorcycleId})</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="flex: 4;">
+                                    <input type="text" class="form-control" id="recReason" placeholder="Lý do gợi ý (VD: Leo đèo khỏe)" required style="width: 100%;">
+                                </div>
+                                <div class="form-group" style="flex: 2;">
+                                    <input type="number" class="form-control" id="recPriority" placeholder="Ưu tiên (1-10)" required style="width: 100%;" min="1" max="99">
+                                </div>
+                                <button type="submit" class="btn btn-success" style="flex: 1;"><i class="fa fa-plus"></i> Thêm</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Danh sách hiện tại -->
+                        <h5 style="font-weight: bold; margin-top: 25px;">Danh sách xe đang gợi ý</h5>
+                        <table class="table table-bordered table-hover" id="recTable">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Mẫu Xe</th>
+                                    <th>Hình Ảnh</th>
+                                    <th>Lý do gợi ý</th>
+                                    <th>Độ ưu tiên</th>
+                                    <th class="text-center">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recTableBody">
+                                <!-- Dữ liệu render bằng JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script>
+            // Parse dữ liệu map từ Backend sang JS
+            var recommendData = {
+                <c:forEach var="entry" items="${recommendMap}" varStatus="status">
+                    "${entry.key}": [
+                        <c:forEach var="rec" items="${entry.value}" varStatus="st">
+                            {
+                                motorcycleId: "${rec.motorcycleId}",
+                                model: "${rec.model}",
+                                image: "${rec.image}",
+                                reason: "${rec.reason}",
+                                priority: ${rec.priority}
+                            }${!st.last ? ',' : ''}
+                        </c:forEach>
+                    ]${!status.last ? ',' : ''}
+                </c:forEach>
+            };
+
+            function manageRecommendations(locationId, locationName) {
+                $('#recLocationId').val(locationId);
+                $('#recLocationName').text(locationName);
+                
+                var tbody = $('#recTableBody');
+                tbody.empty();
+                
+                var recs = recommendData[locationId] || [];
+                if (recs.length === 0) {
+                    tbody.append('<tr><td colspan="5" class="text-center text-muted">Chưa có gợi ý xe nào cho địa điểm này.</td></tr>');
+                } else {
+                    recs.forEach(function(rec) {
+                        var imgSrc = rec.image ? (rec.image.startsWith('http') ? rec.image : 'images/' + rec.image) : 'images/default.jpg';
+                        var tr = $('<tr></tr>');
+                        tr.append('<td><strong>' + rec.model + '</strong><br><small class="text-muted">' + rec.motorcycleId + '</small></td>');
+                        tr.append('<td><img src="' + imgSrc + '" class="img-thumbnail" style="height: 50px;"></td>');
+                        tr.append('<td>' + rec.reason + '</td>');
+                        tr.append('<td>' + rec.priority + '</td>');
+                        tr.append('<td class="text-center"><button class="btn btn-danger btn-sm" onclick="deleteRec(' + locationId + ', \'' + rec.motorcycleId + '\')"><i class="fa fa-trash"></i></button></td>');
+                        tbody.append(tr);
+                    });
+                }
+                
+                $('#recommendationModal').modal('show');
+            }
+
+            // Xử lý Thêm Gợi ý (Ajax)
+            $('#addRecForm').submit(function(e) {
+                e.preventDefault();
+                var locId = $('#recLocationId').val();
+                var motId = $('#recMotorcycleId').val();
+                var reason = $('#recReason').val();
+                var prio = $('#recPriority').val();
+                
+                $.post('TourismLocationServletStaff', {
+                    action: 'add',
+                    locationId: locId,
+                    motorcycleId: motId,
+                    reason: reason,
+                    priority: prio
+                }, function(res) {
+                    if (res.success) {
+                        Swal.fire('Thành công!', 'Đã thêm gợi ý xe.', 'success').then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire('Lỗi!', res.message || 'Không thể thêm (có thể do trùng xe).', 'error');
+                    }
+                });
+            });
+
+            // Xử lý Xóa Gợi ý (Ajax)
+            function deleteRec(locationId, motorcycleId) {
+                Swal.fire({
+                    title: 'Xóa gợi ý?',
+                    text: "Bạn chắc chắn muốn xóa gợi ý xe này khỏi địa điểm?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.post('TourismLocationServletStaff', {
+                            action: 'delete',
+                            locationId: locationId,
+                            motorcycleId: motorcycleId
+                        }, function(res) {
+                            if (res.success) {
+                                Swal.fire('Đã xóa!', '', 'success').then(() => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire('Lỗi!', 'Không thể xóa.', 'error');
+                            }
+                        });
+                    }
+                });
+            }
+
             function editTouristLocation(locationId, locationName, locationImage, description, urlArticle, staffID) {
                 document.getElementById('editLocationId').value = locationId;
                 document.getElementById('editLocationName').value = locationName;

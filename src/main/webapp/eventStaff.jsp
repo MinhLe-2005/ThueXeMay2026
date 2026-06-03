@@ -1,8 +1,3 @@
-<%-- 
-    Document   :eventStaff
-    Created on : Jun 13, 2024, 7:58:19 AM
-    Author     : ADMIN
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
@@ -184,10 +179,7 @@
     </head>
 
     <body>
-        <div class="col-md-2">
-
-        </div>
-        <div class="container-fluid tab-container">
+        <div class="container-fluid tab-container col-md-12">
             <!-- Danh sách tab ngang -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active">

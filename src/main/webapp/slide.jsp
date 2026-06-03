@@ -9,10 +9,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
-    if (session.getAttribute("listM") == null || ((List)session.getAttribute("listM")).size() <= 1) {
-        List<Motorcycle> listM = MotorcycleDAO.getInstance().getMotorcycles();
-        session.setAttribute("listM", listM);
-    }
+    // Luôn lấy toàn bộ danh sách xe cho slider trang chủ
+    List<Motorcycle> sliderListM = MotorcycleDAO.getInstance().getMotorcycles();
+    request.setAttribute("sliderListM", sliderListM);
+
     if (session.getAttribute("listP") == null) {
         List<PriceList> listP = PriceListDAO.getInstance().getAllPriceList();
         session.setAttribute("listP", listP);
@@ -277,13 +277,8 @@
                 box-shadow: 0 8px 20px rgba(26, 26, 26, 0.3);
             }
             .best-choice .btn-book:hover {
-                background: linear-gradient(135deg, #333, #000);
-                box-shadow: 0 12px 25px rgba(26, 26, 26, 0.4);
-            }
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            }
-            .best-choice .btn-book:hover {
                 background: linear-gradient(135deg, #000000, #1a1a1a);
+                box-shadow: 0 12px 25px rgba(26, 26, 26, 0.4);
                 color: #c4a14b;
             }
             .best-choice .btn-msg {
@@ -345,7 +340,7 @@
         <div class="swiper-container-wrapper">
             <div class="swiper centered-slide-carousel">
                 <div class="swiper-wrapper">
-                    <c:forEach items="${sessionScope.listM}" var="m" varStatus="status">
+                    <c:forEach items="${requestScope.sliderListM}" var="m" varStatus="status">
                         <!-- Make the 2nd item (index 1) the Best Choice -->
                         <c:set var="isBest" value="${status.index == 1}" />
                         

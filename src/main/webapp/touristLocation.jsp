@@ -1,8 +1,3 @@
-<%-- 
-    Document   : touristLocation
-    Created on : May 25, 2024, 9:43:36 PM
-    Author     : ADMIN
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

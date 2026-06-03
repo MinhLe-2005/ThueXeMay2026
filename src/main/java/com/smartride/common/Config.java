@@ -1,4 +1,3 @@
-
 package com.smartride.common;
 
 import java.io.UnsupportedEncodingException;
@@ -15,10 +14,6 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import jakarta.servlet.http.HttpServletRequest;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class Config {
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";

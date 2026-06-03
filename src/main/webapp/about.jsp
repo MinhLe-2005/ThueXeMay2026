@@ -1,9 +1,3 @@
-<%-- 
-    Document   : about
-    Created on : May 25, 2024, 4:57:50 PM
-    Author     : DiepTCNN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -293,6 +287,70 @@
                 background: var(--primary);
             }
 
+            .mission-vision-card {
+                background: white;
+                padding: 40px;
+                border-radius: 16px;
+                box-shadow: 0 15px 40px rgba(0,0,0,0.04);
+                height: 100%;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                position: relative;
+                z-index: 2;
+                overflow: hidden;
+            }
+            .mission-vision-card.primary-border {
+                border-top: 4px solid var(--primary);
+            }
+            .mission-vision-card.dark-border {
+                border-top: 4px solid #1a1816;
+            }
+            .mission-vision-card::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                border-radius: 16px;
+                padding: 2px;
+                background: linear-gradient(135deg, rgba(181, 147, 73, 0.4), rgba(181, 147, 73, 0));
+                -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+            .mission-vision-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 20px 40px rgba(181, 147, 73, 0.15);
+            }
+            .mission-vision-card:hover::before {
+                opacity: 1;
+            }
+
+            .mission-icon-box {
+                width: 70px;
+                height: 70px;
+                background: rgba(181, 147, 73, 0.1);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 25px;
+                transition: all 0.4s ease;
+            }
+            .mission-vision-card.dark-border .mission-icon-box {
+                background: rgba(26, 24, 22, 0.05);
+            }
+            .mission-vision-card:hover .mission-icon-box {
+                background: linear-gradient(135deg, #c4a14b, #b59349);
+                transform: scale(1.1) rotate(5deg);
+                box-shadow: 0 10px 20px rgba(181, 147, 73, 0.3);
+            }
+            .mission-vision-card:hover .mission-icon-box svg {
+                stroke: #ffffff !important;
+            }
+            .mission-icon-box svg {
+                transition: stroke 0.4s ease;
+            }
+
             @media (max-width: 991px) {
                 .masonry-grid { grid-template-columns: 1fr; height: auto; }
                 .masonry-side { flex-direction: row; height: 300px; }
@@ -357,8 +415,8 @@
                 <div class="container">
                     <div class="row gy-4 justify-content-center">
                         <div class="col-md-5" data-aos="fade-up">
-                            <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.04); height: 100%; border-top: 4px solid var(--primary); transition: transform 0.3s ease;">
-                                <div style="width: 70px; height: 70px; background: rgba(181, 147, 73, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+                            <div class="mission-vision-card primary-border">
+                                <div class="mission-icon-box">
                                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <circle cx="12" cy="12" r="6"></circle>
@@ -370,8 +428,8 @@
                             </div>
                         </div>
                         <div class="col-md-5" data-aos="fade-up" data-aos-delay="100">
-                            <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.04); height: 100%; border-top: 4px solid #1a1816; transition: transform 0.3s ease;">
-                                <div style="width: 70px; height: 70px; background: rgba(26, 24, 22, 0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+                            <div class="mission-vision-card dark-border">
+                                <div class="mission-icon-box">
                                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a1816" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
                                         <circle cx="12" cy="12" r="3"></circle>

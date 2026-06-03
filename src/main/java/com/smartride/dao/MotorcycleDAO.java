@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.smartride.dao;
 
 import com.smartride.dto.Account;
@@ -22,10 +18,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
 
     private static MotorcycleDAO instance;
@@ -56,6 +48,15 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
         PreparedStatement stm;
         ResultSet rs;
         try {
+            // Tối ưu N+1 Query: Lấy toàn bộ Detail một lần và map theo MotorcycleID
+            List<MotorcycleDetail> allDetails = MotorcycleDetailDAO.getInstance().getAllMotorcycleDetail();
+            java.util.Map<String, List<MotorcycleDetail>> detailsMap = new java.util.HashMap<>();
+            if (allDetails != null) {
+                for (MotorcycleDetail md : allDetails) {
+                    detailsMap.computeIfAbsent(md.getMotorcycleId(), k -> new ArrayList<>()).add(md);
+                }
+            }
+
             String sql = "SELECT \n"
                     + "    \"MotorcycleID\",\n"
                     + "    \"Model\",\n"
@@ -68,12 +69,12 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     + "    \"PriceListID\"\n"
                     + "FROM \n"
                     + "    \"Motorcycle\";";
-            //why không * đi
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
             while (rs.next()) {
                 Motorcycle motorcycle = new Motorcycle();
-                motorcycle.setMotorcycleId(rs.getString(1));
+                String mId = rs.getString(1);
+                motorcycle.setMotorcycleId(mId);
                 motorcycle.setModel(rs.getString(2));
                 motorcycle.setImage(rs.getString(3));
                 motorcycle.setDisplacement(rs.getString(4));
@@ -82,12 +83,12 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                 motorcycle.setBrandID(rs.getInt(7));
                 motorcycle.setCategoryID(rs.getInt(8));
                 motorcycle.setPriceListID(rs.getInt(9));
-                List<MotorcycleDetail> listMotorcycleDetails = MotorcycleDetailDAO.getInstance().getMotorcycleDetail(rs.getString(1));
-                motorcycle.setListMotorcycleDetails(listMotorcycleDetails);
+                
+                motorcycle.setListMotorcycleDetails(detailsMap.getOrDefault(mId, new ArrayList<>()));
                 list.add(motorcycle);
             }
         } catch (Exception ex) {
-            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MotorcycleDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -95,12 +96,22 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
         List<Motorcycle> list = new ArrayList<>();
         String sql = "SELECT * FROM \"Motorcycle\" ORDER BY \"MotorcycleID\" OFFSET ? LIMIT 9";
         try {
+            // Tối ưu N+1 Query: Lấy toàn bộ Detail một lần và map theo MotorcycleID
+            List<MotorcycleDetail> allDetails = MotorcycleDetailDAO.getInstance().getAllMotorcycleDetail();
+            java.util.Map<String, List<MotorcycleDetail>> detailsMap = new java.util.HashMap<>();
+            if (allDetails != null) {
+                for (MotorcycleDetail md : allDetails) {
+                    detailsMap.computeIfAbsent(md.getMotorcycleId(), k -> new ArrayList<>()).add(md);
+                }
+            }
+
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setInt(1, (index - 1) * 9);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 Motorcycle motorcycle = new Motorcycle();
-                motorcycle.setMotorcycleId(rs.getString("MotorcycleID"));
+                String mId = rs.getString("MotorcycleID");
+                motorcycle.setMotorcycleId(mId);
                 motorcycle.setModel(rs.getString("Model"));
                 motorcycle.setImage(rs.getString("Image"));
                 motorcycle.setDisplacement(rs.getString("Displacement"));
@@ -109,7 +120,7 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                 motorcycle.setBrandID(rs.getInt("BrandID"));
                 motorcycle.setCategoryID(rs.getInt("CategoryID"));
                 motorcycle.setPriceListID(rs.getInt("PriceListID"));
-                motorcycle.setListMotorcycleDetails(MotorcycleDetailDAO.getInstance().getMotorcycleDetail(rs.getString("MotorcycleID")));
+                motorcycle.setListMotorcycleDetails(detailsMap.getOrDefault(mId, new ArrayList<>()));
                 list.add(motorcycle);
             }
         } catch (Exception ex) {

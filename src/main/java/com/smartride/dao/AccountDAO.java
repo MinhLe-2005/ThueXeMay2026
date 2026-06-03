@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.smartride.dao;
 
 import com.smartride.dto.Account;
@@ -20,10 +16,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class AccountDAO implements Serializable {
 
     private static AccountDAO instance;
@@ -54,6 +46,18 @@ public class AccountDAO implements Serializable {
             if (rs.next()) {
                 String storedPassword = rs.getString("Password");
                 if (com.smartride.util.PasswordUtil.checkPassword(passWord, storedPassword)) {
+                    // Tự động nâng cấp thuật toán mã hóa nếu phát hiện dùng bản cũ quá nặng (cost 12)
+                    if (storedPassword.startsWith("$2a$12$")) {
+                        try {
+                            String newHash = com.smartride.util.PasswordUtil.hashPassword(passWord);
+                            PreparedStatement updateStm = conn.prepareStatement("UPDATE \"Account\" SET \"Password\" = ? WHERE \"Username\" = ?");
+                            updateStm.setString(1, newHash);
+                            updateStm.setString(2, userName);
+                            updateStm.executeUpdate();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                     return new Account(rs.getInt("AccountID"), rs.getString("FirstName"), rs.getString("LastName"),
                             rs.getString("Gender"), rs.getString("DayOfBirth"), rs.getString("Address"), rs.getString("PhoneNumber"),
                             rs.getString("Image"), rs.getString("Email"), rs.getString("Username"), rs.getString("Password"), rs.getInt("RoleID"));

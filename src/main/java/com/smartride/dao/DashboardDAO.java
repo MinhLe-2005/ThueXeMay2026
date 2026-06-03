@@ -72,22 +72,23 @@ public class DashboardDAO {
     private StatRaw getStatsForPeriod(Connection conn, String period, String startDate, String endDate, boolean isPrevious) {
         StatRaw raw = new StatRaw();
         String dateCondition = getDateCondition(period, startDate, endDate, isPrevious);
-        String condition = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition);
         String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
+        String conditionRentals = " WHERE b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả')" + (dateCondition.isEmpty() ? "" : (" AND " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\"")));
 
-        String sqlOrders = "SELECT COUNT(*) AS c FROM \"Booking\"" + condition;
-        String sqlRevenue = "SELECT SUM(p.\"PaymentAmount\") AS s FROM \"Payment\" p JOIN \"Booking\" b ON p.\"BookingID\" = b.\"BookingID\"" + conditionWithAlias;
-        String sqlCustomers = "SELECT COUNT(DISTINCT \"CustomerID\") AS c FROM \"Booking\"" + condition;
-        String sqlRentals = "SELECT COUNT(*) AS c FROM \"Booking\" WHERE \"DeliveryStatus\" IN ('Đã giao', 'Đã trả')";
-        if (!dateCondition.isEmpty()) {
-            sqlRentals += " AND " + dateCondition;
-        }
+        String sql = "SELECT "
+                   + "(SELECT COUNT(*) FROM \"Booking\" b " + conditionWithAlias + ") AS orders, "
+                   + "(SELECT COALESCE(SUM(p.\"PaymentAmount\"), 0) FROM \"Payment\" p JOIN \"Booking\" b ON p.\"BookingID\" = b.\"BookingID\" " + conditionWithAlias + ") AS revenue, "
+                   + "(SELECT COUNT(DISTINCT b.\"CustomerID\") FROM \"Booking\" b " + conditionWithAlias + ") AS customers, "
+                   + "(SELECT COUNT(*) FROM \"Booking\" b " + conditionRentals + ") AS rentals";
 
-        try {
-            raw.orders = getInt(conn, sqlOrders);
-            raw.revenue = getDouble(conn, sqlRevenue);
-            raw.customers = getInt(conn, sqlCustomers);
-            raw.rentals = getInt(conn, sqlRentals);
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                raw.orders = rs.getInt("orders");
+                raw.revenue = rs.getDouble("revenue");
+                raw.customers = rs.getInt("customers");
+                raw.rentals = rs.getInt("rentals");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -264,6 +265,7 @@ public class DashboardDAO {
 
         String dateCondition = getDateCondition(period, startDate, endDate, false);
         String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
+        String conditionWithDelivery = conditionWithAlias.isEmpty() ? " WHERE b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') " : conditionWithAlias + " AND b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') ";
         
         String sql = "SELECT c.\"CategoryName\", COUNT(md.\"MotorcycleID\") as rentCount "
                    + "FROM \"Booking Detail\" bd "
@@ -271,7 +273,7 @@ public class DashboardDAO {
                    + "JOIN \"Motorcycle Detail\" md ON bd.\"MotorcycleDetailID\" = md.\"MotorcycleDetailID\" "
                    + "JOIN \"Motorcycle\" m ON md.\"MotorcycleID\" = m.\"MotorcycleID\" "
                    + "JOIN \"Category\" c ON m.\"CategoryID\" = c.\"CategoryID\" "
-                   + conditionWithAlias
+                   + conditionWithDelivery
                    + " GROUP BY c.\"CategoryName\"";
                    
         try (PreparedStatement ps = conn.prepareStatement(sql);
@@ -289,6 +291,7 @@ public class DashboardDAO {
         List<DashboardStatsData.TopMotorcycle> list = new ArrayList<>();
         String dateCondition = getDateCondition(period, startDate, endDate, false);
         String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
+        String conditionWithDelivery = conditionWithAlias.isEmpty() ? " WHERE b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') " : conditionWithAlias + " AND b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') ";
         
         String sql = "SELECT m.\"Image\", m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\", COUNT(md.\"MotorcycleID\") as rentCount "
                    + "FROM \"Motorcycle\" m "
@@ -296,9 +299,9 @@ public class DashboardDAO {
                    + "JOIN \"Booking Detail\" bd ON md.\"MotorcycleDetailID\" = bd.\"MotorcycleDetailID\" "
                    + "JOIN \"Booking\" b ON bd.\"BookingID\" = b.\"BookingID\" "
                    + "JOIN \"PriceList\" p ON m.\"PriceListID\" = p.\"PriceListID\" "
-                   + conditionWithAlias
+                   + conditionWithDelivery
                    + " GROUP BY m.\"Image\", m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\" "
-                   + " ORDER BY rentCount DESC LIMIT 5";
+                   + " ORDER BY rentCount DESC";
                    
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {

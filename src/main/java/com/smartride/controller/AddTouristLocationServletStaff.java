@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package com.smartride.controller;
 
 import com.smartride.dao.StaffDAO;
@@ -20,10 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-/**
- *
- * @author LeQuangMinh
- */
 @MultipartConfig
 @WebServlet(name = "AddTouristLocationServletStaff", urlPatterns = {"/AddTouristLocationServletStaff"})
 public class AddTouristLocationServletStaff extends HttpServlet {

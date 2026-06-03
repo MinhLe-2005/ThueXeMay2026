@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package com.smartride.controller;
 
 import com.smartride.dao.TouristLocationDAO;
@@ -14,10 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import com.smartride.dto.TouristLocation;
 import com.smartride.util.SupabaseStorageUtil;
-/**
- *
- * @author LeQuangMinh
- */
+
 @WebServlet(name = "DeleteTourismLocationServletStaff", urlPatterns = {"/DeleteTourismLocationServletStaff"})
 public class DeleteTourismLocationServletStaff extends HttpServlet {
 

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package com.smartride.controller;
 
 import com.smartride.constant.SendEmail;
@@ -26,24 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name = "SendEmailsAutomaticallyServlet", urlPatterns = {"/auto"})
 public class SendEmailsAutomaticallyServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -62,28 +44,11 @@ public class SendEmailsAutomaticallyServlet extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     private static boolean notificationSent = false; // Biến flag để kiểm tra xem thông báo đã được gửi chưa
 
     @Override
@@ -96,12 +61,7 @@ public class SendEmailsAutomaticallyServlet extends HttpServlet {
         String msg = (String) session.getAttribute("messageListNull");
         if (msg == null) {
             if (listB == null) {
-                out.println("thinh");
                 listB = daoB.getAllBookings();
-            }
-
-            for (Booking x : listB) {
-                out.println(x);
             }
 
             // Get current date and time
@@ -134,16 +94,14 @@ public class SendEmailsAutomaticallyServlet extends HttpServlet {
                 Account account = new Account();
                 // Kiểm tra nếu còn 3 giờ nữa là đến thời gian bắt đầu
                 if (hoursBetweenStart <= 3 && currentDateTime.toLocalDate().isEqual(startDate.toLocalDate())) {
-                    out.println("start");
                     Customer customer = daoC.getCustomerbyID(booking.getCustomerID());
                     account = daoA.getAccountbyID(customer.getAccountId());
-                    title = "Chào bạn, ColorBike xin thông báo thời gian lấy xe của bạn sắp đến !!! ";
+                    title = "Chào bạn, SmartRide xin thông báo thời gian lấy xe của bạn sắp đến !!! ";
                 }
                 if (hoursBetweenEnd <= 1 && currentDateTime.toLocalDate().isEqual(endDate.toLocalDate())) {
-                    out.println("end");
                     Customer customer = daoC.getCustomerbyID(booking.getCustomerID());
                     account = daoA.getAccountbyID(customer.getAccountId());
-                    title = "Chào bạn, ColorBike xin thông báo thời gian trả xe của bạn sắp đến !!! ";
+                    title = "Chào bạn, SmartRide xin thông báo thời gian trả xe của bạn sắp đến !!! ";
                 }
                 
                 if(title != null) {
@@ -227,12 +185,6 @@ public class SendEmailsAutomaticallyServlet extends HttpServlet {
         }
 
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";

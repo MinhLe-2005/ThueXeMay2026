@@ -1,8 +1,3 @@
-<%-- 
-    Document   : manageCustomer
-    Created on : May 25, 2024, 5:52:23 PM
-    Author     : DiepTCNN
---%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -44,18 +39,17 @@
         <jsp:include page="/includes/staff/header-staff.jsp" />
         <jsp:include page="/includes/staff/sidebar.jsp" />
         <div class="container">
+            <div class="pagetitle" style="margin-bottom: 20px; margin-top: 20px;">
+                <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ NHÂN VIÊN</h1>
+                <nav>
+                    <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
+                        <li class="breadcrumb-item"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
+                        <li class="breadcrumb-item active" style="font-weight: 500; color: #6c757d;">Quản lý nhân viên</li>
+                    </ol>
+                </nav>
+            </div>
             <div class="row flex-lg-nowrap">
-                <div class="col-12 col-lg-auto mb-3">
-                    <div class="card p-3">
-                        <div class="e-navlist e-navlist--active-bg">
-                            <ul class="nav">
-                                <li class="nav-item"><a class="nav-link px-2 active" href="homeStaff.jsp"><i
-                                            class="fa fa-fw fa-bar-chart mr-1"></i><span>Trang chủ</span></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div style="margin-top: 5rem" class="col col-lg">
+                <div style="margin-top: 2rem" class="col col-lg">
                     <div>
                         <ul class="nav nav-tabs">
                             <li class="nav-item">

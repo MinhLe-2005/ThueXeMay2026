@@ -1,9 +1,3 @@
-<%-- 
-    Document   : motorManage
-    Created on : Jun 13, 2024, 7:58:19 AM
-    Author     : ADMIN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">

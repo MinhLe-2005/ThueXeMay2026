@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package com.smartride.controller;
 
 import com.smartride.dao.BookingDAO;
@@ -21,10 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name = "BookingHistoryServlet", urlPatterns = {"/bookingHistory"})
 public class BookingHistoryServlet extends HttpServlet {
 

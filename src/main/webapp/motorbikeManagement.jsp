@@ -1,9 +1,3 @@
-<%-- 
-    Document   : motorbikeManagement
-    Created on : Jun 13, 2024, 7:58:19 AM
-    Author     : DiepTCNN
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -21,170 +15,335 @@
         <style>
             
             
-            body,
-            html {
+            body, html {
                 height: 100%;
                 margin: 0;
-                font-family: 'Tahoma', sans-serif;
+                font-family: 'Be Vietnam Pro', 'Tahoma', sans-serif;
+                background-color: #f5f7fb; /* Light modern gray */
             }
 
             .tab-container {
                 display: flex;
                 flex-direction: column;
-                height: 100vh;
-                margin-top: 60px;
+                min-height: 100vh;
+                margin-top: 10px;
             }
 
-            /* Nội dung tab */
             .tab-content {
                 flex: 1;
-                padding: 20px;
-                overflow-y: auto;
-                /*background: rgba(30, 151, 191, 0.1);*/
+                padding: 10px 40px;
             }
 
-            .tab-content h3 {
-                color: #1e97bf;
-                font-size: 20px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin: 0 0 7px;
-            }
-
-            /* Danh sách tab ngang */
+            /* --- Premium Pill Tabs --- */
             .nav-tabs {
-                display: flex;
-                margin-top: 0; /* Xóa khoảng trống phía trên */
-                padding-left: 50px; /* Xóa padding bên trái */
+                display: inline-flex;
+                flex-wrap: wrap;
+                background: #f1f5f9; /* Khung nền xám nhạt */
+                border-radius: 12px;
+                padding: 6px !important;
                 margin-left: 3%;
-                border-bottom: 2px solid #ddd;
-
+                margin-bottom: 30px;
+                border-bottom: none !important;
+                gap: 5px;
             }
-
 
             .nav-tabs li {
-                margin-right: 10px;
+                margin: 0;
             }
 
             .nav-tabs li a {
-                color: #222;
+                color: #64748b;
                 background: transparent;
-                font-size: 17px;
-                font-weight: 800;
-                letter-spacing: 1px;
-                text-align: center;
+                font-size: 13px;
+                font-weight: 700;
                 text-transform: uppercase;
-                padding: 12px 15px;
+                letter-spacing: 0.5px;
+                padding: 12px 24px;
                 margin: 0;
-                border: none;
-                border-radius: 4px;
+                border: none !important;
+                border-radius: 8px !important;
                 transition: all 0.3s ease;
+                box-shadow: none !important;
             }
 
-            .nav-tabs li a:hover,
-            .nav-tabs li.active a {
-                color: #1e97bf;
-                background: rgba(30, 151, 191, 0.1);
-                border-block-end: solid;
-                writing-mode: horizontal-tb;
+            .nav-tabs li a:hover {
+                color: #1e293b !important;
+                background: #e2e8f0 !important; /* Xám đậm hơn chút khi hover */
             }
 
-            /* Thiết kế phản hồi cho màn hình nhỏ */
-            @media only screen and (max-width: 767px) {
-                .nav-tabs {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-
-                .nav-tabs li {
-                    margin-right: 0;
-                    margin-bottom: 10px;
-                }
-
-                .tab-content {
-                    padding: 10px;
-                }
+            .nav-tabs li.active a,
+            .nav-tabs li.active a:focus,
+            .nav-tabs li.active a:hover {
+                color: #d4af37 !important; /* Chữ vàng Gold */
+                background: #1a1816 !important; /* Nền đen nhám */
+                box-shadow: 0 4px 15px rgba(26, 24, 22, 0.25) !important;
             }
 
-            .container-fluid {
-                padding: 2rem 0;
+            .nav-tabs li.active a::after {
+                display: none; /* Bỏ cái gạch chân cũ đi */
             }
-
             .tableview {
-                width: 80%;
+                width: 100%;
                 margin: 0 auto;
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 24px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); 
             }
 
             .table-image {
-                border-collapse: separate;
-                border-spacing: 0 15px;
+                width: 100%;
+                border-collapse: collapse !important;
+                margin-top: 5px !important;
+                border: 1px solid #e2e8f0 !important; /* Đóng khung toàn bộ bảng */
+                border-radius: 8px;
+                overflow: hidden;
             }
 
-            .table-image td,
-            .table-image th {
-                vertical-align: middle;
-                background: #fff;
-                border: none;
-                padding: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
+            /* --- Header: Đen Nhám Premium --- */
             .table thead th {
-                border: none;
-                background-color: #6E9DC5;
-                color: #fff;
+                background: #1a1816 !important; 
+                color: #d4af37 !important; 
+                font-size: 13px !important;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                border: none !important; 
+                border-bottom: 3px solid #d4af37 !important; /* Nhấn nhá đường vàng dưới Header */
+                padding: 16px 12px;
                 text-align: center;
+                vertical-align: middle;
+                white-space: nowrap; /* Không cho rớt dòng */
             }
 
-            .table tbody tr:hover {
-                background-color: #f1f1f1;
+            /* Căn trái cho tiêu đề cột Mẫu và Mô tả */
+            .table thead th:nth-child(3),
+            .table thead th:nth-child(5) {
+                text-align: left;
             }
 
-            .action-buttons .btn {
-                margin: 0 5px;
-                transition: all 0.3s ease;
+            /* --- Table Body: Phân cách Rõ ràng --- */
+            .table-image td {
+                background: transparent;
+                vertical-align: middle;
+                border: none !important; 
+                border-bottom: 1px solid #e2e8f0 !important; /* Viền ngang */
+                border-right: 1px dashed #e2e8f0 !important; /* Phân cách dọc siêu mờ */
+                padding: 16px 12px; 
+                color: #334155; 
+                font-size: 14px;
+                text-align: center;
+                transition: background-color 0.2s ease;
+            }
+            .table-image td:last-child {
+                border-right: none !important;
             }
 
-            .action-buttons .btn:hover {
-                transform: scale(1.1);
+            /* Bật lại sọc dưa để dễ dóng hàng */
+            .table-image tbody tr:nth-of-type(odd) td {
+                background-color: #ffffff !important;
+            }
+            .table-image tbody tr:nth-of-type(even) td {
+                background-color: #f8f9fa !important;
             }
 
-            .action-buttons .btn:focus {
-                outline: none;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            /* Cột Mẫu xe và Mô tả căn trái */
+            .table-image td:nth-child(3) {
+                text-align: left;
+                font-weight: 600;
+                color: #0f172a; 
+            }
+            .table-image td:nth-child(5) {
+                text-align: left;
+                color: #64748b;
             }
 
-            td input.form-control {
-                animation: fadeIn 0.5s;
+            /* Hover effect nổi bật nhẹ nhàng */
+            .table-image tbody tr:hover td {
+                background-color: #fff3cd !important; 
+                color: #1a1816;
             }
 
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
+            .desc-text {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 250px; /* Giới hạn độ rộng thay vì dùng % cho cột */
+            }
 
-                to {
-                    opacity: 1;
-                }
+            
+            .table-image tbody tr:hover td {
+                background: #fafafa !important;
+            }
+
+            /* Thu nhỏ kích thước ảnh lại cho tinh tế */
+            .table-image img {
+                width: 100px;
+                height: auto;
+                max-height: 70px;
+                object-fit: contain; /* Đổi thành contain để không bị xén mất xe */
+                border-radius: 4px;
+            }
+
+            /* --- Premium Solid Buttons --- */
+            .btn {
+                border-radius: 6px;
+                padding: 8px 16px;
+                font-weight: 600;
+                font-size: 13px;
+                text-transform: none;
+                transition: all 0.2s ease;
+                border: none;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            }
+            .btn:active {
+                transform: translateY(1px);
+                box-shadow: none !important;
+            }
+
+            /* Nút Chi Tiết nổi bật */
+            .btn-gold {
+                background: #b59349;
+                color: #ffffff;
+            }
+            .btn-gold:hover {
+                background: #9a7b3c;
+                color: #ffffff;
+            }
+
+            /* Nút Edit (Action) */
+            .btn-dark-custom {
+                background: #2b3445;
+                color: #ffffff;
+            }
+            .btn-dark-custom:hover {
+                background: #111827;
+                color: #ffffff;
+            }
+
+            /* Nút Xóa (Action) */
+            .btn-danger-custom {
+                background: #ef4444;
+                color: #ffffff;
+            }
+            .btn-danger-custom:hover {
+                background: #dc2626;
+                color: #ffffff;
             }
 
             .buttons {
                 display: flex;
-                justify-content: center;
+                gap: 8px;
+                align-items: center;
+            }
+
+            /* Forms inside Add/Update */
+            .addnew, .editmotor {
+                background: #fff;
+                padding: 40px;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            }
+            
+            .addnew h3, .editmotor h3 {
+                color: #1a1816;
+                font-weight: 800;
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+                position: relative;
+            }
+            .addnew h3::after, .editmotor h3::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 0;
+                width: 50px;
+                height: 4px;
+                background: #d4af37;
+                border-radius: 2px;
+            }
+
+            .form-group {
+                margin-bottom: 22px; /* Tạo khoảng cách giữa các ô nhập liệu */
+            }
+
+            .form-control {
+                border-radius: 10px;
+                border: 1px solid #e2e8f0;
+                padding: 12px 15px;
+                background: #f8fafc;
+                transition: all 0.3s ease;
+                box-shadow: none !important;
+                height: auto; /* Fix lỗi đè chữ ở select box */
+                font-size: 14px;
+            }
+            .form-control:focus {
+                border-color: #d4af37;
+                background: #fff;
+                box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15) !important;
+            }
+
+            /* Làm đẹp nút tải ảnh lên */
+            input[type="file"].form-control-file {
+                padding: 15px;
+                background: #f8fafc;
+                border: 2px dashed #cbd5e1;
+                border-radius: 10px;
+                width: 100%;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            input[type="file"].form-control-file:hover {
+                border-color: #d4af37;
+                background: #fff;
+            }
+
+            /* Nút Submit của Form */
+            .addnew .btn-dark, .editmotor .btn-dark {
+                background: #1a1816;
+                color: #d4af37;
+                padding: 14px 20px;
+                font-weight: 700;
+                border-radius: 10px;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                width: 100%;
+                border: none;
+                transition: all 0.3s ease;
+            }
+            .addnew .btn-dark:hover, .editmotor .btn-dark:hover {
+                background: #d4af37;
+                color: #1a1816;
+                box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            }
+
+            .btn-dark {
+                background: #1a1816;
+                border: none;
+                border-radius: 10px;
+                padding: 12px 25px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                transition: all 0.3s;
+            }
+            .btn-dark:hover {
+                background: #d4af37;
+                color: #1a1816;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
             }
 
             .container-fluid {
-                background: #E1EDF2;
+                padding: 0;
+                background: transparent;
             }
 
-            .addnew,
-            .editmotor {
-                margin-left: 15%;
-            }
-
-            .alert {
-                margin-top: 10px; /* Khoảng cách từng thông báo */
-                display: none; /* Ẩn thông báo mặc định */
+            /* Page title fixes */
+            .pagetitle {
+                padding-left: 40px !important;
             }
 
         </style>
@@ -194,10 +353,16 @@
     <body>
         <!-- ======= Header ======= -->
 
-        <div class="col-md-2">
-
-        </div>
-        <div class="container-fluid tab-container col-md-10">
+        <div class="container-fluid tab-container col-md-12">
+            <div class="pagetitle" style="padding-left: 3%; margin-bottom: 20px;">
+                <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ XE MÁY</h1>
+                <nav>
+                    <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
+                        <li class="breadcrumb-item"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
+                        <li class="breadcrumb-item active" style="font-weight: 500; color: #6c757d;">Quản lý xe máy</li>
+                    </ol>
+                </nav>
+            </div>
             <!-- Danh sách tab ngang -->
             <ul class="m-auto nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#Section1"
@@ -216,86 +381,88 @@
             </ul>
             <!-- Nội dung tab -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="Section1">
+                <div role="tabpanel" class="tab-pane active" id="Section1" style="opacity: 1 !important; display: block;">
                     <!-- Nội dung phần tab Display All Motorbikes -->
                     <div class="container-fluid">
                         <div class="m-auto row tableview">
                             <div class="col-12">
-                                <table class="table table-image">
+                                <table class="table table-image" id="motorTable">
                                     <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-                                            <th scope="col">Hình Ảnh</th>
+                                            <th scope="col" class="text-center">Hình Ảnh</th>
                                             <th scope="col">Mẫu</th>
                                             <th scope="col">Phân Khối</th>
                                             <th scope="col">Thông Tin Mô Tả</th>
-                                            <th scope="col">Tuổi Sử Dụng</th>
+                                            <th scope="col" class="text-center">Tuổi</th>
                                             <th scope="col">Hãng</th>
                                             <th scope="col">Loại Xe</th>
                                             <th scope="col">Giá</th>
-                                            <th scope="col">Chi Tiết</th>
-                                            <th scope="col">Hành động</th>
+                                            <th scope="col" class="text-center">Chi Tiết</th>
+                                            <th scope="col" class="text-center">Hành động</th>
                                         </tr>
                                     </thead>
+                                    <tbody id="table-body">
                                     <c:forEach items="${listM}" var="m">
-                                        <tbody id="table-body">
                                             <tr>
                                                 <th scope="row">${m.motorcycleId}</th>
-                                                <td class="w-25">
+                                                <td class="text-center">
                                                     <img src="${empty m.image ? 'images/default.jpg' : (m.image.startsWith('http') ? m.image : 'images/'.concat(m.image))}"
                                                          class="img-fluid img-thumbnail" alt="motor">
                                                 </td>
-                                                <td>${m.model}</td>
+                                                <td><div style="font-weight: 600;">${m.model}</div></td>
                                                 <td>${m.displacement}</td>
-                                                <td>${m.description}</td>
-                                                <td>${m.minAge}+</td>
-                                                <c:forEach items="${listB}" var="b">
-                                                    <c:if test="${m.brandID == b.brandID}">
-                                                        <td>${b.brandName}</td>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <c:forEach items="${listC}" var="c">
-                                                    <c:if test="${m.categoryID == c.categoryID}">
-                                                        <td>${c.categoryName}</td>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <c:forEach items="${listP}" var="p">
-                                                    <c:if test="${m.priceListID == p.priceListId}">
-                                                        <td>${p.dailyPriceForDay}</td>
-                                                    </c:if>
-                                                </c:forEach>
+                                                <td><div class="desc-text" title="${m.description}">${m.description}</div></td>
+                                                <td class="text-center">${m.minAge}+</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-primary" id="launchModalBtn"
+                                                    <c:forEach items="${listB}" var="b">
+                                                        <c:if test="${m.brandID == b.brandID}">
+                                                            ${b.brandName}
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </td>
+                                                <td>
+                                                    <c:forEach items="${listC}" var="c">
+                                                        <c:if test="${m.categoryID == c.categoryID}">
+                                                            ${c.categoryName}
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </td>
+                                                <td>
+                                                    <c:forEach items="${listP}" var="p">
+                                                        <c:if test="${m.priceListID == p.priceListId}">
+                                                            ${p.dailyPriceForDay}
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-gold" id="launchModalBtn"
                                                             data-toggle="modal" data-target="#user-form-modal" onclick="OneClick(this)"
                                                             data-motorcycleId="${m.motorcycleId}" 
                                                             data-motorcycleName="${m.model}"
-                                                            data-license="<c:forEach items="${m.listMotorcycleDetails}" var="listmd">
-                                                                ${listmd.licensePlate},
-                                                            </c:forEach>"                                        
+                                                            data-license="<c:forEach items="${m.listMotorcycleDetails}" var="listmd">${listmd.licensePlate},</c:forEach>">                                        
                                                             <span class="bold">Chi Tiết</span>
                                                     </button>
-
                                                 </td>
                                                 <td class="action-buttons">
                                                     <div class="buttons">
-                                                        <button class="btn btn-primary btn-sm" onclick="editMotorcycle('${m.motorcycleId}', '${m.model}', '${m.image}', '${m.displacement}', '${m.description}', '${m.minAge}', '${m.brandID}', '${m.categoryID}', '${m.priceListID}')">
+                                                        <button class="btn btn-dark-custom btn-sm" onclick="editMotorcycle('${m.motorcycleId}', '${m.model}', '${m.image}', '${m.displacement}', '${m.description}', '${m.minAge}', '${m.brandID}', '${m.categoryID}', '${m.priceListID}')">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
-                                                        <button class="btn btn-danger btn-sm" onclick="confirmDelete('${m.motorcycleId}')">
-
+                                                        <button class="btn btn-danger-custom btn-sm" onclick="confirmDelete('${m.motorcycleId}')">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        </tbody>
                                     </c:forEach>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="Section2">
+                <div role="tabpanel" class="tab-pane" id="Section2" style="opacity: 1 !important;">
                     <!-- Nội dung phần tab Add New Motorbike -->
                     <section>
                         <div class="container-fluid">
@@ -307,26 +474,49 @@
                                                 <form class="addnew-motorbike-form" method="post" action="addMotorbike" enctype="multipart/form-data">
                                                     <h3>THÊM MẪU XE MỚI</h3>
                                                     <div class="form-group">
+                                                        <label>Ảnh mẫu xe</label>
                                                         <input type="file" class="form-control-file" id="motorbikeImage" name="image">
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" placeholder="Nhập vào ID" name="id">
+                                                        <label>Mã dòng xe (ID)</label>
+                                                        <input type="text" class="form-control" placeholder="Ví dụ: M00022" name="id">
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" placeholder="Nhập vào mẫu xe" name="model">
+                                                        <label>Tên mẫu xe</label>
+                                                        <input type="text" class="form-control" placeholder="Ví dụ: Honda Vision 2023" name="model">
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control"
-                                                               placeholder="Nhập vào phân khối" name="displacement">
+                                                        <label>Phân khối động cơ</label>
+                                                        <input type="text" class="form-control" list="displacementOptions"
+                                                               placeholder="Ví dụ: 110cc, 150cc, hoặc 50 kW (xe điện)..." name="displacement">
+                                                        <datalist id="displacementOptions">
+                                                            <option value="50cc">
+                                                            <option value="110cc">
+                                                            <option value="125cc">
+                                                            <option value="150cc">
+                                                            <option value="160cc">
+                                                            <option value="300cc">
+                                                            <option value="1000W">
+                                                            <option value="1200W">
+                                                            <option value="3000W">
+                                                        </datalist>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label>Thông tin mô tả</label>
                                                         <textarea class="form-control" rows="3"
-                                                                  placeholder="Nhập vào thông tin mô tả" name="description"></textarea>
+                                                                  placeholder="Mô tả các ưu điểm, tính năng của xe..." name="description"></textarea>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="number" class="form-control" placeholder="Nhập vào độ tuổi tối thiểu sử dụng" name="minAge">
+                                                        <label>Độ tuổi tối thiểu (Min Age)</label>
+                                                        <input type="number" class="form-control" list="ageOptions" placeholder="Ví dụ: 16 hoặc 18" name="minAge">
+                                                        <datalist id="ageOptions">
+                                                            <option value="16">
+                                                            <option value="18">
+                                                            <option value="21">
+                                                        </datalist>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label>Hãng xe</label>
                                                         <select class="form-control" id="bid" name="brandID">
                                                             <c:forEach items="${listB}" var="b" varStatus="loop">
                                                                 <option value="${b.brandID}">${b.brandName}</option>
@@ -334,6 +524,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label>Loại xe</label>
                                                         <select class="form-control" id="cid" name="categoryID">
                                                             <c:forEach items="${listC}" var="c" varStatus="loop">
                                                                 <option value="${c.categoryID}">${c.categoryName}</option>
@@ -341,13 +532,14 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label>Bảng giá thuê</label>
                                                         <select class="form-control" id="pid" name="priceListID">
                                                             <c:forEach items="${listP}" var="p" varStatus="loop">
-                                                                <option value="${p.priceListId}">Day: ${p.dailyPriceForDay} - Week: ${p.dailyPriceForWeek} - Month: ${p.dailyPriceForMonth}</option>
+                                                                <option value="${p.priceListId}">Ngày: ${p.dailyPriceForDay}k - Tuần: ${p.dailyPriceForWeek}k - Tháng: ${p.dailyPriceForMonth}k</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
-                                                    <button type="submit" class="btn btn-dark">Thêm xe máy</button>
+                                                    <button type="submit" class="btn btn-dark" style="background-color: #1a1816; border-color: #d4af37; color: #d4af37; font-weight: bold;">THÊM MẪU XE</button>
                                                     <div class="feedback mt-3">
                                                         <div id="success-message" class="alert alert-success" style="display: none;">
                                                             Motorbike added successfully!
@@ -377,8 +569,9 @@
                                         <div class="col-md-12">
                                             <div class="addnew">
                                                 <!-- <form class="addnew-motorbike-form" method="post" action="addMotorDetail">-->
-                                                <h3>Add New Motorbike</h3>
+                                                <h3>THÊM XE MÁY MỚI</h3>
                                                 <div class="form-group">
+                                                    <label>Mẫu xe</label>
                                                     <select class="form-control" id="model" name="model">
                                                         <c:forEach items="${listM}" var="m" varStatus="loop">
                                                             <option value="${m.motorcycleId}">${m.model}</option>
@@ -386,7 +579,8 @@
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Nhập vào biển số xe" name="licensePlate" id="licensePlate">
+                                                    <label>Biển số xe</label>
+                                                    <input type="text" class="form-control" placeholder="Ví dụ: 29A1-12345" name="licensePlate" id="licensePlate">
                                                 </div>
                                                 <div style="color: red;" id="msg"></div> <br>
                                                 <button type="submit" class="btn btn-dark" onclick="addMotorbikeDetail()">Thêm xe máy</button>
@@ -419,27 +613,34 @@
                                         <div class="col-md-12">
                                             <div class="addnew">
                                                 <form class="" id="" action="updateMotorcycle" method="post" enctype="multipart/form-data">
-                                                    <h3>Update Tourist Location</h3>
+                                                    <h3>CẬP NHẬT THÔNG TIN XE MÁY</h3>
                                                     <div class="form-group">
+                                                        <label>Ảnh mẫu xe</label>
                                                         <div id="editMotorbikeImagePreview"></div>
                                                         <input type="file" class="form-control-file" id="motorbikeImage" name="image">
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" id="id" placeholder="Nhập vào ID" name="id">
+                                                        <label>Mã dòng xe (ID)</label>
+                                                        <input type="text" class="form-control" id="id" placeholder="Ví dụ: M00022" name="id" readonly>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" id="modelName" placeholder="Nhập vào mẫu xe" name="modelName">
+                                                        <label>Tên mẫu xe</label>
+                                                        <input type="text" class="form-control" id="modelName" placeholder="Ví dụ: Honda Vision 2023" name="modelName">
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" id="displacement" placeholder="Nhập vào phân khối" name="displacement">
+                                                        <label>Phân khối động cơ</label>
+                                                        <input type="text" class="form-control" id="displacement" list="displacementOptions" placeholder="Ví dụ: 110cc, 150cc..." name="displacement">
                                                     </div>
                                                     <div class="form-group">
-                                                        <textarea class="form-control" rows="3" id="description" placeholder="Nhập vào thông tin mô tả" name="description"></textarea>
+                                                        <label>Thông tin mô tả</label>
+                                                        <textarea class="form-control" rows="3" id="description" placeholder="Mô tả ưu điểm..." name="description"></textarea>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="number" class="form-control" id="minAge" placeholder="Nhập vào độ tuổi tối thiểu sử dụng" name="minAge">
+                                                        <label>Độ tuổi tối thiểu</label>
+                                                        <input type="number" class="form-control" id="minAge" list="ageOptions" placeholder="Ví dụ: 18" name="minAge">
                                                     </div>
                                                     <div class="form-group">
+                                                        <label>Hãng xe</label>
                                                         <select class="form-control" id="bid" name="brandID">
                                                             <c:forEach items="${listB}" var="b" varStatus="loop">
                                                                 <option value="${b.brandID}">${b.brandName}</option>
@@ -447,6 +648,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label>Loại xe</label>
                                                         <select class="form-control" id="cid" name="categoryID">
                                                             <c:forEach items="${listC}" var="c" varStatus="loop">
                                                                 <option value="${c.categoryID}">${c.categoryName}</option>
@@ -454,9 +656,10 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label>Bảng giá thuê</label>
                                                         <select class="form-control" id="pid" name="priceListID">
                                                             <c:forEach items="${listP}" var="p" varStatus="loop">
-                                                                <option value="${p.priceListId}">Day: ${p.dailyPriceForDay} - Week: ${p.dailyPriceForWeek} - Month: ${p.dailyPriceForMonth}</option>
+                                                                <option value="${p.priceListId}">Ngày: ${p.dailyPriceForDay}k - Tuần: ${p.dailyPriceForWeek}k - Tháng: ${p.dailyPriceForMonth}k</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
@@ -658,20 +861,49 @@
                                         // Chuyển sang tab Section 4 (nếu cần thiết)
                                         $('a[href="#Section4"]').tab('show');
                                         
-                                    }
+                                     }
         </script>
-<!--        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script> lỗi update-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Tải thư viện JS theo đúng thứ tự (jQuery -> Bootstrap -> DataTables -> Plugin khác) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/showMoreItems.min.js"></script>
-        <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
         <script src="js/main.js"></script>
 
-<!--        ajax-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // Ép buộc các tab hoạt động (khắc phục lỗi xung đột Bootstrap 3 vs 4)
+                $('.nav-tabs a').on('click', function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                    // Buộc hiển thị thẻ div tương ứng để chống lỗi tàng hình
+                    $('.tab-pane').hide();
+                    $($(this).attr('href')).show();
+                });
 
+                // Khởi tạo DataTables
+                $('#motorTable').DataTable({
+                    "pageLength": 10,
+                    "lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "Tất cả"]],
+                    "language": {
+                        "lengthMenu": "Hiển thị _MENU_ xe mỗi trang",
+                        "zeroRecords": "Không tìm thấy xe nào",
+                        "info": "Trang _PAGE_ / _PAGES_",
+                        "infoEmpty": "Không có dữ liệu",
+                        "infoFiltered": "(lọc từ _MAX_ xe)",
+                        "search": "Tìm kiếm:",
+                        "paginate": {
+                            "first": "Đầu",
+                            "last": "Cuối",
+                            "next": "Sau",
+                            "previous": "Trước"
+                        }
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
 

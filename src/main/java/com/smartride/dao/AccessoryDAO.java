@@ -13,10 +13,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class AccessoryDAO implements Serializable, DAO<Accessory> {
 
     private static AccessoryDAO instance;

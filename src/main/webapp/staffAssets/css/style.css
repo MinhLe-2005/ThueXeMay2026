@@ -28,7 +28,7 @@
   --sr-border: #E5E7EB;
 
   /* Sidebar */
-  --sr-sidebar-width: 250px;
+  --sr-sidebar-width: 280px;
   --sr-sidebar-text: #9CA3AF;
   --sr-sidebar-text-hover: #FFFFFF;
   --sr-sidebar-active-bg: var(--sr-accent);

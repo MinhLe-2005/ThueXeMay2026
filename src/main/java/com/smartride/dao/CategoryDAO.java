@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.smartride.dao;
 
 import com.smartride.dto.Category;
@@ -18,10 +14,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class CategoryDAO implements Serializable, DAO<Category>{
     private static CategoryDAO instance;
     private Connection conn = DBUtil.makeConnection();

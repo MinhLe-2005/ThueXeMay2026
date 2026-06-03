@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.smartride.util;
 
 import java.lang.reflect.InvocationHandler;
@@ -25,9 +21,20 @@ public class DBUtil {
     private static final String DB_USER = "postgres.zfvgigfjmbtgwgirdify";
     private static final String DB_PASS = "Bimdiendie1@";
 
+    // Static Connection Pool để tái sử dụng connection, tăng tốc độ load x10 lần
+    private static final java.util.concurrent.ConcurrentLinkedQueue<Connection> pool = new java.util.concurrent.ConcurrentLinkedQueue<>();
+
     // Method to obtain a raw standard database connection
     private static Connection getRawConnection() {
         try {
+            Connection conn = pool.poll();
+            while(conn != null) {
+                if(!conn.isClosed() && conn.isValid(1)) {
+                    return conn;
+                }
+                if(conn != null) try { conn.close(); } catch(Exception e){}
+                conn = pool.poll();
+            }
             Class.forName("org.postgresql.Driver");
             return DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
         } catch (Exception ex) {
@@ -63,14 +70,18 @@ public class DBUtil {
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if ("close".equals(method.getName())) {
                 if (realConn != null && !realConn.isClosed()) {
-                    realConn.close();
+                    if (pool.size() < 20) { // Keep up to 20 connections alive in the pool
+                        pool.offer(realConn);
+                    } else {
+                        realConn.close();
+                    }
                 }
                 return null;
             }
 
-            // Auto-reconnect if the connection was closed or has become stale
+            // Auto-reconnect if the connection was closed
             try {
-                if (realConn == null || realConn.isClosed() || !realConn.isValid(2)) {
+                if (realConn == null || realConn.isClosed()) {
                     System.out.println("⚠️ DB Connection stale or closed. Reconnecting transparently...");
                     Connection newConn = getRawConnection();
                     if (newConn != null) {

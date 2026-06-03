@@ -1,8 +1,3 @@
-<%-- 
-    Document   : navbar2
-    Created on : Jun 24, 2024, 3:26:58 PM
-    Author     : ADMIN
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -529,7 +524,7 @@
                 type: "POST",
                 url: "auto", // Thay đổi URL tới servlet của bạn
                 success: function (response) {
-                    console.log("Data sent successfully:", response);
+                    console.log("Check mail cron job executed.");
                 },
                 error: function (xhr, status, error) {
                     console.error("Error sending data:", error);

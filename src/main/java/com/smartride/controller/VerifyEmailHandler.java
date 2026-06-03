@@ -1,4 +1,3 @@
-
 package com.smartride.controller;
 
 import com.smartride.dao.AccountDAO;

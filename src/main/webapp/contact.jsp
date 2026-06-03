@@ -1,10 +1,5 @@
-<%-- 
-    Document   : contact
-    Created on : May 25, 2024, 5:11:05 PM
-    Author     : DiepTCNN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,6 +39,10 @@
             .section-title p {
                 color: #666666 !important;
                 text-align: center;
+                font-size: 1.1rem;
+                max-width: 600px;
+                margin: 0 auto;
+                line-height: 1.6;
             }
 
             /* contact form styling */
@@ -86,22 +85,87 @@
             .contact-info .border {
                 display: flex;
                 align-items: center; 
-                padding: 20px 25px !important; 
-                border-radius: 12px; 
+                padding: 25px 30px !important; 
+                border-radius: 16px; 
                 background-color: #ffffff !important; 
-                border: 1px solid #eae6df !important;
+                border: 1px solid rgba(181, 147, 73, 0.1) !important;
                 box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
-                transition: border-color 0.3s ease;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                position: relative;
+                overflow: hidden;
+                z-index: 2;
+            }
+            .contact-info .border::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                border-radius: 16px;
+                padding: 2px;
+                background: linear-gradient(135deg, rgba(181, 147, 73, 0.4), rgba(181, 147, 73, 0));
+                -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                opacity: 0;
+                transition: opacity 0.4s ease;
             }
             .contact-info .border:hover {
-                border-color: #b59349 !important;
+                transform: translateY(-8px);
+                box-shadow: 0 20px 40px rgba(181, 147, 73, 0.12);
+                border-color: rgba(181, 147, 73, 0.3) !important;
+            }
+            .contact-info .border:hover::before {
+                opacity: 1;
+            }
+            .contact-info .border:hover .icon i {
+                transform: scale(1.15);
+                color: #a38241;
+            }
+            .contact-info .icon i {
+                transition: transform 0.3s ease, color 0.3s ease;
             }
 
-            .contact-info p {
-                margin: 0; 
-                color: #666666;
+            .premium-label {
+                display: block;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 3px;
+                color: #999999;
+                margin-bottom: 10px;
+                font-weight: 500;
             }
-            .contact-info p a {
+
+            .contact-form .form-control {
+                border: none !important;
+                border-bottom: 1px solid #eae6df !important;
+                border-radius: 0 !important;
+                padding: 10px 0 !important;
+                height: auto !important;
+                background-color: transparent !important;
+                color: #1a1816 !important;
+                font-size: 1.05rem !important;
+                transition: border-color 0.3s ease !important;
+                box-shadow: none !important;
+            }
+            .contact-form .form-control:focus {
+                border-bottom: 1px solid #b59349 !important;
+                box-shadow: none !important;
+                background-color: transparent !important;
+                outline: none !important;
+            }
+            .contact-form .form-control::placeholder {
+                color: #b3b3b3 !important;
+                font-weight: 300;
+            }
+
+            .contact-form-container {
+                background: #ffffff;
+                padding: 45px 40px;
+                border-radius: 20px;
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.05);
+                border: 1px solid rgba(181, 147, 73, 0.08);
+            }
+
+            .contact-form .btn-primary {
                 color: #b59349 !important;
                 text-decoration: none;
                 transition: color 0.3s ease;
@@ -128,25 +192,46 @@
                 box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
             }
 
-            /* Submit Button styling */
+            .hero-wedding-style {
+                position: relative;
+                width: 100%;
+                padding: 110px 0 90px 0;
+                background: linear-gradient(135deg, #1a1816 0%, #2b2824 100%); /* Nền tối gradient sang trọng */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                margin-top: 75px;
+                border-bottom: 3px solid #b59349;
+            }
+
+            .hero-content {
+                position: relative;
+                z-index: 3;
+                max-width: 800px;
+                padding: 0 20px;
+                color: #ffffff; /* Chữ trắng */
+            }
+
             .contact-form .btn-primary {
                 background: #b59349 !important; 
                 border: none !important; 
                 color: #ffffff !important;
                 font-weight: 700;
-                padding: 14px 35px; 
-                border-radius: 50px; 
+                padding: 16px 35px; 
+                border-radius: 12px; 
                 transition: all 0.3s ease; 
                 text-transform: uppercase;
-                letter-spacing: 1px;
-                font-size: 13px;
-                box-shadow: 0 4px 10px rgba(181, 147, 73, 0.15);
+                letter-spacing: 2px;
+                font-size: 14px;
+                box-shadow: 0 8px 20px rgba(181, 147, 73, 0.2);
+                width: 100%;
             }
 
             .contact-form .btn-primary:hover {
                 background: #a38241 !important; 
-                transform: translateY(-2px); 
-                box-shadow: 0 5px 15px rgba(181, 147, 73, 0.25) !important;
+                transform: translateY(-3px); 
+                box-shadow: 0 12px 25px rgba(181, 147, 73, 0.35) !important;
             }
 
             @media (max-width: 768px) {
@@ -174,17 +259,75 @@
         <jsp:include page="/includes/customer/navbar.jsp" />
 
 
-        <div style="margin-top: 8%;">
+        <div>
 
-            <!-- Section Title -->
-            <div class="container section-title" data-aos="fade-up">
-                <span>Welcome to SmartRide!<br></span>
-                <h2>Chào Mừng Đến Với SmartRide!</h2>
-                <p>Nếu bạn có câu hỏi gì hãy liên hệ với chúng tôi nhé!</p>
-            </div><!-- End Section Title -->
-            <section class="ftco-section contact-section animate__animated animate__fadeInUp">
+            <!-- Premium Header Section -->
+            <section class="hero-wedding-style">
+                <div class="hero-content" data-aos="fade-up" data-aos-duration="1500">
+                    <div style="display: inline-flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="height: 1px; width: 40px; background: rgba(181, 147, 73, 0.8);"></div>
+                        <span style="color: #b59349; font-size: 14px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif;">Hỗ trợ 24/7</span>
+                        <div style="height: 1px; width: 40px; background: rgba(181, 147, 73, 0.8);"></div>
+                    </div>
+                    <h1 style="color: #ffffff; font-family: 'Playfair Display', serif; font-weight: 800; font-size: 4rem; margin-bottom: 20px; letter-spacing: 1px;">Liên Hệ <span style="color: #b59349;">SmartRide</span></h1>
+                    <p style="color: rgba(255,255,255,0.8); font-size: 1.15rem; max-width: 600px; margin: 0 auto; line-height: 1.7; font-weight: 300;">
+                        Bạn có câu hỏi hoặc cần hỗ trợ? Đừng ngần ngại để lại lời nhắn, đội ngũ tư vấn viên của chúng tôi luôn sẵn sàng hỗ trợ bạn một cách nhanh chóng nhất.
+                    </p>
+                </div>
+            </section>
+            
+            <section class="ftco-section contact-section animate__animated animate__fadeInUp" style="padding-top: 40px;">
                 <div class="container">
-                    <div class="row d-flex mb-5 contact-info">
+                    <c:choose>
+                        <c:when test="${not empty msg}">
+                            <!-- Giao diện báo thành công (Success State) -->
+                            <div class="row d-flex mb-5 align-items-center" data-aos="fade-up" data-aos-duration="1000" style="background: #ffffff; padding: 70px 40px; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.04); margin-top: -80px; position: relative; z-index: 10;">
+                                <div class="col-md-6 text-center pe-lg-5" style="border-right: 1px solid #eae6df;">
+                                    <div style="width: 80px; height: 80px; border: 1px solid rgba(181, 147, 73, 0.5); border-radius: 0; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
+                                        <i class="fas fa-check" style="font-size: 30px; color: #b59349; font-weight: 300;"></i>
+                                    </div>
+                                    <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: #1a1816; margin-bottom: 20px;">Cảm ơn bạn đã liên hệ!</h2>
+                                    <p style="color: #666; font-size: 1.05rem; line-height: 1.8; margin-bottom: 40px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                                        ${msg}
+                                    </p>
+                                    <a href="contact" style="display: inline-block; padding: 12px 30px; border-bottom: 1px solid #1a1816; color: #1a1816; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; text-decoration: none; font-size: 0.85rem; transition: all 0.3s;" onmouseover="this.style.color='#b59349'; this.style.borderColor='#b59349'" onmouseout="this.style.color='#1a1816'; this.style.borderColor='#1a1816'">
+                                        Gửi yêu cầu khác
+                                    </a>
+                                </div>
+                                <div class="col-md-6 ps-lg-5 mt-5 mt-md-0 text-start">
+                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #1a1816; margin-bottom: 25px;">Điều gì sẽ diễn ra tiếp theo?</h3>
+                                    <p style="color: #666; font-size: 1.05rem; line-height: 1.8; margin-bottom: 35px;">
+                                        Ngay sau khi nhận được yêu cầu của bạn, đội ngũ tư vấn viên của SmartRide sẽ phân bổ chuyên viên phù hợp nhất để liên hệ và giải đáp mọi thắc mắc của bạn một cách nhanh chóng và chi tiết nhất.
+                                    </p>
+                                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                                        <div style="display: flex; align-items: flex-start; gap: 15px;">
+                                            <i class="fas fa-map-marker-alt" style="color: #b59349; font-size: 1.2rem; margin-top: 5px;"></i>
+                                            <div>
+                                                <span style="display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 5px;">Địa chỉ văn phòng</span>
+                                                <p style="color: #1a1816; margin: 0; line-height: 1.6;">Số 01 Đại lộ Tự Do - Quận Hành Trình - TP. SmartRide</p>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; align-items: flex-start; gap: 15px;">
+                                            <i class="fas fa-phone-alt" style="color: #b59349; font-size: 1.2rem; margin-top: 5px;"></i>
+                                            <div>
+                                                <span style="display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 5px;">Số điện thoại</span>
+                                                <p style="color: #1a1816; margin: 0; line-height: 1.6;">0824 551 789</p>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; align-items: flex-start; gap: 15px;">
+                                            <i class="fas fa-envelope" style="color: #b59349; font-size: 1.2rem; margin-top: 5px;"></i>
+                                            <div>
+                                                <span style="display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 5px;">Email</span>
+                                                <p style="color: #1a1816; margin: 0; line-height: 1.6;">smartride.system@gmail.com</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <!-- Giao diện Form bình thường -->
+                            <div class="row d-flex mb-5 contact-info">
                         <div class="col-md-5">
                             <div class="row mb-5">
                                 <div class="col-md-12">
@@ -214,29 +357,44 @@
                             </div>
                         </div>
                         <div class="col-md-7 block-9 mb-md-5">
-                            <form action="contact" method="post" class="p-5 contact-form">
-                                <div class="form-group">
-                                    <input type="text" name="name" class="form-control" placeholder="Tên">
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" name="phone" class="form-control" placeholder="Số Điện Thoại">
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" name="email" class="form-control" placeholder="Email">
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" name="title" class="form-control" placeholder="Tiêu Đề">
-                                </div>
-                                <div class="form-group">
-                                    <textarea name="message" id="" cols="30" rows="7" class="form-control" placeholder="Nội Dung"></textarea>
-                                </div>
-                                <div style="color: green; margin-left:30px; ">${msg}</div><br>
-                                <div class="form-group">
-                                    <input type="submit" value="Gửi cho chúng tôi" class="btn btn-primary py-3 px-5 animate__animated animate__fadeInUp">
-                                </div>
-                            </form>
+                            <div class="contact-form-container">
+                                <form action="contact" method="post" class="contact-form">
+                                    <div class="row">
+                                        <div class="col-md-6 form-group mb-4">
+                                            <label class="premium-label">Họ & Tên *</label>
+                                            <input type="text" name="name" class="form-control" placeholder="Họ & tên của bạn" required>
+                                        </div>
+                                        <div class="col-md-6 form-group mb-4">
+                                            <label class="premium-label">Số điện thoại *</label>
+                                            <input type="text" name="phone" class="form-control" placeholder="0123 456 789" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-6 form-group mb-4">
+                                            <label class="premium-label">Địa chỉ Email *</label>
+                                            <input type="email" name="email" class="form-control" placeholder="email@domain.com" required>
+                                        </div>
+                                        <div class="col-md-6 form-group mb-4">
+                                            <label class="premium-label">Tiêu Đề *</label>
+                                            <input type="text" name="title" class="form-control" placeholder="Bạn cần hỗ trợ về vấn đề gì?" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-4 mt-2">
+                                        <label class="premium-label">Nội dung *</label>
+                                        <textarea name="message" id="" cols="30" rows="5" class="form-control" placeholder="Nội dung lời nhắn của bạn..." required></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group mb-0 mt-4">
+                                        <button type="submit" class="btn btn-primary animate__animated animate__fadeInUp w-100">
+                                            Gửi Yêu Cầu <i class="fas fa-paper-plane ms-2"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
+                        </c:otherwise>
+                    </c:choose>
 
                     <!-- Iframe Google Maps -->
                     <div class="animate__animated animate__fadeInUp">

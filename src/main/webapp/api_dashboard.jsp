@@ -1,21 +1,9 @@
 <%@ page import="java.sql.*, java.util.*, java.time.*, java.time.format.*, java.time.temporal.*, com.google.gson.*" %>
 <%@ page contentType="application/json;charset=UTF-8" language="java" %>
 <%!
-    // A persistent, ultra-fast static connection to fix the delay
-    private static Connection fastConn = null;
-    
-    private static synchronized Connection getFastConnection() {
-        try {
-            if (fastConn == null || fastConn.isClosed() || !fastConn.isValid(2)) {
-                if (fastConn != null) { try { fastConn.close(); } catch(Exception e){} }
-                Class.forName("org.postgresql.Driver");
-                fastConn = DriverManager.getConnection("jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?sslmode=require", "postgres.zfvgigfjmbtgwgirdify", "Bimdiendie1@");
-            }
-            return fastConn;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    // Sử dụng DBUtil đã được tích hợp Connection Pool siêu tốc
+    private static Connection getFastConnection() {
+        return com.smartride.util.DBUtil.makeConnection();
     }
 
     private String getDateCondition(String period, String startDate, String endDate, boolean isPrevious) {
@@ -58,7 +46,7 @@
                 case "30days": start = today.minusDays(30); end = today; break;
                 case "90days": start = today.minusDays(90); end = today; break;
                 case "180days": start = today.minusDays(180); end = today; break;
-                case "all": start = today.minusDays(365); end = today; break;
+                case "all": start = LocalDate.of(2020, 1, 1); end = today; break;
             }
         }
         return new LocalDate[]{start, end};
@@ -80,10 +68,12 @@
     Map<String, Object> responseMap = new HashMap<>();
 
     // 1. Stats (One massive fast query instead of 6 slow queries)
-    int currentOrders = 0, currentCustomers = 0;
-    double currentRevenue = 0;
-    int prevOrders = 0, prevCustomers = 0;
-    double prevRevenue = 0;
+    final int[] currentOrdersArr = {0};
+    final int[] currentCustomersArr = {0};
+    final double[] currentRevenueArr = {0};
+    final int[] prevOrdersArr = {0};
+    final int[] prevCustomersArr = {0};
+    final double[] prevRevenueArr = {0};
 
     String dateCond = getDateCondition(period, startDate, endDate, false);
     String prevDateCond = getDateCondition(period, startDate, endDate, true);
@@ -103,14 +93,21 @@
 
     try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(massiveSql)) {
         if (rs.next()) {
-            currentOrders = rs.getInt("co");
-            currentRevenue = rs.getDouble("cr");
-            currentCustomers = rs.getInt("cc");
-            prevOrders = rs.getInt("po");
-            prevRevenue = rs.getDouble("pr");
-            prevCustomers = rs.getInt("pc");
+            currentOrdersArr[0] = rs.getInt("co");
+            currentRevenueArr[0] = rs.getDouble("cr");
+            currentCustomersArr[0] = rs.getInt("cc");
+            prevOrdersArr[0] = rs.getInt("po");
+            prevRevenueArr[0] = rs.getDouble("pr");
+            prevCustomersArr[0] = rs.getInt("pc");
         }
     } catch(Exception e) { e.printStackTrace(); }
+
+    int currentOrders = currentOrdersArr[0];
+    double currentRevenue = currentRevenueArr[0];
+    int currentCustomers = currentCustomersArr[0];
+    int prevOrders = prevOrdersArr[0];
+    double prevRevenue = prevRevenueArr[0];
+    int prevCustomers = prevCustomersArr[0];
 
     double trO = prevOrders == 0 ? (currentOrders > 0 ? 100 : 0) : ((currentOrders - prevOrders) * 100.0 / prevOrders);
     double trR = prevRevenue == 0 ? (currentRevenue > 0 ? 100 : 0) : ((currentRevenue - prevRevenue) * 100.0 / prevRevenue);
@@ -235,7 +232,8 @@
                    + "JOIN \"Motorcycle Detail\" md ON bd.\"MotorcycleDetailID\" = md.\"MotorcycleDetailID\" "
                    + "JOIN \"Motorcycle\" m ON md.\"MotorcycleID\" = m.\"MotorcycleID\" "
                    + "JOIN \"Category\" c ON m.\"CategoryID\" = c.\"CategoryID\" "
-                   + c1Alias + " GROUP BY c.\"CategoryName\"";
+                   + c1Alias + (c1Alias.isEmpty() ? " WHERE " : " AND ") + "b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') "
+                   + "GROUP BY c.\"CategoryName\"";
         ResultSet rs = stmt.executeQuery(sql);
         while(rs.next()) pie.put(rs.getString("CategoryName"), rs.getInt("rentCount"));
     } catch(Exception e) { e.printStackTrace(); }
@@ -249,7 +247,9 @@
                    + "JOIN \"Booking Detail\" bd ON md.\"MotorcycleDetailID\" = bd.\"MotorcycleDetailID\" "
                    + "JOIN \"Booking\" b ON bd.\"BookingID\" = b.\"BookingID\" "
                    + "LEFT JOIN \"PriceList\" p ON m.\"PriceListID\" = p.\"PriceListID\" "
-                   + c1Alias + " GROUP BY m.\"MotorcycleID\", m.\"Image\", m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\" ORDER BY rentCount DESC LIMIT 5";
+                   + c1Alias + (c1Alias.isEmpty() ? " WHERE " : " AND ") + "b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') "
+                   + "GROUP BY m.\"Image\", m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\" "
+                   + "ORDER BY rentCount DESC";
         ResultSet rs = stmt.executeQuery(sql);
         while(rs.next()) {
             Map<String, Object> t = new HashMap<>();
@@ -262,6 +262,9 @@
             topMotos.add(t);
         }
     } catch(Exception e) { e.printStackTrace(); }
+
+    // Close connection to return it to the pool
+    conn.close();
     
     responseMap.put("topMotorcycles", topMotos);
 

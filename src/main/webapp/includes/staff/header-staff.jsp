@@ -1,8 +1,3 @@
-<%-- 
-    Document   : sidebar2
-    Created on : Jun 29, 2024, 2:00:00 PM
-    Author     : DiepTCNN
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

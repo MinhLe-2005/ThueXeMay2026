@@ -1,9 +1,3 @@
-<%-- 
-    Document   : pricing
-    Created on : May 25, 2024, 4:59:34 PM
-    Author     : DiepTCNN
---%>
-
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.smartride.dao.EventDAO" %>

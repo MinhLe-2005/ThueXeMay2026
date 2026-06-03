@@ -1,9 +1,3 @@
-<%-- 
-    Document   : viewFeedback
-    Created on : Jun 20, 2024, 2:54:16 PM
-    Author     : DiepTCNN
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -205,10 +199,7 @@
     </head>
 
     <body>
-        <div class="col-md-2">
-
-        </div>
-        <div class="container-fluid tab-container">
+        <div class="container-fluid tab-container col-md-12">
             <!-- Danh sách tab ngang -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#Section1"

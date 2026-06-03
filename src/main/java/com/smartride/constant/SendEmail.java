@@ -11,10 +11,6 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class SendEmail {
 
     public static String generateRandomSixDigits() {

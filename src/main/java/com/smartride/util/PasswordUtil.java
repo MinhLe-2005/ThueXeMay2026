@@ -13,7 +13,7 @@ public class PasswordUtil {
         if (plainTextPassword == null) {
             return null;
         }
-        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt(12));
+        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt(10));
     }
 
     /**

@@ -1,8 +1,3 @@
-<%-- 
-    Document   : manageCustomer
-    Created on : May 25, 2024, 5:52:23 PM
-    Author     : DiepTCNN
---%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -14,16 +9,21 @@
 
     <head>
         <meta charset="utf-8">
-        <title>Manage Customer</title>
+        <title>Manage Customer - SmartRide</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
+        <!-- Vendor CSS Files -->
+        <link href="staffAssets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="staffAssets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+        <link href="staffAssets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+        <link href="staffAssets/vendor/quill/quill.snow.css" rel="stylesheet">
+        <link href="staffAssets/vendor/quill/quill.bubble.css" rel="stylesheet">
+        <link href="staffAssets/vendor/remixicon/remixicon.css" rel="stylesheet">
+        <link href="staffAssets/vendor/simple-datatables/style.css" rel="stylesheet">
+        <!-- Template Main CSS File -->
+        <link href="staffAssets/css/style.css" rel="stylesheet">
 
         <style type="text/css">
-            body {
-                margin-top: 20px;
-                background: #f8f8f8
-            }
-
             .info label {
                 font-style: italic;
                 width: 20%;
@@ -43,49 +43,51 @@
     <body>
         <jsp:include page="/includes/staff/header-staff.jsp" />
         <jsp:include page="/includes/staff/sidebar.jsp" />
-        <div class="container">
-            <div class="row flex-lg-nowrap">
-                <div class="col-12 col-lg-auto mb-3">
-                    <div class="card p-3">
-                        <div class="e-navlist e-navlist--active-bg">
-                            <ul class="nav">
-                                <li class="nav-item"><a class="nav-link px-2 active" href="homeStaff.jsp"><i
-                                            class="fa fa-fw fa-bar-chart mr-1"></i><span>Trang chủ</span></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div style="margin-top: 5rem" class="col col-lg">
-                    <div>
-                        <ul class="nav nav-tabs">
+        
+        <main id="main" class="main">
+            <div class="pagetitle mb-4">
+                <h1>Quản lý khách hàng</h1>
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="homeStaff" target="_top">Trang Chủ</a></li>
+                        <li class="breadcrumb-item active">Quản lý khách hàng</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <section class="section">
+                <div class="row flex-lg-nowrap">
+                    <!-- Main Content -->
+                    <div class="col-12 col-lg-9">
+                        <div>
+                            <ul class="nav nav-tabs nav-tabs-bordered">
                             <li class="nav-item">
-                                <a class="nav-link active" id="customer-tab" data-bs-toggle="tab" href="#customer">Thông tin khách hàng</a>
+                                <a class="nav-link active fw-bold" id="customer-tab" data-bs-toggle="tab" href="#customer">Thông tin khách hàng</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="overdue-tab" data-bs-toggle="tab" href="#overdue">Quá hạn thuê xe</a>
+                                <a class="nav-link fw-bold" id="overdue-tab" data-bs-toggle="tab" href="#overdue">Quá hạn thuê xe</a>
                             </li>
                         </ul>
                     </div>
                     <div class="tab-content mt-3">
                         <div id="customer" class="tab-pane fade show active">
-                            <div class="e-panel card">
-                                <div class="card-body">
-                                    <div class="card-title">
-                                        <h6 class="mr-2"><span>Làm TỐT</span><small class="px-1">cuối tháng tăng lương</small></h6>
+                            <div class="card border-0 shadow-sm custom-card">
+                                <div class="card-body p-4 pb-0">
+                                    <div class="card-title mb-4">
+                                        <h5 class="m-0 fw-bold text-dark" style="font-family: 'Be Vietnam Pro', sans-serif;">Danh sách khách hàng</h5>
                                     </div>
                                     <div class="e-table">
                                         <div class="table-responsive table-lg">
-                                            <table class="table table-bordered">
-                                                <thead>
+                                            <table class="table table-hover table-borderless align-middle">
+                                                <thead class="table-light text-muted" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
                                                     <tr>
-                                                        <th>ID</th>
+                                                        <th class="ps-3">ID</th>
                                                         <th>Họ và tên</th>
                                                         <th>Tên đăng nhập</th>
                                                         <th>Ngày sinh</th>
                                                         <th>Điện thoại</th>
-                                                        <th> </th>
-                                                        <th>Trạng thái</th>
-                                                        <th>Thao tác</th>
+                                                        <th class="text-center">Trạng thái</th>
+                                                        <th class="text-center">Thao tác</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="customer-table-body">
@@ -104,21 +106,15 @@
                                                             <td name="dob" class="text-nowrap align-middle">${account.dob}</td>
                                                             <td name="phoneNumber" class="text-nowrap align-middle">${account.phoneNumber}</td>
                                                             <td class="text-center align-middle">
-                                                                <i id="toggle-icon-${account.accountId}" class="fa fa-fw text-secondary cursor-pointer 
-                                                                   ${account.roleID == 1 ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
-                                                            </td>
-                                                            <td class="text-center align-middle" >
-                                                                <form id="form-${account.accountId}" action="manageCustomer" method="post">
-                                                                    <input type="hidden" name="action" value="updateRoleAndGetStatuses">
-                                                                    <input type="hidden" name="accountId" value="${account.accountId}">
-                                                                    <input type="hidden" name="isActive" value="${account.roleID != 1}">
-                                                                    <button style="width: 74px;" type="button" class="btn btn-sm btn-outline-secondary" onclick="showConfirmModal(${account.accountId}, ${account.roleID == 1})">Cập nhật</button>
-                                                                </form>
+                                                                <span class="badge ${account.roleID == 1 ? 'bg-success' : 'bg-danger'} rounded-pill fw-normal px-3 py-2" style="font-size: 0.8rem; background-color: ${account.roleID == 1 ? '#198754' : '#dc3545'};">
+                                                                    <i class="fa ${account.roleID == 1 ? 'fa-check-circle' : 'fa-ban'} me-1"></i>
+                                                                    ${account.roleID == 1 ? 'Hoạt động' : 'Vô hiệu hóa'}
+                                                                </span>
                                                             </td>
                                                             <td class="text-center align-middle">
-                                                                <div class="btn-group align-top">
-                                                                    <button class="btn btn-sm btn-outline-secondary edit-btn" type="button"
-                                                                            data-toggle="modal" data-target="#user-form-modal"
+                                                                <div class="btn-group align-top gap-2">
+                                                                    <button class="btn btn-sm btn-outline-info rounded-pill edit-btn fw-medium px-3" type="button"
+                                                                            data-bs-toggle="modal" data-bs-target="#user-form-modal"
                                                                             data-accountId="${account.accountId}"
                                                                             data-fullName="${account.firstName} ${account.lastName}"
                                                                             data-dob="${account.dob}"
@@ -132,10 +128,20 @@
                                                                             data-idCardIssueDate="${customerMap[account.accountId].issuedOnDate}"
                                                                             data-idCardExpiryDate="${customerMap[account.accountId].expDate}"
                                                                             data-idCardType="${customerMap[account.accountId].typeCard}"
+                                                                            data-idCardImage="${customerMap[account.accountId].identityCardImage}"
                                                                             data-bookingCount="${bookingCount[account.accountId]}"
                                                                             onclick="openUserModal(this)">
-                                                                        Xem
+                                                                        <i class="fa fa-eye me-1"></i> Xem
                                                                     </button>
+                                                                    <button type="button" class="btn btn-sm ${account.roleID == 1 ? 'btn-outline-danger' : 'btn-outline-success'} rounded-pill fw-medium px-3" onclick="showConfirmModal(${account.accountId}, ${account.roleID == 1})">
+                                                                        <i class="fa ${account.roleID == 1 ? 'fa-lock' : 'fa-unlock'} me-1"></i> 
+                                                                        ${account.roleID == 1 ? 'Khóa' : 'Mở'}
+                                                                    </button>
+                                                                    <form id="form-${account.accountId}" action="manageCustomer" method="post" style="display:none;">
+                                                                        <input type="hidden" name="action" value="updateRoleAndGetStatuses">
+                                                                        <input type="hidden" name="accountId" value="${account.accountId}">
+                                                                        <input type="hidden" name="isActive" value="${account.roleID != 1}">
+                                                                    </form>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -149,21 +155,21 @@
                         </div>
 
                         <div id="overdue" class="tab-pane fade">
-                            <div class="e-panel card">
-                                <div class="card-body">
-                                    <div class="card-title">
-                                        <h6 class="mr-2"><span>Làm TỐT</span><small class="px-1">cuối tháng tăng lương</small></h6>
+                            <div class="card border-0 shadow-sm custom-card">
+                                <div class="card-body p-4 pb-0">
+                                    <div class="card-title mb-4">
+                                        <h5 class="m-0 fw-bold text-danger" style="font-family: 'Be Vietnam Pro', sans-serif;"><i class="fa fa-exclamation-triangle me-2"></i>Danh sách khách hàng quá hạn</h5>
                                     </div>
                                     <div class="e-table">
                                         <div class="table-responsive table-lg">
-                                            <table class="table table-bordered">
-                                                <thead>
+                                            <table class="table table-hover table-borderless align-middle">
+                                                <thead class="table-light text-muted" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
                                                     <tr>
-                                                        <th>ID</th>
+                                                        <th class="ps-3">ID</th>
                                                         <th>Họ và tên</th>
                                                         <th>Tên đăng nhập</th>
                                                         <th>Điện thoại</th>
-                                                        <th>Đơn hàng </th>
+                                                        <th>Đơn hàng</th>
                                                         <th>Hạn cuối</th>
                                                         <th scope="col">Quá hạn</th>
                                                     </tr>
@@ -218,81 +224,92 @@
                         </div>
                     </div>
 
-                    <!-- modal để hiển thị thông tin chi tiết -->
-                    <div class="modal fade" role="dialog" tabindex="-1" id="user-form-modal">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div style="padding: 10px 16px;" class="modal-header">
-                                    <h5 class="modal-title">Thông tin khách hàng</h5>
-                                    <button style="border: 1px solid #000" onclick="closeDetail()" type="button" class="btn close" data-dismiss="modal">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div style="padding-top: 0px" class="info modal-body">.
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="profile-image" style="position: relative; width: 150px; height: 150px;">
-                                                    <img id="modal-image" alt="Profile Image" style="width: 120%; height: 120%; border-radius: 50%; object-fit: cover;">
-                                                </div>
+                    <!-- Modal hiển thị thông tin chi tiết -->
+                    <div class="modal fade" id="user-form-modal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+                                
+                                <div class="modal-body p-0">
+                                    <button type="button" class="btn-close position-absolute top-0 end-0 m-4 z-3 bg-white p-2 rounded-circle shadow-sm opacity-75" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    
+                                    <div class="row g-0">
+                                        <!-- Cột Trái: Thông tin cơ bản (Nền vàng) -->
+                                        <div class="col-lg-4 text-center p-5 text-white d-flex flex-column justify-content-center" style="background: linear-gradient(135deg, #b8860b 0%, #d4af37 100%);">
+                                            <div class="position-relative d-inline-block mb-4">
+                                                <img id="modal-image" src="" alt="Profile" 
+                                                     class="rounded-circle border border-4 border-white shadow-lg" 
+                                                     style="width: 150px; height: 150px; object-fit: cover; background-color: #fff;"
+                                                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=User&background=random';">
                                             </div>
-                                            <div class="col-md-8">
-                                                <div class="row">
-                                                    <div class="col-md-12 mb-4">
-                                                        <label>Họ và tên:</label>
-                                                        <p style="display: inline;" id="modal-full-name"></p>
-                                                    </div>
-                                                    <div class="col-md-12 mb-4">
-                                                        <label>Ngày sinh: </label>
-                                                        <p style="display: inline;" id="modal-dob"></p>
-                                                    </div>
-                                                    <div class="col-md-12 mb-4">
-                                                        <label>Email: </label>
-                                                        <p style="display: inline;" id="modal-email"></p>
-                                                    </div>
-                                                    <div class="col-md-12  mb-4">
-                                                        <label>Địa chỉ: </label>
-                                                        <p style="display: inline;" id="modal-address"></p>
-                                                    </div>
-                                                </div>
+                                            <h4 class="fw-bold mb-1 text-white" id="modal-full-name">Tên Khách Hàng</h4>
+                                            <p class="text-white-50 mb-4">@<span id="modal-username">username</span></p>
+                                            
+                                            <div class="d-inline-flex align-items-center bg-white bg-opacity-25 rounded-pill px-4 py-2 text-white mb-4 shadow-sm border border-white border-opacity-25 mx-auto">
+                                                <i class="fa fa-shopping-cart text-white me-2"></i>
+                                                <span class="small me-2">Đã đặt:</span>
+                                                <span class="fw-bold fs-5" id="modal-booking-count">0</span>
+                                                <span class="small ms-1">xe</span>
                                             </div>
-                                            <div class="row mb-4 mt-3">
-                                                <div class="col-md-4 text-center">
-                                                    <label style="min-width: 100px;">Giới tính</label>
-                                                    <p id="modal-gender"></p>
-                                                </div>
-                                                <div class="col-md-4 text-center">
-                                                    <label style="min-width: 100px;">Số điện thoại</label>
-                                                    <p id="modal-phone-number"></p>
-                                                </div>
-                                                <div class="col-md-4 text-center">
-                                                    <label style="min-width: 120px;">Tên đăng nhập</label>
-                                                    <p id="modal-username"></p>
-                                                </div>
+                                            
+                                            <hr class="border-white opacity-25 w-75 mx-auto mb-4">
+                                            
+                                            <!-- Contact info short -->
+                                            <div class="text-start text-white opacity-100 small px-3">
+                                                <p class="mb-3 d-flex align-items-center"><i class="fa fa-phone fa-fw me-3 opacity-75"></i><span id="modal-phone-number" class="fw-medium">090xxxxxxx</span></p>
+                                                <p class="mb-3 d-flex align-items-center"><i class="fa fa-envelope fa-fw me-3 opacity-75"></i><span id="modal-email" class="fw-medium text-break">email@example.com</span></p>
+                                                <p class="mb-0 d-flex align-items-start"><i class="fa fa-map-marker-alt fa-fw me-3 mt-1 opacity-75"></i><span id="modal-address" class="fw-medium">Địa chỉ</span></p>
                                             </div>
                                         </div>
-                                        <!-- ID Card and Related Information - Bottom Right -->
-                                        <div class="row">
-                                            <div class="col text-right">
-                                                <div style="position: relative; width: 150px; height: auto;">
-                                                    <img src="https://www.politsei.ee/thumbs/1080x1080r/Dokumentide%20naeidised/idkaart2021/uus-id-kaart-naeidis1.jpg?4e010f0460" alt="ID Card" 
-                                                         style="    width: 200%;
-                                                         height: auto;
-                                                         object-fit: cover;
-                                                         border: 1px solid #ccc;
-                                                         position: absolute;
-                                                         right: -389%;
-                                                         top: 8px">                                                
+
+                                        <!-- Cột Phải: Thông tin chi tiết -->
+                                        <div class="col-lg-8 p-5 bg-white">
+                                            <h5 class="fw-bold text-dark mb-4 border-bottom pb-3">Hồ sơ chi tiết</h5>
+                                            
+                                            <div class="row mb-5">
+                                                <!-- Thông tin cá nhân -->
+                                                <div class="col-md-6 mb-4 mb-md-0 border-end">
+                                                    <h6 class="fw-bold text-muted text-uppercase mb-4" style="font-size: 0.75rem; letter-spacing: 1px;"><i class="fa fa-user me-2"></i>Thông tin cá nhân</h6>
+                                                    <div class="mb-4">
+                                                        <small class="text-muted d-block mb-1">Ngày sinh</small>
+                                                        <span class="fw-medium text-dark" id="modal-dob">...</span>
+                                                    </div>
+                                                    <div>
+                                                        <small class="text-muted d-block mb-1">Giới tính</small>
+                                                        <span class="fw-medium text-dark" id="modal-gender">...</span>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p><strong>Thông tin CMND/Bằng lái xe</strong></p>
-                                                    <p>Số thẻ: <span id="modal-id-card-number"></span></p>
-                                                    <p>Ngày cấp: <span id="modal-id-card-issue-date"></span></p>
-                                                    <p>Ngày hết hạn: <span id="modal-id-card-expiry-date"></span></p>
-                                                    <p>Loại thẻ: <span id="modal-id-card-type"></span></p>
+                                                
+                                                <!-- Giấy tờ tùy thân -->
+                                                <div class="col-md-6 ps-md-4">
+                                                    <h6 class="fw-bold text-muted text-uppercase mb-4" style="font-size: 0.75rem; letter-spacing: 1px;"><i class="fa fa-id-card me-2"></i>Giấy tờ xác minh</h6>
+                                                    <div class="row">
+                                                        <div class="col-sm-6 mb-4">
+                                                            <small class="text-muted d-block mb-1">Loại giấy tờ</small>
+                                                            <span class="fw-medium text-dark" id="modal-id-card-type">...</span>
+                                                        </div>
+                                                        <div class="col-sm-6 mb-4">
+                                                            <small class="text-muted d-block mb-1">Mã số</small>
+                                                            <span class="fw-medium text-dark" id="modal-id-card-number">...</span>
+                                                        </div>
+                                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                                            <small class="text-muted d-block mb-1">Ngày cấp</small>
+                                                            <span class="fw-medium text-dark" id="modal-id-card-issue-date">...</span>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <small class="text-muted d-block mb-1">Ngày hết hạn</small>
+                                                            <span class="fw-medium text-dark" id="modal-id-card-expiry-date">...</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p><strong>Số lượng đơn đặt xe: &ensp;&ensp;<span id="modal-booking-count"></span></strong></p>
+                                            </div>
+
+                                            <!-- Ảnh CMND -->
+                                            <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.75rem; letter-spacing: 1px;"><i class="fa fa-camera me-2"></i>Ảnh giấy tờ</h6>
+                                            <div class="bg-light border rounded-3 p-3 text-center d-flex align-items-center justify-content-center" style="min-height: 220px; border-style: dashed !important; border-width: 2px !important;">
+                                                <img id="modal-id-card-image" src="" alt="ID Card" class="img-fluid rounded shadow-sm" style="max-height: 280px; display: none; object-fit: contain;">
+                                                <div id="modal-id-card-placeholder" class="text-muted">
+                                                    <i class="fa fa-image fs-1 mb-3 text-secondary opacity-50"></i><br>
+                                                    <span class="small fw-medium">Chưa cập nhật ảnh giấy tờ</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -300,81 +317,61 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                       
-                </div>
-                <div style="width: 18%; margin-top: 137px;" class="col-12 col-lg-3 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <hr class="my-4>
-                                <div class="e-navlist e-navlist--active-bold">
-                            <ul class="nav" id="navList">
-                                <li class="nav-item">
-                                    <a class="nav-link" data-status="all">
-                                        <span>Tất cả</span>&nbsp;<small>/&nbsp;<span id="allCount">${allCount}</span></small>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-status="active">
-                                        <span>Hoạt động</span>&nbsp;<small>/&nbsp;<span id="activeCount">${activeCount}</span></small>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-status="disabled">
-                                        <span>Vô hiệu hóa</span>&nbsp;<small>/&nbsp;<span id="disabledCount">${disabledCount}</span></small>
-                                    </a>
-                                </li>
-                            </ul>
-                            <hr class="my-4">
-                            <div>
-                                <label>Trạng thái: </label>
-                                <div class="px-2">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" name="user-status" id="users-status-any" value="all" checked>
-                                        <label class="custom-control-label" for="users-status-any">Tất cả</label>
-                                    </div>
-                                </div>
-                                <div class="px-2">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" name="user-status" id="users-status-active" value="active">
-                                        <label class="custom-control-label" for="users-status-active">Hoạt động</label>
-                                    </div>
-                                </div>
-                                <div class="px-2">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" name="user-status" id="users-status-disabled" value="disabled">
-                                        <label class="custom-control-label" for="users-status-disabled">Vô hiệu hóa</label>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
                     </div>
-                    <hr class="my-3">
-                    <form action="searchCustomer" method="post">
-                        <div>
-                            <div class="form-group fst-italic">
-                                <label>Tìm kiếm qua Tên đăng nhập: </label>
-                                <div><input name="username" class="form-control w-100" type="text" placeholder="Username" value>
-                                </div>
-                            </div>
-                            <div class="form-group fst-italic">
-                                <label>Tìm kiếm qua Tên:</label>
-                                <div><input name="name" class="form-control w-100" type="text" placeholder="Name" value>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <button class="btn btn-secondary w-100" type="submit" value="Search">Tìm kiếm</button>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="mt-2 d-flex flex-column align-items-center"></div>
                 </div>
+                <!-- Right Sidebar / Filter -->
+                <div class="col-12 col-lg-3">
+                    <div class="card border-0 shadow-sm custom-card mb-4">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Thống kê & Trạng thái</h6>
+                            
+                            <div class="list-group list-group-flush border-bottom-0" id="statusFilterGroup">
+                                <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 active rounded-3 mb-1" data-status="all" style="cursor:pointer; background-color: rgba(184, 134, 11, 0.1); color: #b8860b; font-weight: bold; border-left: 4px solid #b8860b !important;">
+                                    <span><i class="fa fa-users me-2"></i>Tất cả</span>
+                                    <span class="badge bg-primary rounded-pill" style="background-color: #b8860b !important;">${allCount}</span>
+                                </button>
+                                <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded-3 mb-1" data-status="active" style="cursor:pointer">
+                                    <span class="text-success"><i class="fa fa-check-circle me-2"></i>Hoạt động</span>
+                                    <span class="badge bg-success rounded-pill">${activeCount}</span>
+                                </button>
+                                <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded-3 mb-1" data-status="disabled" style="cursor:pointer">
+                                    <span class="text-danger"><i class="fa fa-ban me-2"></i>Vô hiệu hóa</span>
+                                    <span class="badge bg-danger rounded-pill">${disabledCount}</span>
+                                </button>
+                            </div>
+                            
+                            <hr class="my-4">
+                            
+                            <form action="searchCustomer" method="post">
+                                <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Tìm kiếm khách hàng</h6>
+                                <div class="form-group mb-3">
+                                    <label class="text-secondary small mb-1">Tên đăng nhập:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 rounded-start-pill"><i class="fa fa-user-circle text-muted"></i></span>
+                                        <input name="username" class="form-control border-start-0 rounded-end-pill px-2" type="text" placeholder="Nhập username..." value="${param.username}">
+                                    </div>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label class="text-secondary small mb-1">Họ và tên:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 rounded-start-pill"><i class="fa fa-id-card text-muted"></i></span>
+                                        <input name="name" class="form-control border-start-0 rounded-end-pill px-2" type="text" placeholder="Nhập họ và tên..." value="${param.name}">
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="manageCustomer" class="btn btn-light w-50 rounded-pill fw-medium shadow-sm border text-muted"><i class="fa fa-undo me-1"></i>Làm mới</a>
+                                    <button class="btn btn-primary w-50 rounded-pill fw-medium shadow-sm" type="submit"><i class="fa fa-search me-1"></i>Tìm kiếm</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                <!-- End Right Sidebar -->
             </div>         
-        </div>
-    </div>
+            </section>
+        </main>
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="staffAssets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
                                         function openUserModal(button) {
                                             var modal = $('#user-form-modal');
@@ -384,7 +381,11 @@
                                             modal.find('#modal-email').text(button.getAttribute('data-email'));
                                             modal.find('#modal-address').text(button.getAttribute('data-address'));
                                             modal.find('#modal-gender').text(button.getAttribute('data-gender'));
-                                            modal.find('#modal-image').attr('src', button.getAttribute('data-image'));
+                                            let imgStr = button.getAttribute('data-image');
+                                            if (!imgStr || imgStr.trim() === '') {
+                                                imgStr = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(button.getAttribute('data-fullName')) + '&background=random';
+                                            }
+                                            modal.find('#modal-image').attr('src', imgStr);
                                             modal.find('#modal-phone-number').text(button.getAttribute('data-phoneNumber'));
                                             modal.find('#modal-username').text(button.getAttribute('data-username'));
                                             modal.find('#modal-id-card-number').text(button.getAttribute('data-idCardNumber'));
@@ -392,6 +393,16 @@
                                             modal.find('#modal-id-card-expiry-date').text(button.getAttribute('data-idCardExpiryDate'));
                                             modal.find('#modal-id-card-type').text(button.getAttribute('data-idCardType'));
                                             modal.find('#modal-booking-count').text(button.getAttribute('data-bookingCount'));
+                                            
+                                            // Xử lý ảnh CMND/CCCD
+                                            let idCardImg = button.getAttribute('data-idCardImage');
+                                            if (idCardImg && idCardImg.trim() !== '') {
+                                                modal.find('#modal-id-card-image').attr('src', 'images/' + idCardImg).show();
+                                                modal.find('#modal-id-card-placeholder').hide();
+                                            } else {
+                                                modal.find('#modal-id-card-image').hide().attr('src', '');
+                                                modal.find('#modal-id-card-placeholder').show();
+                                            }
 
                                             $('#user-form-modal').modal('show'); //boostrap jqs
                                         }
@@ -402,18 +413,29 @@
                                         }
 
                                         document.addEventListener("DOMContentLoaded", function () {
-                                            const navLinks = document.querySelectorAll("#navList .nav-link");
-                                            navLinks.forEach(link => {
-                                                link.addEventListener("click", function (e) {
+                                            const filterButtons = document.querySelectorAll("#statusFilterGroup .list-group-item");
+                                            filterButtons.forEach(button => {
+                                                button.addEventListener("click", function (e) {
                                                     e.preventDefault();
-                                                    filterTableByStatus(link.getAttribute("data-status"));
-                                                });
-                                            });
-
-                                            const radioButtons = document.querySelectorAll('input[name="user-status"]');
-                                            radioButtons.forEach(button => {
-                                                button.addEventListener("change", function () {
-                                                    filterTableByStatus(this.value);
+                                                    
+                                                    // Loại bỏ class active khỏi tất cả nút
+                                                    filterButtons.forEach(btn => {
+                                                        btn.classList.remove("active");
+                                                        btn.style.backgroundColor = "";
+                                                        btn.style.color = "";
+                                                        btn.style.fontWeight = "normal";
+                                                        btn.style.borderLeft = "none";
+                                                    });
+                                                    
+                                                    // Thêm class active cho nút vừa click
+                                                    this.classList.add("active");
+                                                    this.style.backgroundColor = "rgba(184, 134, 11, 0.1)"; // Màu nền vàng nhạt/nâu nhạt
+                                                    this.style.color = "#b8860b"; // Chữ màu vàng/nâu (dark goldenrod)
+                                                    this.style.fontWeight = "bold";
+                                                    this.style.borderLeft = "4px solid #b8860b";
+                                                    
+                                                    // Gọi hàm filter
+                                                    filterTableByStatus(this.getAttribute("data-status"));
                                                 });
                                             });
                                         });

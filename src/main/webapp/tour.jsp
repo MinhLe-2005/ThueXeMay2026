@@ -1,9 +1,3 @@
-<%-- 
-    Document   : event
-    Created on : May 25, 2024, 9:43:36 PM
-    Author     : ADMIN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

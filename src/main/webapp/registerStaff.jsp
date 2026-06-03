@@ -1,9 +1,3 @@
-<%-- 
-    Document   : registerStaff
-    Created on : Jun 19, 2024, 7:31:11 PM
-    Author     : ADMIN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">

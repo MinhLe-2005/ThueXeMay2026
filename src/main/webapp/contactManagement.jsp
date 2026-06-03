@@ -1,9 +1,3 @@
-<%-- 
-    Document   : contactManagement
-    Created on : Jun 23, 2024, 7:54:04 PM
-    Author     : DiepTCNN
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -210,8 +204,7 @@
 
         <!-- ======= Header ======= -->
 
-        <div class="col-md-2"></div>
-        <div style="margin-top: 6rem;" class="container-fluid tab-container col-md-10">
+        <div class="container-fluid tab-container col-md-12">
             <!-- Danh sách tab ngang -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#Section1"

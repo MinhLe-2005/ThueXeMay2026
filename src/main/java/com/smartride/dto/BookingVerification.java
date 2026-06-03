@@ -1,4 +1,3 @@
-
 package com.smartride.dto;
 
 import java.io.Serializable;

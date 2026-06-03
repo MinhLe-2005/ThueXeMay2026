@@ -10,10 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name = "reOtpServlet", urlPatterns = {"/reOtp"})
 public class GetReOtpServlet extends HttpServlet {
 

@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author LeQuangMinh
- */
 public class FeedbackDAO implements Serializable {
 
     private static FeedbackDAO instance;

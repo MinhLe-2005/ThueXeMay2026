@@ -13,10 +13,6 @@ import java.util.Map;
 import java.util.HashMap;
 import com.smartride.dto.LocationRecommendationDTO;
 
-/**
- *
- * @author LeQuangMinh
- */
 @WebServlet(name = "TouristLocationServlet", urlPatterns = {"/touristLocation"})
 public class TouristLocationServlet extends HttpServlet {
     
