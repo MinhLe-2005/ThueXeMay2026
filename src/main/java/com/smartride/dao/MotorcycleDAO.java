@@ -952,3 +952,5 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
 // fix patch 18
 
 // fix patch 19
+
+// fix patch 28
