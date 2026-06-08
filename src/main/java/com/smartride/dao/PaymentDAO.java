@@ -164,3 +164,5 @@ public class PaymentDAO implements Serializable {
 // fix patch 5
 
 // fix patch 22
+
+// fix patch 34
