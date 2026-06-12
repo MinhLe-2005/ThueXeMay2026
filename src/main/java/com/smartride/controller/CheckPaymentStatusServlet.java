@@ -49,3 +49,5 @@ public class CheckPaymentStatusServlet extends HttpServlet {
 // Minor update 29
 
 // fix patch 41
+
+// fix patch 42
