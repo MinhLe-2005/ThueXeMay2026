@@ -385,3 +385,5 @@ public class DashboardDAO {
 // fix patch 24
 
 // fix patch 32
+
+// fix patch 45
