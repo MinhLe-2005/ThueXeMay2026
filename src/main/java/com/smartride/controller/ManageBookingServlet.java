@@ -51,11 +51,16 @@ public class ManageBookingServlet extends HttpServlet {
         List<Cancellation> cancels = CancellationDAO.getInstance().getAllCancellation();
         List<Extension> extend = ExtensionDAO.getInstance().getAllExtension();
         Map<String, Map<String, Integer>> motorcycleDetailsMap = new HashMap<>();
+        Map<String, List<String>> motorcyclePlatesMap = new HashMap<>();
         for (Booking book : bookings) {
             Map<String, Integer> motorcycleDetails = BookingDAO.getInstance().getMotorcycleDetailsByBookingID(book.getBookingID());
             motorcycleDetailsMap.put(book.getBookingID(), motorcycleDetails);
+            
+            List<String> plates = BookingDAO.getInstance().getMotorcyclePlatesByBookingID(book.getBookingID());
+            motorcyclePlatesMap.put(book.getBookingID(), plates);
         }
         session.setAttribute("motorcycleDetailsMap", motorcycleDetailsMap);
+        session.setAttribute("motorcyclePlatesMap", motorcyclePlatesMap);
         session.setAttribute("bookings", bookings);
         session.setAttribute("cancels", cancels);
         session.setAttribute("extend", extend);
@@ -67,16 +72,14 @@ public class ManageBookingServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String bookingID = request.getParameter("bookingID");
 
-        //update xác nhận đơn hàng nè
-        BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã xác nhận");
-        //--------------------------------------------------------------------------------
-        //update set auto chưa giao khi đã xác nhận
-        boolean auto = BookingDAO.getInstance().updateDeliveryStatus("Chưa giao", bookingID);
-        //--------------------------------------------------------------------------------
-        //úp đết trạng thái giao hàng nè
-        if (auto == true) {
+        if (bookingID != null && !bookingID.isEmpty()) {
             String delistatus = request.getParameter("delistatus_" + bookingID);
-            BookingDAO.getInstance().updateDeliveryStatus(delistatus, bookingID);
+            if (delistatus != null && !delistatus.isEmpty()) {
+                BookingDAO.getInstance().updateDeliveryStatus(delistatus, bookingID);
+            } else {
+                BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã xác nhận");
+                BookingDAO.getInstance().updateDeliveryStatus("Chưa giao", bookingID);
+            }
         }
         //--------------------------------------------------------------------------------
         Account accountStaff = (Account) session.getAttribute("account");
@@ -102,13 +105,20 @@ public class ManageBookingServlet extends HttpServlet {
         }
         //--------------------------------------------------------------------------------
         //Hủy đơn (của khách hàng)  -> staff confirm
-        Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
         String cancelBookingID = request.getParameter("cancelBookId");
-        CancellationDAO.getInstance().updateCancellationByStaff(staff.getStaffID(), cancelBookingID);
+        if (cancelBookingID != null && !cancelBookingID.isEmpty()) {
+            Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
+            String staffId = staff != null ? staff.getStaffID() : "STAFF00001";
+            CancellationDAO.getInstance().updateCancellationByStaff(staffId, cancelBookingID);
+        }
         //--------------------------------------------------------------------------------
         //Gia hạn (của khách hàng) -> staff confirm
         String extendBookId = request.getParameter("extendBookId");
-        ExtensionDAO.getInstance().updateExtensionByStaff(staff.getStaffID(), extendBookId);
+        if (extendBookId != null && !extendBookId.isEmpty()) {
+            Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
+            String staffId = staff != null ? staff.getStaffID() : "STAFF00001";
+            ExtensionDAO.getInstance().updateExtensionByStaff(staffId, extendBookId);
+        }
         //--------------------------------------------------------------------------------
        
         //--------------------------------------------------------------------------------

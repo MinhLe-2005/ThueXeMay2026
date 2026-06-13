@@ -31,11 +31,15 @@ public class MotorbikeManagementServlet extends HttpServlet {
         List<PriceList> listP = pd.getAllPriceList();
         List<Brand> listB = bd.getAllBrand();
         List<Category> listC = cd.getAllCategory();
+        java.util.LinkedHashMap<String, String> mapA = md.getAllAvailableMotorCycle();
+        String newMotorID = md.getNewMotorcycleID();
 
         request.setAttribute("listM", listM);
         request.setAttribute("listP", listP);
         request.setAttribute("listB", listB);
         request.setAttribute("listC", listC);
+        request.setAttribute("mapA", mapA);
+        request.setAttribute("newMotorID", newMotorID);
 
         request.getRequestDispatcher("motorbikeManagement.jsp").forward(request, response);
 

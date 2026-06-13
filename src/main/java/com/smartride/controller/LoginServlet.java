@@ -102,7 +102,7 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect("home");
                 }
             } else if (account.getRoleID() == 2 || account.getRoleID() == 3) {
-                response.sendRedirect("homeStaff");
+                response.sendRedirect("manageSmartRide.jsp?iframeSrc=homeStaff");
             } else {
                 request.setAttribute("error", "Tài khoản bạn đã bị khóa <br> Vui lòng liên hệ với trang web để lấy lại thông tin");
                 request.getRequestDispatcher("login.jsp").forward(request, response);

@@ -163,10 +163,10 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     + "    \"Motorcycle\" m\n"
                     + "INNER JOIN\n"
                     + "    \"Motorcycle Detail\" md ON m.\"MotorcycleID\" = md.\"MotorcycleID\"\n"
-                    + "INNER JOIN\n"
+                    + "LEFT JOIN\n"
                     + "    LatestStatus ls ON md.\"MotorcycleDetailID\" = ls.\"MotorcycleDetailID\" AND ls.\"RowNum\" = 1\n"
                     + "WHERE\n"
-                    + "    ls.\"StatusAction\" like 'Có sẵn'\n"
+                    + "    (ls.\"StatusAction\" like 'Có sẵn' OR ls.\"StatusAction\" IS NULL)\n"
                     + "GROUP BY\n"
                     + "    m.\"MotorcycleID\"\n"
                     + "ORDER BY\n"
@@ -474,6 +474,11 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
     }
 
     private void buildCriteriaSql(SearchCriteria criteria, StringBuilder sql, List<Object> params) {
+        if (criteria.getKeyword() != null && !criteria.getKeyword().trim().isEmpty()) {
+            sql.append(" AND m.\"Model\" ILIKE ?");
+            params.add("%" + criteria.getKeyword().trim() + "%");
+        }
+        
         if (criteria.getPriceRanges() != null && !criteria.getPriceRanges().isEmpty()) {
             sql.append(" AND \"PriceListID\" IN (SELECT \"PriceListID\" FROM \"PriceList\" WHERE ");
             for (int i = 0; i < criteria.getPriceRanges().size(); i++) {
@@ -914,6 +919,24 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
             Logger.getLogger(MotorcycleDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+    
+    public String getNewMotorcycleID() {
+        String sql = "SELECT \"MotorcycleID\" FROM \"Motorcycle\" ORDER BY \"MotorcycleID\" DESC LIMIT 1";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                String lastID = rs.getString(1);
+                if (lastID != null && lastID.startsWith("M")) {
+                    int num = Integer.parseInt(lastID.substring(1));
+                    return String.format("M%05d", num + 1);
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(MotorcycleDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "M00001";
     }
 
 }

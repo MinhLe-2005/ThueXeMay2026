@@ -15,191 +15,70 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
 
         <style>
-            body, html {
-                height: 100%;
-                margin: 0;
-                font-family: 'Tahoma', sans-serif;
-            }
+    body, html { height: 100%; margin: 0; font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+    .container-fluid { padding: 2rem; }
+    
+    /* --- Card Container --- */
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: none; margin-bottom: 2rem; }
+    .card-header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .card-title { color: #1e293b; font-size: 1.25rem; font-weight: 600; margin: 0; }
+    .card-body { padding: 0; }
 
-            .tab-container {
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
-                margin-top: 60px;
-            }
+    /* --- Table Styles --- */
+    .table-responsive { overflow-x: auto; border-radius: 0 0 12px 12px; }
+    .table { margin-bottom: 0; width: 100%; border-collapse: separate; border-spacing: 0; }
+    .table thead th { background: #f1f5f9; color: #334155; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: none; border-bottom: 2px solid #cbd5e1; padding: 14px 16px; text-align: center; vertical-align: middle; white-space: nowrap; }
+    .table tbody td { vertical-align: middle; border: none; border-bottom: 1px solid #e2e8f0; padding: 14px 16px; color: #334155; font-size: 0.9rem; text-align: center; transition: background-color 0.2s; }
+    .table tbody tr:hover td { background-color: #f8fafc; }
+    .table tbody tr:last-child td { border-bottom: none; }
+    .table img { max-width: 80px; height: auto; max-height: 80px; object-fit: contain; border-radius: 6px; border: 1px solid #e2e8f0; padding: 2px; }
 
-            .tab-content {
+    
+    /* --- Custom Select & Text Truncate --- */
+    .custom-select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23475569"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center; background-size: 16px; background-color: #fff; border: 1px solid #cbd5e1; border-radius: 20px; padding: 6px 36px 6px 16px; font-weight: 500; color: #475569; transition: all 0.2s; cursor: pointer; height: auto; }
+    .custom-select:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+    .dataTables_wrapper .dataTables_length select { margin: 0 10px; border: 1px solid #cbd5e1; border-radius: 20px; padding: 5px 30px 5px 15px; outline: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23475569"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 8px center; background-size: 16px; appearance: none; -webkit-appearance: none; }
+    
+    .desc-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 160px; color: #6c757d; font-size: 13px; text-align: center; margin: 0 auto; }
 
-                flex: 1;
-                padding: 20px;
-                overflow-y: auto;
-                margin-left: 35px;
-            }
+    /* --- Button Styles --- */
+    .btn-custom-add { background: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%); color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(212, 175, 55, 0.3); }
+    .btn-custom-add:hover { background: linear-gradient(135deg, #c5a030 0%, #e3b70e 100%); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(212, 175, 55, 0.4); }
+    .action-buttons .btn { border-radius: 6px; padding: 6px 10px; margin: 0 3px; font-size: 0.85rem; transition: all 0.2s; }
+    .btn-edit { background-color: #ecfeff; color: #0891b2; border: 1px solid #a5f3fc; }
+    .btn-edit:hover { background-color: #cffafe; color: #0e7490; }
+    .btn-delete { background-color: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+    .btn-delete:hover { background-color: #fee2e2; color: #b91c1c; }
 
-            .tab-content h3 {
-                color: #1e97bf;
-                font-size: 20px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-bottom: 7px;
-            }
-
-            .nav-tabs {
-                display: flex;
-                margin-left: 3%;
-                padding-left: 50px; /* Xóa padding bên trái */
-                border-bottom: 2px solid #ddd;
-            }
-
-            .nav-tabs li {
-                margin-right: 10px;
-            }
-
-            .nav-tabs li a {
-                color: #222;
-                background: transparent;
-                font-size: 17px;
-                font-weight: 800;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-                padding: 12px 15px;
-                border: none;
-                border-radius: 4px;
-                transition: all 0.3s ease;
-            }
-
-            .nav-tabs li a:hover,
-            .nav-tabs li.active a {
-                color: #1e97bf;
-                background: rgba(30, 151, 191, 0.1);
-                border-block-end: solid;
-            }
-
-            @media only screen and (max-width: 767px) {
-                .nav-tabs {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-
-                .nav-tabs li {
-                    margin-bottom: 10px;
-                }
-
-                .tab-content {
-                    padding: 10px;
-
-                }
-            }
-
-            .container-fluid {
-                padding: 2rem 0;
-
-            }
-
-            .tableview {
-                width: 95%;
-                margin: 0 auto;
-            }
-
-            .table-image {
-                border-collapse: separate;
-                border-spacing: 0 15px;
-            }
-
-            .table-image td, .table-image th {
-                vertical-align: middle;
-                background: #fff;
-                border: none;
-                padding: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .table thead th {
-                background-color: #6E9DC5;
-                color: #fff;
-                text-align: center;
-            }
-
-            .table tbody tr:hover {
-                background-color: #f1f1f1;
-            }
-
-            .action-buttons .btn {
-                margin: 0 5px;
-                transition: all 0.3s ease;
-            }
-
-            .action-buttons .btn:hover {
-                transform: scale(1.1);
-            }
-
-            .action-buttons .btn:focus {
-                outline: none;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            }
-
-            td input.form-control {
-                animation: fadeIn 0.5s;
-            }
-
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-                to {
-                    opacity: 1;
-                }
-            }
-
-            .buttons {
-                display: flex;
-                justify-content: center;
-            }
-
-            .addnew, .editlocation {
-                margin-left: 15%;
-            }
-
-            .alert {
-                margin-top: 10px;
-                display: none;
-            }
-            #content {
-                resize: vertical; /* Chỉ cho phép kéo dọc */
-                overflow-y: auto; /* Bật thanh cuộn dọc nếu cần */
-                overflow-x: hidden; /* Ẩn thanh cuộn ngang */
-            }
-            #editEventImagePreview img {
-                max-width: 25%; /* Đặt kích thước tối đa cho hình ảnh là 50% */
-                height: auto; /* Chiều cao tự điều chỉnh để giữ nguyên tỷ lệ */
-                display: block; /* Đảm bảo hình ảnh hiển thị theo chiều ngang */
-                margin-top: 10px; /* Khoảng cách phía trên hình ảnh */
-            }
-        </style>
+    /* --- Modal Styles --- */
+    .modal-content { border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .modal-header { background: #fff; border-bottom: 1px solid #e2e8f0; border-radius: 12px 12px 0 0; padding: 1.5rem; }
+    .modal-title { color: #1e293b; font-weight: 600; font-size: 1.25rem; }
+    .modal-body { padding: 1.5rem; }
+    .modal-footer { border-top: 1px solid #e2e8f0; padding: 1rem 1.5rem; background: #f8fafc; border-radius: 0 0 12px 12px; }
+    .close { color: #64748b; opacity: 0.7; transition: opacity 0.2s; }
+    .close:hover { opacity: 1; color: #0f172a; }
+    .form-control, .form-control-file { border-radius: 6px; border: 1px solid #cbd5e1; padding: 0.5rem 0.75rem; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+    .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    label { font-weight: 500; color: #475569; margin-bottom: 0.5rem; display: inline-block; }
+</style>
     </head>
 
     <body>
-        <div class="container-fluid tab-container col-md-12">
-            <!-- Danh sách tab ngang -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active">
-                    <a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">Sự Kiện</a>
-                </li>
-                <li role="presentation">
-                    <a href="#Section2" aria-controls="profile" role="tab" data-toggle="tab">Thêm Sự Kiện</a>
-                </li>
-                <li role="presentation">
-                    <a href="#Section3" aria-controls="profile" role="tab" data-toggle="tab">Chỉnh Sửa Sự Kiện</a>
-                </li>
-            </ul>
-            <!-- Nội dung tab -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="Section1">
-                    <div class="container-fluid">
-                        <div class="row tableview">
-                            <div class="col-12">
-                                <table class="table table-image">
-                                    <thead>
+        <div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title"><i class="fa fa-calendar-alt text-primary mr-2"></i> DANH SÁCH SỰ KIỆN</h3>
+                    <button class="btn btn-custom-add" data-toggle="modal" data-target="#addEventModal">
+                        <i class="fa fa-plus-circle"></i> Thêm Sự Kiện
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
                                         <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Tiêu Đề</th>
@@ -214,7 +93,7 @@
 
                                         </tr>
                                     </thead>
-                                    <tbody id="table-body">
+                            <tbody>
                                         <c:forEach var="eventLists" items="${eventList}">
                                             <tr>
                                                 <td>${eventLists.eventID}</td>
@@ -232,82 +111,90 @@
                                                 <td>${eventLists.staffID}</td>
                                                 <td class="action-buttons">
                                                     <div class="buttons">
-                                                        <button class="btn btn-primary btn-sm" onclick="editEventForm('${eventLists.eventID}', '${eventLists.eventTitle}', '${eventLists.createdDate}', '${eventLists.startDate}', '${eventLists.endDate}', '${eventLists.content}', '${eventLists.eventImage}', '${eventLists.discount}', '${eventLists.staffID}')">
-                                                            <i class="fas fa-edit"></i>
+                                                        <button class="btn btn-edit" onclick="editEventForm('${eventLists.eventID}', '${eventLists.eventTitle}', '${eventLists.createdDate}', '${eventLists.startDate}', '${eventLists.endDate}', '${eventLists.content}', '${eventLists.eventImage}', '${eventLists.discount}', '${eventLists.staffID}')">
+                                                            <i class="fa fa-edit"></i>
                                                         </button>
-                                                        <button class="btn btn-danger btn-sm" onclick="confirmDelete('${eventLists.eventID}')">
-                                                            <i class="fas fa-trash"></i>
+                                                        <button class="btn btn-delete" onclick="confirmDelete('${eventLists.eventID}')">
+                                                            <i class="fa fa-trash"></i>
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        </table>
                     </div>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="Section2">
-                    <section>
-                        <div class="container-fluid">
-                            <div class="row tableview">
-                                <div class="col-12">
-                                    <h3 class="mb-4">Thêm Sự Kiện</h3>
-                                    <form class="addnew-event-form" id="addLocationForm" action="AddNewEventStaff" method="post" enctype="multipart/form-data">
+            </div>
+        </div>
+    </div>
+</div>
+                
+<!-- Add Event Modal -->
+<div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addEventModalLabel"><i class="fa fa-plus-circle text-primary"></i> Thêm Mới Sự Kiện</h4>
+            </div>
+            <form class="addnew-event-form" id="addLocationForm" action="AddNewEventStaff" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    
                                         <!-- Event Title -->
-                                        <div class="form-group row">
-                                            <label for="eventTitle" class="col-sm-2 col-form-label">Tiêu Đề Sự Kiện:</label>
-                                            <div class="col-sm-10">
+                                        <div class="form-group">
+                                            <label for="eventTitle">Tiêu Đề Sự Kiện:</label>
+                                            
                                                 <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="Nhập tiêu đề sự kiện" required>
-                                            </div>
+                                            
                                         </div>
                                         <!-- Created Date -->
-                                        <!--                                        <div class="form-group row">
+                                        <!--                                        <div class="form-group">
                                                                                     <label for="createdDate" class="col-sm-2 col-form-label">Created Date</label>
-                                                                                    <div class="col-sm-10">
+                                                                                    
                                                                                         <input type="date" class="form-control" id="createdDate" name="createdDate" required>
-                                                                                    </div>
+                                                                                    
                                                                                 </div>-->
                                         <!-- Start Date -->
-                                        <div class="form-group row">
-                                            <label for="startDate" class="col-sm-2 col-form-label">Ngày Bắt Đầu:</label>
-                                            <div class="col-sm-10">
+                                        <div class="form-group">
+                                            <label for="startDate">Ngày Bắt Đầu:</label>
+                                            
                                                 <input type="date" class="form-control" id="startDate" name="startDate" required>
-                                            </div>
+                                            
                                         </div>
                                         <!-- End Date -->
-                                        <div class="form-group row">
-                                            <label for="endDate" class="col-sm-2 col-form-label">Ngày Kết Thúc:</label>
-                                            <div class="col-sm-10">
+                                        <div class="form-group">
+                                            <label for="endDate">Ngày Kết Thúc:</label>
+                                            
                                                 <input type="date" class="form-control" id="endDate" name="endDate" required>
-                                            </div>
+                                            
                                         </div>
                                         <!-- Content -->
-                                        <div class="form-group row">
-                                            <label for="content" class="col-sm-2 col-form-label">Nôi Dung:</label>
-                                            <div class="col-sm-10">
+                                        <div class="form-group">
+                                            <label for="content">Nôi Dung:</label>
+                                            
                                                 <textarea class="form-control" id="content" name="content" rows="3" placeholder="Nhập nội dung sự kiện" required style="resize: vertical;"></textarea>
-                                            </div>
+                                            
                                         </div>
                                         <!-- Event Image -->
-                                        <div class="form-group row">
-                                            <label for="eventImage" class="col-sm-2 col-form-label">Hình Ảnh Sự Kiện:</label>
-                                            <div class="col-sm-10">
+                                        <div class="form-group">
+                                            <label for="eventImage">Hình Ảnh Sự Kiện:</label>
+                                            
+                                                <div id="eventImagePreview" style="margin-bottom: 15px; border-radius: 8px; overflow: hidden; display: inline-block;"></div>
                                                 <input type="file" class="form-control-file" id="eventImage" name="eventImage" accept="image/*" required>
-                                            </div>
+                                            
                                         </div>
                                         <!-- Discount -->
-                                        <div class="form-group row">
-                                            <label for="discount" class="col-sm-2 col-form-label">Giảm Giá</label>
-                                            <div class="col-sm-10">
+                                        <div class="form-group">
+                                            <label for="discount">Giảm Giá</label>
+                                            
                                                 <input type="number" class="form-control" id="discount" name="discount" placeholder="Nhập phần trăm giảm giá" step="0.01" oninput="validateDiscount(this)" required>
-                                            </div>
+                                            
                                         </div>
                                         <!-- Staff ID -->
                                         <div class="form-group">
                                             <label for="staffID">Lựa Chọn Nhân Viên:</label>
-                                            <select class="form-control" id="staffID" name="staffID" required>
+                                            <select class="form-control custom-select" id="staffID" name="staffID" required>
                                                 <!--<option value="">Select Staff</option>-->
                                                 <c:forEach var="staff" items="${staffList}" varStatus="loop">
                                                     <option value="${staff.staffID}">${staff.staffID}</option>
@@ -315,23 +202,36 @@
                                             </select>
                                         </div>
                                         <div class="buttons">
-                                            <button type="submit" class="btn btn-primary">Thêm Mới Sự Kiện</button>
+                                            
                                         </div>
-                                    </form>
+                                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Thêm Sự Kiện</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-                                </div>
                             </div>
                         </div>
                     </section>
                 </div>
 
-                <div role="tabpanel" class="tab-pane fade" id="Section3">
-                    <section>
-                        <div class="container-fluid">
-                            <div class="row tableview">
-                                <div class="col-12">
-                                    <h3 class="mb-4">Chỉnh Sửa Sự Kiện</h3>
-                                    <form class="edit-event-form" id="editEventForm" action="UpdateEventStaff" method="post" enctype="multipart/form-data">
+                
+<!-- Edit Event Modal -->
+<div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="editEventModalLabel"><i class="fa fa-edit text-info"></i> Chỉnh Sửa Sự Kiện</h4>
+            </div>
+            <form class="edit-event-form" id="editEventForm" action="UpdateEventStaff" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    
                                         <div class="form-group">
                                             <label for="editEventID">ID:</label>
                                             <input type="text" class="form-control" id="editEventID" name="editEventID" readonly>
@@ -369,26 +269,31 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="editStaffID">Lựa Chọn Nhân Viên:</label>
-                                            <select class="form-control" id="editStaffID" name="editStaffID">
+                                            <select class="form-control custom-select" id="editStaffID" name="editStaffID">
                                                 <!-- Options will be dynamically populated using JSTL -->
                                                 <c:forEach var="staff" items="${staffList}" varStatus="loop">
                                                     <option value="${staff.staffID}">${staff.staffID}</option>
                                                 </c:forEach>
                                             </select>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Cập Nhập Chỉnh Sửa</button>
-                                    </form>
+                                        
+                                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-info"><i class="fa fa-save"></i> Cập Nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-                                </div>
                             </div>
                         </div>
                     </section>
                 </div>
 
 
-
-            </div>
-        </div>
 
         <script>
 
@@ -430,7 +335,7 @@
                 }
 
                 // Chuyển sang tab Section 3 (nếu cần thiết)
-                $('a[href="#Section3"]').tab('show');
+                $('#editEventModal').modal('show');
             }
 
         </script>
@@ -564,8 +469,15 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/imagePreview.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof setupLivePreview === 'function') {
+                    setupLivePreview('eventImage', 'eventImagePreview');
+                    setupLivePreview('editEventImage', 'editEventImagePreview');
+                }
+            });
+        </script>
     </body>
-
 </html>

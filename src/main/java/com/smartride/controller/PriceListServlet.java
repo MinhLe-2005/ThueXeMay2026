@@ -23,22 +23,76 @@ public class PriceListServlet extends HttpServlet {
         }
         int index = Integer.parseInt(indexPage);
         
+        String categoryIdStr = request.getParameter("category");
+        int categoryId = 0;
+        if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+            try {
+                categoryId = Integer.parseInt(categoryIdStr);
+            } catch (NumberFormatException e) {
+                categoryId = 0;
+            }
+        }
+        
         PriceListDAO pd = PriceListDAO.getInstance();
         MotorcycleDAO md = MotorcycleDAO.getInstance();
+        com.smartride.dao.CategoryDAO cd = com.smartride.dao.CategoryDAO.getInstance();
         
-        int total = md.getTotalMotorcyclesCount();
+        int total;
+        String searchKeyword = request.getParameter("search");
+        
+        com.smartride.dto.SearchCriteria criteria = new com.smartride.dto.SearchCriteria();
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            criteria.setKeyword(searchKeyword.trim());
+        }
+
+        if (categoryId > 0) {
+            criteria.addCategoryID(categoryId);
+            
+            // Smart Grouping Logic
+            String selectedCatName = "";
+            List<com.smartride.dto.Category> allCats = cd.getAllCategory();
+            for (com.smartride.dto.Category c : allCats) {
+                if (c.getCategoryID() == categoryId) {
+                    selectedCatName = c.getCategoryName().toLowerCase();
+                    break;
+                }
+            }
+            
+            if (selectedCatName.contains("côn")) {
+                for (com.smartride.dto.Category c : allCats) {
+                    String name = c.getCategoryName().toLowerCase();
+                    if (name.contains("thể thao") || name.contains("phân khối")) {
+                        criteria.addCategoryID(c.getCategoryID());
+                    }
+                }
+            } else if (selectedCatName.contains("số") || selectedCatName.contains("ga")) {
+                for (com.smartride.dto.Category c : allCats) {
+                    String name = c.getCategoryName().toLowerCase();
+                    if (name.contains("50cc")) {
+                        criteria.addCategoryID(c.getCategoryID());
+                    }
+                }
+            }
+        }
+        
+        total = md.getTotalMotorcyclesCountByCriteria(criteria);
+        List<Motorcycle> listM = md.getPagingMotorcyclesByCriteria(criteria, index);
+        
         int endPage = total / 9;
         if (total % 9 != 0) {
             endPage++;
         }
         
-        List<Motorcycle> listM = md.getPagingMotorcycles(index);
         List<PriceList> listP = pd.getAllPriceList();
+        List<com.smartride.dto.Category> listC = cd.getAllCategory();
         
         request.setAttribute("listP", listP);
         request.setAttribute("listM", listM);
+        request.setAttribute("listC", listC);
         request.setAttribute("endP", endPage);
         request.setAttribute("tag", index);
+        request.setAttribute("currentCategory", categoryId);
+        request.setAttribute("searchKeyword", searchKeyword);
         
         request.getRequestDispatcher("pricing.jsp").forward(request, response);
     } 

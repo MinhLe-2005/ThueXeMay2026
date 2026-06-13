@@ -224,7 +224,7 @@
                                                     <c:forEach items="${booking.listBookingDetails}" var="detail">
                                                         <c:set var="total" value="${total + detail.totalPrice}"/>
                                                     </c:forEach>
-                                                    <fmt:formatNumber value="${total*1000}" type="currency" currencySymbol="VNĐ" />
+                                                    <fmt:formatNumber value="${total}" type="currency" currencySymbol="VNĐ" />
                                                 </p>
                                             </div>
                                         </div>
@@ -398,14 +398,14 @@
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
                                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Phí gia hạn</span>
                                     <span class="text-sm font-bold text-green-600">
-                                        <fmt:formatNumber value="${extension.extensionFee * 1000}" type="currency" currencySymbol="VNĐ" />
+                                        <fmt:formatNumber value="${extension.extensionFee}" type="currency" currencySymbol="VNĐ" />
                                     </span>
                                 </div>
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
                                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Tổng tiền mới</span>
                                     <span class="text-sm font-bold text-yellow-600">
                                         <c:set var="total" value="${total + extension.extensionFee}" />
-                                        <fmt:formatNumber value="${total*1000}" type="currency" currencySymbol="VNĐ" />
+                                        <fmt:formatNumber value="${total}" type="currency" currencySymbol="VNĐ" />
                                     </span>
                                 </div>
                             </div>
@@ -447,7 +447,7 @@
                 if (!payButton) return;
                 
                 const amountPaid = parseFloat("${paidAmount}") || 0;
-                const totalPrice = (parseFloat("${total}") || 0) * 1000;
+                const totalPrice = (parseFloat("${total}") || 0);
                 
                 if (amountPaid < totalPrice) {
                     payButton.style.display = "inline-flex";
@@ -465,7 +465,7 @@
                     const iframe = document.getElementById('paymentIframe');
                     iframe.onload = function() {
                         const amountPaid = parseFloat("${paidAmount}") || 0;
-                        const totalPrice = (parseFloat("${total}") || 0) * 1000;
+                        const totalPrice = (parseFloat("${total}") || 0);
                         
                         // Send data to iframe
                         const data = {

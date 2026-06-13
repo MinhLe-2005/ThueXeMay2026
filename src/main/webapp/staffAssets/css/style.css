@@ -394,7 +394,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (min-width: 1200px) {
   .logo {
-    width: var(--sr-sidebar-width);
+    width: 260px; /* Match standard sidebar width for alignment */
   }
 }
 
@@ -706,6 +706,15 @@ h1, h2, h3, h4, h5, h6 {
 
   .toggle-sidebar .sidebar {
     left: calc(-1 * var(--sr-sidebar-width));
+  }
+
+  .toggle-sidebar .header {
+    left: 0;
+    width: 100%;
+  }
+
+  .toggle-sidebar .header .logo {
+    display: flex !important;
   }
 }
 
@@ -1475,4 +1484,12 @@ label {
 
 .text-primary {
   color: var(--sr-gold) !important;
+}
+
+/* Fix modal backdrop to cover sidebar and header */
+.modal-backdrop {
+  z-index: 104000 !important;
+}
+.modal {
+  z-index: 105000 !important;
 }

@@ -16,7 +16,7 @@
     <div class="container-fluid container-xl position-relative d-flex align-items-center" style="height: 75px;">
 
         <a href="home" class="logo d-flex align-items-center me-auto" style="text-decoration: none; padding: 4px 0; transition: all 0.3s ease; gap: 10px;">
-            <img src="${pageContext.request.contextPath}/images/newlogo_transparent.png?v=<%=System.currentTimeMillis()%>" alt="SmartRide Logo" class="logo-icon" />
+            <img src="${pageContext.request.contextPath}/images/newlogo_transparent.png" alt="SmartRide Logo" class="logo-icon" />
             <span class="logo-brand-name">SmartRide</span>
         </a>
 
@@ -516,28 +516,32 @@
 
 </style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    function yourFunction() {
-            console.log("Hàm này sẽ được thực hiện sau mỗi 10 giây.");
-            $.ajax({
-                type: "POST",
-                url: "auto", // Thay đổi URL tới servlet của bạn
-                success: function (response) {
-                    console.log("Check mail cron job executed.");
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error sending data:", error);
-                }
-            });
-        
+    function runAutoTaskOnce() {
+        const taskKey = 'smartRideAutoTaskTriggered';
+        if (sessionStorage.getItem(taskKey)) {
+            return;
+        }
+
+        sessionStorage.setItem(taskKey, 'true');
+        fetch('auto', {
+            method: 'POST',
+            credentials: 'same-origin',
+            keepalive: true
+        }).catch(function() {
+            sessionStorage.removeItem(taskKey);
+        });
     }
 
-// Thiết lập hàm để thực hiện sau mỗi 10 giây
-    setInterval(yourFunction, 1 * 60 * 60 * 1000);
-
-// Thực hiện lần đầu tiên sau khi trang load xong 5 giây để tránh lag trang
-    setTimeout(yourFunction, 5000);
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(runAutoTaskOnce, { timeout: 5000 });
+            } else {
+                runAutoTaskOnce();
+            }
+        }, 15000);
+    });
     
     // Auto-detect current page and apply .active class with gold underline transition
     document.addEventListener("DOMContentLoaded", function() {

@@ -11,17 +11,13 @@
 <html lang="en">
 
     <head>
-        <title>Danh sách xe máy</title>
+        <title>Danh sÃ¡ch xe mÃ¡y</title>
         
         <jsp:include page="/includes/customer/header.jsp" />
         <!-- thanh search -->
-        <link rel="stylesheet" type="text/css"
-              href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
             @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
 
             .filter-module {
@@ -164,12 +160,12 @@
             }
 
             .filter-group .filter-button:after {
-                content: ' ▼';
+                content: ' â–¼';
                 font-size: 0.8em;
                 opacity: 0.7;
             }
             .filter-group .filter-button.open:after {
-                content: ' ▲';
+                content: ' â–²';
                 font-size: 0.8em;
                 opacity: 0.7;
             }
@@ -281,69 +277,623 @@
                 /* Removed width constraint so it uses flex layout from .show-options */
             }
 
-            /* Container & Grid cards */
+            /* Search and filter panel */
+            .vehicle-filter-shell {
+                max-width: 1240px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            .filter-module {
+                width: 100%;
+                max-width: none;
+                margin: 0;
+                padding: 30px;
+                border: 1px solid #ece5d8;
+                border-radius: 24px;
+                background:
+                    radial-gradient(circle at top right, rgba(181, 147, 73, 0.1), transparent 32%),
+                    #ffffff;
+                box-shadow: 0 18px 55px rgba(42, 34, 24, 0.08);
+                z-index: 100;
+            }
+
+            .filter-heading {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 24px;
+                margin-bottom: 28px;
+            }
+
+            .filter-eyebrow {
+                display: block;
+                margin-bottom: 5px;
+                color: #b59349;
+                font-size: 13px;
+                font-weight: 800;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+            }
+
+            .filter-heading h2 {
+                margin: 0;
+                color: #1a1816;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 30px;
+                font-weight: 800;
+                letter-spacing: -0.5px;
+            }
+
+            .filter-heading p {
+                max-width: 430px;
+                margin: 0;
+                color: #7a746d;
+                font-size: 15px;
+                line-height: 1.6;
+                text-align: right;
+            }
+
+            .filter-search-form {
+                display: flex;
+                align-items: center;
+                background: #ffffff;
+                border: 1px solid rgba(181, 147, 73, 0.2) !important;
+                border-radius: 100px;
+                padding: 6px 6px 6px 0;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+                transition: all 0.3s ease;
+                width: 100%;
+                margin-bottom: 28px;
+            }
+
+            .filter-search-form:focus-within {
+                box-shadow: 0 12px 32px rgba(181, 147, 73, 0.15);
+                border-color: #b59349 !important;
+                transform: translateY(-2px);
+            }
+
+            .filter-search-field {
+                flex-grow: 1;
+                position: relative;
+                display: flex;
+                align-items: center;
+            }
+
+            .filter-search-field .search-icon {
+                position: absolute;
+                left: 24px;
+                color: #b59349;
+                font-size: 20px;
+                pointer-events: none;
+            }
+
+            .filter-search-field input {
+                width: 100%;
+                height: 56px;
+                padding: 0 24px 0 56px;
+                border: none !important;
+                background: transparent;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 16px;
+                color: #1a1816;
+                outline: none !important;
+                box-shadow: none !important;
+            }
+
+            .filter-search-field input::placeholder {
+                color: #9e9589;
+            }
+
+            .filter-search-submit,
+            .filter-apply-button {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 9px;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-weight: 700;
+                font-size: 15px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .filter-search-submit {
+                height: 56px;
+                min-width: 150px;
+                padding: 0 32px;
+                border-radius: 100px;
+                box-shadow: 0 4px 14px rgba(181, 147, 73, 0.3);
+                background: linear-gradient(135deg, #b59349 0%, #d4b572 100%);
+                color: #ffffff;
+                margin-left: auto;
+            }
+
+            .filter-search-submit:hover,
+            .filter-apply-button:hover {
+                background: linear-gradient(135deg, #9f7f3e 0%, #c1a25d 100%);
+                color: #ffffff;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(181, 147, 73, 0.4);
+            }
+
+            .filter-toolbar {
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+                gap: 12px;
+                margin-top: 22px;
+                padding-top: 22px;
+                border-top: 1px solid #eee9e1;
+            }
+
+            .filter-group {
+                min-width: 0;
+                z-index: auto;
+            }
+
+            .filter-group:has(.show-options) {
+                z-index: 10000;
+            }
+
+            .filter-button {
+                width: 100%;
+                min-height: 62px;
+                padding: 10px 14px;
+                border: 1px solid #e6ded1;
+                border-radius: 14px;
+                background: #ffffff;
+                justify-content: flex-start;
+                gap: 11px;
+                text-align: left;
+            }
+
+            .filter-button::after {
+                content: '\f282' !important;
+                margin-left: auto;
+                font-family: bootstrap-icons;
+                font-size: 13px !important;
+                opacity: 0.6 !important;
+                transition: transform 0.2s ease;
+            }
+
+            .filter-button.open::after {
+                content: '\f282' !important;
+                transform: rotate(180deg);
+            }
+
+            .filter-button-icon {
+                display: inline-flex;
+                flex: 0 0 36px;
+                width: 36px;
+                height: 36px;
+                align-items: center;
+                justify-content: center;
+                border-radius: 10px;
+                background: #f6f1e7;
+                color: #a68440;
+                font-size: 17px;
+            }
+
+            .filter-button-copy {
+                display: flex;
+                min-width: 0;
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .filter-label {
+                color: #1a1816;
+                font-size: 14px;
+                font-weight: 750;
+                line-height: 1.2;
+            }
+
+            .filter-status {
+                overflow: hidden;
+                color: #8a847c;
+                font-size: 11px;
+                font-weight: 500;
+                line-height: 1.2;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .filter-button:hover {
+                border-color: #cdb47b;
+                background: #fdfbf7;
+                color: #1a1816 !important;
+                transform: translateY(-1px);
+            }
+
+            .filter-button.has-active-filter {
+                border-color: #b59349;
+                background: #f8f2e6;
+                color: #1a1816 !important;
+                box-shadow: 0 0 0 3px rgba(181, 147, 73, 0.09);
+            }
+
+            .filter-button.has-active-filter .filter-button-icon {
+                background: #b59349;
+                color: #ffffff;
+            }
+
+            .filter-options {
+                top: calc(100% + 10px);
+                left: 0;
+                min-width: 100%;
+                max-width: 310px;
+                max-height: 320px;
+                padding: 9px;
+                border-radius: 14px;
+                overflow-y: auto !important;
+                transform: none;
+            }
+
+            .filter-options::before,
+            .filter-options::after {
+                display: none;
+            }
+
+            .filter-options button {
+                padding: 11px 12px;
+            }
+
+            .filter-apply-button {
+                min-width: 162px;
+                min-height: 62px;
+                padding: 0 22px;
+                border-radius: 14px;
+                box-shadow: 0 10px 22px rgba(181, 147, 73, 0.22);
+            }
+
+            .selected-filters {
+                margin-top: 18px !important;
+                padding: 14px 16px !important;
+                border: 1px solid #e9dfcf !important;
+                border-radius: 15px !important;
+                background: linear-gradient(90deg, #fffdf9 0%, #faf6ee 100%) !important;
+                gap: 9px !important;
+                min-height: 58px;
+            }
+
+            .filter-summary-title {
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                margin-right: 4px;
+                color: #524a40;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 13px;
+                font-weight: 800;
+                white-space: nowrap;
+            }
+
+            .filter-summary-title i {
+                display: inline-flex;
+                width: 30px;
+                height: 30px;
+                align-items: center;
+                justify-content: center;
+                border-radius: 9px;
+                background: #b59349;
+                color: #ffffff;
+                font-size: 14px;
+            }
+
+            .filter-summary-count {
+                display: inline-flex;
+                min-width: 24px;
+                height: 24px;
+                align-items: center;
+                justify-content: center;
+                padding: 0 7px;
+                border-radius: 999px;
+                background: #eee3cc;
+                color: #8a6c31;
+                font-size: 11px;
+                font-weight: 800;
+            }
+
+            .selected-filter {
+                padding: 7px 8px 7px 12px !important;
+                border-color: #e3d6c0 !important;
+                background: #ffffff !important;
+                color: #3d3832 !important;
+                box-shadow: 0 3px 10px rgba(60, 48, 31, 0.05) !important;
+                font-size: 12px !important;
+            }
+
+            .selected-filter strong {
+                color: #9c7b39;
+                font-weight: 800;
+            }
+
+            .remove-filter {
+                display: inline-flex;
+                width: 24px;
+                height: 24px;
+                align-items: center;
+                justify-content: center;
+                margin-left: 2px;
+                border-radius: 50%;
+                background: #f5efe4;
+                color: #9c7b39;
+                font-size: 15px;
+                line-height: 1;
+            }
+
+            .remove-filter:hover {
+                background: #b59349;
+                color: #ffffff;
+            }
+
+            .clear-all-filter {
+                display: inline-flex !important;
+                align-items: center;
+                gap: 6px;
+                margin-left: auto;
+                padding: 7px 10px !important;
+                border: 0 !important;
+                border-radius: 9px !important;
+                background: transparent !important;
+                color: #b14e43 !important;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 12px !important;
+                font-weight: 700 !important;
+                cursor: pointer;
+            }
+
+            .clear-all-filter:hover {
+                background: #fff0ed !important;
+                color: #963a31 !important;
+            }
+
+            @media (max-width: 1100px) {
+                .filter-toolbar {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+
+                .filter-apply-button {
+                    width: 100%;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .vehicle-filter-shell {
+                    padding: 0 12px;
+                }
+
+                .filter-module {
+                    padding: 22px 16px;
+                    border-radius: 18px;
+                }
+
+                .filter-heading {
+                    align-items: flex-start;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+
+                .filter-heading h2 {
+                    font-size: 24px;
+                }
+
+                .filter-heading p {
+                    text-align: left;
+                }
+
+                .filter-search-form {
+                    flex-direction: column;
+                    border-radius: 20px;
+                    padding: 12px;
+                }
+
+                .filter-search-field {
+                    width: 100%;
+                }
+
+                .filter-search-submit {
+                    width: 100%;
+                }
+
+                .filter-options {
+                    right: 0;
+                    max-width: none;
+                }
+
+                .selected-filters {
+                    align-items: flex-start !important;
+                }
+
+                .filter-summary-title {
+                    width: 100%;
+                }
+
+                .clear-all-filter {
+                    margin-left: 0;
+                }
+            }
+
+
             .container-haha {
                 border-radius: 12px;
-                padding: 38px;
+                padding: 40px 20px;
+                max-width: 1240px;
+                margin: 0 auto;
+            }
+            
+            .wrapper.row {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                margin-right: -15px !important;
+                margin-left: -15px !important;
+                justify-content: center !important;
+            }
+            
+            .wrapper.row > [class*="col-"] {
+                padding-right: 15px !important;
+                padding-left: 15px !important;
+            }
+            
+            /* Responsive adjustments for motorcycle cards */
+            @media (max-width: 991px) {
+                .container-haha {
+                    padding: 25px 20px;
+                }
+            }
+            
+            @media (max-width: 767px) {
+                .container-haha {
+                    padding: 20px 15px;
+                }
+                
+                .wrapper.row > [class*="col-"] {
+                    padding-right: 10px !important;
+                    padding-left: 10px !important;
+                }
+            }
+
+            .box {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+                border-radius: 20px;
+                border: 1px solid rgba(181, 147, 73, 0.15);
+                padding: 28px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;
+                justify-content: flex-start;
                 text-align: center;
-            }
-
-            .wrapper {
-                width: 100%;
+                margin: 0;
+                background: #fff;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
                 height: 100%;
-                justify-content: center;
-            }
-
-            .banner-image {
-                background-position: center;
-                background-size: cover;
-                height: 200px;
                 width: 100%;
-                border-radius: 12px;
-                background-color: white;
+                overflow: visible;
+                min-height: 520px;
+                position: relative;
             }
 
-            .banner-image img {
-                object-fit: contain;
+            .box:hover {
+                transform: translateY(-12px);
+                box-shadow: 0 20px 40px rgba(181, 147, 73, 0.2);
+                border-color: rgba(181, 147, 73, 0.4);
+            }
+            
+            .box::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #b59349 0%, #d4a574 100%);
+                border-radius: 20px 20px 0 0;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+            
+            .box:hover::after {
+                opacity: 1;
             }
 
-            .list h1 {
-                font-family: 'Playfair Display', serif !important;
-                color: #1a1816 !important;
-                font-weight: 600 !important;
-                font-size: 3rem !important;
-                margin: 15px 0 30px 0;
+            .box .banner-image {
+                border-radius: 16px;
+                margin-bottom: 24px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+                background: #f8f8f8;
+                padding: 10px;
+                transition: transform 0.4s ease;
             }
-            .list-subtitle {
-                font-family: 'Plus Jakarta Sans', sans-serif;
-                font-size: 0.9rem;
-                letter-spacing: 3px;
-                text-transform: uppercase;
-                color: #b59349;
-                font-weight: 600;
+            
+            .box:hover .banner-image {
+                transform: scale(1.05);
+            }
+            
+            .box .banner-image a {
                 display: block;
-                text-align: center;
+                width: 100%;
+                transition: transform 0.3s ease;
             }
-
-            .box p {
-                color: #4a4744 !important;
-                font-family: 'Lato', sans-serif;
-                font-weight: bold;
-                text-align: center;
-                font-size: 0.85rem;
-                line-height: 150%;
-                letter-spacing: 1px;
-                text-transform: uppercase;
+            
+            .box .banner-image img {
+                transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            
+            .box:hover .banner-image img {
+                transform: scale(1.08);
+            }
+            
+            /* Typography improvements */
+            .motorcycle.box h2 {
+                margin: 24px 0 10px 0 !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-size: 1.5rem !important;
+                color: #1a1816 !important;
+                font-weight: 800 !important;
+                line-height: 1.3 !important;
+                transition: color 0.3s ease !important;
+            }
+            
+            .motorcycle.box h2 a {
+                color: inherit !important;
+                text-decoration: none !important;
+                transition: color 0.3s ease !important;
+            }
+            
+            .motorcycle.box:hover h2 a {
+                color: #b59349 !important;
+            }
+            
+            .motorcycle.box .category-label {
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 600 !important;
+                font-size: 0.75rem !important;
+                color: #b59349 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1.5px !important;
+                margin-bottom: 14px !important;
+                display: inline-block !important;
+                padding: 4px 12px !important;
+                background: rgba(181, 147, 73, 0.1) !important;
+                border-radius: 20px !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            .motorcycle.box:hover .category-label {
+                background: rgba(181, 147, 73, 0.2) !important;
+                transform: scale(1.05) !important;
+            }
+            
+            .motorcycle.box .price-section {
+                margin-bottom: 18px !important;
+            }
+            
+            .motorcycle.box .price-main {
+                font-size: 1.4rem !important;
+                color: #b59349 !important;
+                font-weight: 800 !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+            }
+            
+            .motorcycle.box .price-unit {
+                font-size: 0.9rem !important;
+                color: #6c757d !important;
+                font-weight: 500 !important;
             }
 
             .button-wrapper {
-                margin-top: 18px;
+                margin-top: auto !important;
+                width: 100%;
+                display: flex !important;
+                gap: 12px;
+                padding-top: 20px;
+                justify-content: center;
             }
-
             .btn {
                 border: none;
                 padding: 12px 24px;
@@ -353,10 +903,93 @@
                 font-weight: 700;
                 letter-spacing: 1px;
                 cursor: pointer;
+                min-width: 100px;
+                min-height: 44px;
+                white-space: nowrap;
             }
 
             .btn + .btn {
                 margin-left: 10px;
+            }
+
+            .motorcycle.box .button-wrapper a.btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                text-decoration: none !important;
+                min-width: 120px !important;
+                height: 48px !important;
+                padding: 0 24px !important;
+                border-radius: 12px !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-size: 0.85rem !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.5px !important;
+                cursor: pointer !important;
+                white-space: nowrap !important;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+                box-sizing: border-box !important;
+                position: relative !important;
+                overflow: hidden !important;
+            }
+            
+            .motorcycle.box .button-wrapper a.btn::before {
+                content: '' !important;
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                width: 0 !important;
+                height: 0 !important;
+                border-radius: 50% !important;
+                background: rgba(255, 255, 255, 0.3) !important;
+                transform: translate(-50%, -50%) !important;
+                transition: width 0.6s, height 0.6s !important;
+            }
+            
+            .motorcycle.box .button-wrapper a.btn:hover::before {
+                width: 300px !important;
+                height: 300px !important;
+            }
+            
+            .motorcycle.box .button-wrapper a.outline-huhu {
+                background: #ffffff !important;
+                color: #b59349 !important;
+                border: 2px solid #b59349 !important;
+                box-shadow: 0 2px 8px rgba(181, 147, 73, 0.15) !important;
+            }
+            
+            .motorcycle.box .button-wrapper a.outline-huhu:hover {
+                transform: translateY(-3px) scale(1.02) !important;
+                background: #b59349 !important;
+                color: #ffffff !important;
+                box-shadow: 0 8px 20px rgba(181, 147, 73, 0.35) !important;
+            }
+            
+            .motorcycle.box .button-wrapper a.fill {
+                background: linear-gradient(135deg, #b59349 0%, #d4a574 100%) !important;
+                color: #ffffff !important;
+                border: 2px solid #b59349 !important;
+                box-shadow: 0 4px 12px rgba(181, 147, 73, 0.3) !important;
+            }
+            
+            .motorcycle.box .button-wrapper a.fill:hover {
+                transform: translateY(-3px) scale(1.02) !important;
+                background: linear-gradient(135deg, #d4a574 0%, #b59349 100%) !important;
+                box-shadow: 0 8px 24px rgba(181, 147, 73, 0.45) !important;
+                border-color: #d4a574 !important;
+            }
+            
+            .motorcycle.box .button-wrapper a.disabled {
+                background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%) !important;
+                color: #999999 !important;
+                border: 2px solid #d0d0d0 !important;
+                cursor: not-allowed !important;
+                pointer-events: none !important;
+                box-shadow: none !important;
+            }
+            
+            .motorcycle.box .button-wrapper a.disabled:hover {
+                transform: none !important;
             }
 
             .outline-huhu {
@@ -404,179 +1037,355 @@
 
             .fill:hover {
                 transform: scale(1.05) !important;
-                background: #a38241 !important;
-                color: #fff !important;
-                border-color: #a38241 !important;
+                background: transparent !important;
+                color: #b59349 !important;
+                border: 1px solid #b59349 !important;
                 text-decoration: none !important;
-                filter: drop-shadow(0 10px 5px rgba(0,0,0,0.05)) !important;
             }
 
-            .fill.disabled {
-                opacity: 0.6 !important;
-                pointer-events: none !important;
+            .disabled {
+                background: #e0e0e0 !important;
+                color: #9e9e9e !important;
+                border: 1px solid #e0e0e0 !important;
                 cursor: not-allowed !important;
             }
 
-            .box {
-                box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-                border-radius: 12px;
-                border: 1px solid rgba(181, 147, 73, 0.15);
-                padding: 24px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                margin: 20px;
-                background: #ffffff;
-                transition: all 0.3s ease !important;
+            .disabled:hover {
+                transform: none !important;
+                background: #e0e0e0 !important;
+                color: #9e9e9e !important;
             }
-
-            .box:hover {
-                border-color: #b59349 !important;
-                box-shadow: 0 10px 40px rgba(181, 147, 73, 0.08) !important;
-                transform: translateY(-5px) !important;
-            }
-
-            .xemthem {
-                border: 2px solid #b59349 !important;
-                background: transparent !important;
-                color: #b59349 !important;
-                font-family: 'Plus Jakarta Sans', sans-serif !important;
-                font-weight: 700 !important;
-                transition: all 0.3s ease !important;
-            }
-
-            .xemthem:hover {
-                background: #b59349 !important;
-                color: white !important;
+            
+            /* Modern Pagination Styling */
+            .pagination-list {
+                display: flex !important;
+                gap: 8px !important;
+                align-items: center !important;
             }
 
             .page-link-custom {
-                display: inline-block;
-                width: 42px;
-                height: 42px;
-                line-height: 40px;
-                text-align: center;
-                border-radius: 50%;
-                border: 1px solid rgba(181, 147, 73, 0.25);
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 44px !important;
+                height: 44px !important;
+                border-radius: 14px !important;
+                background: #ffffff !important;
                 color: #b59349 !important;
-                background: transparent;
-                font-weight: 600;
-                text-decoration: none;
-                transition: all 0.3s ease;
-                cursor: pointer;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 16px !important;
+                text-decoration: none !important;
+                border: 1px solid rgba(181, 147, 73, 0.2) !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
             }
+
             .page-link-custom:hover {
-                background: rgba(181, 147, 73, 0.1);
-                border-color: #b59349;
-                color: #b59349 !important;
-                transform: translateY(-2px);
-            }
-            .page-link-custom.active {
                 background: #b59349 !important;
                 color: #ffffff !important;
-                border-color: transparent !important;
-                box-shadow: 0 4px 10px rgba(181, 147, 73, 0.3);
+                box-shadow: 0 6px 16px rgba(181, 147, 73, 0.25) !important;
+                transform: translateY(-3px) !important;
+                border-color: #b59349 !important;
+            }
+
+            .page-link-custom.active {
+                background: linear-gradient(135deg, #b59349 0%, #d4b572 100%) !important;
+                color: #ffffff !important;
+                border: none !important;
+                box-shadow: 0 6px 16px rgba(181, 147, 73, 0.35) !important;
+                cursor: default !important;
+                pointer-events: none !important;
+            }
+            
+            .page-link-custom i {
+                font-size: 14px;
+            }
+            
+            /* Custom Return Button */
+            .btn-return-custom {
+                padding: 10px 24px !important;
+                border-radius: 30px !important;
+                text-decoration: none !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                background: #ffffff !important;
+                color: #b59349 !important;
+                border: 1px solid rgba(181, 147, 73, 0.3) !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 15px !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+
+            .btn-return-custom:hover {
+                background: #b59349 !important;
+                color: #ffffff !important;
+                border-color: #b59349 !important;
+                transform: translateY(-2px) !important;
+                box-shadow: 0 4px 12px rgba(181, 147, 73, 0.2) !important;
+            }
+            
+            /* Ensure motorcycle cards display properly */
+            .motorcycle.box {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                animation: fadeInUp 0.6s ease-out;
+                animation-fill-mode: both;
+            }
+            
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .motorcycle.box:nth-child(1) { animation-delay: 0.1s; }
+            .motorcycle.box:nth-child(2) { animation-delay: 0.2s; }
+            .motorcycle.box:nth-child(3) { animation-delay: 0.3s; }
+            .motorcycle.box:nth-child(4) { animation-delay: 0.4s; }
+            .motorcycle.box:nth-child(5) { animation-delay: 0.5s; }
+            .motorcycle.box:nth-child(6) { animation-delay: 0.6s; }
+            .motorcycle.box:nth-child(n+7) { animation-delay: 0.7s; }
+            
+            .motorcycle.box .banner-image a {
+                display: block;
+                width: 100%;
+            }
+            
+            .motorcycle.box .banner-image img {
+                display: block;
+                width: 100%;
+            }
+            
+            /* Fix column gutters for motorcycle grid */
+            .wrapper.row.mb-4 {
+                margin-bottom: 1.5rem;
+            }
+            
+            [class*="col-"].mb-4 {
+                margin-bottom: 1.5rem !important;
+            }
+            
+            /* List section styling */
+            .list {
+                max-width: 1240px;
+                margin: 0 auto;
+                padding: 40px 20px;
+            }
+            
+            .list-subtitle {
+                display: inline-block;
+                color: #b59349;
+                font-size: 13px;
+                font-weight: 800;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                margin-bottom: 10px;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            
+            .list h1 {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 36px;
+                font-weight: 800;
+                color: #1a1816;
+                margin-bottom: 30px;
+                letter-spacing: -0.5px;
+            }
+            
+            .no-results-message {
+                width: 100%;
+                padding: 60px 20px;
+                font-size: 18px;
+                color: #6c757d;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-weight: 500;
+            }
+            
+            /* Ensure proper Bootstrap grid behavior */
+            @media (min-width: 768px) {
+                .col-md-6 {
+                    flex: 0 0 50%;
+                    max-width: 50%;
+                }
+            }
+            
+            @media (min-width: 992px) {
+                .col-lg-4 {
+                    flex: 0 0 33.333333%;
+                    max-width: 33.333333%;
+                }
+            }
+            
+            @media (max-width: 767px) {
+                .col-md-6, .col-lg-4 {
+                    flex: 0 0 100%;
+                    max-width: 100%;
+                }
             }
         </style>
     </head>
-
     <body>
         <jsp:include page="/includes/customer/navbar.jsp" />
-        <div class="container" style="margin-top: 130px; margin-bottom: 40px; position: relative; z-index: 99; overflow: visible !important;">
+
+        <div class="vehicle-filter-shell" style="margin-top: 130px; margin-bottom: 40px; position: relative; z-index: 99; overflow: visible !important;">
             <!-- thanh search -->
             <section style="overflow: visible !important;">
-                <div class="filter-module" style="background: white; border-radius: 20px; padding: 25px 35px; box-shadow: 0 15px 40px rgba(0,0,0,0.06); border: 1px solid rgba(181,147,73,0.1);">
+                <div class="filter-module">
+                    <div class="filter-heading">
+                        <div>
+                            <span class="filter-eyebrow">Tìm kiếm nhanh</span>
+                            <h2>Tìm chiếc xe phù hợp với bạn</h2>
+                        </div>
+                        <p>Tìm theo tên xe hoặc kết hợp nhiều tiêu chí để thu hẹp kết quả chính xác hơn.</p>
+                    </div>
+
                     <!-- HÀNG 1: Ô Tìm Kiếm Từ Khóa -->
-                    <div class="filter-search-row" style="margin-bottom: 20px;">
-                        <form action="searchMotorcycle" method="get" style="display: flex; gap: 15px; align-items: center; width: 100%;">
-                            <div style="flex: 1; position: relative;">
-                                <input id="textSearch" style="width: 100%; padding: 16px 24px; padding-left: 50px; border-radius: 50px; border: 1px solid rgba(181,147,73,0.3); font-size: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);" value="${key}" name="textSearch" class="form-control" type="search" placeholder="Nhập tên xe, dòng xe bạn muốn tìm..." aria-label="Search">
-                                <i class="fa fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #b59349; font-size: 1.2rem;"></i>
+                    <div class="filter-search-row">
+                        <form action="searchMotorcycle" method="get" class="filter-search-form">
+                            <div class="filter-search-field">
+                                <input id="textSearch" value="${key}" name="textSearch" type="search" placeholder="Nhập tên hoặc dòng xe, ví dụ: Vision, Air Blade..." aria-label="Tìm kiếm xe máy">
+                                <i class="bi bi-search search-icon"></i>
                             </div>
-                            <button class="btn xemketqua" style="border-radius: 50px; padding: 16px 36px; white-space: nowrap; font-weight: bold; color: white; font-size: 1rem; box-shadow: 0 4px 15px rgba(181,147,73,0.3);" type="submit">Tìm kiếm</button>
+                            <button class="filter-search-submit" type="submit">
+                                <i class="bi bi-search"></i>
+                                <span>Tìm kiếm</span>
+                            </button>
                         </form>
                     </div>
 
                     <!-- HÀNG 2: Các Dropdown Lọc Kết Quả -->
-                    <div class="filter-dropdowns-row" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: center; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.05);">
+                    <div class="filter-toolbar">
                         <div class="filter-group">
-
-                                <button class="filter-button price" onclick="toggleOptions('priceOptions')">Giá</button>
+                                <button type="button" class="filter-button price" data-label="Giá thuê" onclick="toggleOptions('priceOptions')">
+                                    <span class="filter-button-icon"><i class="bi bi-cash-stack"></i></span>
+                                    <span class="filter-button-copy">
+                                        <span class="filter-label">Giá thuê</span>
+                                        <span class="filter-status">Tất cả mức giá</span>
+                                    </span>
+                                </button>
                                 <div class="filter-options" id="priceOptions">
                                     <c:forEach items="${listPriceRange}" var="o">
                                         <input hidden name="priceRanges" value="${o.minPrice},${o.maxPrice}"/>
-                                        <button data-id="${o.minPrice},${o.maxPrice}" class="button-item-option" onclick="toggleSelection(this)">
+                                        <button type="button" data-id="${o.minPrice},${o.maxPrice}" class="button-item-option" onclick="toggleSelection(this)">
                                             <c:if test="${o.minPrice == 0}">
-                                                Dưới <fmt:formatNumber value="${o.maxPrice}" pattern="#,##0.000"/>VNĐ/day
+                                                Dưới <fmt:formatNumber value="${o.maxPrice}" type="number" maxFractionDigits="0"/>₫/ngày
                                             </c:if>
                                             <c:if test="${o.minPrice != 0 && o.maxPrice != 0}">
-                                                <fmt:formatNumber value="${o.minPrice}" pattern="#,##0.000"/> - <fmt:formatNumber value="${o.maxPrice}" pattern="#,##0.000"/>VNĐ/day
+                                                <fmt:formatNumber value="${o.minPrice}" type="number" maxFractionDigits="0"/> - <fmt:formatNumber value="${o.maxPrice}" type="number" maxFractionDigits="0"/>₫/ngày
                                             </c:if>
 
                                             <c:if test="${o.maxPrice == 0}">
-                                                <fmt:formatNumber value="${o.minPrice}" pattern="#,##0.000"/>VNĐ/day trở lên
+                                                Từ <fmt:formatNumber value="${o.minPrice}" type="number" maxFractionDigits="0"/>₫/ngày
                                             </c:if>
                                         </button>
                                     </c:forEach>
                                 </div>
                             </div>
                             <div class="filter-group">
-                                <button class="filter-button" onclick="toggleOptions('brandOptions')">Hãng</button>
+                                <button type="button" class="filter-button" data-label="Hãng xe" onclick="toggleOptions('brandOptions')">
+                                    <span class="filter-button-icon"><i class="bi bi-award"></i></span>
+                                    <span class="filter-button-copy">
+                                        <span class="filter-label">Hãng xe</span>
+                                        <span class="filter-status">Tất cả hãng</span>
+                                    </span>
+                                </button>
                                 <div class="filter-options" id="brandOptions">
                                     <c:forEach items="${listBrand}" var="o">
                                         <input hidden name="brands" value="${o.brandID}" id="searchBrand">
-                                        <button class="button-item-option" data-id="${o.brandID}" 
-                                                onclick="toggleSelection(this)">${o.brandName}</button>
+                                        <button type="button" class="button-item-option" data-id="${o.brandID}"
+                                                 onclick="toggleSelection(this)">${o.brandName}</button>
                                     </c:forEach>
                                 </div>
                             </div>
 
                             <div class="filter-group">
-                                <button class="filter-button" onclick="toggleOptions('categoryOptions')">Loại</button>
+                                <button type="button" class="filter-button" data-label="Loại xe" onclick="toggleOptions('categoryOptions')">
+                                    <span class="filter-button-icon"><i class="bi bi-grid"></i></span>
+                                    <span class="filter-button-copy">
+                                        <span class="filter-label">Loại xe</span>
+                                        <span class="filter-status">Tất cả loại xe</span>
+                                    </span>
+                                </button>
                                 <div class="filter-options" id="categoryOptions">
                                     <c:forEach items="${categories}" var="o">
                                         <input hidden name="categories" value="${o.categoryID}" id="searchCategory">
-                                        <button class="button-item-option"  data-id="${o.categoryID}" 
-                                                onclick="toggleSelection(this)">${o.categoryName}</button>
+                                        <button type="button" class="button-item-option" data-id="${o.categoryID}"
+                                                 onclick="toggleSelection(this)">${o.categoryName}</button>
                                     </c:forEach>
                                 </div>
                             </div>
 
                             <div class="filter-group">
-                                <button class="filter-button" onclick="toggleOptions('massOptions')">Phân khối</button>
+                                <button type="button" class="filter-button" data-label="Phân khối" onclick="toggleOptions('massOptions')">
+                                    <span class="filter-button-icon"><i class="bi bi-speedometer2"></i></span>
+                                    <span class="filter-button-copy">
+                                        <span class="filter-label">Phân khối</span>
+                                        <span class="filter-status">Tất cả dung tích</span>
+                                    </span>
+                                </button>
                                 <div class="filter-options" id="massOptions">
+                                    <% 
+                                        java.util.List<String> listDisp = (java.util.List<String>) application.getAttribute("listDisplacement");
+                                        if(listDisp != null) {
+                                            java.util.Collections.sort(listDisp, new java.util.Comparator<String>() {
+                                                public int compare(String s1, String s2) {
+                                                    int num1 = extract(s1);
+                                                    int num2 = extract(s2);
+                                                    if(num1 != num2) return Integer.compare(num1, num2);
+                                                    if(s1 == null) return -1;
+                                                    if(s2 == null) return 1;
+                                                    return s1.compareTo(s2);
+                                                }
+                                                int extract(String s) {
+                                                    if(s == null) return 0;
+                                                    String n = s.replaceAll("[^0-9]", "");
+                                                    return n.isEmpty() ? 0 : Integer.parseInt(n);
+                                                }
+                                            });
+                                        }
+                                    %>
                                     <c:forEach items="${listDisplacement}" var="o">
                                         <input hidden name="displacements" value="${o}" id="searchDisplacement">
-                                        <button class="button-item-option" data-id="${o}" 
-                                                onclick="toggleSelection(this)">${o}</button>
+                                        <button type="button" class="button-item-option" data-id="${o}"
+                                                 onclick="toggleSelection(this)">${o}</button>
                                     </c:forEach>
                                 </div>
                             </div>
 
                             <div class="filter-group">
-                                <button class="filter-button" onclick="toggleOptions('needOptions')">Nhu cầu</button>
+                                <button type="button" class="filter-button" data-label="Nhu cầu" onclick="toggleOptions('needOptions')">
+                                    <span class="filter-button-icon"><i class="bi bi-signpost-split"></i></span>
+                                    <span class="filter-button-copy">
+                                        <span class="filter-label">Nhu cầu</span>
+                                        <span class="filter-status">Mọi mục đích</span>
+                                    </span>
+                                </button>
                                 <div class="filter-options" id="needOptions">
                                     <c:forEach items="${listDemand}" var="o">
                                         <input hidden name="demands" value="${o.demandId}" id="searchDemand">
-                                        <button class="button-item-option" data-id="${o.demandId}" onclick="toggleSelection(this)">${o.demand}</button>
+                                        <button type="button" class="button-item-option" data-id="${o.demandId}" onclick="toggleSelection(this)">${o.demand}</button>
                                     </c:forEach>
                                 </div>
                             </div>
 
-                        <div class="filter-group">
-                            <button class="filter-button xemketqua" style="color: white; border-radius: 30px; padding: 12px 24px;" onclick="showResults()">Lọc kết quả</button>
-                        </div>
-                    </div>
-
+                        <button type="button" class="filter-apply-button" onclick="showResults()" style="display: none;">
+                            <i class="bi bi-sliders2"></i>
+                            <span>Áp dụng bộ lọc</span>
+                        </button>
                     </div>
 
                     <div class="selected-filters" id="selectedFilters">
                         <!-- Selected filters will be displayed here -->
                     </div>
                 </div>
-
                 <!-- SMART ASSISTANT BANNER -->
                 <div class="container" style="margin-top: 40px; margin-bottom: 20px;">
                     <div style="background: linear-gradient(135deg, #1a1816 0%, #362f27 100%); border-radius: 24px; padding: 40px; color: white; box-shadow: 0 20px 40px rgba(0,0,0,0.15); position: relative; overflow: hidden;">
@@ -658,44 +1467,51 @@
                             </c:if>
 
                             <c:forEach var="motorbike" items="${motorcycles}">
-                                <div class="motorcycle box col-md-3">
-                                    <div class="banner-image">
-                                        <img src="images/${motorbike.image}" width="100%" height="100%" alt="alt"/>
-                                    </div>
-                                    <h2 style="margin: 16px;" href="motorcycleDetail?id=${motorbike.motorcycleId}"><strong>${motorbike.model}</strong></h2>
-                                    <p style="font-weight: bold;">${categoryMap[motorbike.categoryID]}<br/>
-                                        <c:choose>
-                                            <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
-                                                <div style="display: flex; gap: 8px; justify-content: center; align-items: baseline; margin-top: 5px;">
-                                                    <span style="font-size: 14px; color: #999; text-decoration: line-through;">
-                                                        <fmt:formatNumber value="${priceMap[motorbike.priceListID] * 1000}" type="number" maxFractionDigits="0"/>₫
-                                                    </span>
-                                                    <span style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px;">
-                                                        -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
-                                                    </span>
-                                                </div>
-                                                <span style="font-size: 18px; color: #b59349;"><fmt:formatNumber value="${priceMap[motorbike.priceListID] * (1 - activeEvent.discount) * 1000}" type="number" maxFractionDigits="0"/>₫/ngày</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <fmt:formatNumber value="${priceMap[motorbike.priceListID] * 1000}" type="number" maxFractionDigits="0"/>₫/ngày
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </p>
-                                    <div class="button-wrapper" style="display: flex; gap: 10px; justify-content: center; width: 100%; margin-top: 18px;">
-                                        <a href="motorcycleDetail?id=${motorbike.motorcycleId}" class="btn outline-huhu" style="flex: 1; text-align: center; display: inline-flex; align-items: center; justify-content: center;">CHI TIẾT</a>
-                                        <c:choose>
-                                            <c:when test="${not empty listMA[motorbike.motorcycleId]}">
-                                                <a href="booking?motorcycleid=${motorbike.motorcycleId}" class="btn fill" style="flex: 1; text-align: center; display: inline-flex; align-items: center; justify-content: center;">THUÊ NGAY</a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="#" class="btn fill disabled" style="flex: 1; text-align: center; display: inline-flex; align-items: center; justify-content: center;">HẾT XE</a>
-                                            </c:otherwise>
-                                        </c:choose>
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="motorcycle box h-100">
+                                        <div class="banner-image">
+                                            <a href="motorcycleDetail?id=${motorbike.motorcycleId}"><img src="images/${motorbike.image}" style="width:100%; height:auto; object-fit:contain; max-height: 220px;" alt="${motorbike.model}"/></a>
+                                        </div>
+                                        <h2><a href="motorcycleDetail?id=${motorbike.motorcycleId}">${motorbike.model}</a></h2>
+                                        <div class="category-label">${categoryMap[motorbike.categoryID]}</div>
+                                        <div class="price-section">
+                                            <c:choose>
+                                                <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                    <div style="display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 5px;">
+                                                        <span style="font-size: 14px; color: #999; text-decoration: line-through;">
+                                                            <fmt:formatNumber value="${priceMap[motorbike.priceListID]}" type="number" maxFractionDigits="0"/>₫
+                                                        </span>
+                                                        <span style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px;">
+                                                            -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                        </span>
+                                                    </div>
+                                                    <div class="price-main">
+                                                        <fmt:formatNumber value="${priceMap[motorbike.priceListID] * (1 - activeEvent.discount)}" type="number" maxFractionDigits="0"/>₫<span class="price-unit">/ngày</span>
+                                                    </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="price-main">
+                                                        <fmt:formatNumber value="${priceMap[motorbike.priceListID]}" type="number" maxFractionDigits="0"/>₫<span class="price-unit">/ngày</span>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                        <div class="button-wrapper">
+                                            <a href="motorcycleDetail?id=${motorbike.motorcycleId}" class="btn outline-huhu">CHI TIẾT</a>
+                                            <c:choose>
+                                                <c:when test="${not empty listMA[motorbike.motorcycleId]}">
+                                                    <a href="booking?motorcycleid=${motorbike.motorcycleId}" class="btn fill">THUÊ NGAY</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="#" class="btn fill disabled">HẾT XE</a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
                                     </div>
                                 </div>
                             </c:forEach>
                         </div>
-                        <div class="row mt-5">
+<div class="row mt-5">
                             <div class="col text-center">
                                 <div class="block-27">
                                      <c:choose>
@@ -704,12 +1520,12 @@
                                          </c:when>
                                          <c:otherwise>
                                              <c:if test="${search != 'default'}">
-                                                 <div class="reset-filter-container" style="display: flex; justify-content: center; margin-bottom: 25px;">
-                                                     <a href="motorcycle" class="btn xemthem" style="padding: 10px 24px; border-radius: 30px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                                                         <i class="fa fa-arrow-left"></i> Trở về trang xe máy ban đầu
-                                                     </a>
-                                                 </div>
-                                             </c:if>
+                                                <div class="reset-filter-container" style="display: flex; justify-content: center; margin-bottom: 25px;">
+                                                    <a href="motorcycle" class="btn-return-custom">
+                                                        <i class="bi bi-arrow-left"></i> Trở về trang xe máy ban đầu
+                                                    </a>
+                                                </div>
+                                            </c:if>
                                              <div class="pagination-container" style="display: flex; justify-content: center; margin-top: 20px;">
                                                  <ul class="pagination-list" style="display: inline-flex; list-style: none; gap: 8px; justify-content: center; padding: 0;">
                                                      <!-- Nút quay lại (Prev) -->
@@ -885,6 +1701,9 @@
                                                         currentOpenOptions.previousElementSibling.classList.remove('open');
                                                         currentOpenOptions = null;
                                                     }
+                                                    
+                                                    // Thêm auto-submit
+                                                    showResults();
                                                 }
 
                                                 // Auto-close dropdown when clicking outside
@@ -905,28 +1724,35 @@
                                                     var selectedFilters = Array.from(selectedButtons).map(function (button) {
                                                         return {
                                                             text: button.textContent.trim(),
-                                                            group: button.closest('.filter-group').querySelector('.filter-button').textContent.trim()
+                                                            group: button.closest('.filter-group').querySelector('.filter-label').textContent.trim()
                                                         };
                                                     });
                                                     var selectedFiltersContainer = document.getElementById('selectedFilters');
                                                     selectedFiltersContainer.innerHTML = '';
+                                                    
+                                                    var clearAllButton = null;
+                                                    
                                                     if (selectedFilters.length > 0) {
                                                         var header = document.createElement('h2');
                                                         header.textContent = 'Đang lọc theo';
                                                         selectedFiltersContainer.appendChild(header);
 
-                                                        var clearAllButton = document.createElement('div');
-                                                        clearAllButton.className = 'selected-filter';
+                                                        clearAllButton = document.createElement('div');
+                                                        clearAllButton.className = 'selected-filter clear-all-filter';
                                                         clearAllButton.innerHTML = '<span>× Bỏ chọn tất cả</span>';
                                                         clearAllButton.onclick = clearAllSelections;
-                                                        selectedFiltersContainer.appendChild(clearAllButton)
                                                     }
+                                                    
                                                     selectedFilters.forEach(function (filter) {
                                                         var filterDiv = document.createElement('div');
                                                         filterDiv.className = 'selected-filter';
-                                                        filterDiv.innerHTML = '<span>' + filter.group + ': ' + filter.text + '</span><span class="remove-filter" onclick="removeSelectedFilter(this.parentElement, \'' + filter.text + '\')">&#10006;</span>';
+                                                        filterDiv.innerHTML = '<span><strong style="color: #9c7b39; font-weight: 800;">' + filter.group + ':</strong> ' + filter.text + '</span><span class="remove-filter" onclick="removeSelectedFilter(this.parentElement, &quot;' + filter.text + '&quot;)">&#10006;</span>';
                                                         selectedFiltersContainer.appendChild(filterDiv);
                                                     });
+                                                    
+                                                    if (clearAllButton !== null) {
+                                                        selectedFiltersContainer.appendChild(clearAllButton);
+                                                    }
                                                 }
 
                                                 function removeSelectedFilter(filterDiv, text) {
@@ -938,6 +1764,7 @@
                                                     });
                                                     filterDiv.remove();
                                                     updateSelectedFilters();
+                                                    showResults();
                                                 }
 
                                                 function clearAllSelections() {
@@ -946,6 +1773,7 @@
                                                         button.classList.remove('selected');
                                                     });
                                                     updateSelectedFilters();
+                                                    showResults();
                                                 }
                                                 var currentOpenOptions = null;
 
@@ -1015,16 +1843,126 @@
                                                     }
 
                                                     // Remove the trailing '&'
-                                                    url = url.slice(0, -1);
+                                                    if (url.endsWith('&')) {
+                                                        url = url.slice(0, -1);
+                                                    }
+                                                    if (url === 'searchCriteria?') {
+                                                        url = 'motorcycle';
+                                                    }
 
-                                                    window.location.href = url;
+                                                    fetchAndUpdateGrid(url);
+                                                }
+
+                                                function fetchAndUpdateGrid(url) {
+                                                    const grid = document.getElementById('motorcycleContent');
+                                                    if (grid) {
+                                                        grid.style.opacity = '0.5';
+                                                        grid.style.transition = 'opacity 0.3s ease';
+                                                    }
+                                                    
+                                                    window.history.pushState({}, '', url);
+                                                    
+                                                    fetch(url)
+                                                        .then(response => response.text())
+                                                        .then(html => {
+                                                            const parser = new DOMParser();
+                                                            const doc = parser.parseFromString(html, 'text/html');
+                                                            
+                                                            const newContent = doc.getElementById('motorcycleContent');
+                                                            if (newContent && grid) {
+                                                                grid.innerHTML = newContent.innerHTML;
+                                                                grid.style.opacity = '1';
+                                                            }
+                                                            
+                                                            const newPagination = doc.querySelector('.block-27');
+                                                            const currentPagination = document.querySelector('.block-27');
+                                                            if (newPagination && currentPagination) {
+                                                                currentPagination.innerHTML = newPagination.innerHTML;
+                                                            }
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('Error fetching results:', error);
+                                                            if (grid) grid.style.opacity = '1';
+                                                        });
                                                 }
 
                                                 function goToPage(index) {
                                                     const urlParams = new URLSearchParams(window.location.search);
                                                     urlParams.set('index', index);
-                                                    window.location.search = urlParams.toString();
+                                                    
+                                                    const basePath = window.location.pathname.split('/').pop() || 'motorcycle';
+                                                    const url = basePath + '?' + urlParams.toString();
+                                                    
+                                                    fetchAndUpdateGrid(url);
+                                                    
+                                                    const listSection = document.querySelector('.list');
+                                                    if (listSection) {
+                                                        listSection.scrollIntoView({ behavior: 'smooth' });
+                                                    }
                                                 }
-    </script>
+    
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    const params = new URLSearchParams(window.location.search);
+                                                    
+                                                    function restoreState(paramName, sectionId) {
+                                                        if (params.has(paramName)) {
+                                                            const values = params.get(paramName).split(',');
+                                                            const container = document.getElementById(sectionId);
+                                                            if(container) {
+                                                                const buttons = container.querySelectorAll('.button-item-option');
+                                                                buttons.forEach(btn => {
+                                                                    if (values.includes(btn.getAttribute('data-id'))) {
+                                                                        btn.classList.add('selected');
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                    restoreState('priceRanges', 'priceOptions');
+                                                    restoreState('brands', 'brandOptions');
+                                                    restoreState('categories', 'categoryOptions');
+                                                    restoreState('displacements', 'massOptions');
+                                                    restoreState('demands', 'needOptions');
+                                                    
+                                                    updateSelectedFilters();
+                                                });
+
+
+                                                window.addEventListener('popstate', function() {
+                                                    fetchAndUpdateGrid(window.location.href);
+                                                    
+                                                    // Cập nhật lại giao diện bộ lọc tương ứng với URL (khôi phục trạng thái visual)
+                                                    const params = new URLSearchParams(window.location.search);
+                                                    
+                                                    document.querySelectorAll('.button-item-option').forEach(btn => {
+                                                        btn.classList.remove('selected');
+                                                    });
+                                                    
+                                                    function restoreState(paramName, sectionId) {
+                                                        if (params.has(paramName)) {
+                                                            const values = params.get(paramName).split(',');
+                                                            const container = document.getElementById(sectionId);
+                                                            if(container) {
+                                                                const buttons = container.querySelectorAll('.button-item-option');
+                                                                buttons.forEach(btn => {
+                                                                    if (values.includes(btn.getAttribute('data-id'))) {
+                                                                        btn.classList.add('selected');
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                    restoreState('priceRanges', 'priceOptions');
+                                                    restoreState('brands', 'brandOptions');
+                                                    restoreState('categories', 'categoryOptions');
+                                                    restoreState('displacements', 'massOptions');
+                                                    restoreState('demands', 'needOptions');
+                                                    
+                                                    updateSelectedFilters();
+                                                });
+
+</script>
 </body>
 </html>

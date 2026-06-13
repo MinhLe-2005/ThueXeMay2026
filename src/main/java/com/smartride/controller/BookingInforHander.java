@@ -7,10 +7,17 @@ import com.smartride.dao.BookingDAO;
 import com.smartride.dao.BookingDetailDAO;
 import com.smartride.dao.CustomerDAO;
 import com.smartride.dao.MotorcycleDetailDAO;
+import com.smartride.dao.MotorcycleDAO;
 import com.smartride.dao.MotorcycleStatusDAO;
 import com.smartride.dao.PaymentDAO;
+import com.smartride.dao.PriceListDAO;
 import com.smartride.dto.AccessoryDetail;
 import com.smartride.dto.Customer;
+import com.smartride.dto.Event;
+import com.smartride.dto.Motorcycle;
+import com.smartride.dto.PriceList;
+import com.smartride.dao.EventDAO;
+import com.smartride.util.RentalPricingUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -253,8 +260,12 @@ public class BookingInforHander extends HttpServlet {
         String formattedDateString = currentDateTime.format(formatterDate);
 
         MotorcycleDetailDAO daoMD = MotorcycleDetailDAO.getInstance();
+        MotorcycleDAO daoM = MotorcycleDAO.getInstance();
+        PriceListDAO daoPrice = PriceListDAO.getInstance();
         MotorcycleStatusDAO daoMS = MotorcycleStatusDAO.getInstance();
         BookingDetailDAO daoBD = BookingDetailDAO.getInstance();
+        Event activeEvent = EventDAO.getInstance().getActiveEvent();
+        int rentalDays = RentalPricingUtil.calculateRentalDays(pickupDate, returnDate);
         Random random = new Random();
         
         // Map Ä‘á»ƒ lÆ°u sá»‘ lÆ°á»£ng xe theo tÃªn
@@ -262,7 +273,20 @@ public class BookingInforHander extends HttpServlet {
 
         for (HashMap<String, String> bikeDetail : bikeDetails) {
             String bikeName = bikeDetail.get("name");
+            String motorcycleId = bikeDetail.get("motorcycleId");
             int bikePrice = Integer.parseInt(bikeDetail.get("price"));
+
+            Motorcycle motorcycle = motorcycleId == null ? null : daoM.getMotorcycleByid(motorcycleId);
+            if (motorcycle != null) {
+                PriceList priceList = daoPrice.getPricingByid(String.valueOf(motorcycle.getPriceListID()));
+                if (priceList != null) {
+                    double dailyRate = RentalPricingUtil.selectDailyRate(priceList, rentalDays);
+                    double eventMultiplier = activeEvent != null && activeEvent.getDiscount() > 0
+                            ? 1 - activeEvent.getDiscount() : 1;
+                    bikePrice = (int) Math.round(dailyRate * eventMultiplier * rentalDays);
+                }
+            }
+
             bikeCounts.put(bikeName, bikeCounts.getOrDefault(bikeName, 0) + 1);
             List<Integer> list = daoMD.getListAvailableMotorcycleDetailIdByMotorcycleName(bikeName);
             int randomElement = list.get(random.nextInt(list.size()));

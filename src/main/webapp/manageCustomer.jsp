@@ -10,6 +10,7 @@
     <head>
         <meta charset="utf-8">
         <title>Manage Customer - SmartRide</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <!-- Vendor CSS Files -->
@@ -38,6 +39,66 @@
             .fa-toggle-on:before {
                 color: blue;
             }
+
+            /* Custom Table Styles matching Voucher page */
+            .table {
+                border-collapse: separate !important;
+                border-spacing: 0 !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 8px !important;
+                overflow: hidden !important;
+            }
+            .table th {
+                white-space: nowrap;
+                background-color: #f1f5f9 !important;
+                color: #334155 !important;
+                font-size: 0.85rem !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
+                padding: 14px 16px !important;
+                border-bottom: 2px solid #cbd5e1 !important;
+                border-right: 1px solid #e2e8f0 !important;
+            }
+            .table th:last-child {
+                border-right: none !important;
+            }
+            .table td {
+                vertical-align: middle !important;
+                padding: 14px 16px !important;
+                border-bottom: 1px solid #e2e8f0 !important;
+                border-right: 1px solid #e2e8f0 !important;
+            }
+            .table td:last-child {
+                border-right: none !important;
+            }
+            .table tr:last-child td {
+                border-bottom: none !important;
+            }
+
+            .datatable-top {
+                padding: 15px 0 !important;
+            }
+            .datatable-top > div:last-child {
+                position: relative;
+            }
+            .datatable-input {
+                width: 450px !important; 
+                max-width: 100%;
+                padding: 10px 20px 10px 45px !important; /* Space for the icon on the left */
+                border-radius: 25px !important; /* Beautiful pill shape */
+                border: 1px solid #ced4da !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+                transition: all 0.3s ease;
+                font-size: 14.5px;
+                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23b59349" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>') no-repeat 18px center !important;
+                background-color: #ffffff !important;
+                background-size: 16px !important;
+            }
+            .datatable-input:focus {
+                border-color: #b59349 !important;
+                box-shadow: 0 0 0 4px rgba(181, 147, 73, 0.15) !important;
+                outline: none !important;
+            }
         </style>
     </head>
     <body>
@@ -57,8 +118,8 @@
 
             <section class="section">
                 <div class="row flex-lg-nowrap">
-                    <!-- Main Content -->
-                    <div class="col-12 col-lg-9">
+                    <!-- Main Content (Full Width) -->
+                    <div class="col-12">
                         <div>
                             <ul class="nav nav-tabs nav-tabs-bordered">
                             <li class="nav-item">
@@ -78,7 +139,7 @@
                                     </div>
                                     <div class="e-table">
                                         <div class="table-responsive table-lg">
-                                            <table class="table table-hover table-borderless align-middle">
+                                            <table class="table table-hover align-middle datatable mb-0">
                                                 <thead class="table-light text-muted" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
                                                     <tr>
                                                         <th class="ps-3">ID</th>
@@ -162,7 +223,7 @@
                                     </div>
                                     <div class="e-table">
                                         <div class="table-responsive table-lg">
-                                            <table class="table table-hover table-borderless align-middle">
+                                            <table class="table table-bordered datatable mb-0">
                                                 <thead class="table-light text-muted" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
                                                     <tr>
                                                         <th class="ps-3">ID</th>
@@ -193,7 +254,7 @@
                                                             <td name="phoneNumber" class="text-nowrap align-middle">${accountK.phoneNumber}</td>
                                                             <td name="bookingId" class="text-nowrap align-middle">${bookingK.bookingID}</td>
                                                             <td name="endDate" class="text-nowrap align-middle">${bookingK.endDate}</td>
-                                                            <td name="overdueDays" class="text-danger fw-bold text-nowrap align-middle">${bookingK.overdueDays} </td>
+                                                            <td name="overdueDays" class="text-danger fw-bold text-nowrap align-middle">${bookingK.overdueDays} ngày</td>
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>
@@ -238,7 +299,8 @@
                                             <div class="position-relative d-inline-block mb-4">
                                                 <img id="modal-image" src="" alt="Profile" 
                                                      class="rounded-circle border border-4 border-white shadow-lg" 
-                                                     style="width: 150px; height: 150px; object-fit: cover; background-color: #fff;"
+                                                     style="width: 150px; height: 150px; object-fit: cover; background-color: #fff; cursor: pointer;"
+                                                     onclick="zoomImage(this.src)"
                                                      onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=User&background=random';">
                                             </div>
                                             <h4 class="fw-bold mb-1 text-white" id="modal-full-name">Tên Khách Hàng</h4>
@@ -305,8 +367,17 @@
 
                                             <!-- Ảnh CMND -->
                                             <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.75rem; letter-spacing: 1px;"><i class="fa fa-camera me-2"></i>Ảnh giấy tờ</h6>
-                                            <div class="bg-light border rounded-3 p-3 text-center d-flex align-items-center justify-content-center" style="min-height: 220px; border-style: dashed !important; border-width: 2px !important;">
-                                                <img id="modal-id-card-image" src="" alt="ID Card" class="img-fluid rounded shadow-sm" style="max-height: 280px; display: none; object-fit: contain;">
+                                            <div class="bg-light border rounded-3 p-3 text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 220px; border-style: dashed !important; border-width: 2px !important;">
+                                                <div id="modal-id-card-images" class="w-100 d-none flex-column gap-3">
+                                                    <div>
+                                                        <p class="small text-muted mb-1 fw-bold text-start"><i class="fa fa-id-card-o me-1"></i> Mặt trước</p>
+                                                        <img id="modal-id-card-front" src="" alt="Mặt trước" class="img-fluid rounded shadow-sm w-100" style="max-height: 250px; object-fit: contain; background: #fff; cursor: pointer;" onclick="zoomImage(this.src)" onerror="this.onerror=null; this.src='https://placehold.co/600x400/f8f9fa/a0aec0?text=Loi+Hien+Thi';">
+                                                    </div>
+                                                    <div>
+                                                        <p class="small text-muted mb-1 fw-bold text-start"><i class="fa fa-id-card me-1"></i> Mặt sau</p>
+                                                        <img id="modal-id-card-back" src="" alt="Mặt sau" class="img-fluid rounded shadow-sm w-100" style="max-height: 250px; object-fit: contain; background: #fff; cursor: pointer;" onclick="zoomImage(this.src)" onerror="this.onerror=null; this.src='https://placehold.co/600x400/f8f9fa/a0aec0?text=Loi+Hien+Thi';">
+                                                    </div>
+                                                </div>
                                                 <div id="modal-id-card-placeholder" class="text-muted">
                                                     <i class="fa fa-image fs-1 mb-3 text-secondary opacity-50"></i><br>
                                                     <span class="small fw-medium">Chưa cập nhật ảnh giấy tờ</span>
@@ -319,59 +390,44 @@
                         </div>
                     </div>
                 </div>
-                <!-- Right Sidebar / Filter -->
-                <div class="col-12 col-lg-3">
-                    <div class="card border-0 shadow-sm custom-card mb-4">
-                        <div class="card-body p-4">
-                            <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Thống kê & Trạng thái</h6>
-                            
-                            <div class="list-group list-group-flush border-bottom-0" id="statusFilterGroup">
-                                <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 active rounded-3 mb-1" data-status="all" style="cursor:pointer; background-color: rgba(184, 134, 11, 0.1); color: #b8860b; font-weight: bold; border-left: 4px solid #b8860b !important;">
-                                    <span><i class="fa fa-users me-2"></i>Tất cả</span>
-                                    <span class="badge bg-primary rounded-pill" style="background-color: #b8860b !important;">${allCount}</span>
-                                </button>
-                                <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded-3 mb-1" data-status="active" style="cursor:pointer">
-                                    <span class="text-success"><i class="fa fa-check-circle me-2"></i>Hoạt động</span>
-                                    <span class="badge bg-success rounded-pill">${activeCount}</span>
-                                </button>
-                                <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded-3 mb-1" data-status="disabled" style="cursor:pointer">
-                                    <span class="text-danger"><i class="fa fa-ban me-2"></i>Vô hiệu hóa</span>
-                                    <span class="badge bg-danger rounded-pill">${disabledCount}</span>
-                                </button>
-                            </div>
-                            
-                            <hr class="my-4">
-                            
-                            <form action="searchCustomer" method="post">
-                                <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">Tìm kiếm khách hàng</h6>
-                                <div class="form-group mb-3">
-                                    <label class="text-secondary small mb-1">Tên đăng nhập:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0 rounded-start-pill"><i class="fa fa-user-circle text-muted"></i></span>
-                                        <input name="username" class="form-control border-start-0 rounded-end-pill px-2" type="text" placeholder="Nhập username..." value="${param.username}">
-                                    </div>
-                                </div>
-                                <div class="form-group mb-4">
-                                    <label class="text-secondary small mb-1">Họ và tên:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0 rounded-start-pill"><i class="fa fa-id-card text-muted"></i></span>
-                                        <input name="name" class="form-control border-start-0 rounded-end-pill px-2" type="text" placeholder="Nhập họ và tên..." value="${param.name}">
-                                    </div>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <a href="manageCustomer" class="btn btn-light w-50 rounded-pill fw-medium shadow-sm border text-muted"><i class="fa fa-undo me-1"></i>Làm mới</a>
-                                    <button class="btn btn-primary w-50 rounded-pill fw-medium shadow-sm" type="submit"><i class="fa fa-search me-1"></i>Tìm kiếm</button>
-                                </div>
-                            </form>
                         </div>
                     </div>
-                <!-- End Right Sidebar -->
-            </div>         
+                </div>
+
+                <!-- Bottom Panels Row -->
+                <div class="row mt-4">
+                    <!-- Stats Panel -->
+                    <div class="col-12 col-md-4">
+                        <div class="card border-0 shadow-sm custom-card mb-4 h-100">
+                            <div class="card-body p-4">
+                                <h6 class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;"><i class="bi bi-bar-chart-fill me-2 text-warning"></i>Thống kê & Trạng thái</h6>
+                                
+                                <div class="list-group list-group-flush border-bottom-0" id="statusFilterGroup">
+                                    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 active rounded-3 mb-1" data-status="all" style="cursor:pointer; background-color: rgba(184, 134, 11, 0.1); color: #b8860b; font-weight: bold; border-left: 4px solid #b8860b !important;">
+                                        <span><i class="fa fa-users me-2"></i>Tất cả</span>
+                                        <span class="badge bg-primary rounded-pill" style="background-color: #b8860b !important;">${allCount}</span>
+                                    </button>
+                                    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded-3 mb-1" data-status="active" style="cursor:pointer">
+                                        <span class="text-success"><i class="fa fa-check-circle me-2"></i>Hoạt động</span>
+                                        <span class="badge bg-success rounded-pill">${activeCount}</span>
+                                    </button>
+                                    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded-3 mb-1" data-status="disabled" style="cursor:pointer">
+                                        <span class="text-danger"><i class="fa fa-ban me-2"></i>Vô hiệu hóa</span>
+                                        <span class="badge bg-danger rounded-pill">${disabledCount}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>         
             </section>
         </main>
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="staffAssets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="staffAssets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="staffAssets/js/main.js"></script>
     <script type="text/javascript">
                                         function openUserModal(button) {
                                             var modal = $('#user-form-modal');
@@ -396,11 +452,46 @@
                                             
                                             // Xử lý ảnh CMND/CCCD
                                             let idCardImg = button.getAttribute('data-idCardImage');
-                                            if (idCardImg && idCardImg.trim() !== '') {
-                                                modal.find('#modal-id-card-image').attr('src', 'images/' + idCardImg).show();
+                                            if (idCardImg && idCardImg.trim() !== '' && idCardImg.trim() !== 'null' && idCardImg.trim() !== 'undefined') {
+                                                let images = idCardImg.split(',');
+                                                
+                                                // Front Image
+                                                let frontSrc = '';
+                                                if (images[0] && images[0].trim() !== '' && images[0].trim() !== 'null') {
+                                                    let img = images[0].trim();
+                                                    frontSrc = img.startsWith('http') ? img : 'images/' + img;
+                                                }
+                                                
+                                                // Back Image
+                                                let backSrc = '';
+                                                if (images.length > 1 && images[1] && images[1].trim() !== '' && images[1].trim() !== 'null') {
+                                                    let img = images[1].trim();
+                                                    backSrc = img.startsWith('http') ? img : 'images/' + img;
+                                                }
+                                                
+                                                // Default placeholder URL
+                                                const placeholderUrl = 'https://placehold.co/600x400/f8f9fa/a0aec0?text=Chua+Cap+Nhat';
+                                                
+                                                // Handle Front Image View
+                                                if(frontSrc) {
+                                                    modal.find('#modal-id-card-front').attr('src', frontSrc);
+                                                } else {
+                                                    modal.find('#modal-id-card-front').attr('src', placeholderUrl);
+                                                }
+                                                modal.find('#modal-id-card-front').parent().show();
+                                                
+                                                // Handle Back Image View
+                                                if(backSrc) {
+                                                    modal.find('#modal-id-card-back').attr('src', backSrc);
+                                                } else {
+                                                    modal.find('#modal-id-card-back').attr('src', placeholderUrl);
+                                                }
+                                                modal.find('#modal-id-card-back').parent().show();
+                                                
+                                                modal.find('#modal-id-card-images').removeClass('d-none').addClass('d-flex');
                                                 modal.find('#modal-id-card-placeholder').hide();
                                             } else {
-                                                modal.find('#modal-id-card-image').hide().attr('src', '');
+                                                modal.find('#modal-id-card-images').removeClass('d-flex').addClass('d-none');
                                                 modal.find('#modal-id-card-placeholder').show();
                                             }
 
@@ -441,18 +532,41 @@
                                         });
 
                                         function filterTableByStatus(status) {
-                                            const rows = document.querySelectorAll("#customer-table-body tr");
+                                            const tbody = document.getElementById("customer-table-body");
+                                            if (!tbody) return;
+                                            
+                                            const rows = tbody.querySelectorAll("tr:not(.empty-msg-row)");
+                                            let visibleCount = 0;
+                                            
                                             rows.forEach(row => {
                                                 if (status === "all") {
                                                     row.style.display = "";
+                                                    visibleCount++;
                                                 } else if (status === "active" && row.classList.contains("active")) {
                                                     row.style.display = "";
+                                                    visibleCount++;
                                                 } else if (status === "disabled" && row.classList.contains("disabled")) {
                                                     row.style.display = "";
+                                                    visibleCount++;
                                                 } else {
                                                     row.style.display = "none";
                                                 }
                                             });
+                                            
+                                            let emptyRow = tbody.querySelector(".empty-msg-row");
+                                            if (visibleCount === 0) {
+                                                if (!emptyRow) {
+                                                    emptyRow = document.createElement("tr");
+                                                    emptyRow.className = "empty-msg-row";
+                                                    emptyRow.innerHTML = '<td colspan="8" style="text-align: center; font-style: italic; padding: 18px; font-size: 17px; color: #6c757d;">Không có thông tin nào ở đây</td>';
+                                                    tbody.appendChild(emptyRow);
+                                                }
+                                                emptyRow.style.display = "";
+                                            } else {
+                                                if (emptyRow) {
+                                                    emptyRow.style.display = "none";
+                                                }
+                                            }
                                         }
                                         let formToSubmit;
 

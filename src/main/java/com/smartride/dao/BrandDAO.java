@@ -89,6 +89,37 @@ public class BrandDAO implements Serializable {
         return list;
     }
 
+    public int getBrandIdByName(String brandName) {
+        try {
+            String sql = "SELECT \"BrandID\" FROM \"Brand\" WHERE LOWER(\"BrandName\") = LOWER(?)";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, brandName.trim());
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(BrandDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public int addBrand(String brandName) {
+        int newId = -1;
+        try {
+            String sql = "INSERT INTO \"Brand\" (\"BrandName\") VALUES (?) RETURNING \"BrandID\"";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, brandName);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                newId = rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(BrandDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return newId;
+    }
+
     public static void main(String[] args) {
         BrandDAO bd = BrandDAO.getInstance();
         

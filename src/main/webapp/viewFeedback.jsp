@@ -29,192 +29,48 @@
               href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
 
         <style>
-            body,
-            html {
-                height: 100%;
-                margin: 0;
-                font-family: 'Montserrat', sans-serif;
-            }
+    body, html { height: 100%; margin: 0; font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+    .container-fluid { padding: 2rem; background: #f8fafc; }
+    
+    /* --- Card Container --- */
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: none; margin-bottom: 2rem; }
+    .card-header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .card-title { color: #1e293b; font-size: 1.25rem; font-weight: 600; margin: 0; }
+    .card-body { padding: 0; }
 
-            .tab-container {
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
-                margin-top: 60px;
-            }
+    /* --- Table Styles --- */
+    .table-responsive { overflow-x: auto; border-radius: 0 0 12px 12px; }
+    .table { margin-bottom: 0; width: 100%; border-collapse: separate; border-spacing: 0; }
+    .table thead th { background: #f1f5f9; color: #334155; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: none; border-bottom: 2px solid #cbd5e1; padding: 14px 16px; text-align: center; vertical-align: middle; white-space: nowrap; }
+    .table tbody td { vertical-align: middle; border: none; border-bottom: 1px solid #e2e8f0; padding: 14px 16px; color: #334155; font-size: 0.9rem; text-align: center; transition: background-color 0.2s; }
+    .table tbody tr:hover td { background-color: #f8fafc; }
+    .table tbody tr:last-child td { border-bottom: none; }
 
-            /* Nội dung tab */
-            .tab-content {
-                flex: 1;
-                padding: 20px;
-                overflow-y: auto;
-                margin-left: 35px;
-                /*background: rgba(30, 151, 191, 0.1);*/
-            }
+    
+    /* --- Custom Select & Text Truncate --- */
+    .custom-select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23475569"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center; background-size: 16px; background-color: #fff; border: 1px solid #cbd5e1; border-radius: 20px; padding: 6px 36px 6px 16px; font-weight: 500; color: #475569; transition: all 0.2s; cursor: pointer; height: auto; }
+    .custom-select:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+    .dataTables_wrapper .dataTables_length select { margin: 0 10px; border: 1px solid #cbd5e1; border-radius: 20px; padding: 5px 30px 5px 15px; outline: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23475569"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 8px center; background-size: 16px; appearance: none; -webkit-appearance: none; }
+    
+    .desc-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 160px; color: #6c757d; font-size: 13px; text-align: center; margin: 0 auto; }
 
-            .tab-content h3 {
-                color: #1e97bf;
-                font-size: 20px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin: 0 0 7px;
-            }
-
-            /* Danh sách tab ngang */
-            .nav-tabs {
-                display: flex;
-                margin-top: 0; /* Xóa khoảng trống phía trên */
-                padding-left: 50px;
-                margin-left: 3%;
-                border-bottom: 2px solid #ddd;
-
-            }
-
-
-            .nav-tabs li {
-                margin-right: 10px;
-            }
-
-            .nav-tabs li a {
-                color: #222;
-                background: transparent;
-                font-size: 17px;
-                font-weight: 800;
-                letter-spacing: 1px;
-                text-align: center;
-                text-transform: uppercase;
-                padding: 12px 15px;
-                margin: 0;
-                border: none;
-                border-radius: 4px;
-                transition: all 0.3s ease;
-            }
-
-            .nav-tabs li a:hover,
-            .nav-tabs li.active a {
-                color: #1e97bf;
-                background: rgba(30, 151, 191, 0.1);
-                border-block-end: solid;
-                writing-mode: horizontal-tb;
-            }
-
-            /* Thiết kế phản hồi cho màn hình nhỏ */
-            @media only screen and (max-width: 767px) {
-                .nav-tabs {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-
-                .nav-tabs li {
-                    margin-right: 0;
-                    margin-bottom: 10px;
-                }
-
-                .tab-content {
-                    padding: 10px;
-                }
-            }
-
-            .container-fluid {
-                padding: 2rem 0;
-            }
-
-            .tableview {
-                width: 80%;
-                margin: 0 auto;
-            }
-
-            .table-image {
-                border-collapse: separate;
-                border-spacing: 0 15px;
-            }
-
-            .table-image td,
-            .table-image th {
-                vertical-align: middle;
-                background: #fff;
-                border: none;
-                padding: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .table thead th {
-                border: none;
-                background-color: #6E9DC5;
-                color: #fff;
-                text-align: center;
-            }
-
-            .table tbody tr:hover {
-                background-color: #f1f1f1;
-            }
-
-            .action-buttons .btn {
-                margin: 0 5px;
-                transition: all 0.3s ease;
-            }
-
-            .action-buttons .btn:hover {
-                transform: scale(1.1);
-            }
-
-            .action-buttons .btn:focus {
-                outline: none;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            }
-
-            td input.form-control {
-                animation: fadeIn 0.5s;
-            }
-
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-
-                to {
-                    opacity: 1;
-                }
-            }
-
-            .buttons {
-                display: flex;
-                justify-content: center;
-            }
-
-            .container-fluid {
-                background: #E1EDF2;
-            }
-
-            .addnew,
-            .editmotor {
-                margin-left: 15%;
-            }
-            .alert {
-                margin-top: 10px; /* Khoảng cách từng thông báo */
-                display: none; /* Ẩn thông báo mặc định */
-            }
-
-        </style>
+    /* --- Filters --- */
+    .filters-container { padding: 1rem 1.5rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px; }
+    .form-control { border-radius: 6px; border: 1px solid #cbd5e1; padding: 0.5rem 0.75rem; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+    .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+</style>
     </head>
 
     <body>
-        <div class="container-fluid tab-container col-md-12">
-            <!-- Danh sách tab ngang -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#Section1"
-                                                          aria-controls="home" role="tab"
-                                                          data-toggle="tab">Danh Sách Đánh Giá</a></li>
-
-            </ul>
-            <!-- Nội dung tab -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="Section1">
-                    <!-- Nội dung phần tab Display All Motorbikes -->
-                    <div class="container-fluid">
-                        <div class="row tableview">
-                            <div class="col-12">
-                                <div class="buttons" style="display: flex; justify-content: right;">
+        <div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fa fa-star text-warning mr-2"></i> DANH SÁCH ĐÁNH GIÁ</h3>
+                </div>
+                <div class="filters-container">
+                    
                                     <select class="form-control" style="width: 200px;" onchange="sortTable(this.value)">
                                         <option value="">Sắp xếp theo sao</option>
                                         <option value="asc">Tăng dần</option>
@@ -228,9 +84,12 @@
                                         <option value="2">2 sao</option>
                                         <option value="1">1 sao</option>
                                     </select>
-                                </div>
-                                <table class="table table-image" id="feedbackTable">
-                                    <thead>
+                                
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" id="feedbackTable">
+                            <thead>
                                         <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Nội Dung</th>
@@ -239,8 +98,9 @@
 
                                         </tr>
                                     </thead>
-                                    <c:forEach items="${listF}" var="f">
-                                        <tbody id="table-body">
+                            <tbody id="table-body">
+                                <c:forEach items="${listF}" var="f">
+                                    
                                             <tr>
                                                 <th scope="row">${f.feedbackID}</th>                                                                                           
                                                 <td>${f.content}</td>
@@ -259,18 +119,20 @@
 
                                             </tr>
 
-                                        </tbody>
-                                    </c:forEach>
-                                </table>
-                            </div>
-                            <div class="" style="display: flex; justify-content: right;">
-                                <p class="" id="feedbackCount" >Tổng cộng: ${quantity} feedbacks</p>                               
-                            </div>
-                        </div>
+                                        
+                                </c:forEach>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
             </div>
+            
+            <div class="text-right mt-3 text-muted" style="margin-right: 1.5rem; margin-bottom: 2rem;">
+                <strong>Tổng cộng: <span id="total-feedbacks">${listF.size()}</span> feedbacks</strong>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

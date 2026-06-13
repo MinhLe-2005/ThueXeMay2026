@@ -31,7 +31,7 @@
                             <div class="col-lg-4 col-md-6 animate__animated animate__zoomIn">
                                 <div class="tour-card" onclick="window.open('${touristLocations.urlArticle}', '_blank')">
                                     <div class="tour-img-wrapper">
-                                        <img src="${empty touristLocations.locationImage ? 'images/default.jpg' : (touristLocations.locationImage.startsWith('http') ? touristLocations.locationImage : 'images/'.concat(touristLocations.locationImage))}" alt="${touristLocations.locationName}">
+                                        <img src="${empty touristLocations.locationImage ? 'images/default.jpg' : (touristLocations.locationImage.startsWith('http') ? touristLocations.locationImage : 'images/'.concat(touristLocations.locationImage))}?v=2" alt="${touristLocations.locationName}" loading="lazy" decoding="async">
                                     </div>
                                     <div class="tour-content">
                                         <h3>${touristLocations.locationName}</h3>
@@ -46,7 +46,7 @@
                                                 <div class="d-flex flex-column gap-2">
                                                     <c:forEach var="rec" items="${recommendMap[touristLocations.locationId]}">
                                                         <div class="recommendation-item d-flex align-items-center bg-light rounded p-2 border">
-                                                            <img src="images/${rec.image}" alt="${rec.model}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 12px;">
+                                                            <img src="images/${rec.image}" alt="${rec.model}" loading="lazy" decoding="async" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 12px;">
                                                             <div>
                                                                 <strong style="font-size: 0.85rem; color: #1a1816; display: block;">${rec.model}</strong>
                                                                 <span style="font-size: 0.75rem; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
@@ -85,24 +85,8 @@
             </section>
         </div>
         <jsp:include page="/includes/customer/footer.jsp" />
-        <!-- Các tệp JS -->
-        <script src="js/jquery.min.js"></script>
-        <script src="js/jquery-migrate-3.0.1.min.js"></script>
-        <script src="js/popper.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/jquery.easing.1.3.js"></script>
-        <script src="js/jquery.waypoints.min.js"></script>
-        <script src="js/jquery.stellar.min.js"></script>
-        <script src="js/owl.carousel.min.js"></script>
-        <script src="js/jquery.magnific-popup.min.js"></script>
-        <script src="js/aos.js"></script>
-        <script src="js/jquery.animateNumber.min.js"></script>
-        <script src="js/bootstrap-datepicker.js"></script>
-        <script src="js/jquery.timepicker.min.js"></script>
-        <script src="js/scrollax.min.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&sensor=false"></script>
-        <script src="js/google-map.js"></script>
-        <script src="js/main.js"></script>
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/main.js"></script>
     </body>
 
     <style>

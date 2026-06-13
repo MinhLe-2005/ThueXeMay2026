@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import com.smartride.dto.LocationRecommendationDTO;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TouristLocationDAO implements Serializable, DAO<TouristLocation> {
 
@@ -94,11 +96,10 @@ public class TouristLocationDAO implements Serializable, DAO<TouristLocation> {
 
     public int getTotalTouristLocation() {
         int total = 0;
-        try {
-            String sql = "SELECT COUNT(*) FROM \"TouristLocation\"";
-            Connection conn = DBUtil.makeConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        try (Connection connection = DBUtil.makeConnection();
+                PreparedStatement ps = connection.prepareStatement(
+                        "SELECT COUNT(*) FROM \"TouristLocation\"");
+                ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 total = rs.getInt(1);
             }
@@ -106,6 +107,53 @@ public class TouristLocationDAO implements Serializable, DAO<TouristLocation> {
             Logger.getLogger(TouristLocationDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return total;
+    }
+
+    public Map<Integer, List<LocationRecommendationDTO>> getRecommendationsByLocations(
+            List<TouristLocation> locations) {
+        Map<Integer, List<LocationRecommendationDTO>> recommendations = new HashMap<>();
+        if (locations == null || locations.isEmpty()) {
+            return recommendations;
+        }
+
+        String placeholders = String.join(", ", java.util.Collections.nCopies(locations.size(), "?"));
+        String sql = "SELECT r.\"LocationID\", r.\"MotorcycleID\", m.\"Model\", m.\"Image\", "
+                + "r.\"Reason\", r.\"Priority\" "
+                + "FROM \"LocationMotorcycleRecommendation\" r "
+                + "JOIN \"Motorcycle\" m ON r.\"MotorcycleID\" = m.\"MotorcycleID\" "
+                + "WHERE r.\"LocationID\" IN (" + placeholders + ") "
+                + "ORDER BY r.\"LocationID\", r.\"Priority\" ASC";
+
+        Map<Integer, Set<String>> seenModelsByLocation = new HashMap<>();
+        try (Connection connection = DBUtil.makeConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (int i = 0; i < locations.size(); i++) {
+                int locationId = locations.get(i).getLocationId();
+                ps.setInt(i + 1, locationId);
+                recommendations.put(locationId, new ArrayList<>());
+                seenModelsByLocation.put(locationId, new HashSet<>());
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int locationId = rs.getInt("LocationID");
+                    String model = rs.getString("Model");
+                    Set<String> seenModels = seenModelsByLocation.get(locationId);
+                    if (seenModels != null && seenModels.add(model)) {
+                        recommendations.get(locationId).add(new LocationRecommendationDTO(
+                                rs.getString("MotorcycleID"),
+                                model,
+                                rs.getString("Image"),
+                                rs.getString("Reason"),
+                                rs.getInt("Priority")
+                        ));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(TouristLocationDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return recommendations;
     }
 
     public List<LocationRecommendationDTO> getRecommendationsByLocation(int locationId) {

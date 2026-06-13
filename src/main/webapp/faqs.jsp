@@ -434,9 +434,24 @@
     // Search filter
     document.getElementById('faqSearch').addEventListener('input', function() {
         const q = this.value.toLowerCase();
-        document.querySelectorAll('.faq-item').forEach(item => {
-            const text = item.querySelector('.faq-question span').textContent.toLowerCase();
-            item.style.display = text.includes(q) ? '' : 'none';
+        
+        document.querySelectorAll('.faq-category').forEach(category => {
+            let hasVisibleItem = false;
+            
+            category.querySelectorAll('.faq-item').forEach(item => {
+                const questionText = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answerText = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (questionText.includes(q) || answerText.includes(q)) {
+                    item.style.display = '';
+                    hasVisibleItem = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Hide category completely if no items match
+            category.style.display = hasVisibleItem ? 'block' : 'none';
         });
     });
 </script>

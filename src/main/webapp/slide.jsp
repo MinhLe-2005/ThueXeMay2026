@@ -79,30 +79,30 @@
 
             .best-badge {
                 position: absolute;
-                top: 0;
-                left: 50%;
-                transform: translateX(-50%);
+                top: 15px;
+                right: 15px;
                 background: linear-gradient(135deg, #d4af37, #b59349);
                 color: #fff;
-                font-size: 12px;
+                font-size: 10px;
                 font-weight: 800;
                 text-transform: uppercase;
-                letter-spacing: 2px;
-                padding: 8px 24px;
-                border-radius: 0 0 15px 15px;
+                letter-spacing: 1.5px;
+                padding: 6px 14px;
+                border-radius: 20px;
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: 6px;
                 box-shadow: 0 5px 15px rgba(181, 147, 73, 0.4);
+                z-index: 10;
             }
 
             .card-title {
                 text-align: center;
                 font-family: 'Times New Roman', serif;
-                font-size: 26px;
+                font-size: 18px;
                 font-weight: 800;
                 color: #1a1a1a;
-                margin: 25px 0 10px 0;
+                margin: 15px 0 8px 0;
                 letter-spacing: 0.5px;
             }
             .best-choice .card-title {
@@ -112,15 +112,15 @@
             .card-tags {
                 display: flex;
                 justify-content: center;
-                gap: 8px;
-                margin-bottom: 20px;
+                gap: 6px;
+                margin-bottom: 15px;
             }
             .card-tag {
                 background: #f0f0f0;
                 color: #555;
-                font-size: 11px;
+                font-size: 10px;
                 font-weight: 700;
-                padding: 4px 10px;
+                padding: 3px 8px;
                 border-radius: 20px;
                 text-transform: uppercase;
                 letter-spacing: 1px;
@@ -134,8 +134,8 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 180px;
-                margin-bottom: 25px;
+                height: 110px;
+                margin-bottom: 15px;
                 position: relative;
             }
             
@@ -170,9 +170,9 @@
             .features-grid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 10px;
-                margin-bottom: 25px;
-                padding: 15px 0;
+                gap: 6px;
+                margin-bottom: 15px;
+                padding: 8px 0;
                 border-top: 1px dashed rgba(0,0,0,0.1);
                 border-bottom: 1px dashed rgba(0,0,0,0.1);
             }
@@ -183,9 +183,10 @@
             .feature-item {
                 display: flex;
                 align-items: center;
-                gap: 8px;
-                font-size: 13px;
-                color: #555;
+                gap: 6px;
+                font-size: 11px;
+                color: #666;
+                font-weight: 500;
             }
             .feature-item i {
                 color: #c4a14b;
@@ -207,7 +208,7 @@
             }
             
             .price-val {
-                font-size: 30px;
+                font-size: 22px;
                 font-weight: 800;
                 color: #1a1a1a;
             }
@@ -215,7 +216,7 @@
                 color: #b59349;
             }
             .price-unit {
-                font-size: 14px;
+                font-size: 13px;
                 font-weight: 600;
                 color: #888;
             }
@@ -229,17 +230,17 @@
                 background: linear-gradient(135deg, #c4a14b, #b59349);
                 color: #ffffff;
                 font-weight: 800;
-                font-size: 14px;
+                font-size: 13px;
                 text-transform: uppercase;
                 letter-spacing: 1px;
                 text-decoration: none;
                 border: none;
                 border-radius: 50px;
-                padding: 14px 15px;
+                padding: 10px 10px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                gap: 8px;
+                gap: 5px;
                 cursor: pointer;
                 transition: all 0.3s;
                 box-shadow: 0 8px 20px rgba(181, 147, 73, 0.3);
@@ -255,11 +256,11 @@
                 color: #1a1a1a;
                 border: 2px solid #eaeaea;
                 border-radius: 50px;
-                padding: 0 20px;
+                padding: 0 15px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: 700;
                 text-transform: uppercase;
                 cursor: pointer;
@@ -376,17 +377,17 @@
                                         <c:choose>
                                             <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
                                                 <div style="font-size: 14px; color: #999; text-decoration: line-through; display: inline-block;">
-                                                    <fmt:formatNumber value="${p.dailyPriceForDay * 1000}" pattern="#,###"/>đ
+                                                    <fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,###"/>đ
                                                 </div>
                                                 <div style="display: inline-block; color: #dc2626; font-size: 11px; font-weight: bold; background: #fee2e2; padding: 2px 5px; border-radius: 4px; margin-left: 4px; transform: translateY(-2px);">
                                                     -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
                                                 </div>
                                                 <br>
-                                                <span class="price-val"><fmt:formatNumber value="${(p.dailyPriceForDay * (1 - activeEvent.discount)) * 1000}" pattern="#,###"/></span>
+                                                <span class="price-val"><fmt:formatNumber value="${(p.dailyPriceForDay * (1 - activeEvent.discount))}" pattern="#,###"/></span>
                                                 <span class="price-unit">đ/ngày</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="price-val"><fmt:formatNumber value="${p.dailyPriceForDay * 1000}" pattern="#,###"/></span>
+                                                <span class="price-val"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,###"/></span>
                                                 <span class="price-unit">đ/ngày</span>
                                             </c:otherwise>
                                         </c:choose>
@@ -420,13 +421,14 @@
         <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
         <script>
             var swiper = new Swiper('.centered-slide-carousel', {
-                slidesPerView: 4,
-                spaceBetween: 25,
+                slidesPerView: 5,
+                spaceBetween: 20,
                 centeredSlides: false,
                 loop: true,
                 autoplay: {
                     delay: 3500,
-                    disableOnInteraction: false
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: false
                 },
                 navigation: {
                     nextEl: '.swiper-button-next',
@@ -443,11 +445,15 @@
                     },
                     768: {
                         slidesPerView: 2.5,
-                        spaceBetween: 25
+                        spaceBetween: 20
                     },
                     1024: {
                         slidesPerView: 4,
-                        spaceBetween: 25
+                        spaceBetween: 20
+                    },
+                    1280: {
+                        slidesPerView: 5,
+                        spaceBetween: 20
                     }
                 }
             });

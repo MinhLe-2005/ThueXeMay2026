@@ -463,7 +463,7 @@
                                                                 <c:forEach items="${o.listBookingDetails}" var="detail">
                                                                     <c:set var="total" value="${total + detail.totalPrice}"/>
                                                                 </c:forEach>
-                                                                <fmt:formatNumber value="${total*1000}" type="currency" currencySymbol="đ" />
+                                                                <fmt:formatNumber value="${total}" type="currency" currencySymbol="đ" />
                                                             </td>
                                                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                                                 <div class="inline-flex items-center justify-center gap-2">

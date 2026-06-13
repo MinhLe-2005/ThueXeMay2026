@@ -1,4 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:if test="${empty requestScope.customerHeaderIncluded}">
+<c:set var="customerHeaderIncluded" value="true" scope="request" />
 <title>Trang Chủ</title>
 <meta content name="description">
 <meta content name="keywords">
@@ -28,6 +31,18 @@
 <!-- link icon -->
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png?v=<%=System.currentTimeMillis()%>">
-
+<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
+<script>
+    (function() {
+        var link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            link.type = 'image/png';
+            link.href = '${pageContext.request.contextPath}/images/newlogo_transparent.png';
+            document.head.appendChild(link);
+        }
+    })();
+</script>
 <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css">
+</c:if>

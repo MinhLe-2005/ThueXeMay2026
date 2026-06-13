@@ -819,16 +819,19 @@
                     </div>
                 </div>
             </div>
-            <iframe src="slide.jsp" style="width: 100%; height: 720px; padding: 0; margin: 0; border: none; overflow: hidden;" scrolling="no"></iframe>
+            <iframe id="motorcycleSlideIframe" src="slide.jsp" style="width: 100%; height: 720px; padding: 0; margin: 0; border: none; overflow: hidden;" scrolling="no"></iframe>
+            
+            <script>
+                window.addEventListener('message', function(e) {
+                    if (e.data && e.data.type === 'smartRideRelatedHeight') {
+                        var iframe = document.getElementById('motorcycleSlideIframe');
+                        if (iframe) {
+                            iframe.style.height = (e.data.height + 10) + 'px';
+                        }
+                    }
+                });
+            </script>
 
-            <!-- Link to Pricing Page -->
-            <div style="background-color: #fcfcfc; padding: 40px 0 60px 0; text-align: center;">
-                <div class="container" data-aos="fade-up">
-                    <a href="pricing" style="display:inline-flex; align-items:center; gap:12px; background:linear-gradient(135deg, #b59349, #a38241); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:16px; text-transform:uppercase; letter-spacing:1px; padding:16px 45px; border-radius:50px; text-decoration:none; box-shadow:0 10px 30px rgba(181, 147, 73, 0.3); transition:all 0.3s ease;">
-                        Xem Chi Tiết Bảng Giá <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
 
             <!-- Call To Action Section -->
             <section id="call-to-action" class="call-to-action section">

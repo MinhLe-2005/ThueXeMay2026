@@ -1,5 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<fmt:setLocale value="vi_VN" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -983,6 +985,13 @@
 /*                display: inline-block;*/
                 display: none;
             }
+            .main-price small {
+                display: block;
+                margin-top: 3px;
+                color: #777;
+                font-size: 11px;
+                font-weight: 600;
+            }
 
             .price-note {
                 font-size: 0.9em;
@@ -1212,9 +1221,9 @@
                                                     <!--                                                        <h2 class="main-price price-day price-current" >₫100000/Ngày</h2>                                                     -->
                                                     <c:forEach items="${listP}" var="p">
                                                         <c:if test="${p.priceListId eq m.key.priceListID}">
-                                                            <h2 class="main-price price-day" >₫${p.dailyPriceForDay}00/Ngày</h2>
-                                                            <h2 class="main-price price-week" >₫${p.dailyPriceForWeek}00/Ngày</h2>
-                                                            <h2 class="main-price price-month" >₫${p.dailyPriceForMonth}00/Ngày</h2>
+                                                            <h2 class="main-price price-day"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,##0"/> VNĐ<small>/ngày</small></h2>
+                                                            <h2 class="main-price price-week"><fmt:formatNumber value="${p.dailyPriceForWeek}" pattern="#,##0"/> VNĐ<small>/ngày · gói tuần</small></h2>
+                                                            <h2 class="main-price price-month"><fmt:formatNumber value="${p.dailyPriceForMonth}" pattern="#,##0"/> VNĐ<small>/ngày · gói tháng</small></h2>
                                                         </c:if>
                                                     </c:forEach>                                             
                                                     <p class="price-note">Không bao gồm thuế và bảo hiểm</p>                                                    
@@ -1465,21 +1474,21 @@
                             
                             console.log(differenceInDays);
                             
-                            if(quantityDay >= 1 && quantityDay <= 7){
+                            if (quantityDay < 7) {
                                 
                                 priceDayElements.forEach(element => {
                                    element.style.display = "inline-block";
                                    element.classList.add("price-current");
                                 });
                             }
-                            else if(quantityDay >= 8 && quantityDay <= 30){
+                            else if (quantityDay < 30) {
                                 
                                 priceWeekElements.forEach(element => {
                                    element.style.display = "inline-block";
                                    element.classList.add("price-current");
                                 });
                             }
-                            else if(quantityDay >= 30){
+                            else {
                                 
                                 priceMonthElements.forEach(element => {
                                    element.style.display = "inline-block";
@@ -1531,7 +1540,7 @@
                             savedBikeCal.forEach(formBox => { 
                                 const selects = formBox.querySelector('.form-check-select');
                                 const title = formBox.querySelector('h4').textContent;
-                                const priceLabel = formBox.querySelector('.main-price').textContent;
+                                const priceLabel = formBox.querySelector('.price-current').textContent;
                                 const quantity = parseInt(selects.value, 10);
                                 let price = 0;
 

@@ -19,16 +19,13 @@ public class VoucherManageServlet extends HttpServlet {
         VoucherDAO dao = VoucherDAO.getInstance();
         List<Voucher> vouchers = dao.getAllVouchers();
         
-        CustomerDAO customerDAO = CustomerDAO.getInstance();
-        List<Customer> customers = customerDAO.getAll();
-        
         request.setAttribute("vouchers", vouchers);
-        request.setAttribute("customers", customers);
         request.getRequestDispatcher("manageVoucher.jsp").forward(request, response);
     }
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         VoucherDAO dao = VoucherDAO.getInstance();
         
@@ -37,19 +34,12 @@ public class VoucherManageServlet extends HttpServlet {
                 String code = request.getParameter("code").toUpperCase();
                 double discount = Double.parseDouble(request.getParameter("discountAmount"));
                 String description = request.getParameter("description");
-                String status = "Chưa sử dụng"; // Default
-                int customerId = 0;
-                String custIdParam = request.getParameter("customerID");
-                if (custIdParam != null && !custIdParam.trim().isEmpty()) {
-                    customerId = Integer.parseInt(custIdParam);
-                }
-                
+                String status = "Đang hoạt động"; // Default
                 Voucher v = new Voucher();
                 v.setCode(code);
                 v.setDiscountAmount(discount);
                 v.setDescription(description);
                 v.setStatus(status);
-                v.setCustomerID(customerId);
                 
                 dao.insertVoucher(v);
             } else if ("edit".equals(action)) {
@@ -58,27 +48,27 @@ public class VoucherManageServlet extends HttpServlet {
                 double discount = Double.parseDouble(request.getParameter("discountAmount"));
                 String description = request.getParameter("description");
                 String status = request.getParameter("status");
-                int customerId = 0;
-                String custIdParam = request.getParameter("customerID");
-                if (custIdParam != null && !custIdParam.trim().isEmpty()) {
-                    customerId = Integer.parseInt(custIdParam);
-                }
-                
                 Voucher v = new Voucher();
                 v.setVoucherId(voucherId);
                 v.setCode(code);
                 v.setDiscountAmount(discount);
                 v.setDescription(description);
                 v.setStatus(status);
-                v.setCustomerID(customerId);
                 
                 dao.updateVoucher(v);
+                request.getSession().setAttribute("successMsg", "Cập nhật Voucher thành công!");
             } else if ("delete".equals(action)) {
                 int voucherId = Integer.parseInt(request.getParameter("voucherId"));
-                dao.deleteVoucher(voucherId);
+                boolean deleted = dao.deleteVoucher(voucherId);
+                if (!deleted) {
+                    request.getSession().setAttribute("errorMsg", "Không thể xóa Voucher này vì nó đã được sử dụng. Vui lòng chuyển trạng thái sang Ngừng hoạt động.");
+                } else {
+                    request.getSession().setAttribute("successMsg", "Xóa Voucher thành công!");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            request.getSession().setAttribute("errorMsg", "Đã xảy ra lỗi: " + e.getMessage());
         }
         response.sendRedirect("manageVoucher");
     }

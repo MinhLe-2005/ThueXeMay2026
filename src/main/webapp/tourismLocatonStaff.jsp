@@ -15,180 +15,72 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
 
         <style>
-            body, html {
-                height: 100%;
-                margin: 0;
-                font-family: 'Tahoma', sans-serif;            }
+    body, html { height: 100%; margin: 0; font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+    .container-fluid { padding: 2rem; }
+    
+    /* --- Card Container --- */
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: none; margin-bottom: 2rem; }
+    .card-header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .card-title { color: #1e293b; font-size: 1.25rem; font-weight: 600; margin: 0; }
+    .card-body { padding: 0; }
 
-            .tab-container {
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
-                margin-top: 60px;
-            }
+    /* --- Table Styles --- */
+    .table-responsive { overflow-x: auto; border-radius: 0 0 12px 12px; }
+    .table { margin-bottom: 0; width: 100%; border-collapse: separate; border-spacing: 0; }
+    .table thead th { background: #f1f5f9; color: #334155; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: none; border-bottom: 2px solid #cbd5e1; padding: 14px 16px; text-align: center; vertical-align: middle; white-space: nowrap; }
+    .table tbody td { vertical-align: middle; border: none; border-bottom: 1px solid #e2e8f0; padding: 14px 16px; color: #334155; font-size: 0.9rem; text-align: center; transition: background-color 0.2s; }
+    .table tbody tr:hover td { background-color: #f8fafc; }
+    .table tbody tr:last-child td { border-bottom: none; }
+    .table img { max-width: 80px; height: auto; max-height: 80px; object-fit: contain; border-radius: 6px; border: 1px solid #e2e8f0; padding: 2px; }
 
-            .tab-content {
-                flex: 1;
-                padding: 20px;
-                background-color: #E0E0E0;
-                overflow-y: auto;
-                margin-left: 35px;
-            }
+    
+    /* --- Custom Select & Text Truncate --- */
+    .custom-select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23475569"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center; background-size: 16px; background-color: #fff; border: 1px solid #cbd5e1; border-radius: 20px; padding: 6px 36px 6px 16px; font-weight: 500; color: #475569; transition: all 0.2s; cursor: pointer; height: auto; }
+    .custom-select:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+    .dataTables_wrapper .dataTables_length select { margin: 0 10px; border: 1px solid #cbd5e1; border-radius: 20px; padding: 5px 30px 5px 15px; outline: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23475569"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 8px center; background-size: 16px; appearance: none; -webkit-appearance: none; }
+    
+    .desc-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 160px; color: #6c757d; font-size: 13px; text-align: center; margin: 0 auto; }
+    .url-text { max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; color: #3b82f6; text-decoration: none; }
+    .url-text:hover { text-decoration: underline; }
 
-            .tab-content h3 {
-                color: #1e97bf;
-                font-size: 20px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-bottom: 7px;
-            }
+    /* --- Button Styles --- */
+    .btn-custom-add { background: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%); color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(212, 175, 55, 0.3); }
+    .btn-custom-add:hover { background: linear-gradient(135deg, #c5a030 0%, #e3b70e 100%); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(212, 175, 55, 0.4); }
+    .action-buttons .btn { border-radius: 6px; padding: 6px 10px; margin: 0 3px; font-size: 0.85rem; transition: all 0.2s; }
+    .btn-edit { background-color: #ecfeff; color: #0891b2; border: 1px solid #a5f3fc; }
+    .btn-edit:hover { background-color: #cffafe; color: #0e7490; }
+    .btn-delete { background-color: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+    .btn-delete:hover { background-color: #fee2e2; color: #b91c1c; }
 
-            .nav-tabs {
-                display: flex;
-                padding-left: 50px;
-                margin-left: 3%;
-                border-bottom: 2px solid #ddd;
-            }
-
-            .nav-tabs li {
-                margin-right: 10px;
-            }
-
-            .nav-tabs li a {
-                color: #222;
-                background: transparent;
-                font-size: 17px;
-                font-weight: 800;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-                padding: 12px 15px;
-                border: none;
-                border-radius: 4px;
-                transition: all 0.3s ease;
-            }
-
-            .nav-tabs li a:hover,
-            .nav-tabs li.active a {
-                color: #1e97bf;
-                background: rgba(30, 151, 191, 0.1);
-                border-block-end: solid;
-            }
-
-            @media only screen and (max-width: 767px) {
-                .nav-tabs {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-
-                .nav-tabs li {
-                    margin-bottom: 10px;
-                }
-
-                .tab-content {
-                    padding: 10px;
-                }
-            }
-
-            .container-fluid {
-                padding: 2rem 0;
-            }
-
-            .tableview {
-                width: 95%;
-
-                margin: 0 auto;
-            }
-
-            .table-image {
-                border-collapse: separate;
-                border-spacing: 0 15px;
-            }
-
-            .table-image td, .table-image th {
-                vertical-align: middle;
-                background: #fff;
-                border: none;
-                padding: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .table thead th {
-                background-color: #6E9DC5;
-                color: #fff;
-                text-align: center;
-            }
-
-            .table tbody tr:hover {
-                background-color: #f1f1f1;
-            }
-
-            .action-buttons .btn {
-                margin: 0 5px;
-                transition: all 0.3s ease;
-            }
-
-            .action-buttons .btn:hover {
-                transform: scale(1.1);
-            }
-
-            .action-buttons .btn:focus {
-                outline: none;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            }
-
-            td input.form-control {
-                animation: fadeIn 0.5s;
-            }
-
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-                to {
-                    opacity: 1;
-                }
-            }
-
-            .buttons {
-                display: flex;
-                justify-content: center;
-            }
-
-            .addnew, .editlocation {
-                margin-left: 15%;
-            }
-
-            .alert {
-                margin-top: 10px;
-                display: none;
-            }
-
-        </style>
+    /* --- Modal Styles --- */
+    .modal-content { border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .modal-header { background: #fff; border-bottom: 1px solid #e2e8f0; border-radius: 12px 12px 0 0; padding: 1.5rem; }
+    .modal-title { color: #1e293b; font-weight: 600; font-size: 1.25rem; }
+    .modal-body { padding: 1.5rem; }
+    .modal-footer { border-top: 1px solid #e2e8f0; padding: 1rem 1.5rem; background: #f8fafc; border-radius: 0 0 12px 12px; }
+    .close { color: #64748b; opacity: 0.7; transition: opacity 0.2s; }
+    .close:hover { opacity: 1; color: #0f172a; }
+    .form-control, .form-control-file { border-radius: 6px; border: 1px solid #cbd5e1; padding: 0.5rem 0.75rem; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+    .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    label { font-weight: 500; color: #475569; margin-bottom: 0.5rem; display: inline-block; }
+</style>
     </head>
 
     <body>
-        <div class="container-fluid tab-container col-md-12">
-            <!-- Danh sách tab ngang -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active">
-                    <a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">Danh Sách Địa Điểm DU Lịch</a>
-                </li>
-                <li role="presentation">
-                    <a href="#Section2" aria-controls="profile" role="tab" data-toggle="tab">Thêm Mới Địa Điểm Du Lịch</a>
-                </li>
-                <li role="presentation">
-                    <a href="#Section3" aria-controls="update" role="tab" data-toggle="tab">Chỉnh Sửa Địa Điểm Du Lịch</a>
-                </li>
-            </ul>
-            <!-- Nội dung tab -->
-            <div class="tab-content">
-                <!-- Section 1: Display All Tourist Locations -->
-                <div role="tabpanel" class="tab-pane fade in active " id="Section1">
-                    <div class="container-fluid">
-                        <div class="row tableview">
-                            <div class="col-12">
-                                <table class="table table-image displayTour">
-                                    <thead>
+        <div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title"><i class="fa fa-map-marked-alt text-primary mr-2"></i> DANH SÁCH ĐỊA ĐIỂM DU LỊCH</h3>
+                    <button class="btn btn-custom-add" data-toggle="modal" data-target="#addLocationModal">
+                        <i class="fa fa-plus-circle"></i> Thêm Mới Địa Điểm
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
                                         <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Ảnh</th>
@@ -201,7 +93,7 @@
 
                                         </tr>
                                     </thead>
-                                    <tbody id="table-body">
+                            <tbody>
                                         <c:forEach var="touristLocations" items="${touristLocation}">
                                             <tr>
                                                 <td>${touristLocations.locationId}</td>
@@ -209,8 +101,8 @@
                                                     <img src="${empty touristLocations.locationImage ? 'images/default.jpg' : (touristLocations.locationImage.startsWith('http') ? touristLocations.locationImage : 'images/'.concat(touristLocations.locationImage))}" class="img-fluid img-thumbnail" alt="Location Image">
                                                 </td>
                                                 <td>${touristLocations.locationName}</td>
-                                                <td>${touristLocations.description}</td>
-                                                <td>${touristLocations.urlArticle}</td>
+                                                <td><div class="desc-text" title="${touristLocations.description}">${touristLocations.description}</div></td>
+                                                <td><a href="${touristLocations.urlArticle}" target="_blank" class="url-text" title="${touristLocations.urlArticle}">${touristLocations.urlArticle}</a></td>
                                                 <td>${touristLocations.staffID}</td>
                                                 <td>
                                                     <button class="btn btn-warning btn-sm" onclick="manageRecommendations('${touristLocations.locationId}', '${touristLocations.locationName}')">
@@ -219,34 +111,41 @@
                                                 </td>
                                                 <td class="action-buttons">
                                                     <div class="buttons">
-                                                        <button class="btn btn-primary btn-sm" onclick="editTouristLocation('${touristLocations.locationId}', '${touristLocations.locationName}', '${touristLocations.locationImage}', '${touristLocations.description}', '${touristLocations.urlArticle}', '${touristLocations.staffID}')">
-                                                            <i class="fas fa-edit"></i>
+                                                        <button class="btn btn-edit" onclick="editTouristLocation('${touristLocations.locationId}', '${touristLocations.locationName}', '${touristLocations.locationImage}', '${touristLocations.description}', '${touristLocations.urlArticle}', '${touristLocations.staffID}')">
+                                                            <i class="fa fa-edit"></i>
                                                         </button>
 
-                                                        <button class="btn btn-danger btn-sm" title="Delete" onclick="confirmDelete('${touristLocations.locationId}')">
-                                                            <i class="fa-solid fas fa-trash" style="color: white;"></i>
+                                                        <button class="btn btn-delete" title="Delete" onclick="confirmDelete('${touristLocations.locationId}')">
+                                                            <i class="fa-solid fa fa-trash" ></i>
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
                 <!-- Section 2: Add New Tourist Location -->
-                <div role="tabpanel" class="tab-pane fade" id="Section2">
-                    <section>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-lg-10 col-md-8 ml-auto">
-                                    <div class="row align-items-center pt-md-5 mt-md-5 mb-5">
-                                        <div class="col-md-12">
-                                            <div class="addnew">
-                                                <form class="addnew-location-form" id="addLocationForm" action="AddTouristLocationServletStaff" method="post" enctype="multipart/form-data">
+                
+<!-- Add Location Modal -->
+<div class="modal fade" id="addLocationModal" tabindex="-1" role="dialog" aria-labelledby="addLocationModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addLocationModalLabel"><i class="fa fa-plus-circle text-primary"></i> Thêm Mới Địa Điểm Du Lịch</h4>
+            </div>
+            <form class="addnew-location-form" id="addLocationForm" action="AddTouristLocationServletStaff" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    
                                                     <div class="form-group">
+                                                        <label for="locationImage" style="font-weight: 600;">Location Image:</label>
+                                                        <div id="locationImagePreview" style="margin-bottom: 15px; border-radius: 8px; overflow: hidden; display: inline-block;"></div>
                                                         <input type="file" class="form-control-file" id="locationImage" name="locationImage" accept="image/*" required>
                                                     </div>
                                                     <div class="form-group">
@@ -260,16 +159,25 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="staffID">Lựa Chọn Nhân Viên:</label>
-                                                        <select class="form-control" id="staffID" name="staffID" required>
+                                                        <select class="form-control custom-select" id="staffID" name="staffID" required>
                                                             <!--<option value="">Select Staff</option>-->
                                                             <c:forEach var="staff" items="${staffList}" varStatus="loop">
                                                                 <option value="${staff.staffID}">${staff.staffID}</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary">Thêm Mới</button>
-                                                </form>
-                                            </div>
+                                                    
+                                                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Thêm Mới</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -279,18 +187,21 @@
                 </div>
 
                 <!-- Nội dung của Section 3 -->
-                <div role="tabpanel" class="tab-pane fade" id="Section3">
-                    <section>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-lg-10 col-md-8 ml-auto">
-                                    <div class="row align-items-center pt-md-5 mt-md-5 mb-5">
-                                        <div class="col-md-12">
-                                            <div class="editlocation">
-                                                <form class="edit-location-form" id="editLocationForm" action="UpdateTourismLoctionServletStaff" method="post" enctype="multipart/form-data">
+                
+<!-- Edit Location Modal -->
+<div class="modal fade" id="editLocationModal" tabindex="-1" role="dialog" aria-labelledby="editLocationModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="editLocationModalLabel"><i class="fa fa-edit text-info"></i> Chỉnh Sửa Địa Điểm Du Lịch</h4>
+            </div>
+            <form class="edit-location-form" id="editLocationForm" action="UpdateTourismLoctionServletStaff" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    
                                                     <div class="form-group">
                                                         <label for="editLocationImage">ID:</label>
-                                                        <input type="text" id="editLocationId" name="locationId" readonly>
+                                                        <input type="text" class="form-control" id="editLocationId" name="locationId" readonly>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="editLocationImage">Ảnh:</label>
@@ -311,17 +222,25 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="editStaffID">Lựa Chọn Nhân Viên:</label>
-                                                        <select class="form-control" id="editStaffID" name="staffID">
+                                                        <select class="form-control custom-select" id="editStaffID" name="staffID">
                                                             <!-- Options sẽ được tạo bằng cách sử dụng forEach hoặc theo dạng tĩnh -->
                                                             <c:forEach var="staff" items="${staffList}" varStatus="loop">
                                                                 <option value="${staff.staffID}">${staff.staffID}</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary">Cập Nhập Chỉnh Sửa</button>
-                                                </form>
+                                                    
+                                                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-info"><i class="fa fa-save"></i> Cập Nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -329,9 +248,6 @@
                         </div>
                     </section>
                 </div>
-            </div>
-        </div>
-
         <!-- Modal Quản lý Gợi ý Xe -->
         <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog" aria-labelledby="recommendationModalLabel">
             <div class="modal-dialog modal-lg" role="document">
@@ -341,13 +257,20 @@
                         <h4 class="modal-title" id="recommendationModalLabel" style="color: #fff; font-weight: bold;"><i class="fa fa-motorcycle me-2"></i> Quản lý Gợi ý Xe - <span id="recLocationName"></span></h4>
                     </div>
                     <div class="modal-body">
+                        <!-- Info Alert cho Ưu Tiên -->
+                        <div class="alert alert-info" style="border-radius: 8px; border-left: 4px solid #0dcaf0;">
+                            <i class="fa fa-info-circle me-2"></i> <strong>Độ ưu tiên:</strong> Quyết định thứ tự hiển thị xe ngoài trang chủ. Số càng nhỏ (ví dụ 1, 2) thì xe càng được xếp hạng cao và ưu tiên xuất hiện trước.
+                        </div>
+                        
                         <!-- Form Thêm Gợi ý -->
-                        <div class="well well-sm" style="background-color: #f8f9fa; padding: 15px; border-radius: 8px;">
+                        <div class="card mb-4" style="background-color: #fff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                            <div class="card-body" style="padding: 1.5rem;">
+                                <h5 style="font-weight: 600; color: #1e293b; margin-top: 0; margin-bottom: 1rem;"><i class="fa fa-plus-circle text-success"></i> Thêm Gợi ý Mới</h5>
                             <h5 style="font-weight: bold; margin-top: 0;">Thêm Gợi ý Mới</h5>
                             <form id="addRecForm" class="form-inline d-flex justify-content-between" style="display: flex; gap: 10px;">
                                 <input type="hidden" id="recLocationId">
                                 <div class="form-group" style="flex: 3;">
-                                    <select class="form-control" id="recMotorcycleId" required style="width: 100%;">
+                                    <select class="form-control custom-select" id="recMotorcycleId" required style="width: 100%;">
                                         <option value="">-- Chọn Xe Khả Dụng --</option>
                                         <c:forEach var="motor" items="${allMotorcycles}">
                                             <option value="${motor.motorcycleId}">${motor.model} (${motor.motorcycleId})</option>
@@ -362,6 +285,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-success" style="flex: 1;"><i class="fa fa-plus"></i> Thêm</button>
                             </form>
+                            </div>
                         </div>
                         
                         <!-- Danh sách hiện tại -->
@@ -504,8 +428,8 @@
                     imgContainer.innerHTML = 'No image available';
                 }
 
-                // Chuyển sang tab Section 3 (nếu cần thiết)
-                $('a[href="#Section3"]').tab('show');
+                // Hiển thị modal chỉnh sửa
+                $('#editLocationModal').modal('show');
             }
 
         </script>
@@ -596,6 +520,15 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/imagePreview.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof setupLivePreview === 'function') {
+                    setupLivePreview('locationImage', 'locationImagePreview');
+                    setupLivePreview('editLocationImage', 'editLocationImagePreview');
+                }
+            });
+        </script>
     </body>
 
 </html>

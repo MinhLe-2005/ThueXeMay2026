@@ -9,7 +9,8 @@
 
     <head>
         <meta charset="utf-8">
-        <title>Manage Staff</title>
+        <title>Manage Staff - SmartRide</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
 
@@ -33,12 +34,42 @@
             .fa-toggle-on:before {
                 color: blue;
             }
+
+            .table tr:last-child td {
+                border-bottom: none !important;
+            }
+
+            .datatable-top {
+                padding: 15px 0 !important;
+            }
+            .datatable-top > div:last-child {
+                position: relative;
+            }
+            .datatable-input {
+                width: 450px !important; 
+                max-width: 100%;
+                padding: 10px 20px 10px 45px !important; /* Space for the icon on the left */
+                border-radius: 25px !important; /* Beautiful pill shape */
+                border: 1px solid #ced4da !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+                transition: all 0.3s ease;
+                font-size: 14.5px;
+                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23b59349" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>') no-repeat 18px center !important;
+                background-color: #ffffff !important;
+                background-size: 16px !important;
+            }
+            .datatable-input:focus {
+                border-color: #b59349 !important;
+                box-shadow: 0 0 0 4px rgba(181, 147, 73, 0.15) !important;
+                outline: none !important;
+            }
         </style>
     </head>
     <body>
         <jsp:include page="/includes/staff/header-staff.jsp" />
         <jsp:include page="/includes/staff/sidebar.jsp" />
-        <div class="container">
+        <main id="main" class="main">
+            <div class="container-fluid">
             <div class="pagetitle" style="margin-bottom: 20px; margin-top: 20px;">
                 <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ NHÂN VIÊN</h1>
                 <nav>
@@ -60,13 +91,13 @@
                     <div class="tab-content mt-3">
                         <div id="customer" class="tab-pane fade show active">
                             <div class="e-panel card">
-                                <div class="card-body">
-                                    <div class="card-title">
-                                        <h6 class="mr-2"><span>Làm TỐT</span><small class="px-1">cuối tháng tăng lương</small></h6>
+                                <div class="card-body p-4 pb-0">
+                                    <div class="card-title mb-4">
+                                        <h5 class="m-0 fw-bold text-dark" style="font-family: 'Be Vietnam Pro', sans-serif;">Danh sách nhân viên</h5>
                                     </div>
                                     <div class="e-table">
                                         <div class="table-responsive table-lg">
-                                            <table class="table table-bordered">
+                                            <table class="table table-bordered datatable">
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
@@ -138,13 +169,13 @@
 
                         <div id="overdue" class="tab-pane fade">
                             <div class="e-panel card">
-                                <div class="card-body">
-                                    <div class="card-title">
-                                        <h6 class="mr-2"><span>Làm TỐT</span><small class="px-1">cuối tháng tăng lương</small></h6>
+                                <div class="card-body p-4 pb-0">
+                                    <div class="card-title mb-4">
+                                        <h5 class="m-0 fw-bold text-dark" style="font-family: 'Be Vietnam Pro', sans-serif;">Nhân viên đã nghỉ việc</h5>
                                     </div>
                                     <div class="e-table">
                                         <div class="table-responsive table-lg">
-                                            <table class="table table-bordered">
+                                            <table class="table table-bordered datatable">
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
@@ -265,80 +296,13 @@
                             </div>
                         </div>
                     </div>                       
-                </div>
-                <div style="width: 18%; margin-top: 137px;" class="col-12 col-lg-3 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <hr class="my-4>
-                                <div class="e-navlist e-navlist--active-bold">
-                            <ul class="nav" id="navList">
-                                <li class="nav-item">
-                                    <a class="nav-link" data-status="all">
-                                        <span>Tất cả</span>&nbsp;<small>/&nbsp;<span id="allCount">${allCountStaff}</span></small>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-status="active">
-                                        <span>Hoạt động</span>&nbsp;<small>/&nbsp;<span id="activeCount">${activeCountStaff}</span></small>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-status="disabled">
-                                        <span>Vô hiệu hóa</span>&nbsp;<small>/&nbsp;<span id="disabledCount">${disabledCountStaff}</span></small>
-                                    </a>
-                                </li>
-                            </ul>
-                            <hr class="my-4">
-                            <div>
-                                <label>Trạng thái: </label>
-                                <div class="px-2">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" name="user-status" id="users-status-any" value="all" checked>
-                                        <label class="custom-control-label" for="users-status-any">Tất cả</label>
-                                    </div>
-                                </div>
-                                <div class="px-2">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" name="user-status" id="users-status-active" value="active">
-                                        <label class="custom-control-label" for="users-status-active">Hoạt động</label>
-                                    </div>
-                                </div>
-                                <div class="px-2">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" name="user-status" id="users-status-disabled" value="disabled">
-                                        <label class="custom-control-label" for="users-status-disabled">Vô hiệu hóa</label>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                    <hr class="my-3">
-                    <form action="searchCustomer" method="post">
-                        <div>
-                            <div class="form-group fst-italic">
-                                <label>Tìm kiếm qua Tên đăng nhập: </label>
-                                <div><input name="username" class="form-control w-100" type="text" placeholder="Username" value>
-                                </div>
-                            </div>
-                            <div class="form-group fst-italic">
-                                <label>Tìm kiếm qua Tên:</label>
-                                <div><input name="name" class="form-control w-100" type="text" placeholder="Name" value>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <button class="btn btn-secondary w-100" type="submit" value="Search">Tìm kiếm</button>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="mt-2 d-flex flex-column align-items-center"></div>
-                </div>
-            </div>         
-        </div>
-    </div>
+            </div>
+        </main>
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="staffAssets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="staffAssets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="staffAssets/js/main.js"></script>
     <script type="text/javascript">
                                         function openUserModal(button) {
                                             var modal = $('#user-form-modal');

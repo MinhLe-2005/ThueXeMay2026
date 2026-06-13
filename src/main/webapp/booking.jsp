@@ -3241,6 +3241,43 @@
                                     const img = dynamicPreviewContainer.querySelector('.img-preview');
                                     img.src = e.target.result;
                                     dynamicPreviewContainer.style.display = 'flex';
+                                    dynamicPreviewContainer.style.position = 'relative';
+                                    
+                                    // Add clear button if not exists
+                                    let clearBtn = dynamicPreviewContainer.querySelector('.clear-btn');
+                                    if (!clearBtn) {
+                                        clearBtn = document.createElement('button');
+                                        clearBtn.className = 'clear-btn';
+                                        clearBtn.innerHTML = '&times;';
+                                        clearBtn.type = 'button';
+                                        clearBtn.title = 'Xóa ảnh';
+                                        clearBtn.style.position = 'absolute';
+                                        clearBtn.style.top = '-10px';
+                                        clearBtn.style.right = '-10px';
+                                        clearBtn.style.background = '#dc2626';
+                                        clearBtn.style.color = 'white';
+                                        clearBtn.style.border = 'none';
+                                        clearBtn.style.borderRadius = '50%';
+                                        clearBtn.style.width = '24px';
+                                        clearBtn.style.height = '24px';
+                                        clearBtn.style.lineHeight = '1';
+                                        clearBtn.style.cursor = 'pointer';
+                                        clearBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                                        clearBtn.style.display = 'flex';
+                                        clearBtn.style.alignItems = 'center';
+                                        clearBtn.style.justifyContent = 'center';
+                                        clearBtn.style.fontSize = '18px';
+                                        clearBtn.style.fontWeight = 'bold';
+                                        clearBtn.style.zIndex = '10';
+                                        
+                                        clearBtn.onclick = function(e) {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                            fileInput.value = '';
+                                            fileInput.dispatchEvent(new Event('change'));
+                                        };
+                                        dynamicPreviewContainer.appendChild(clearBtn);
+                                    }
                                 }
                                 if (existingPreviewContainer) {
                                     existingPreviewContainer.style.display = 'none';

@@ -62,39 +62,48 @@
 
             /* Danh sách tab ngang */
             .nav-tabs {
+                border-bottom: none !important;
+                gap: 10px;
+                margin-bottom: 20px;
+                margin-top: 10px;
+                margin-left: 0;
                 display: flex;
-                margin-top: 0; /* Xóa khoảng trống phía trên */
-                padding-left: 0; /* Xóa padding bên trái */
-                margin-left: 3%;
-                border-bottom: 2px solid #ddd;
+                flex-wrap: wrap;
+                background: transparent;
+                padding: 0;
             }
 
-
             .nav-tabs li {
-                margin-right: 10px;
+                float: none !important;
+                margin-bottom: 5px;
+                margin-right: 5px;
             }
 
             .nav-tabs li a {
-                color: #222;
-                background: transparent;
-                font-size: 17px;
-                font-weight: 800;
-                letter-spacing: 1px;
-                text-align: center;
+                border: none !important;
+                background: #f1f3f5 !important;
+                color: #6c757d !important;
+                border-radius: 30px !important;
+                padding: 10px 25px !important;
+                font-weight: 600 !important;
+                transition: all 0.3s !important;
                 text-transform: uppercase;
-                padding: 12px 15px;
-                margin: 0;
-                border: none;
-                border-radius: 4px;
-                transition: all 0.3s ease;
+                letter-spacing: 0.5px;
+                font-size: 13px;
+                box-shadow: none !important;
             }
 
-            .nav-tabs li a:hover,
-            .nav-tabs li.active a {
-                color: #1e97bf;
-                background: rgba(30, 151, 191, 0.1);
-                border-block-end: solid; 
-writing-mode: horizontal-tb;
+            .nav-tabs li a:hover {
+                background: #e9ecef !important;
+                color: #495057 !important;
+            }
+
+            .nav-tabs li.active a,
+            .nav-tabs li.active a:focus,
+            .nav-tabs li.active a:hover {
+                background: #b59349 !important;
+                color: #fff !important;
+                box-shadow: 0 4px 15px rgba(181, 147, 73, 0.3) !important;
             }
 
             /* Thiết kế phản hồi cho màn hình nhỏ */
@@ -198,9 +207,6 @@ writing-mode: horizontal-tb;
     </head>
 
     <body>
-
-         <jsp:include page="/includes/staff/header-staff.jsp" />
-        <jsp:include page="/includes/staff/sidebar.jsp" />
         <div class="container-fluid tab-container">
             <!-- Danh sách tab ngang -->
             <ul class="nav nav-tabs" role="tablist">
@@ -304,7 +310,9 @@ writing-mode: horizontal-tb;
                                                 <form class="addnew-motorbike-form">
                                                     <h3>Add New Motorbike</h3>
                                                     <div class="form-group">
-                                                        <input type="file" class="form-control-file" id="motorbikeImage">
+                                                        <label for="motorbikeImage" style="font-weight: 600;">Upload Image:</label>
+                                                        <div id="motorbikeImagePreview" style="margin-bottom: 15px; border-radius: 8px; overflow: hidden; display: inline-block;"></div>
+                                                        <input type="file" class="form-control-file" id="motorbikeImage" accept="image/*">
                                                     </div>
                                                     <div class="form-group">
                                                         <input type="text" class="form-control" placeholder="Enter model">
@@ -409,9 +417,10 @@ writing-mode: horizontal-tb;
                                                     <img id="productimage" src="${imageSrc}" alt="Motorbike Image" class="img-fluid img-thumbnail">
                                             </div>
                                             <div class="form-group">
-                                            <label for="productimageupload">Upload New Image:</label>
-                                            <input type="file" class="form-control-file" id="productimageupload" accept="image/*">
-                                                    </div>
+                                                <label for="productimageupload">Upload New Image:</label>
+                                                <div id="productimageuploadPreview" style="margin-bottom: 15px; border-radius: 8px; overflow: hidden; display: inline-block;"></div>
+                                                <input type="file" class="form-control-file" id="productimageupload" accept="image/*">
+                                            </div>
                                                     <!-- Các trường khác nếu có -->
                                                         <div class="form-group">
                                                 <label for="displacement">Displacement:</label>
@@ -552,6 +561,15 @@ function addMotorbike(event) {
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <!-- Theme js -->
         <script type="text/javascript" src="js/main.js"></script>
+        <script src="js/imagePreview.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof setupLivePreview === 'function') {
+                    setupLivePreview('motorbikeImage', 'motorbikeImagePreview');
+                    setupLivePreview('productimageupload', 'productimageuploadPreview');
+                }
+            });
+        </script>
     </body>
 
 </html>

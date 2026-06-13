@@ -1,5 +1,6 @@
 package com.smartride.dto;
 
+import com.smartride.util.RentalPricingUtil;
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -47,7 +48,13 @@ public class Booking implements Serializable {
         this.customerID = customerID;
         this.listBookingDetails = listBookingDetails;
     }
-    
-    
+
+    public int getRentalDays() {
+        return RentalPricingUtil.calculateRentalDays(startDate, endDate);
+    }
+
+    public String getRentalPlan() {
+        return RentalPricingUtil.getPlanLabel(getRentalDays());
+    }
 
 }

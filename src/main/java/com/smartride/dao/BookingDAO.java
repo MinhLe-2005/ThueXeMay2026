@@ -238,6 +238,33 @@ public class BookingDAO {
         return motorcycleDetails;
     }
     
+    public List<String> getMotorcyclePlatesByBookingID(String bookingID) {
+        PreparedStatement stm;
+        ResultSet rs;
+        List<String> motorcycleDetails = new ArrayList<>();
+        String sql = "select m.\"Model\", md.\"LicensePlate\"\n"
+                + "from \"Motorcycle\" m\n"
+                + "	JOIN \"Motorcycle Detail\" md\n"
+                + "	ON m.\"MotorcycleID\" = md.\"MotorcycleID\"\n"
+                + "where md.\"MotorcycleDetailID\" IN (\n"
+                + "	select \"MotorcycleDetailID\" from \"Booking Detail\"\n"
+                + "	where \"BookingID\" = ?\n"
+                + ")";
+        try {
+            stm = conn.prepareStatement(sql);
+            stm.setString(1, bookingID);
+            rs = stm.executeQuery();
+            while (rs.next()) {
+                String model = rs.getString("Model");
+                String plate = rs.getString("LicensePlate");
+                motorcycleDetails.add(model + " - Biển: " + plate);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return motorcycleDetails;
+    }
+    
     public boolean updateBookingStatus(String bookingID, String status) {
         PreparedStatement stm;
         String sql = "UPDATE \"Booking\" SET \"StatusBooking\" = ? WHERE \"BookingID\" = ?";
@@ -265,12 +292,38 @@ public class BookingDAO {
             
             int rowAffect = stm.executeUpdate();
             if (rowAffect > 0) {
+                if ("Đã trả".equals(deliveryStatus)) {
+                    makeMotorcyclesStatus(bookingID, "Có sẵn", "Đã trả xe");
+                } else if ("Đã giao".equals(deliveryStatus)) {
+                    makeMotorcyclesStatus(bookingID, "Đang thuê", "Đã giao xe cho khách");
+                }
                 return true;
             }
         } catch (SQLException ex) {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+    
+    private void makeMotorcyclesStatus(String bookingID, String status, String note) {
+        String sqlDetails = "SELECT \"MotorcycleDetailID\" FROM \"Booking Detail\" WHERE \"BookingID\" = ?";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sqlDetails);
+            stm.setString(1, bookingID);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                int motorDetailId = rs.getInt("MotorcycleDetailID");
+                String sqlInsert = "INSERT INTO \"Motorcycle Status\" (\"MotorcycleDetailID\", \"StaffID\", \"StatusAction\", \"UpdateDate\", \"Note\") " +
+                                   "VALUES (?, 'STAFF00001', ?, CURRENT_DATE, ?)";
+                PreparedStatement psInsert = conn.prepareStatement(sqlInsert);
+                psInsert.setInt(1, motorDetailId);
+                psInsert.setString(2, status);
+                psInsert.setString(3, note);
+                psInsert.executeUpdate();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public Booking getLastestBooking(int accountId) {

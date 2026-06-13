@@ -9,9 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import com.smartride.dto.LocationRecommendationDTO;
+import java.util.Map;
 
 @WebServlet(name = "TouristLocationServlet", urlPatterns = {"/touristLocation"})
 public class TouristLocationServlet extends HttpServlet {
@@ -35,11 +34,8 @@ public class TouristLocationServlet extends HttpServlet {
         
         List<TouristLocation> touristLocations = touristLocationDAO.getPagingTouristLocation(index);
         
-        // Fetch recommendations for these locations
-        Map<Integer, List<LocationRecommendationDTO>> recommendMap = new HashMap<>();
-        for (TouristLocation loc : touristLocations) {
-            recommendMap.put(loc.getLocationId(), touristLocationDAO.getRecommendationsByLocation(loc.getLocationId()));
-        }
+        Map<Integer, List<LocationRecommendationDTO>> recommendMap
+                = touristLocationDAO.getRecommendationsByLocations(touristLocations);
         
         request.setAttribute("touristLocation", touristLocations);
         request.setAttribute("recommendMap", recommendMap);

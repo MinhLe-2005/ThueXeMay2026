@@ -38,7 +38,6 @@
             body {
                 background-color: #fbfaf8 !important;
                 color: #2b2824 !important;
-                font-family: "Plus Jakarta Sans", sans-serif !important;
             }
             .ftco-section {
                 background-color: #fbfaf8 !important;
@@ -51,7 +50,6 @@
             }
             .section-title h2 {
                 color: #1a1816 !important;
-                font-family: 'Playfair Display', Georgia, serif !important;
                 font-weight: 800;
                 letter-spacing: 2px;
                 text-align: center;
@@ -60,9 +58,10 @@
                 position: relative;
                 z-index: 2;
             }
-            .section-title span {
-                color: rgba(181, 147, 73, 0.06) !important;
-                font-family: 'Playfair Display', Georgia, serif !important;
+            .section-title .background-text {
+                position: absolute;
+                top: 50%;
+                left: 50%;
                 font-weight: 800;
                 font-size: 56px;
                 text-transform: uppercase;
@@ -74,135 +73,303 @@
                 right: 0;
                 z-index: 1;
             }
-            /* Table Styling */
-            .table {
-                background-color: #ffffff !important;
-                border: 1px solid #eae6df !important;
-                border-radius: 12px !important;
-                overflow: hidden;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03) !important;
+            /* --- FILTER TABS --- */
+            .filter-tabs {
+                display: flex;
+                justify-content: center;
+                gap: 12px;
+                margin-bottom: 45px;
+                flex-wrap: wrap;
             }
-            .table thead th {
-                border: none !important;
-                color: #ffffff !important;
-                font-weight: 700 !important;
-                padding: 22px 15px !important;
-                font-size: 15px;
-                background-color: #2b2824; /* Dark warm charcoal */
-            }
-            .timeline1 {
-                background: #b59349 !important; /* Brand Gold */
-                color: #ffffff !important;
-                border-bottom: 3px solid #9c7c3b !important;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
-            .timeline2 {
-                background: #9c7c3b !important; /* Warm Bronze */
-                color: #ffffff !important;
-                border-bottom: 3px solid #82662c !important;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
-            .timeline3 {
-                background: #82662c !important; /* Deep Bronze */
-                color: #ffffff !important;
-                border-bottom: 3px solid #6b5321 !important;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
-            .tablePrice {
-                background-color: #ffffff !important;
-                border-bottom: 1px solid #eae6df !important;
-                transition: all 0.3s ease;
-            }
-            .tablePrice:hover {
-                background-color: #fbfaf8 !important;
-            }
-            .tablePrice td {
-                vertical-align: middle !important;
-                padding: 25px 15px !important;
-                border: none !important;
-            }
-            .product-name h3 {
-                color: #1a1816 !important;
-                font-family: 'Playfair Display', Georgia, serif !important;
-                font-size: 20px;
+            .filter-tab {
+                padding: 12px 28px;
+                background-color: #ffffff;
+                color: #555;
+                border-radius: 30px;
                 font-weight: 700;
-                margin: 0;
-            }
-            .price-rate h3 {
-                color: #b59349 !important;
-                font-weight: 700;
-                font-size: 22px;
-                margin-top: 10px;
-                margin-bottom: 5px;
-            }
-            .price-rate h3 .per {
-                color: #666666 !important;
                 font-size: 14px;
+                text-decoration: none !important;
+                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                border: 1px solid #eae6df;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             }
-            .price-rate .subheading {
-                color: #999999 !important;
-                font-size: 12px;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
-            .rentalNow {
-                transition: all 0.3s ease !important;
-                background-color: transparent !important;
-            }
-            .rentalNow:hover {
-                background-color: rgba(181, 147, 73, 0.03) !important;
-            }
-            .rentalButton a {
-                background: #b59349 !important;
-                color: #ffffff !important;
-                font-weight: 700 !important;
-                border-radius: 50px !important;
-                padding: 10px 24px !important;
-                transition: all 0.3s ease !important;
-                text-transform: uppercase;
-                font-size: 12px;
-                letter-spacing: 1px;
-                display: inline-block;
-                border: none !important;
-            }
-            .rentalButton a:hover {
-                background: #a38241 !important;
-                color: #ffffff !important;
-                box-shadow: 0 5px 15px rgba(181, 147, 73, 0.25) !important;
+            .filter-tab:hover {
+                background-color: #fcfbf9;
+                color: #82662c;
+                border-color: #d4af37;
                 transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
+            }
+            .filter-tab.active {
+                background-color: #82662c;
+                color: #fff;
+                border-color: #82662c;
+                box-shadow: 0 5px 15px rgba(130, 102, 44, 0.3);
             }
             
-            .banner-image img {
-                object-fit: contain;
-                max-height: 120px;
-                filter: drop-shadow(0 5px 15px rgba(0,0,0,0.05));
-                transition: transform 0.3s ease;
+            /* --- CARD GRID --- */
+            .motorcycle-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                margin-bottom: 40px;
             }
-            .tablePrice:hover .banner-image img {
+            .motor-card {
+                background: #fff;
+                border-radius: 20px;
+                box-shadow: 0 5px 25px rgba(0,0,0,0.04);
+                display: flex;
+                overflow: hidden;
+                border: 1px solid #f0f0f0;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                padding: 25px;
+            }
+            .motor-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            }
+            
+            /* --- CARD LEFT: IMAGE --- */
+            .motor-img-wrapper {
+                flex: 0 0 32%;
+                position: relative;
+                background: #fbfaf8;
+                border-radius: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            .motor-img-wrapper img {
+                max-width: 100%;
+                max-height: 220px;
+                object-fit: contain;
+                transition: transform 0.4s ease;
+            }
+            .motor-card:hover .motor-img-wrapper img {
                 transform: scale(1.08);
             }
-
+            .category-badge-top {
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                background: #fdf8e2;
+                color: #b59349;
+                padding: 6px 14px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                border: 1px solid #f4e8b8;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                z-index: 10;
+            }
+            
+            /* --- CARD RIGHT: CONTENT --- */
+            .motor-content {
+                flex: 1;
+                padding-left: 35px;
+                display: flex;
+                flex-direction: column;
+            }
+            .motor-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+            .motor-title h3 {
+                font-size: 26px;
+                font-weight: 800;
+                color: #1a1816;
+                margin: 0 0 8px 0;
+            }
+            .motor-desc {
+                font-size: 14px;
+                color: #777;
+                line-height: 1.6;
+                margin: 0;
+                max-width: 85%;
+            }
+            .motor-main-price {
+                text-align: right;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+            }
+            .motor-main-price .price-val-amount {
+                font-size: 28px;
+                font-weight: 900;
+                color: #b59349;
+                line-height: 1;
+                letter-spacing: -0.5px;
+            }
+            .motor-main-price .price-val-currency {
+                font-size: 18px;
+                font-weight: 800;
+                color: #b59349;
+                margin-top: 4px;
+                line-height: 1;
+            }
+            .motor-main-price .price-sub {
+                font-size: 13px;
+                color: #888;
+                font-style: italic;
+                margin-top: 6px;
+            }
+            
+            /* --- PRICING BOXES --- */
+            .pricing-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+                margin-bottom: 25px;
+            }
+            .price-box {
+                border-radius: 12px;
+                padding: 15px;
+                position: relative;
+                transition: all 0.3s ease;
+            }
+            .box-daily {
+                background: #fbfaf9;
+                border: 1px dashed #eae6df;
+            }
+            .box-weekly {
+                background: #fcfbf5;
+                border: 1px solid #ebe4cd;
+            }
+            .box-monthly {
+                background: #fdf5f2;
+                border: 1px solid #f0d5c9;
+            }
+            .price-box:hover {
+                border-color: #b59349;
+                border-style: solid;
+            }
+            .price-box-title {
+                font-size: 11px;
+                color: #555;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+            }
+            .price-box-val .big-money {
+                font-size: 22px;
+                font-weight: 900;
+                color: #1a1816;
+            }
+            .price-box-val .per-day {
+                font-size: 13px;
+                color: #888;
+                font-weight: 500;
+            }
+            .price-box-total {
+                font-size: 11px;
+                color: #888;
+                margin-top: 5px;
+            }
+            .discount-tag {
+                position: absolute;
+                top: -10px;
+                right: -8px;
+                background: #82662c;
+                color: #fff;
+                font-size: 11px;
+                font-weight: 800;
+                padding: 4px 10px;
+                border-radius: 8px;
+                box-shadow: 0 3px 8px rgba(130, 102, 44, 0.4);
+                z-index: 10;
+            }
+            
+            /* --- ACTION BUTTONS --- */
+            .motor-actions {
+                display: flex;
+                gap: 15px;
+                margin-top: auto;
+            }
+            .btn-book-now {
+                flex: 1;
+                background: #82662c;
+                color: #fff !important;
+                text-align: center;
+                padding: 14px;
+                border-radius: 30px;
+                font-weight: 700;
+                text-transform: uppercase;
+                font-size: 14px;
+                letter-spacing: 1px;
+                text-decoration: none !important;
+                transition: all 0.3s ease;
+            }
+            .btn-book-now:hover {
+                background: #6b5321;
+                box-shadow: 0 5px 15px rgba(130, 102, 44, 0.3);
+                transform: translateY(-2px);
+            }
+            .btn-details {
+                flex: 0 0 auto;
+                background: #fff;
+                color: #333 !important;
+                text-align: center;
+                padding: 14px 30px;
+                border-radius: 30px;
+                font-weight: 600;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                text-decoration: none !important;
+                transition: all 0.3s ease;
+            }
+            .btn-details:hover {
+                border-color: #82662c;
+                color: #82662c !important;
+            }
+            
+            /* Responsive */
+            @media (max-width: 991px) {
+                .motor-card {
+                    flex-direction: column;
+                }
+                .motor-img-wrapper {
+                    flex: none;
+                    width: 100%;
+                }
+                .motor-content {
+                    padding-left: 0;
+                    padding-top: 20px;
+                }
+            }
+            @media (max-width: 767px) {
+                .pricing-grid {
+                    grid-template-columns: 1fr;
+                }
+                .motor-header {
+                    flex-direction: column;
+                }
+                .motor-main-price {
+                    text-align: left;
+                    margin-top: 10px;
+                }
+            }
+            
             .pagination-container {
                 display: flex;
                 justify-content: center;
-                margin-top: 40px;
+                margin-top: 20px;
                 margin-bottom: 40px;
             }
-            
             .pagination {
                 display: flex;
                 list-style: none;
                 padding: 0;
             }
-            
             .pagination li {
                 margin: 0 5px;
             }
-            
-            /* Pagination overrides */
             .pagination li a {
                 display: block;
                 padding: 10px 18px;
@@ -224,84 +391,6 @@
                 color: #d4af37 !important;
                 border-color: #d4af37 !important;
             }
-            /* Disable table row hover green color from default style.css */
-            .table tbody tr td.price:hover.price {
-                background: transparent !important;
-            }
-            .tablePrice:hover {
-                background-color: #fcfbf9 !important;
-            }
-            
-            /* Always display price-rate and button cleanly in block layout */
-            .table tbody tr td.price .price-rate {
-                opacity: 1 !important;
-                display: block !important;
-                margin-bottom: 5px !important;
-            }
-            .table tbody tr td.price:hover .price-rate {
-                opacity: 1 !important;
-            }
-            .table tbody tr td.price .btn-custom {
-                position: static !important;
-                transform: none !important;
-                opacity: 1 !important;
-                display: block !important;
-                margin-top: 10px !important;
-            }
-            .table tbody tr td.price:hover .btn-custom {
-                opacity: 1 !important;
-            }
-            
-            /* High-end badge styling for total calculations */
-            .subheading-badge {
-                display: inline-block !important;
-                padding: 5px 14px !important;
-                border-radius: 30px !important;
-                font-size: 11px !important;
-                font-weight: 700 !important;
-                letter-spacing: 0.5px !important;
-                text-transform: uppercase !important;
-                margin-top: 8px !important;
-                border: 1px solid transparent !important;
-            }
-            .badge-day {
-                background-color: #f4f3f0 !important;
-                color: #666666 !important;
-            }
-            .badge-week {
-                background-color: rgba(181, 147, 73, 0.08) !important;
-                color: #b59349 !important;
-                border-color: rgba(181, 147, 73, 0.15) !important;
-            }
-            .badge-month {
-                background-color: rgba(130, 102, 44, 0.08) !important;
-                color: #82662c !important;
-                border-color: rgba(130, 102, 44, 0.15) !important;
-            }
-            
-            /* Premium Button Styling */
-            .rentalButton a {
-                background: #b59349 !important;
-                color: #ffffff !important;
-                font-weight: 700 !important;
-                border-radius: 50px !important;
-                padding: 10px 24px !important;
-                transition: all 0.3s ease !important;
-                text-transform: uppercase;
-                font-size: 11px !important;
-                letter-spacing: 0.8px !important;
-                display: inline-block !important;
-                border: 1px solid #b59349 !important;
-                box-shadow: 0 4px 12px rgba(181, 147, 73, 0.15) !important;
-                margin-top: 8px !important;
-            }
-            .rentalButton a:hover {
-                background: #2b2824 !important;
-                color: #ffffff !important;
-                border-color: #2b2824 !important;
-                box-shadow: 0 6px 18px rgba(43, 40, 36, 0.25) !important;
-                transform: translateY(-2px);
-            }
 
         </style>
     </head>
@@ -316,126 +405,144 @@
             </div><!-- End Section Title -->
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12 ftco-animate">
-                        <div class="car-list">
-                            <table class="table">
-                                <thead class="thead-primary">
-                                    <tr class="text-center">
-                                        <th>&nbsp;</th>
-                                        <th>&nbsp;</th>
-                                        <th class="timeline1">Thuê theo ngày</th>
-                                        <th class="timeline2">Thuê theo tuần</th>
-                                        <th class="timeline3">Thuê theo tháng</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach items="${listM}" var="m">
-                                        <tr class="tablePrice">
-                                            <c:forEach items="${listP}" var="p">
-                                                <c:if test="${p.priceListId == m.priceListID}">
-                                                    <td class="car-image">
-                                                        <div class="img banner-image">
-                                                            <img src="${empty m.image ? 'images/default.jpg' : (m.image.startsWith('http') ? m.image : 'images/'.concat(m.image))}" width="100%" height="100%" alt="alt"/>
-                                                        </div></td>
-                                                    <td class="product-name">
-                                                        <h3>${m.model}</h3>
-                                                    </td>
-
-                                                    <td class="price rentalNow">
-                                                        <div class="price-rate">
-                                                            <div style="margin-bottom: 8px;">
-                                                                <c:choose>
-                                                                    <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
-                                                                        <div style="font-size: 14px; color: #999; text-decoration: line-through;">
-                                                                            <fmt:formatNumber value="${p.dailyPriceForDay * 1000}" type="number" groupingUsed="true" /> VNĐ
-                                                                        </div>
-                                                                        <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
-                                                                            Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
-                                                                        </div><br/>
-                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForDay * (1 - activeEvent.discount) * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForDay * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                                <span style="font-size: 14px; color: #7a756c; font-weight: 500; margin-left: 2px;">/ ngày</span>
-                                                            </div>
-                                                            <span class="subheading-badge badge-day">Thuê ngày lẻ</span>
-                                                        </div>
-                                                        <p class="btn-custom rentalButton" style="margin-top: 15px !important;"><a href="booking?motorcycleid=${m.motorcycleId}">Thuê xe máy</a></p>
-                                                    </td>
-
-                                                    <td class="price rentalNow">
-                                                        <div class="price-rate">
-                                                            <div style="margin-bottom: 8px;">
-                                                                <c:choose>
-                                                                    <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
-                                                                        <div style="font-size: 14px; color: #999; text-decoration: line-through;">
-                                                                            <fmt:formatNumber value="${p.dailyPriceForWeek * 1000}" type="number" groupingUsed="true" /> VNĐ
-                                                                        </div>
-                                                                        <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
-                                                                            Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
-                                                                        </div><br/>
-                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForWeek * (1 - activeEvent.discount) * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForWeek * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                                <span style="font-size: 14px; color: #7a756c; font-weight: 500; margin-left: 2px;">/ ngày</span>
-                                                            </div>
-                                                            <span class="subheading-badge badge-week">Tổng: <c:choose><c:when test="${not empty activeEvent and activeEvent.discount > 0}"><fmt:formatNumber value="${p.dailyPriceForWeek * (1 - activeEvent.discount) * 1000 * 7}" type="number" groupingUsed="true" /></c:when><c:otherwise><fmt:formatNumber value="${p.dailyPriceForWeek * 1000 * 7}" type="number" groupingUsed="true" /></c:otherwise></c:choose> VNĐ/tuần</span>
-                                                        </div>
-                                                        <p class="btn-custom rentalButton" style="margin-top: 15px !important;"><a href="booking?motorcycleid=${m.motorcycleId}">Thuê xe máy</a></p>
-                                                    </td>
-
-                                                    <td class="price rentalNow">
-                                                        <div class="price-rate">
-                                                            <div style="margin-bottom: 8px;">
-                                                                <c:choose>
-                                                                    <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
-                                                                        <div style="font-size: 14px; color: #999; text-decoration: line-through;">
-                                                                            <fmt:formatNumber value="${p.dailyPriceForMonth * 1000}" type="number" groupingUsed="true" /> VNĐ
-                                                                        </div>
-                                                                        <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
-                                                                            Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
-                                                                        </div><br/>
-                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForMonth * (1 - activeEvent.discount) * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <span style="font-size: 24px; font-weight: 800; color: #b59349 !important; font-family: 'Poppins', sans-serif;"><fmt:formatNumber value="${p.dailyPriceForMonth * 1000}" type="number" groupingUsed="true" /> VNĐ</span>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                                <span style="font-size: 14px; color: #7a756c; font-weight: 500; margin-left: 2px;">/ ngày</span>
-                                                            </div>
-                                                            <span class="subheading-badge badge-month">Tổng: <c:choose><c:when test="${not empty activeEvent and activeEvent.discount > 0}"><fmt:formatNumber value="${p.dailyPriceForMonth * (1 - activeEvent.discount) * 1000 * 30}" type="number" groupingUsed="true" /></c:when><c:otherwise><fmt:formatNumber value="${p.dailyPriceForMonth * 1000 * 30}" type="number" groupingUsed="true" /></c:otherwise></c:choose> VNĐ/tháng</span>
-                                                        </div>
-                                                        <p class="btn-custom rentalButton" style="margin-top: 15px !important;"><a href="booking?motorcycleid=${m.motorcycleId}">Thuê xe máy</a></p>
-                                                    </td>
-
-
-                                                </tr><!-- END TR-->
-                                            </c:if>
-                                        </c:forEach> 
-                                    </c:forEach>
-                                </tbody>
-                            </table>
+                    <div class="col-md-12">
+                        <!-- Khám phá... subtitle -->
+                        <p class="text-center" style="color: #777; margin-top: -15px; margin-bottom: 30px;">
+                            Khám phá đội xe cao cấp của chúng tôi với mức giá minh bạch, linh hoạt theo nhu cầu của bạn.
+                        </p>
+                        
+                        <!-- FILTER TABS -->
+                        <div class="filter-tabs" data-aos="fade-up" data-aos-delay="100">
+                            <a href="pricing?category=0${not empty searchKeyword ? '&search='.concat(searchKeyword) : ''}" class="filter-tab ${currentCategory == 0 ? 'active' : ''}">Tất cả xe</a>
+                            <c:forEach items="${listC}" var="cat">
+                                <c:if test="${cat.categoryName.toLowerCase().contains('ga') or cat.categoryName.toLowerCase().contains('côn') or cat.categoryName.toLowerCase().contains('số') or cat.categoryName.toLowerCase().contains('điện')}">
+                                    <a href="pricing?category=${cat.categoryID}${not empty searchKeyword ? '&search='.concat(searchKeyword) : ''}" class="filter-tab ${currentCategory == cat.categoryID ? 'active' : ''}">${cat.categoryName}</a>
+                                </c:if>
+                            </c:forEach>
                         </div>
+
+                        <!-- SMART FILTER BAR -->
+                        <form action="pricing" method="GET" class="smart-filter-bar mb-5" style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; max-width: 800px; margin: 0 auto; align-items: center;" data-aos="fade-up" data-aos-delay="150">
+                            <input type="hidden" name="category" value="${currentCategory}">
+                            <!-- Search -->
+                            <div class="search-box" style="flex: 1; min-width: 250px; display: flex; gap: 10px;">
+                                <div style="position: relative; flex: 1;">
+                                    <i class="fas fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #b59349;"></i>
+                                    <input type="text" name="search" value="${searchKeyword}" placeholder="Nhập tên xe (VD: Air Blade...)" style="width: 100%; padding: 14px 20px 14px 45px; border: 1px solid #e2e8f0; border-radius: 30px; outline: none; font-size: 15px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                                </div>
+                                <button type="submit" style="background-color: #b59349; color: white; border: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(181, 147, 73, 0.3);">Tìm</button>
+                            </div>
+                            
+
+                        </div>
+
+                        <!-- CARD LIST -->
+                        <div class="motorcycle-grid" data-aos="fade-up" data-aos-delay="200">
+                            <c:forEach items="${listM}" var="m">
+                                <c:forEach items="${listP}" var="p">
+                                    <c:if test="${p.priceListId == m.priceListID}">
+                                        
+                                        <!-- Determine Category Name -->
+                                        <c:set var="catName" value="Xe Máy"/>
+                                        <c:forEach items="${listC}" var="cat">
+                                            <c:if test="${cat.categoryID == m.categoryID}">
+                                                <c:set var="catName" value="${cat.categoryName}"/>
+                                            </c:if>
+                                        </c:forEach>
+                                        
+                                        <!-- Calculate discounts percentage -->
+                                        <c:set var="discountWeek" value="${100 - (p.dailyPriceForWeek / p.dailyPriceForDay * 100)}" />
+                                        <c:set var="discountMonth" value="${100 - (p.dailyPriceForMonth / p.dailyPriceForDay * 100)}" />
+                                        
+                                        <div class="motor-card" data-price="${p.dailyPriceForDay}" data-id="${m.motorcycleId}">
+                                            <!-- LEFT IMAGE -->
+                                            <div class="motor-img-wrapper">
+                                                <div class="category-badge-top">
+                                                    <i class="ion-ios-settings"></i> ${catName}
+                                                </div>
+                                                <img src="${empty m.image ? 'images/default.jpg' : (m.image.startsWith('http') ? m.image : 'images/'.concat(m.image))}" alt="${m.model}">
+                                            </div>
+                                            
+                                            <!-- RIGHT CONTENT -->
+                                            <div class="motor-content">
+                                                <div class="motor-header">
+                                                    <div class="motor-title">
+                                                        <h3>${m.model}</h3>
+                                                        <p class="motor-desc">${empty m.description ? 'Mẫu xe tuyệt vời cho những chuyến đi dài, được bảo dưỡng định kỳ và vận hành cực kỳ êm ái.' : m.description}</p>
+                                                    </div>
+                                                    <div class="motor-main-price">
+                                                        <div class="price-val-amount"><fmt:formatNumber value="${p.dailyPriceForDay}" type="number" groupingUsed="true" /></div>
+                                                        <div class="price-val-currency">VNĐ</div>
+                                                        <div class="price-sub">mỗi ngày</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- PRICING BOXES -->
+                                                <div class="pricing-grid">
+                                                    <!-- BOX 1: Ngày -->
+                                                    <div class="price-box box-daily">
+                                                        <div class="price-box-title">Theo Ngày</div>
+                                                        <div class="price-box-val">
+                                                            <span class="big-money"><fmt:formatNumber value="${p.dailyPriceForDay / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- BOX 2: Tuần -->
+                                                    <div class="price-box box-weekly">
+                                                        <c:if test="${discountWeek >= 1}">
+                                                            <div class="discount-tag">GIẢM <fmt:formatNumber value="${discountWeek}" maxFractionDigits="0"/>%</div>
+                                                        </c:if>
+                                                        <div class="price-box-title">Theo Tuần</div>
+                                                        <div class="price-box-val">
+                                                            <span class="big-money"><fmt:formatNumber value="${p.dailyPriceForWeek / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                        </div>
+                                                        <div class="price-box-total">Tổng: <fmt:formatNumber value="${p.dailyPriceForWeek * 7}" type="number" groupingUsed="true" /> VNĐ</div>
+                                                    </div>
+                                                    
+                                                    <!-- BOX 3: Tháng -->
+                                                    <div class="price-box box-monthly">
+                                                        <c:if test="${discountMonth >= 1}">
+                                                            <div class="discount-tag">GIẢM <fmt:formatNumber value="${discountMonth}" maxFractionDigits="0"/>%</div>
+                                                        </c:if>
+                                                        <div class="price-box-title">Theo Tháng</div>
+                                                        <div class="price-box-val">
+                                                            <span class="big-money"><fmt:formatNumber value="${p.dailyPriceForMonth / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                        </div>
+                                                        <div class="price-box-total">Tổng: <fmt:formatNumber value="${p.dailyPriceForMonth * 30}" type="number" groupingUsed="true" /> VNĐ</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- BUTTONS -->
+                                                <div class="motor-actions">
+                                                    <a href="booking?motorcycleid=${m.motorcycleId}" class="btn-book-now">Thuê Ngay</a>
+                                                    <a href="motorcycleDetail?id=${m.motorcycleId}" class="btn-details">Xem chi tiết</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+                            </c:forEach>
+                        </div>
+                        
+                        <!-- PAGINATION -->
+                        <c:if test="${endP > 1}">
+                            <div class="pagination-container">
+                                <ul class="pagination">
+                                    <c:if test="${tag > 1}">
+                                        <li><a href="pricing?index=${tag - 1}&category=${currentCategory}${not empty searchKeyword ? '&search='.concat(searchKeyword) : ''}">&laquo;</a></li>
+                                    </c:if>
+                                    <c:forEach begin="1" end="${endP}" var="i">
+                                        <li class="${tag == i ? 'active' : ''}"><a href="pricing?index=${i}&category=${currentCategory}${not empty searchKeyword ? '&search='.concat(searchKeyword) : ''}">${i}</a></li>
+                                    </c:forEach>
+                                    <c:if test="${tag < endP}">
+                                        <li><a href="pricing?index=${tag + 1}&category=${currentCategory}${not empty searchKeyword ? '&search='.concat(searchKeyword) : ''}">&raquo;</a></li>
+                                    </c:if>
+                                </ul>
+                            </div>
+                        </c:if>
+                        
                     </div>
-                    <div class="pagination-container">
-                    <ul class="pagination">
-                        <c:if test="${tag > 1}">
-                            <li><a href="pricing?index=${tag - 1}">&laquo;</a></li>
-                        </c:if>
-                        <c:forEach begin="1" end="${endP}" var="i">
-                            <li class="${tag == i ? 'active' : ''}"><a href="pricing?index=${i}">${i}</a></li>
-                        </c:forEach>
-                        <c:if test="${tag < endP}">
-                            <li><a href="pricing?index=${tag + 1}">&raquo;</a></li>
-                        </c:if>
-                    </ul>
                 </div>
-            </div>
             </div>
         </section>
 
@@ -465,6 +572,9 @@
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
         <script src="js/google-map.js"></script>
         <script src="js/main.js"></script>
+
+        <script>
+
 
     </body>
 </html>

@@ -252,15 +252,22 @@
                 font-size: 14px;
                 color: var(--text-muted);
             }
-            .resend-link a {
+            .resend-link button {
                 color: var(--primary-color);
                 font-weight: 600;
                 text-decoration: none;
                 transition: all 0.2s;
+                border: none;
+                background: transparent;
+                padding: 0;
             }
-            .resend-link a:hover {
+            .resend-link button:hover:not(:disabled) {
                 text-decoration: underline;
                 color: var(--primary-hover);
+            }
+            .resend-link button:disabled {
+                color: var(--text-muted);
+                cursor: not-allowed;
             }
 
             @keyframes fadeInUp {
@@ -310,7 +317,7 @@
                 </form>
 
                 <div class="resend-link">
-                    Không nhận được mã? <a href="reOtp">Gửi lại ngay</a>
+                    Không nhận được mã? <button type="button" id="resendBtn" onclick="resendOTP()" disabled>Gửi lại ngay <span id="timerSpan"></span></button>
                 </div>
             </div>
 
@@ -388,7 +395,47 @@
                         }
                     });
                 });
+                
+                // --- 60 SECONDS COOLDOWN LOGIC ---
+                let timeLeft = 60;
+                const resendBtn = document.getElementById('resendBtn');
+                const timerSpan = document.getElementById('timerSpan');
+
+                // Check sessionStorage to prevent refresh bypass
+                const storedTime = sessionStorage.getItem('otpResendTime');
+                if (storedTime) {
+                    const passed = Math.floor((Date.now() - parseInt(storedTime)) / 1000);
+                    if (passed < 60) {
+                        timeLeft = 60 - passed;
+                    } else {
+                        timeLeft = 0;
+                    }
+                } else {
+                    // First time load
+                    sessionStorage.setItem('otpResendTime', Date.now());
+                }
+
+                function updateTimer() {
+                    if (timeLeft > 0) {
+                        resendBtn.disabled = true;
+                        timerSpan.textContent = `(${timeLeft}s)`;
+                        timeLeft--;
+                        setTimeout(updateTimer, 1000);
+                    } else {
+                        resendBtn.disabled = false;
+                        timerSpan.textContent = '';
+                    }
+                }
+                
+                // Start the countdown
+                updateTimer();
             });
+
+            function resendOTP() {
+                // Reset timer for the next request
+                sessionStorage.setItem('otpResendTime', Date.now());
+                window.location.href = 'reOtp';
+            }
         </script>
     </body>
 </html>

@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="com.smartride.dao.EventDAO" %>
 <%@ page import="com.smartride.dto.Event" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -15,6 +16,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!--logo-->
         
+        <!-- Font Awesome for icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 
         <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
@@ -44,7 +47,57 @@
             }
             .ftco-section {
                 background: transparent !important;
-                padding: 4em 0 !important;
+                padding: 6em 0 !important;
+            }
+            .ftco-car-details {
+                padding-top: 130px !important;
+            }
+            
+            /* Hero Section Styles */
+            .hero-wrap {
+                width: 100%;
+                min-height: 200px;
+                position: relative;
+                background-color: #1a202c;
+                margin-top: 20px;
+            }
+            .hero-wrap.js-fullheight {
+                height: 400px !important;
+            }
+            .hero-wrap .overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                content: '';
+                background: linear-gradient(135deg, rgba(26, 32, 44, 0.95) 0%, rgba(45, 55, 72, 0.9) 100%);
+                opacity: 1;
+            }
+            .slider-text {
+                position: relative;
+                z-index: 1;
+            }
+            .breadcrumbs {
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 1px;
+                color: rgba(255, 255, 255, 0.8);
+            }
+            .breadcrumbs a {
+                color: rgba(255, 255, 255, 0.8);
+                transition: color 0.3s;
+            }
+            .breadcrumbs a:hover {
+                color: #b89228;
+            }
+            .bread {
+                font-size: 54px;
+                font-weight: 900;
+                color: #fff;
+                line-height: 1.2;
+                letter-spacing: -1px;
+                text-shadow: 0 4px 12px rgba(0,0,0,0.3);
             }
             
             /* Motorcycle Showcase */
@@ -89,8 +142,6 @@
                 border-radius: 24px;
                 padding: 35px;
                 box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-                position: sticky;
-                top: 100px;
             }
             .brand-badge {
                 display: inline-block;
@@ -116,154 +167,325 @@
 
             /* Accessory Grid */
             .accessories-section {
-                margin-top: 40px;
+                margin-top: 60px;
+                padding: 0;
             }
             .accessories-section h3 {
                 color: #1a202c !important;
-                font-size: 20px;
-                font-weight: 700;
-                margin-bottom: 20px;
-                letter-spacing: 0.5px;
+                font-size: 32px;
+                font-weight: 900;
+                margin-bottom: 15px;
+                letter-spacing: -0.8px;
+                position: relative;
+                padding-bottom: 0;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            .accessories-section > p {
+                color: #64748b;
+                font-size: 16px;
+                margin-bottom: 40px;
+                font-weight: 500;
+                line-height: 1.6;
             }
             .accessories-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                gap: 16px;
+                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+                gap: 20px;
             }
             .accessory-card {
                 background: #ffffff;
-                border: 1px solid rgba(0, 0, 0, 0.05);
-                border-radius: 18px;
-                padding: 16px;
+                border: 1.5px solid rgba(0, 0, 0, 0.08);
+                border-radius: 20px;
+                padding: 28px 20px;
                 text-align: center;
-                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 cursor: pointer;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                min-height: 120px;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+                min-height: 170px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+                position: relative;
+                overflow: hidden;
+            }
+            .accessory-card::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(145deg, rgba(184, 146, 40, 0.03), rgba(212, 165, 116, 0.02));
+                opacity: 0;
+                transition: opacity 0.4s ease;
             }
             .accessory-card:hover {
-                background: rgba(184, 146, 40, 0.03);
-                border-color: rgba(184, 146, 40, 0.3);
-                transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(184, 146, 40, 0.08);
+                border-color: rgba(184, 146, 40, 0.4);
+                transform: translateY(-8px);
+                box-shadow: 
+                    0 16px 32px rgba(184, 146, 40, 0.12),
+                    0 0 0 1px rgba(184, 146, 40, 0.08);
+            }
+            .accessory-card:hover::before {
+                opacity: 1;
             }
             .accessory-icon-wrapper {
-                width: 48px;
-                height: 48px;
+                width: 72px;
+                height: 72px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin-bottom: 12px;
-                transition: transform 0.3s ease;
+                margin-bottom: 18px;
+                background: linear-gradient(145deg, #fdfbf7 0%, #f8f4ec 100%);
+                border: 2px solid rgba(184, 146, 40, 0.15);
+                border-radius: 50%;
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                box-shadow: 0 4px 12px rgba(184, 146, 40, 0.08);
+                position: relative;
+                z-index: 1;
             }
-            .accessory-icon {
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: contain;
+            .accessory-card:hover .accessory-icon-wrapper {
+                background: linear-gradient(145deg, #b89228, #d4af37);
+                transform: scale(1.1);
+                border-color: rgba(255, 255, 255, 0.3);
+                box-shadow: 0 12px 28px rgba(184, 146, 40, 0.3);
             }
-            .accessory-card:hover .accessory-icon {
-                transform: scale(1.12);
+            .accessory-icon-wrapper i {
+                font-size: 32px !important;
+                color: #b89228;
+                transition: all 0.4s ease;
+            }
+            .accessory-card:hover .accessory-icon-wrapper i {
+                color: #ffffff !important;
+                transform: scale(1.05);
             }
             .accessory-title {
-                font-size: 13px;
-                font-weight: 600;
-                color: #2d3748;
+                font-size: 15px;
+                font-weight: 700;
+                color: #1a202c;
                 margin: 0;
                 line-height: 1.4;
+                position: relative;
+                z-index: 1;
+                transition: all 0.3s ease;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            .accessory-card:hover .accessory-title {
+                color: #b89228;
             }
 
             /* Custom Pills & Tabs */
             .modern-tabs {
-                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-                margin-bottom: 24px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+                margin-bottom: 10px;
+                display: flex;
+                justify-content: center;
+                background: #fafafa;
+                border-radius: 12px;
+                padding: 5px;
             }
             .modern-tabs .nav-link {
                 background: transparent !important;
                 border: none !important;
-                color: #718096 !important;
+                color: #a0aec0 !important;
                 font-weight: 600;
-                font-size: 15px;
-                padding: 12px 20px;
+                font-size: 16px;
+                padding: 14px 20px;
                 position: relative;
-                transition: color 0.3s ease;
-                border-radius: 0 !important;
+                transition: all 0.3s ease;
+                border-radius: 8px !important;
+                cursor: pointer;
+            }
+            .modern-tabs .nav-link:hover {
+                color: #4a5568 !important;
+                background: rgba(0, 0, 0, 0.02) !important;
             }
             .modern-tabs .nav-link.active {
-                color: #b89228 !important;
+                color: #1a202c !important;
+                background: #ffffff !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             }
             .modern-tabs .nav-link.active::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                background: #b89228;
-                border-radius: 2px;
+                display: none;
             }
 
-            /* Pricing Card Integration */
+            /* Pricing List Refined */
             .pricing-list {
-                padding: 0;
-                margin: 0;
-                list-style: none;
+                margin-top: 30px;
+                background: linear-gradient(145deg, #fffdf8 0%, #fdfbf7 100%);
+                border: 2px solid rgba(184, 146, 40, 0.2);
+                border-radius: 20px;
+                padding: 8px 28px;
+                box-shadow: 
+                    0 10px 30px rgba(184, 146, 40, 0.08),
+                    inset 0 2px 0 rgba(255, 255, 255, 0.8);
+                position: relative;
+                overflow: hidden;
+            }
+            .pricing-list::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(90deg, #b89228, #d4af37, #b89228);
             }
             .pricing-item {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 14px 0;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                padding: 20px 0;
+                border-bottom: 1px dashed rgba(184, 146, 40, 0.25);
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .pricing-item:hover {
+                padding-left: 10px;
+                background: rgba(184, 146, 40, 0.03);
+                border-radius: 12px;
+                margin: 0 -10px;
+                padding: 20px 20px;
             }
             .pricing-item:last-child {
                 border-bottom: none;
             }
             .pricing-label {
                 color: #4a5568;
-                font-size: 14px;
-                font-weight: 500;
+                font-size: 15px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .pricing-label::before {
+                content: '';
+                width: 8px;
+                height: 8px;
+                background: #b89228;
+                border-radius: 50%;
+                box-shadow: 0 0 10px rgba(184, 146, 40, 0.4);
             }
             .pricing-value {
                 color: #b89228;
-                font-weight: 700;
+                font-weight: 900;
                 font-size: 20px;
+                letter-spacing: 0.5px;
+                text-shadow: 0 2px 4px rgba(184, 146, 40, 0.1);
             }
             
+            #pills-manufacturer {
+                padding-top: 25px;
+            }
             #pills-manufacturer p {
-                color: #4a5568 !important;
-                line-height: 1.7;
-                font-size: 15px;
+                color: #2d3748 !important;
+                line-height: 1.9;
+                font-size: 17px;
                 margin: 0;
+                padding: 30px 28px;
+                background: linear-gradient(145deg, #ffffff 0%, #fffdf8 100%);
+                border: 2px solid rgba(184, 146, 40, 0.15);
+                border-radius: 20px;
+                font-style: normal;
+                text-align: justify;
+                letter-spacing: 0.2px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+                position: relative;
+                overflow: hidden;
+                font-weight: 400;
+                font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+            }
+            #pills-manufacturer p::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(90deg, #b89228, #d4af37, #b89228);
+            }
+            #pills-manufacturer p::after {
+                content: '"';
+                position: absolute;
+                top: 18px;
+                left: 18px;
+                font-size: 90px;
+                color: rgba(184, 146, 40, 0.08);
+                font-family: Georgia, serif;
+                line-height: 1;
             }
 
             /* Premium Rent Button */
             .rent-now-btn {
                 width: 100%;
-                background: linear-gradient(135deg, #d4af37 0%, #b89228 100%) !important;
+                background: linear-gradient(135deg, #a67c2a 0%, #b89228 50%, #a67c2a 100%) !important;
+                background-size: 200% 200% !important;
                 color: #ffffff !important;
-                padding: 18px;
+                padding: 20px;
                 border: none !important;
-                border-radius: 16px;
-                font-size: 16px;
-                font-weight: 700;
-                letter-spacing: 1px;
+                border-radius: 60px;
+                font-size: 17px;
+                font-weight: 900;
+                letter-spacing: 2.5px;
                 text-transform: uppercase;
-                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-                box-shadow: 0 6px 20px rgba(184, 146, 40, 0.25);
+                transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+                box-shadow: 
+                    0 10px 30px rgba(166, 124, 42, 0.35),
+                    0 0 40px rgba(166, 124, 42, 0.15),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.2),
+                    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+                margin-top: 20px;
+                position: relative;
+                overflow: hidden;
+                animation: shimmer-btn 4s ease-in-out infinite;
                 cursor: pointer;
-                margin-top: 15px;
+                outline: none;
+            }
+            .rent-now-btn::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: linear-gradient(
+                    45deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    transparent 70%
+                );
+                transform: rotate(45deg);
+                animation: shine-btn 4s ease-in-out infinite;
+            }
+            @keyframes shimmer-btn {
+                0%, 100% { 
+                    background-position: 0% 50%;
+                }
+                50% { 
+                    background-position: 100% 50%;
+                }
+            }
+            @keyframes shine-btn {
+                0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+                100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
             }
             .rent-now-btn:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 10px 25px rgba(184, 146, 40, 0.35);
-                background: linear-gradient(135deg, #e5c158 0%, #cfa63a 100%) !important;
+                background: linear-gradient(135deg, #b89228 0%, #c9a33a 50%, #b89228 100%) !important;
+                transform: translateY(-6px) scale(1.02);
+                box-shadow: 
+                    0 15px 40px rgba(184, 146, 40, 0.45),
+                    0 0 60px rgba(184, 146, 40, 0.25),
+                    inset 0 3px 6px rgba(255, 255, 255, 0.3),
+                    inset 0 -3px 6px rgba(0, 0, 0, 0.15);
+                letter-spacing: 3px;
             }
             .rent-now-btn:active {
-                transform: translateY(-1px);
+                transform: translateY(-3px) scale(1.01);
+                box-shadow: 
+                    0 10px 25px rgba(184, 146, 40, 0.35),
+                    inset 0 3px 10px rgba(0, 0, 0, 0.2);
+            }
+            .rent-now-btn:focus {
+                outline: 2px solid #b89228;
+                outline-offset: 2px;
             }
             
             /* Modal Styles */
@@ -275,80 +497,255 @@
                 top: 0;
                 width: 100%;
                 height: 100%;
-                overflow: auto;
-                background-color: rgba(0,0,0,0.4);
-                backdrop-filter: blur(8px);
-                -webkit-backdrop-filter: blur(8px);
+                background-color: rgba(0,0,0,0.6);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                animation: fadeIn 0.3s ease;
+                align-items: center;
+                justify-content: center;
+                overflow-y: auto;
+                padding: 20px;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
             }
             .modal-content {
                 background: #ffffff !important;
-                border: 1px solid rgba(0, 0, 0, 0.08) !important;
-                margin: 8% auto;
-                padding: 30px;
+                border: none !important;
+                margin: auto;
+                padding: 0;
                 width: 90%;
-                max-width: 750px;
-                border-radius: 24px;
-                box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+                max-width: 900px;
+                border-radius: 28px;
+                box-shadow: 0 25px 60px rgba(0,0,0,0.2);
                 color: #2d3748 !important;
-                transform: scale(0.9);
+                transform: scale(0.95);
                 opacity: 0;
-                transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                overflow: hidden;
+                position: relative;
+            }
+            .modal.show-modal {
+                display: flex !important;
             }
             .modal.show-modal .modal-content {
                 transform: scale(1);
                 opacity: 1;
             }
             .close {
-                color: #718096 !important;
-                float: right;
-                font-size: 28px;
-                font-weight: 500;
-                transition: color 0.2s;
-                line-height: 1;
-            }
-            .close:hover {
-                color: #1a202c !important;
-                cursor: pointer;
-            }
-            #accessoryName {
-                font-size: 28px;
-                font-weight: 800;
-                color: #b89228 !important;
-                margin-bottom: 16px;
-            }
-            #accessoryDescription {
-                color: #4a5568 !important;
-                font-size: 15px;
-                line-height: 1.6;
-            }
-            #accessoryPrice {
-                color: #b89228 !important;
-                font-size: 24px;
-                font-weight: 700;
-                margin-top: 20px;
-            }
-            .modal-img-container {
-                background: #f7fafc;
-                border: 1px solid rgba(0, 0, 0, 0.05);
-                border-radius: 16px;
-                padding: 20px;
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                min-height: 250px;
+                background: rgba(255, 255, 255, 0.8);
+                border-radius: 50%;
+                color: #718096 !important;
+                font-size: 24px;
+                font-weight: 400;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                border: 1px solid rgba(0, 0, 0, 0.06);
+                line-height: 1;
+                z-index: 10;
+            }
+            .close:hover {
+                background: #1a202c;
+                color: #ffffff !important;
+                transform: rotate(90deg);
+                border-color: #1a202c;
+            }
+            #accessoryName {
+                font-size: 38px;
+                font-weight: 900;
+                margin: 0 0 12px 0;
+                line-height: 1.2;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                letter-spacing: -0.8px;
+                background: linear-gradient(135deg, #1a202c 0%, #4a5568 100%);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+            #accessoryDescription {
+                color: #64748b !important;
+                font-size: 17px;
+                line-height: 1.7;
+                margin: 0 0 30px 0;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-weight: 400;
+            }
+            #accessoryPrice {
+                display: inline-flex;
+                align-items: center;
+                color: #ffffff !important;
+                font-size: 24px;
+                font-weight: 800;
+                padding: 14px 35px;
+                background: linear-gradient(135deg, #d4af37 0%, #b89228 100%);
+                border: none;
+                border-radius: 50px;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                box-shadow: 0 10px 25px rgba(184, 146, 40, 0.35);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                position: relative;
+                overflow: hidden;
+            }
+            #accessoryPrice::after {
+                content: '';
+                position: absolute;
+                top: -50%; left: -50%; width: 200%; height: 200%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+                transform: rotate(45deg);
+                animation: shine-badge 3s infinite;
+            }
+            @keyframes shine-badge {
+                0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+                100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            }
+            .modal-img-container {
+                background: radial-gradient(circle at center, #ffffff 0%, #f7f9fa 100%);
+                border: 1px solid rgba(184, 146, 40, 0.15);
+                border-radius: 24px;
+                padding: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 320px;
+                position: relative;
+                box-shadow: inset 0 0 30px rgba(0,0,0,0.02);
+            }
+            .modal-img-container::before {
+                content: '';
+                position: absolute;
+                width: 220px;
+                height: 220px;
+                background: rgba(184, 146, 40, 0.05);
+                border-radius: 50%;
+                z-index: 0;
             }
             .modal-img-container img {
                 max-width: 100%;
-                max-height: 220px;
+                max-height: 280px;
                 object-fit: contain;
-                filter: drop-shadow(0 8px 16px rgba(0,0,0,0.08));
+                z-index: 1;
+                mix-blend-mode: multiply;
+                transform: scale(1.05);
+                transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .modal-img-container:hover img {
+                transform: scale(1.15) rotate(-3deg);
+            }
+            
+            @media (max-width: 767px) {
+                .modal {
+                    padding: 10px;
+                }
+                .modal-content {
+                    width: 95%;
+                    border-radius: 20px;
+                }
+                .modal-content > div {
+                    padding: 30px 20px !important;
+                }
+                #accessoryName {
+                    font-size: 28px;
+                }
+                #accessoryDescription {
+                    font-size: 15px;
+                }
+                #accessoryPrice {
+                    font-size: 20px;
+                    padding: 12px 28px;
+                }
+                .modal-img-container {
+                    min-height: 240px;
+                    padding: 30px;
+                }
+                .modal-img-container img {
+                    max-height: 200px;
+                }
+                .close {
+                    width: 36px;
+                    height: 36px;
+                    font-size: 20px;
+                    top: 15px;
+                    right: 15px;
+                }
             }
             .heading-section h2 {
                 color: #1a202c !important;
             }
             .heading-section .subheading {
                 color: #b89228 !important;
-            } }
+            }
+            
+            /* Responsive Styles */
+            @media (max-width: 991px) {
+                .details-sidebar {
+                    position: relative;
+                    top: auto;
+                    margin-top: 40px;
+                }
+                .hero-wrap.js-fullheight {
+                    height: 300px !important;
+                }
+                .bread {
+                    font-size: 38px;
+                }
+                .model-title {
+                    font-size: 28px;
+                }
+                .motorcycle-showcase {
+                    min-height: 300px;
+                }
+            }
+            
+            @media (max-width: 767px) {
+                .accessories-grid {
+                    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                    gap: 15px;
+                }
+                .accessory-card {
+                    min-height: 150px;
+                    padding: 20px 15px;
+                }
+                .accessory-icon-wrapper {
+                    width: 60px;
+                    height: 60px;
+                }
+                .accessory-icon-wrapper i {
+                    font-size: 26px !important;
+                }
+                .accessories-section h3 {
+                    font-size: 24px;
+                }
+                .rent-now-btn {
+                    font-size: 15px;
+                    padding: 18px;
+                    letter-spacing: 2px;
+                }
+                .bread {
+                    font-size: 32px;
+                }
+            }
+            
+            @media (max-width: 575px) {
+                .accessories-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                .pricing-value {
+                    font-size: 16px;
+                }
+                .pricing-label {
+                    font-size: 13px;
+                }
+            }
         </style>
         </head>
         <body>
@@ -356,9 +753,17 @@
             <jsp:include page="/includes/customer/header.jsp" />
             <jsp:include page="/includes/customer/navbar.jsp" />
 
-
             <section class="ftco-section ftco-car-details">
                 <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <p class="breadcrumbs" style="font-size: 14px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; margin-bottom: 0;">
+                                <span class="mr-2"><a href="home" style="color: #b89228;">Trang Chủ <i class="ion-ios-arrow-forward"></i></a></span> 
+                                <span class="mr-2"><a href="motorcycle" style="color: #b89228;">Danh Sách Xe <i class="ion-ios-arrow-forward"></i></a></span> 
+                                <span style="color: #999;">Chi Tiết Xe <i class="ion-ios-arrow-forward"></i></span>
+                            </p>
+                        </div>
+                    </div>
                     <div class="row">
                         <!-- Left Column: Motorcycle Hero Showcase & Accessories Grid -->
                         <div class="col-lg-7 pr-lg-5 animate__animated animate__fadeInLeft">
@@ -371,15 +776,19 @@
                             
                             <!-- Accessories Section -->
                             <div class="accessories-section">
-                                <h3>Một số phụ kiện đi kèm</h3>
-                                <div class="accessories-grid">
+                                <h3 style="font-family: 'Times New Roman', serif; font-size: 26px; font-weight: 800; color: #1a202c; letter-spacing: 0.5px; border-bottom: 2px solid #b89228; display: inline-block; padding-bottom: 8px;">Phụ Kiện Kèm Theo</h3>
+                                <div class="accessories-grid" style="margin-top: 25px;">
                                     <c:forEach items="${listAccess}" var="listAccess">
-                                        <div class="accessory-card" 
-                                             onclick="openModal('${listAccess.accessoryName}', '${listAccess.accessoryDescription}', '${listAccess.price * 1000} VNĐ', '${listAccess.accessoryImage}')">
-                                            <div class="accessory-icon-wrapper">
-                                                <img src="images/${listAccess.accessoryImageicon}" 
-                                                     class="accessory-icon" 
-                                                     alt="${listAccess.accessoryName}">
+                                        <c:set var="formattedPrice">
+                                            <c:choose>
+                                                <c:when test="${listAccess.price == 0}">Miễn phí</c:when>
+                                                <c:otherwise><fmt:formatNumber value="${listAccess.price}" pattern="#,###"/> VNĐ</c:otherwise>
+                                            </c:choose>
+                                        </c:set>
+                                        <div class="accessory-card" style="border: 1px solid #f2e8d5; background: linear-gradient(145deg, #fff 0%, #fffdf8 100%);"
+                                             onclick="openModal('${listAccess.accessoryName}', '${listAccess.accessoryDescription}', '${formattedPrice}', '${listAccess.accessoryImage}')">
+                                            <div class="accessory-icon-wrapper" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                                <img src="${empty listAccess.accessoryImage ? 'images/default.jpg' : (listAccess.accessoryImage.startsWith('http') ? listAccess.accessoryImage : 'images/'.concat(listAccess.accessoryImage))}" alt="${listAccess.accessoryName}" style="max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply;">
                                             </div>
                                             <p class="accessory-title">${listAccess.accessoryName}</p>
                                         </div>
@@ -400,10 +809,10 @@
                                 
                                 <ul class="nav nav-pills modern-tabs" id="pills-tab" role="tablist">
                                     <li class="nav-item" style="width: 50%; text-align: center;">
-                                        <a class="nav-link active" id="pills-pricing-tab" data-bs-toggle="pill" data-bs-target="#pills-pricing" href="#pills-pricing" role="tab" aria-controls="pills-pricing" aria-selected="true">Giá Thuê</a>
+                                        <a class="nav-link active" id="pills-pricing-tab" data-toggle="pill" data-target="#pills-pricing" href="#pills-pricing" role="tab" aria-controls="pills-pricing" aria-selected="true">Giá Thuê</a>
                                     </li>
                                     <li class="nav-item" style="width: 50%; text-align: center;">
-                                        <a class="nav-link" id="pills-manufacturer-tab" data-bs-toggle="pill" data-bs-target="#pills-manufacturer" href="#pills-manufacturer" role="tab" aria-controls="pills-manufacturer" aria-selected="false">Mô tả</a>
+                                        <a class="nav-link" id="pills-manufacturer-tab" data-toggle="pill" data-target="#pills-manufacturer" href="#pills-manufacturer" role="tab" aria-controls="pills-manufacturer" aria-selected="false">Mô tả</a>
                                     </li>
                                 </ul>
                                 
@@ -417,15 +826,15 @@
                                                     <c:choose>
                                                         <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
                                                             <div style="font-size: 14px; color: #999; text-decoration: line-through; text-align: right;">
-                                                                <fmt:formatNumber value="${priceList.dailyPriceForDay * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                                <fmt:formatNumber value="${priceList.dailyPriceForDay }" pattern="#,### VNĐ" />
                                                             </div>
                                                             <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
                                                                 Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
                                                             </div><br/>
-                                                            <fmt:formatNumber value="${priceList.dailyPriceForDay * (1 - activeEvent.discount) * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForDay * (1 - activeEvent.discount) }" pattern="#,### VNĐ" />
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <fmt:formatNumber value="${priceList.dailyPriceForDay * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForDay }" pattern="#,### VNĐ" />
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </span>
@@ -436,15 +845,15 @@
                                                     <c:choose>
                                                         <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
                                                             <div style="font-size: 14px; color: #999; text-decoration: line-through; text-align: right;">
-                                                                <fmt:formatNumber value="${priceList.dailyPriceForWeek * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                                <fmt:formatNumber value="${priceList.dailyPriceForWeek }" pattern="#,### VNĐ" />
                                                             </div>
                                                             <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
                                                                 Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
                                                             </div><br/>
-                                                            <fmt:formatNumber value="${priceList.dailyPriceForWeek * (1 - activeEvent.discount) * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForWeek * (1 - activeEvent.discount) }" pattern="#,### VNĐ" />
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <fmt:formatNumber value="${priceList.dailyPriceForWeek * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForWeek }" pattern="#,### VNĐ" />
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </span>
@@ -455,15 +864,15 @@
                                                     <c:choose>
                                                         <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
                                                             <div style="font-size: 14px; color: #999; text-decoration: line-through; text-align: right;">
-                                                                <fmt:formatNumber value="${priceList.dailyPriceForMonth * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                                <fmt:formatNumber value="${priceList.dailyPriceForMonth }" pattern="#,### VNĐ" />
                                                             </div>
                                                             <div style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px;">
                                                                 Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
                                                             </div><br/>
-                                                            <fmt:formatNumber value="${priceList.dailyPriceForMonth * (1 - activeEvent.discount) * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForMonth * (1 - activeEvent.discount) }" pattern="#,### VNĐ" />
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <fmt:formatNumber value="${priceList.dailyPriceForMonth * 1000}" type="currency" currencySymbol="VNĐ" />
+                                                            <fmt:formatNumber value="${priceList.dailyPriceForMonth }" pattern="#,### VNĐ" />
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </span>
@@ -564,10 +973,10 @@
             
             <!-- Polish Modal definition -->
             <div id="myModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeModal()">&times;</span>
+                <div class="modal-content" style="position: relative; padding: 40px; overflow: hidden;">
+                    <span class="close" onclick="closeModal()" style="position: absolute; top: 20px; right: 25px; z-index: 10; font-size: 32px; color: #a0aec0 !important;">&times;</span>
                     <div class="row align-items-center" id="accessoryForm">
-                        <div class="col-md-6 pr-md-4">
+                        <div class="col-md-6 pr-md-5 text-left" style="text-align: left;">
                             <h2 id="accessoryName"></h2>
                             <p id="accessoryDescription"></p>
                             <h3 id="accessoryPrice"></h3>
@@ -584,9 +993,16 @@
             <section class="ftco-section ftco-no-pt">
                 <div class="container-fluid">
                     <div class="row justify-content-center">
-                        <div class="col-md-12 heading-section text-center ftco-animate mb-5">
-                            <span class="subheading">Lựa Chọn Khác</span>
-                            <h2 class="mb-2">Các Xe Liên Quan</h2>
+                        <div class="col-md-12 text-center mb-5" style="opacity: 1; transform: none;">
+                            <div style="display: inline-flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
+                                <span style="display: block; width: 50px; height: 2px; background: linear-gradient(90deg, transparent, #b89228);"></span>
+                                <span style="color: #b89228; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px;">Khám Phá Thêm</span>
+                                <span style="display: block; width: 50px; height: 2px; background: linear-gradient(270deg, transparent, #b89228);"></span>
+                            </div>
+                            <h2 style="font-family: 'Times New Roman', serif; font-size: 42px; font-weight: 800; color: #1a202c; margin-bottom: 0; letter-spacing: 1px;">Các Mẫu Xe Tương Tự</h2>
+                            <a href="motorcycle" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 25px; padding: 12px 30px; background: transparent; color: #b89228; border: 2px solid #b89228; border-radius: 50px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; text-decoration: none;" onmouseover="this.style.background='#b89228'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#b89228';">
+                                Xem Toàn Bộ Xe <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
                     <iframe src="slide.jsp" style="width: 100%;
@@ -634,7 +1050,7 @@
                 document.getElementById('accessoryPrice').textContent = price;
                 document.getElementById('accessoryImage').src = 'images/' + imageSrc;
                 var modal = document.getElementById('myModal');
-                modal.style.display = 'block';
+                modal.style.display = 'flex';
                 setTimeout(function() {
                     modal.classList.add('show-modal');
                 }, 10);

@@ -557,7 +557,7 @@
                                                             ${trans.paymentDate}
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
-                                                            <fmt:formatNumber value="${trans.paymentAmount * 1000}" type="currency" currencySymbol="đ" />
+                                                            <fmt:formatNumber value="${trans.paymentAmount}" type="currency" currencySymbol="đ" />
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap">
                                                             <c:choose>

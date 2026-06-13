@@ -27,16 +27,14 @@ public class VoucherDAO implements Serializable {
      * If customerID > 0, also checks that the voucher belongs to that customer OR is a general voucher (customerID=0).
      */
     public Voucher getVoucherByCode(String code, int customerId) {
-        // Status values from DB: 'Chưa sử dụng' = available, 'Đã sử dụng' = used
+        // Status values from DB: 'Đang hoạt động' = available, 'Ngừng hoạt động' = used
         // A voucher is valid if it belongs to this customer AND has not been used
-        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\", \"CustomerID\" "
+        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\" "
                    + "FROM \"Voucher\" "
-                   + "WHERE \"Code\" = ? AND \"Status\" = 'Chưa sử dụng' "
-                   + "AND \"CustomerID\" = ?";
+                   + "WHERE \"Code\" = ? AND \"Status\" = 'Đang hoạt động'";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, code);
-            ps.setInt(2, customerId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Voucher v = new Voucher();
@@ -46,7 +44,6 @@ public class VoucherDAO implements Serializable {
                 v.setDescription(rs.getString("Description"));
                 v.setCreatedTime(rs.getString("CreatedTime"));
                 v.setStatus(rs.getString("Status"));
-                v.setCustomerID(rs.getInt("CustomerID"));
                 return v;
             }
         } catch (SQLException e) {
@@ -59,7 +56,7 @@ public class VoucherDAO implements Serializable {
      * Mark a voucher as used after booking is confirmed.
      */
     public void markVoucherUsed(int voucherId) {
-        String sql = "UPDATE \"Voucher\" SET \"Status\" = 'Đã sử dụng' WHERE \"VoucherID\" = ?";
+        String sql = "UPDATE \"Voucher\" SET \"Status\" = 'Ngừng hoạt động' WHERE \"VoucherID\" = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, voucherId);
@@ -74,11 +71,10 @@ public class VoucherDAO implements Serializable {
      */
     public java.util.List<Voucher> getVouchersByCustomerId(int customerId) {
         java.util.List<Voucher> list = new java.util.ArrayList<>();
-        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\", \"CustomerID\" "
-                   + "FROM \"Voucher\" WHERE \"CustomerID\" = ? ORDER BY \"CreatedTime\" DESC";
+        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\" "
+                   + "FROM \"Voucher\" ORDER BY \"CreatedTime\" DESC";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, customerId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Voucher v = new Voucher();
@@ -88,7 +84,6 @@ public class VoucherDAO implements Serializable {
                 v.setDescription(rs.getString("Description"));
                 v.setCreatedTime(rs.getString("CreatedTime"));
                 v.setStatus(rs.getString("Status"));
-                v.setCustomerID(rs.getInt("CustomerID"));
                 list.add(v);
             }
         } catch (SQLException e) {
@@ -102,7 +97,7 @@ public class VoucherDAO implements Serializable {
      */
     public java.util.List<Voucher> getAllVouchers() {
         java.util.List<Voucher> list = new java.util.ArrayList<>();
-        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\", \"CustomerID\" "
+        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\" "
                    + "FROM \"Voucher\" ORDER BY \"CreatedTime\" DESC";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -115,7 +110,6 @@ public class VoucherDAO implements Serializable {
                 v.setDescription(rs.getString("Description"));
                 v.setCreatedTime(rs.getString("CreatedTime"));
                 v.setStatus(rs.getString("Status"));
-                v.setCustomerID(rs.getInt("CustomerID"));
                 list.add(v);
             }
         } catch (SQLException e) {
@@ -128,18 +122,13 @@ public class VoucherDAO implements Serializable {
      * Thêm Voucher mới
      */
     public boolean insertVoucher(Voucher v) {
-        String sql = "INSERT INTO \"Voucher\" (\"Code\", \"DiscountAmount\", \"Description\", \"Status\", \"CustomerID\") VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO \"Voucher\" (\"Code\", \"DiscountAmount\", \"Description\", \"Status\") VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, v.getCode());
             ps.setDouble(2, v.getDiscountAmount());
             ps.setString(3, v.getDescription());
             ps.setString(4, v.getStatus());
-            if (v.getCustomerID() > 0) {
-                ps.setInt(5, v.getCustomerID());
-            } else {
-                ps.setNull(5, java.sql.Types.INTEGER);
-            }
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -151,19 +140,14 @@ public class VoucherDAO implements Serializable {
      * Cập nhật Voucher
      */
     public boolean updateVoucher(Voucher v) {
-        String sql = "UPDATE \"Voucher\" SET \"Code\" = ?, \"DiscountAmount\" = ?, \"Description\" = ?, \"Status\" = ?, \"CustomerID\" = ? WHERE \"VoucherID\" = ?";
+        String sql = "UPDATE \"Voucher\" SET \"Code\" = ?, \"DiscountAmount\" = ?, \"Description\" = ?, \"Status\" = ? WHERE \"VoucherID\" = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, v.getCode());
             ps.setDouble(2, v.getDiscountAmount());
             ps.setString(3, v.getDescription());
             ps.setString(4, v.getStatus());
-            if (v.getCustomerID() > 0) {
-                ps.setInt(5, v.getCustomerID());
-            } else {
-                ps.setNull(5, java.sql.Types.INTEGER);
-            }
-            ps.setInt(6, v.getVoucherId());
+            ps.setInt(5, v.getVoucherId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

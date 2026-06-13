@@ -4,12 +4,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
 
     <head>
         <meta charset="utf-8">
-        <title>Quản lý Khuyến mãi - SmartRide</title>
+        <title>Manage Voucher - SmartRide</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <!-- Vendor CSS Files -->
@@ -28,13 +30,149 @@
                 box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             }
             .voucher-code {
-                font-family: 'Courier New', Courier, monospace;
-                font-weight: bold;
-                color: #d4af37;
-                background: rgba(212, 175, 55, 0.1);
-                padding: 4px 8px;
-                border-radius: 4px;
-                border: 1px dashed #d4af37;
+                font-family: monospace;
+                font-size: 1rem;
+                font-weight: 700;
+                color: #b8860b;
+                background-color: rgba(184, 134, 11, 0.1);
+                padding: 6px 12px;
+                border-radius: 8px;
+                border: 1px dashed rgba(184, 134, 11, 0.4);
+                letter-spacing: 1px;
+            }
+            
+            /* Restore standard table behavior */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .table {
+                border-collapse: separate;
+                border-spacing: 0;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .table th {
+                white-space: nowrap;
+                background-color: #f1f5f9 !important;
+                color: #334155 !important;
+                font-size: 0.85rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 14px 16px !important;
+                border-bottom: 2px solid #cbd5e1 !important;
+                border-right: 1px solid #e2e8f0;
+            }
+            .table th:last-child {
+                border-right: none;
+            }
+            .table td {
+                vertical-align: middle;
+                padding: 14px 16px !important;
+                border-bottom: 1px solid #e2e8f0;
+                border-right: 1px solid #e2e8f0;
+            }
+            .table td:last-child {
+                border-right: none;
+            }
+            .table tr:last-child td {
+                border-bottom: none;
+            }
+            .table td.nowrap {
+                white-space: nowrap;
+            }
+            
+            /* Premium Button */
+            .btn-premium {
+                background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+                color: white !important;
+                border: none;
+                border-radius: 20px;
+                padding: 10px 24px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+                transition: all 0.3s ease;
+            }
+            .btn-premium:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+                background: linear-gradient(135deg, #b8860b 0%, #d4af37 100%);
+            }
+            
+            /* Modern Datatable Controls */
+            .dataTable-top, .datatable-top { 
+                padding: 0 0 1.5rem 0 !important; 
+                margin-bottom: 1rem !important; 
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+            .dataTable-search, .datatable-search {
+                margin-bottom: 0 !important;
+            }
+            .dataTable-input, .datatable-input { 
+                border-radius: 20px !important; 
+                border: 1px solid #dee2e6 !important; 
+                padding: 8px 20px !important; 
+                font-size: 0.9rem !important;
+                outline: none !important;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important;
+                transition: all 0.2s ease !important;
+            }
+            .dataTable-input:focus, .datatable-input:focus {
+                border-color: #b59349 !important;
+                box-shadow: 0 0 0 0.25rem rgba(181, 147, 73, 0.25) !important;
+            }
+            .dataTable-selector, .datatable-selector { 
+                border-radius: 8px !important; 
+                border: 1px solid #dee2e6 !important; 
+                padding: 6px 12px !important; 
+                font-size: 0.9rem !important;
+            }
+            .dataTable-pagination a, .datatable-pagination a {
+                border-radius: 8px !important;
+                margin: 0 2px !important;
+                border: none !important;
+                color: #495057 !important;
+                padding: 8px 16px !important;
+                font-weight: 500 !important;
+            }
+            .dataTable-pagination a:hover, .datatable-pagination a:hover {
+                background-color: #f8f9fa !important;
+            }
+            .dataTable-pagination .active a, .datatable-pagination .active a,
+            .dataTable-pagination .active a:focus, .dataTable-pagination .active a:hover,
+            .datatable-pagination .active a, .datatable-pagination .active a:focus, .datatable-pagination .active a:hover {
+                background-color: #b59349 !important;
+                color: white !important;
+                box-shadow: 0 4px 10px rgba(181, 147, 73, 0.3) !important;
+            }
+            
+            .datatable-top {
+                padding: 15px 0 !important;
+            }
+            .datatable-top > div:last-child { /* The wrapper generated by simple-datatables */
+                position: relative;
+            }
+            .datatable-input {
+                width: 450px !important; 
+                max-width: 100%;
+                padding: 10px 20px 10px 45px !important; /* Space for the icon on the left */
+                border-radius: 25px !important; /* Beautiful pill shape */
+                border: 1px solid #ced4da !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+                transition: all 0.3s ease;
+                font-size: 14.5px;
+                background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23b59349" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>') no-repeat 18px center !important;
+                background-color: #ffffff !important;
+                background-size: 16px !important;
+            }
+            .datatable-input:focus {
+                border-color: #b59349 !important;
+                box-shadow: 0 0 0 4px rgba(181, 147, 73, 0.15) !important;
+                outline: none !important;
             }
         </style>
     </head>
@@ -53,73 +191,115 @@
                         </ol>
                     </nav>
                 </div>
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#voucherModal" onclick="openAddModal()" style="font-weight: 600;">
+                <button class="btn btn-premium shadow-sm" data-bs-toggle="modal" data-bs-target="#voucherModal" onclick="openAddModal()">
                     <i class="bi bi-plus-circle me-1"></i> Tạo Voucher Mới
                 </button>
             </div>
 
             <section class="section">
                 <div class="row">
+                    <!-- Main Content (Full Width Table) -->
                     <div class="col-12">
-                        <div class="card custom-card">
+                        <div class="card border-0 shadow-sm custom-card">
                             <div class="card-body p-4">
                                 <h5 class="card-title fw-bold text-dark mb-4">Danh sách Voucher</h5>
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-borderless align-middle datatable">
-                                        <thead class="table-light text-muted" style="font-size: 0.85rem; text-transform: uppercase;">
+                                    <table class="table table-hover align-middle datatable mb-0">
+                                        <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Mã Code</th>
-                                                <th>Mô tả</th>
-                                                <th>Giảm giá</th>
-                                                <th>Ngày tạo</th>
-                                                <th>Dành cho Khách</th>
-                                                <th>Trạng thái</th>
-                                                <th class="text-center">Thao tác</th>
+                                                <th data-sortable="false">STT</th>
+                                                <th data-sortable="false">Mã Code</th>
+                                                <th data-sortable="false" style="min-width: 200px;">Mô tả</th>
+                                                <th data-sortable="false">Giảm giá</th>
+                                                <th data-sortable="false">Ngày tạo</th>
+                                                <th data-sortable="false">Trạng thái</th>
+                                                <th data-sortable="false" class="text-center">Thao tác</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach var="v" items="${vouchers}">
+                                            <c:forEach var="v" items="${vouchers}" varStatus="loop">
                                                 <tr>
-                                                    <td>#${v.voucherId}</td>
-                                                    <td><span class="voucher-code">${v.code}</span></td>
-                                                    <td>${v.description}</td>
-                                                    <td class="text-success fw-bold">
+                                                    <td class="fw-bold text-muted nowrap">${loop.count}</td>
+                                                    <td class="nowrap"><span class="voucher-code">${v.code}</span></td>
+                                                    <td class="text-secondary">${v.description}</td>
+                                                    <td class="text-success fw-bold fs-6 nowrap">
                                                         <fmt:formatNumber value="${v.discountAmount}" pattern="#,###"/> đ
                                                     </td>
-                                                    <td>${v.createdTime != null ? fn:substring(v.createdTime, 0, 16) : 'N/A'}</td>
-                                                    <td>
+                                                    <td class="text-secondary nowrap">${v.createdTime != null ? fn:substring(v.createdTime, 0, 16) : 'N/A'}</td>
+                                                    <td class="nowrap">
                                                         <c:choose>
-                                                            <c:when test="${v.customerID > 0}">
-                                                                <span class="badge bg-info">ID: ${v.customerID}</span>
+                                                            <c:when test="${v.status == 'Đang hoạt động'}">
+                                                                <span class="badge bg-success rounded-pill px-3 py-2 fw-medium"><i class="bi bi-check-circle me-1"></i> Đang hoạt động</span>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <span class="badge bg-secondary">Tất cả khách</span>
+                                                                <span class="badge bg-secondary rounded-pill px-3 py-2 fw-medium"><i class="bi bi-pause-circle me-1"></i> Ngừng hoạt động</span>
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${v.status == 'Chưa sử dụng'}">
-                                                                <span class="badge bg-success">Chưa sử dụng</span>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <span class="badge bg-danger">Đã sử dụng</span>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal(${v.voucherId}, '${v.code}', ${v.discountAmount}, '${fn:escapeXml(v.description)}', '${v.status}', ${v.customerID})" title="Chỉnh sửa">
-                                                            <i class="bi bi-pencil-square"></i>
-                                                        </button>
-                                                        <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(${v.voucherId})" title="Xóa">
-                                                            <i class="bi bi-trash"></i>
-                                                        </button>
+                                                    <td class="nowrap text-center">
+                                                        <div class="d-flex justify-content-center gap-2">
+                                                            <button class="btn btn-sm btn-outline-primary rounded-pill fw-medium px-3" 
+                                                                data-id="${v.voucherId}" 
+                                                                data-code="${v.code}" 
+                                                                data-discount="${v.discountAmount}" 
+                                                                data-desc="${fn:escapeXml(v.description)}" 
+                                                                data-status="${v.status}" 
+                                                                onclick="openEditModal(this)" title="Chỉnh sửa">
+                                                                <i class="bi bi-pencil-square me-1"></i> Sửa
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-danger rounded-pill fw-medium px-3" onclick="confirmDelete(${v.voucherId})" title="Xóa">
+                                                                <i class="bi bi-trash me-1"></i> Xóa
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bottom Panels Row -->
+                <div class="row">
+                    <!-- Stats Panel -->
+                    <div class="col-12 col-md-4">
+                        <div class="card border-0 shadow-sm custom-card mb-4 h-100">
+                            <div class="card-body p-4">
+                                <h6 class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;"><i class="bi bi-bar-chart-fill me-2 text-warning"></i> Thống kê Voucher</h6>
+                                
+                                <div class="list-group list-group-flush border-bottom-0">
+                                    <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 active rounded-3 mb-1" style="background-color: rgba(184, 134, 11, 0.1); color: #8b6508; font-weight: 800; border-left: 4px solid #b8860b !important; cursor: default;">
+                                        <span><i class="bi bi-ticket-perforated me-2"></i>Tổng số</span>
+                                        <span class="badge rounded-pill" style="background-color: #b8860b !important; font-size: 0.9rem;">${fn:length(vouchers)}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Guidelines Panel -->
+                    <div class="col-12 col-md-8">
+                        <div class="card border-0 shadow-sm custom-card mb-4 h-100">
+                            <div class="card-body p-4">
+                                <h6 class="fw-bold text-dark text-uppercase mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;"><i class="bi bi-info-circle-fill me-2 text-primary"></i> Hướng dẫn sử dụng</h6>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="text-dark fw-medium small mb-2">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Mã Code:</strong> Tự động được viết hoa khi lưu.
+                                        </p>
+                                        <p class="text-dark fw-medium small mb-2">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Giảm giá:</strong> Số tiền được giảm cho khách thuê.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="text-dark fw-medium small mb-0">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Thao tác:</strong> Có thể sửa, hoặc khóa voucher lại (ngừng áp dụng).
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -132,8 +312,8 @@
         <div class="modal fade" id="voucherModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header bg-warning">
-                        <h5 class="modal-title fw-bold text-white" id="modalTitle"><i class="bi bi-ticket-perforated"></i> Tạo Voucher</h5>
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h5 class="modal-title fw-bold text-dark" id="modalTitle"><i class="bi bi-ticket-perforated"></i> Tạo Voucher Mới</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form action="manageVoucher" method="POST">
@@ -146,33 +326,24 @@
                                 <input type="text" class="form-control" name="code" id="code" required placeholder="VD: SUMMER2024" style="text-transform: uppercase;">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Số tiền giảm (VND)</label>
+                                <label class="form-label text-muted small fw-bold">Số tiền giảm (VND)</label>
                                 <input type="number" class="form-control" name="discountAmount" id="discountAmount" required min="1000" step="1000" placeholder="VD: 50000">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Mô tả chương trình</label>
+                                <label class="form-label text-muted small fw-bold">Mô tả chương trình</label>
                                 <textarea class="form-control" name="description" id="description" rows="3" required placeholder="Nhập lý do hoặc mô tả..."></textarea>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Gán cho Khách Hàng (Tùy chọn)</label>
-                                <select class="form-select" name="customerID" id="customerID">
-                                    <option value="">-- Dành cho tất cả khách --</option>
-                                    <c:forEach var="c" items="${customers}">
-                                        <option value="${c.customerId}">${c.customerName} (ID: ${c.customerId})</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
                             <div class="mb-3" id="statusDiv" style="display: none;">
-                                <label class="form-label fw-bold">Trạng thái</label>
+                                <label class="form-label text-muted small fw-bold">Trạng thái</label>
                                 <select class="form-select" name="status" id="status">
-                                    <option value="Chưa sử dụng">Chưa sử dụng</option>
-                                    <option value="Đã sử dụng">Đã sử dụng</option>
+                                    <option value="Đang hoạt động">Đang hoạt động (Khách dùng được)</option>
+                                    <option value="Ngừng hoạt động">Ngừng hoạt động (Tạm dừng/Hết hạn)</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" class="btn btn-warning fw-bold text-dark">Lưu Voucher</button>
+                        <div class="modal-footer border-top-0 pt-0">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-warning fw-bold text-dark shadow-sm">Lưu Voucher</button>
                         </div>
                     </form>
                 </div>
@@ -205,19 +376,24 @@
                 document.getElementById('code').value = '';
                 document.getElementById('discountAmount').value = '';
                 document.getElementById('description').value = '';
-                document.getElementById('customerID').value = '';
                 document.getElementById('statusDiv').style.display = 'none';
             }
 
-            function openEditModal(id, code, discount, desc, status, customerId) {
+            function openEditModal(btn) {
+                var id = btn.getAttribute('data-id');
+                var code = btn.getAttribute('data-code');
+                var discount = btn.getAttribute('data-discount');
+                var desc = btn.getAttribute('data-desc');
+                var status = btn.getAttribute('data-status');
+                
                 document.getElementById('modalTitle').innerHTML = '<i class="bi bi-pencil-square"></i> Cập nhật Voucher';
                 document.getElementById('formAction').value = 'edit';
                 document.getElementById('voucherId').value = id;
                 document.getElementById('code').value = code;
                 document.getElementById('discountAmount').value = discount;
                 document.getElementById('description').value = desc;
-                document.getElementById('customerID').value = customerId == 0 ? '' : customerId;
-                document.getElementById('status').value = status;
+                document.getElementById('status').value = status.trim();
+                
                 document.getElementById('statusDiv').style.display = 'block';
                 
                 var myModal = new bootstrap.Modal(document.getElementById('voucherModal'));
@@ -241,6 +417,27 @@
                     }
                 })
             }
+            
+            // Show alert from session
+            <% if (session.getAttribute("successMsg") != null) { %>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: '<%= session.getAttribute("successMsg") %>',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                <% session.removeAttribute("successMsg"); %>
+            <% } %>
+            <% if (session.getAttribute("errorMsg") != null) { %>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: '<%= session.getAttribute("errorMsg") %>',
+                    confirmButtonColor: '#d33'
+                });
+                <% session.removeAttribute("errorMsg"); %>
+            <% } %>
         </script>
     </body>
 </html>

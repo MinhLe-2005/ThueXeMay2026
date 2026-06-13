@@ -317,3 +317,52 @@
   }
 
 })();
+
+// Global Image Zoom Function
+window.zoomImage = function(src) {
+    if (!src || src.trim() === '') return;
+    
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
+    overlay.style.zIndex = '106000'; // above everything
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.cursor = 'zoom-out';
+    
+    // Create image
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.maxWidth = '90%';
+    img.style.maxHeight = '90%';
+    img.style.objectFit = 'contain';
+    img.style.borderRadius = '8px';
+    img.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+    
+    // Create close button
+    const closeBtn = document.createElement('div');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.style.position = 'absolute';
+    closeBtn.style.top = '20px';
+    closeBtn.style.right = '30px';
+    closeBtn.style.color = '#fff';
+    closeBtn.style.fontSize = '40px';
+    closeBtn.style.fontWeight = 'bold';
+    closeBtn.style.cursor = 'pointer';
+    
+    overlay.appendChild(img);
+    overlay.appendChild(closeBtn);
+    
+    // Close on click
+    overlay.onclick = function() {
+        document.body.removeChild(overlay);
+    };
+    
+    document.body.appendChild(overlay);
+};

@@ -158,8 +158,17 @@ public class PriceListDAO implements Serializable {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public void delete(PriceList t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean deletePricing(int id) {
+        String sql = "DELETE FROM \"PriceList\" WHERE \"PriceListID\" = ?";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1, id);
+            int rowsAffected = stm.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(PriceListDAO.class.getName()).log(Level.SEVERE, "Error deleting pricing: " + e.getMessage(), e);
+            return false;
+        }
     }
 
     public static void main(String[] args) {

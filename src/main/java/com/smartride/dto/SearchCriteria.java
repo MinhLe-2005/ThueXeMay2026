@@ -22,6 +22,7 @@ public class SearchCriteria implements Serializable{
     private List<Integer> demandIDs = new ArrayList<>();
     private List<String> displacements = new ArrayList<>();
     private List<Integer> locationIDs = new ArrayList<>();
+    private String keyword;
 
     public void addPriceRange(double minPrice, double maxPrice) {
         this.priceRanges.add(new PriceRange(minPrice, maxPrice));

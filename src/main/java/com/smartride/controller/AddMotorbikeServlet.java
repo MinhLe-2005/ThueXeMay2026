@@ -46,11 +46,22 @@ public class AddMotorbikeServlet extends HttpServlet {
         Part image = request.getPart("image");
 
         String id = request.getParameter("id");
+        if (id == null || id.trim().isEmpty()) {
+            id = MotorcycleDAO.getInstance().getNewMotorcycleID();
+        }
         String model = request.getParameter("model");
         String displacement = request.getParameter("displacement");
         String description = request.getParameter("description");
-        int minAge = Integer.parseInt(request.getParameter("minAge"));
-        int brandID = Integer.parseInt(request.getParameter("brandID"));
+        String minAgeStr = request.getParameter("minAge");
+        int minAge = 0;
+        if (minAgeStr != null && !minAgeStr.trim().isEmpty()) {
+            minAge = Integer.parseInt(minAgeStr);
+        }
+        String brandName = request.getParameter("brandName");
+        int brandID = com.smartride.dao.BrandDAO.getInstance().getBrandIdByName(brandName);
+        if (brandID == -1) {
+            brandID = com.smartride.dao.BrandDAO.getInstance().addBrand(brandName);
+        }
         int categoryID = Integer.parseInt(request.getParameter("categoryID"));
         int priceListID = Integer.parseInt(request.getParameter("priceListID"));
 

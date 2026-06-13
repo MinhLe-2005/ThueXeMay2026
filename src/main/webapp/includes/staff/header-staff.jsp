@@ -3,7 +3,18 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- Favicons -->
 <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
-
+<script>
+    (function() {
+        var link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            link.type = 'image/png';
+            link.href = '${pageContext.request.contextPath}/images/newlogo_transparent.png';
+            document.head.appendChild(link);
+        }
+    })();
+</script>
 <!-- Google Fonts: Inter + Playfair Display -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,8 +33,20 @@
 <!-- Template Main CSS File -->
 <link href="staffAssets/css/style.css?v=<%= System.currentTimeMillis() %>" rel="stylesheet">
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:if test="${empty param.iframe}">
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="homeStaff" class="logo d-flex align-items-center d-xl-none" style="text-decoration: none;">
+            <img src="${pageContext.request.contextPath}/images/newlogo_transparent.png" alt="SmartRide Logo" style="max-height: 40px; margin-right: 10px;">
+            <span class="d-none d-lg-block fw-bold" style="color: #b59349; font-family: 'Playfair Display', serif; font-size: 24px;">SmartRide</span>
+        </a>
+        <div class="toggle-sidebar-btn d-flex align-items-center justify-content-center" style="cursor: pointer; margin-left: 20px; width: 44px; height: 44px; border-radius: 50%; background: transparent; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f1f5f9';" onmouseout="this.style.backgroundColor='transparent';">
+            <i class="bi bi-list" style="font-size: 32px; color: #0f172a; line-height: 0; margin-top: 2px;"></i>
+        </div>
+    </div>
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
@@ -67,3 +90,4 @@
     </nav><!-- End Icons Navigation -->
 
 </header><!-- End Header -->
+</c:if>

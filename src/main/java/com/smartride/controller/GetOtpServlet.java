@@ -44,7 +44,7 @@ public class GetOtpServlet extends HttpServlet {
         String sessionCode = (String) request.getSession().getAttribute("verificationCode");
 
         AccountDAO dao = AccountDAO.getInstance();
-
+        
         if (inputCode.equals(sessionCode)) {
 
             HttpSession session = request.getSession();

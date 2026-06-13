@@ -230,6 +230,8 @@
                                             <form class="addnew-location-form" onsubmit="addLocation(event)">
                                                 <h3>Add New Tourist Location</h3>
                                                 <div class="form-group">
+                                                    <label for="locationImage" style="font-weight: 600;">Location Image:</label>
+                                                    <div id="locationImagePreview" style="margin-bottom: 15px; border-radius: 8px; overflow: hidden; display: inline-block;"></div>
                                                     <input type="file" class="form-control-file" id="locationImage" accept="image/*">
                                                 </div>
                                                 <div class="form-group">
@@ -352,6 +354,15 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/imagePreview.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof setupLivePreview === 'function') {
+                setupLivePreview('locationImage', 'locationImagePreview');
+            }
+        });
+    </script>
 </body>
+</html>
 
 </html>

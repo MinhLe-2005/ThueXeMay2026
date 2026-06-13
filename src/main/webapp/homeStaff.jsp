@@ -8,7 +8,8 @@
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-        <title>Dashboard - SmartRide</title>
+        <title>Dashboard - Quản lý</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta content="" name="description">
         <meta content="" name="keywords">
 
@@ -696,9 +697,9 @@
                                             <div class="fw-bold text-dark fs-6 mb-1">`+m.model+`</div>
                                             <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 border border-primary border-opacity-25"><i class="bi bi-graph-up-arrow me-1"></i>Đã thuê: `+m.rentCount+` lần</span>
                                         </td>
-                                        <td class="fw-semibold text-success py-3">`+ new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(m.dailyPriceForDay * 1000).replace('₫', 'VNĐ') +`</td>
-                                        <td class="fw-semibold text-success py-3">`+ new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(m.dailyPriceForWeek * 1000).replace('₫', 'VNĐ') +`</td>
-                                        <td class="fw-semibold text-success py-3">`+ new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(m.dailyPriceForMonth * 1000).replace('₫', 'VNĐ') +`</td>
+                                        <td class="fw-semibold text-success py-3">`+ new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(m.dailyPriceForDay).replace('₫', 'VNĐ') +`</td>
+                                        <td class="fw-semibold text-success py-3">`+ new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(m.dailyPriceForWeek).replace('₫', 'VNĐ') +`</td>
+                                        <td class="fw-semibold text-success py-3">`+ new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(m.dailyPriceForMonth).replace('₫', 'VNĐ') +`</td>
                                     `;
                                     topTbody.appendChild(tr);
                                 });

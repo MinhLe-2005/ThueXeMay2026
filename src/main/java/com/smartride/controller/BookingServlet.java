@@ -36,7 +36,7 @@ public class BookingServlet extends HttpServlet {
         if(account != null && account.getRoleID() == 1){           
     //        session.setAttribute("account", AccountDAO.getInstance().checkLogin("thinhtvde170182@fpt.edu.vn", "Lb4_aa"));
 //            session.setAttribute("account", AccountDAO.getInstance().checkLogin("myphan123", "myphanpass"));
-            session.setAttribute("account", AccountDAO.getInstance().checkLogin(account.getUserName(), account.getPassWord()));
+            session.setAttribute("account", AccountDAO.getInstance().getAccountbyID(account.getAccountId()));
             MotorcycleDAO daoM = MotorcycleDAO.getInstance();
         
             //Tu mototcycle vao

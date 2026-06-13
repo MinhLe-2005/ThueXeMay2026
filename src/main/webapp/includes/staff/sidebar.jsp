@@ -2,6 +2,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:if test="${empty param.iframe}">
 <!-- ======= Sidebar ======= -->
 <style>
 /* Premium Sidebar Redesign - Ultra Modern */
@@ -132,10 +134,17 @@
 
     <!-- Brand Logo Area -->
     <div class="sidebar-brand">
-        <a href="homeStaff" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; padding: 24px 10px 15px 10px;">
+        <a onclick="CallSideBar('homeStaff', this)" style="cursor: pointer; text-decoration: none; display: flex; flex-direction: column; align-items: center; padding: 24px 10px 15px 10px;">
             <img src="${pageContext.request.contextPath}/images/newlogo_transparent.png" alt="SmartRide" style="height: 45px; width: auto; margin-bottom: 8px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.95;" />
             <span style="font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 800; color: #ffffff; letter-spacing: 1.5px;">SMARTRIDE</span>
-            <span style="background: rgba(192, 157, 98, 0.15); border: 1px solid rgba(192, 157, 98, 0.3); color: #C09D62; padding: 3px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 6px; font-family: 'Inter', sans-serif;">Quản Trị Viên</span>
+            <c:choose>
+                <c:when test="${account.roleID == 3}">
+                    <span style="background: rgba(192, 157, 98, 0.15); border: 1px solid rgba(192, 157, 98, 0.3); color: #C09D62; padding: 3px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 6px; font-family: 'Inter', sans-serif;">Quản Trị Viên</span>
+                </c:when>
+                <c:otherwise>
+                    <span style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 3px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 6px; font-family: 'Inter', sans-serif;">Nhân Viên</span>
+                </c:otherwise>
+            </c:choose>
         </a>
     </div>
     <div style="border-bottom: 1px solid #2d2e33; margin: 0 20px 10px 20px;"></div>
@@ -148,7 +157,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
         <li class="nav-item">
-            <a class="nav-link ${currentPage.contains('/homeStaff') ? 'active-page' : 'collapsed'}" href="homeStaff">
+            <a class="nav-link ${param.iframeSrc == 'homeStaff' ? 'active-page' : 'collapsed'}" style="cursor: pointer;" onclick="CallSideBar('homeStaff', this)">
                 <i class="bi bi-grid"></i>
                 <span>Tổng quan</span>
             </a>
@@ -156,7 +165,7 @@
         
         <c:if test="${account.roleID  == 3}">
              <li class="nav-item">
-                <a class="nav-link ${currentPage.contains('/manageStaff') ? 'active-page' : 'collapsed'}" href="manageStaff">
+                <a class="nav-link ${param.iframeSrc == 'manageStaff' ? 'active-page' : 'collapsed'}" style="cursor: pointer;" onclick="CallSideBar('manageStaff', this)">
                     <i class="bi bi-people"></i>
                     <span>Quản lý nhân viên</span>
                 </a>
@@ -164,42 +173,42 @@
         </c:if>
 
         <li class="nav-item">
-            <a class="nav-link ${currentPage.contains('/manageCustomer') ? 'active-page' : 'collapsed'}" href="manageCustomer">
+            <a class="nav-link ${param.iframeSrc == 'manageCustomer' ? 'active-page' : 'collapsed'}" style="cursor: pointer;" onclick="CallSideBar('manageCustomer', this)">
                 <i class="bi bi-person-lines-fill"></i>
                 <span>Quản lý khách hàng</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link ${currentPage.contains('/manageVoucher') ? 'active-page' : 'collapsed'}" href="manageVoucher">
+            <a class="nav-link ${param.iframeSrc == 'manageVoucher' ? 'active-page' : 'collapsed'}" style="cursor: pointer;" onclick="CallSideBar('manageVoucher', this)">
                 <i class="bi bi-ticket-perforated"></i>
                 <span>Quản lý Khuyến mãi</span>
             </a>
         </li>
 
-        <c:set var="isMotorMenu" value="${param.iframeSrc == 'motorManage' || param.iframeSrc == 'pricingManage' || param.iframeSrc == 'accessoriesStaffServlet' || currentPage.contains('/manageBooking')}" />
+        <c:set var="isMotorMenu" value="${param.iframeSrc == 'motorManage' || param.iframeSrc == 'pricingManage' || param.iframeSrc == 'accessoriesStaffServlet' || param.iframeSrc == 'manageBooking'}" />
         <li class="nav-item">
             <a class="nav-link ${isMotorMenu ? 'active-page' : 'collapsed'}" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-bicycle"></i><span>Quản lý Xe Máy</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="forms-nav" class="nav-content collapse ${isMotorMenu ? 'show' : ''}">
                 <li>
-                    <a style="cursor: pointer" onclick="CallSideBar('motorManage', this)" class="${param.iframeSrc == 'motorManage' ? 'active-submenu' : ''}">
+                    <a style="cursor: pointer;" onclick="CallSideBar('motorManage', this)" class="${param.iframeSrc == 'motorManage' ? 'active-submenu' : ''}">
                         <span>Thông tin xe máy</span>
                     </a>
                 </li>
                 <li>
-                    <a href="manageBooking" class="${currentPage.contains('/manageBooking') ? 'active-submenu' : ''}">
+                    <a style="cursor: pointer;" onclick="CallSideBar('manageBooking', this)" class="${param.iframeSrc == 'manageBooking' ? 'active-submenu' : ''}">
                         <span>Quản lí thuê xe</span>
                     </a>
                 </li>
                 <li>
-                    <a style="cursor: pointer" onclick="CallSideBar('pricingManage', this)" class="${param.iframeSrc == 'pricingManage' ? 'active-submenu' : ''}">
+                    <a style="cursor: pointer;" onclick="CallSideBar('pricingManage', this)" class="${param.iframeSrc == 'pricingManage' ? 'active-submenu' : ''}">
                         <span>Quản lí bảng giá</span>
                     </a>
                 </li>
                  <li>
-                    <a style="cursor: pointer" onclick="CallSideBar('accessoriesStaffServlet', this)" class="${param.iframeSrc == 'accessoriesStaffServlet' ? 'active-submenu' : ''}">
+                    <a style="cursor: pointer;" onclick="CallSideBar('accessoriesStaffServlet', this)" class="${param.iframeSrc == 'accessoriesStaffServlet' ? 'active-submenu' : ''}">
                         <span>Quản lí phụ kiện</span>
                     </a>
                 </li>
@@ -233,14 +242,14 @@
         <li class="nav-heading">Trang</li>
 
         <li class="nav-item">
-            <a class="nav-link ${currentPage.contains('/profileStaff.jsp') ? 'active-page' : 'collapsed'}" href="profileStaff.jsp">
+            <a class="nav-link ${param.iframeSrc == 'profileStaff.jsp' ? 'active-page' : 'collapsed'}" style="cursor: pointer;" onclick="CallSideBar('profileStaff.jsp', this)">
                 <i class="bi bi-person"></i>
                 <span>Thông tin cá nhân</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link ${currentPage.contains('/faqsStaff') ? 'active-page' : 'collapsed'}" href="faqsStaff">
+            <a class="nav-link ${param.iframeSrc == 'faqsStaff' ? 'active-page' : 'collapsed'}" style="cursor: pointer;" onclick="CallSideBar('faqsStaff', this)">
                 <i class="bi bi-question-circle"></i>
                 <span>F.A.Q</span>
             </a>
@@ -254,7 +263,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="logout" style="color: #b59349;">
+            <a class="nav-link collapsed" style="cursor: pointer;" onclick="CallSideBar('logout', this)" style="color: #b59349;">
                <i class="bi bi-box-arrow-in-right" style="color: #b59349;"></i>
                 <span>Đăng xuất</span>
             </a>
@@ -263,6 +272,12 @@
     </ul>
 
 </aside><!-- End Sidebar-->
+</c:if>
+<c:if test="${not empty param.iframe}">
+<style>
+    #main { margin-left: 0 !important; margin-top: 0 !important; padding: 20px !important; }
+</style>
+</c:if>
 
 <script>
     function CallSideBar(iframeSrc, element) {
@@ -278,8 +293,12 @@
             var loader = document.getElementById('iframeLoader');
             if (loader) loader.style.display = 'flex';
             
-            iframe.src = iframeSrc;
-            window.history.pushState({}, '', 'manageSmartRide.jsp?iframeSrc=' + iframeSrc);
+            var sep = iframeSrc.includes('?') ? '&' : '?';
+            iframe.src = iframeSrc + sep + 'iframe=true';
+            
+            // Cập nhật URL trên thanh địa chỉ mà không tải lại trang
+            var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?iframeSrc=' + iframeSrc;
+            window.history.pushState({}, '', newUrl);
         } else {
             window.location.href = "manageSmartRide.jsp?iframeSrc=" + iframeSrc;
         }

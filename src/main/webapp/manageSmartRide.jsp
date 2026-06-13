@@ -3,17 +3,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Quản Lý Xe Máy - SmartRide</title>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-        <title>Dashboard - SmartRide</title>
         <meta content="" name="description">
         <meta content="" name="keywords">
 
         <!-- Favicons -->
-<!--        <link href="staffAssets/img/favicon.png" rel="icon">
-        <link href="staffAssets/img/apple-touch-icon.png" rel="apple-touch-icon">-->
+        <link href="${pageContext.request.contextPath}/images/newlogo_transparent.png" rel="icon" type="image/png">
         
 
         <!-- Google Fonts -->
@@ -38,40 +35,10 @@
         <jsp:include page="/includes/staff/header-staff.jsp" />
         <jsp:include page="/includes/staff/sidebar.jsp" />
         
-        <style>
-            #iframeLoader {
-                position: absolute;
-                top: 60px;
-                left: 0; 
-                right: 0;
-                bottom: 0;
-                background: #f6f9ff;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                z-index: 999;
-            }
-            .spinner-border {
-                width: 3rem;
-                height: 3rem;
-                color: #d4af37;
-            }
-            @media (max-width: 1199px) {
-                #iframeLoader {
-                    left: 0;
-                }
-            }
-        </style>
+
 
         <main id="main" class="main" style="padding: 0; position: relative;">
-            <div id="iframeLoader">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Đang tải...</span>
-                </div>
-                <h5 class="mt-3 text-muted">Đang tải dữ liệu, vui lòng chờ...</h5>
-            </div>
-            <iframe id="contentIframe" src="${param.iframeSrc}" style="width: 100%; height: calc(100vh - 60px); border: none;" scrolling="yes" onload="document.getElementById('iframeLoader').style.display='none';"></iframe>
+            <iframe id="contentIframe" src="${param.iframeSrc}${param.iframeSrc.contains('?') ? '&' : '?'}iframe=true" style="width: 100%; height: calc(100vh - 60px); border: none;" scrolling="yes"></iframe>
         </main>
         
         <!-- Vendor JS Files -->

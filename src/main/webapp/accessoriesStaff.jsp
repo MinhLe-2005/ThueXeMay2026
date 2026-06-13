@@ -20,165 +20,293 @@
             body, html {
                 height: 100%;
                 margin: 0;
-                font-family: 'Tahoma', sans-serif;
+                font-family: 'Be Vietnam Pro', 'Tahoma', sans-serif;
+                background-color: #f5f7fb;
             }
 
             .tab-container {
                 display: flex;
                 flex-direction: column;
-                height: 100vh;
-                margin-top: 60px;
+                min-height: 100vh;
+                margin-top: 10px;
             }
 
             .tab-content {
                 flex: 1;
-                padding: 20px;
-                overflow-y: auto;
-                margin-left: 35px;
+                padding: 10px 40px;
             }
 
-            .tab-content h3 {
-                color: #1e97bf;
-                font-size: 20px;
-                font-weight: 700;
-                text-transform: uppercase;
-                margin-bottom: 7px;
-            }
-
+            /* --- Premium Underline Tabs --- */
             .nav-tabs {
+                border-bottom: 2px solid #e2e8f0 !important;
+                gap: 0;
+                margin-bottom: 25px;
+                margin-top: 10px;
+                margin-left: 0;
                 display: flex;
-                margin-left: 3%;
-                border-bottom: 2px solid #ddd;
-                padding-left: 50px;
+                background: transparent;
+                padding: 0 40px;
             }
 
             .nav-tabs li {
-                margin-right: 10px;
+                float: none !important;
+                margin-bottom: -2px; /* Pull down to overlap the border */
+                margin-right: 30px;
             }
 
             .nav-tabs li a {
-                color: #222;
-                background: transparent;
-                font-size: 17px;
-                font-weight: 800;
-                letter-spacing: 1px;
+                border: none !important;
+                background: transparent !important;
+                color: #64748b !important;
+                border-radius: 0 !important;
+                padding: 12px 5px !important;
+                font-weight: 700 !important;
+                transition: all 0.3s !important;
                 text-transform: uppercase;
-                padding: 12px 15px;
-                border: none;
-                border-radius: 4px;
-                transition: all 0.3s ease;
+                letter-spacing: 0.5px;
+                font-size: 14px;
+                box-shadow: none !important;
+                border-bottom: 3px solid transparent !important;
             }
 
-            .nav-tabs li a:hover,
-            .nav-tabs li.active a {
-                color: #1e97bf;
-                background: rgba(30, 151, 191, 0.1);
-                border-block-end: solid;
+            .nav-tabs li a:hover {
+                color: #0f172a !important;
+                background: transparent !important;
+                border-bottom: 3px solid #cbd5e1 !important;
             }
 
-            @media only screen and (max-width: 767px) {
-                .nav-tabs {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-
-                .nav-tabs li {
-                    margin-bottom: 10px;
-                }
-
-                .tab-content {
-                    padding: 10px;
-                }
-            }
-
-            .container-fluid {
-                padding: 2rem 0;
+            .nav-tabs li.active a,
+            .nav-tabs li.active a:focus,
+            .nav-tabs li.active a:hover {
+                background: transparent !important;
+                color: #b59349 !important;
+                border-bottom: 3px solid #b59349 !important;
+                box-shadow: none !important;
             }
 
             .tableview {
-                width: 80%;
+                width: 100%;
                 margin: 0 auto;
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 24px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); 
             }
 
             .table-image {
-                border-collapse: separate;
-                border-spacing: 0 15px;
+                width: 100%;
+                border-collapse: separate !important;
+                border-spacing: 0 !important;
+                margin-top: 5px !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 8px !important;
+                overflow: hidden !important;
             }
 
-            .table-image td, .table-image th {
-                vertical-align: middle;
-                background: #fff;
-                border: none;
-                padding: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
+            /* --- Header --- */
             .table thead th {
-                background-color: #6E9DC5;
-                color: #fff;
+                background: #f1f5f9 !important; 
+                color: #334155 !important; 
+                font-size: 0.85rem !important;
+                font-weight: bold !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
+                border: none !important; 
+                border-bottom: 2px solid #cbd5e1 !important;
+                border-right: 1px solid #e2e8f0 !important;
+                padding: 14px 16px !important;
                 text-align: center;
+                vertical-align: middle;
+                white-space: nowrap; 
+            }
+            .table thead th:last-child {
+                border-right: none !important;
             }
 
-            .table tbody tr:hover {
-                background-color: #f1f1f1;
+            /* --- Table Body --- */
+            .table-image td {
+                background: transparent;
+                vertical-align: middle;
+                border: none !important;
+                border-bottom: 1px solid #e2e8f0 !important; 
+                border-right: 1px solid #e2e8f0 !important;
+                padding: 14px 16px !important; 
+                color: #334155; 
+                font-size: 14px;
+                text-align: center;
+                transition: background-color 0.2s ease;
+            }
+            .table-image td:last-child {
+                border-right: none !important;
+            }
+            .table-image tr:last-child td {
+                border-bottom: none !important;
             }
 
-            .action-buttons .btn {
-                margin: 0 5px;
-                transition: all 0.3s ease;
+            .table-image tbody tr:nth-of-type(odd) td,
+            .table-image tbody tr:nth-of-type(even) td {
+                background-color: transparent !important;
+            }
+            .table-image tbody tr:hover td {
+                background-color: #f8fafc !important; 
             }
 
-            .action-buttons .btn:hover {
-                transform: scale(1.1);
+            /* Thu nhỏ kích thước ảnh */
+            .table-image img {
+                max-width: 80px;
+                height: auto;
+                max-height: 80px;
+                object-fit: contain;
+                border-radius: 4px;
+            }
+            
+            /* Giới hạn kích thước icon */
+            .table-image td:nth-child(4) img {
+                max-width: 50px;
+                max-height: 50px;
             }
 
-            .action-buttons .btn:focus {
-                outline: none;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            /* --- Premium Solid Buttons --- */
+            .btn {
+                border-radius: 6px;
+                padding: 8px 16px;
+                font-weight: 600;
+                font-size: 13px;
+                text-transform: none;
+                transition: all 0.2s ease;
+                border: none;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            }
+            .btn:active {
+                transform: translateY(1px);
+                box-shadow: none !important;
             }
 
-            td input.form-control {
-                animation: fadeIn 0.5s;
+            .btn-gold {
+                background: #b59349;
+                color: #ffffff;
+            }
+            .btn-gold:hover {
+                background: #9a7b3c;
+                color: #ffffff;
             }
 
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-                to {
-                    opacity: 1;
-                }
+            .btn-dark-custom {
+                background: #2b3445;
+                color: #ffffff;
+            }
+            .btn-dark-custom:hover {
+                background: #111827;
+                color: #ffffff;
+            }
+
+            .btn-danger-custom {
+                background: #ef4444;
+                color: #ffffff;
+            }
+            .btn-danger-custom:hover {
+                background: #dc2626;
+                color: #ffffff;
             }
 
             .buttons {
                 display: flex;
+                gap: 8px;
+                align-items: center;
                 justify-content: center;
             }
 
+            /* Forms inside Add/Update */
             .addnew, .editlocation {
-                margin-left: 15%;
+                background: #fff;
+                padding: 40px;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            }
+            
+            .addnew h3, .editlocation h3 {
+                color: #1a1816;
+                font-weight: 800;
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+                position: relative;
+            }
+            .addnew h3::after, .editlocation h3::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 0;
+                width: 50px;
+                height: 4px;
+                background: #d4af37;
+                border-radius: 2px;
             }
 
-            .alert {
-                margin-top: 10px;
-                display: none;
+            .form-group {
+                margin-bottom: 22px;
+            }
+
+            .form-control {
+                border-radius: 10px;
+                border: 1px solid #e2e8f0;
+                padding: 12px 15px;
+                background: #f8fafc;
+                transition: all 0.3s ease;
+                box-shadow: none !important;
+                height: auto;
+                font-size: 14px;
+            }
+            .form-control:focus {
+                border-color: #d4af37;
+                background: #fff;
+                box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15) !important;
+            }
+
+            /* Nút Submit của Form */
+            .addnew .btn-primary, .editlocation .btn-primary {
+                background: #1a1816;
+                color: #d4af37;
+                padding: 14px 20px;
+                font-weight: 700;
+                border-radius: 10px;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                width: 100%;
+                border: none;
+                transition: all 0.3s ease;
+            }
+            .addnew .btn-primary:hover, .editlocation .btn-primary:hover {
+                background: #d4af37;
+                color: #1a1816;
+                box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
             }
         </style>
     </head>
 
     <body>
 
-        <div class="container-fluid tab-container"  style="margin-left: 12%;">
+        <div class="container-fluid tab-container col-md-12">
+            <div class="pagetitle" style="margin-bottom: 20px; padding-left: 40px;">
+                <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ PHỤ KIỆN</h1>
+                <nav>
+                    <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
+                        <li class="breadcrumb-item"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
+                        <li class="breadcrumb-item active" style="font-weight: 500; color: #6c757d;">Quản lý phụ kiện</li>
+                    </ol>
+                </nav>
+            </div>
             <!-- Danh sách tab ngang -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active">
-                    <a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">Danh Sách Phụ Kiện</a>
+                    <a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">DANH SÁCH PHỤ KIỆN</a>
                 </li>
                 <li role="presentation">
-                    <a href="#Section2" aria-controls="profile" role="tab" data-toggle="tab">Thêm Mới Phụ Kiện</a>
-                </li>
-                <li role="presentation">
-                    <a href="#Section3" aria-controls="profile" role="tab" data-toggle="tab">Chỉnh Sửa Phụ Kiện</a>
+                    <a href="#Section2" aria-controls="profile" role="tab" data-toggle="tab">THÊM MỚI PHỤ KIỆN</a>
                 </li>
             </ul>
             <!-- Nội dung tab -->
@@ -191,10 +319,8 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-
                                             <th scope="col">Tên Phụ Kiện</th>
                                             <th scope="col">Hình Ảnh</th>
-                                            <th scope="col">Icon</th>
                                             <th scope="col">Thông Tin Mô Tả</th>
                                             <th scope="col">Giá</th>
                                             <th scope="col">Hành Động</th>
@@ -203,28 +329,30 @@
                                     <tbody id="table-body">
                                         <c:forEach var="accessoryLists" items="${accessoryList}">
                                             <tr>
-                                                <td>${accessoryLists.accessoryId}</td>
-
-                                                <td>${accessoryLists.accessoryName}</td>
+                                                <td class="text-muted fw-bold">#${accessoryLists.accessoryId}</td>
+                                                <td style="color: #0f172a; font-weight: 600;">${accessoryLists.accessoryName}</td>
                                                 <td class="w-25">
                                                     <img src="${empty accessoryLists.accessoryImage ? 'images/default.jpg' : (accessoryLists.accessoryImage.startsWith('http') ? accessoryLists.accessoryImage : 'images/'.concat(accessoryLists.accessoryImage))}"
-                                                         class="img-fluid img-thumbnail" alt="Sheep">
+                                                         class="img-fluid img-thumbnail" style="border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" alt="${accessoryLists.accessoryName}">
                                                 </td>
-                                                <td class="w-25">
-                                                    <img src="${empty accessoryLists.accessoryImageicon ? 'images/default.jpg' : (accessoryLists.accessoryImageicon.startsWith('http') ? accessoryLists.accessoryImageicon : 'images/'.concat(accessoryLists.accessoryImageicon))}"
-                                                         class="img-fluid img-thumbnail" alt="Sheep">
+                                                <td style="color: #475569; font-size: 13px;">${accessoryLists.accessoryDescription}</td>
+                                                <td style="color: #0f172a; font-weight: 600;">
+                                                    <c:choose>
+                                                        <c:when test="${accessoryLists.price == 0}">
+                                                            <span style="color: #10b981; font-weight: 700;">Miễn phí</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <fmt:formatNumber value="${accessoryLists.price}" pattern="#,##0"/> <span style="font-size: 11px; color: #64748b;">VNĐ</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </td>
-                                                <td>${accessoryLists.accessoryDescription}
-                                                </td>
-                                                <td>${accessoryLists.price}</td>
-
 
                                                 <td class="action-buttons">
-                                                    <div class="buttons">
-                                                        <button class="btn btn-primary btn-sm" onclick="editTouristLocation('${accessoryLists.accessoryId}', '${accessoryLists.accessoryName}', '${accessoryLists.accessoryImage}', '${accessoryLists.accessoryImageicon}', '${accessoryLists.accessoryDescription}', '${accessoryLists.price}')">
+                                                    <div class="buttons" style="gap: 8px;">
+                                                        <button class="btn btn-sm" style="background-color: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; border-radius: 8px; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#dbeafe'" onmouseout="this.style.backgroundColor='#eff6ff'" onclick="editTouristLocation('${accessoryLists.accessoryId}', '${accessoryLists.accessoryName}', '${accessoryLists.accessoryImage}', '${accessoryLists.accessoryImageicon}', '${accessoryLists.accessoryDescription}', '${accessoryLists.price}')" title="Sửa phụ kiện">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
-                                                        <button class="btn btn-danger btn-sm" onclick="confirmDelete('${accessoryLists.accessoryId}')">
+                                                        <button class="btn btn-sm" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; border-radius: 8px; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#fee2e2'" onmouseout="this.style.backgroundColor='#fef2f2'" onclick="confirmDelete('${accessoryLists.accessoryId}')" title="Xóa phụ kiện">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </div>
@@ -239,7 +367,7 @@
                 </div>
 
 
-                <div role="tabpanel" class="tab-pane fade" id="Section2" style="margin-left: 12%;">
+                <div role="tabpanel" class="tab-pane fade" id="Section2">
                     <section>
                         <div class="container-fluid">
                             <form id="addLocationForm" action="AddAccessoryStaff" method="POST" enctype="multipart/form-data">
@@ -250,12 +378,13 @@
                                 <div class="form-group">
 
                                     <label for="accessoryImage">Hình ảnh:</label>
+                                    <div id="addAccessoryImagePreview" style="margin-bottom: 10px;"></div>
                                     <input type="file" class="form-control" id="accessoryImage" name="accessoryImage" accept="image/*" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="accessoryImageIcon">Icon:</label>
-                                    <input type="file" class="form-control" id="accessoryImageIcon" name="accessoryImageIcon" accept="image/*" required>
-                                </div>
+                                <div class="form-group" style="display: none;">
+                                                    <label for="accessoryImageIcon">Icon:</label>
+                                                    <input type="file" class="form-control" id="accessoryImageIcon" name="accessoryImageIcon" accept="image/*">
+                                                </div>
                                 <div class="form-group">
                                     <label for="accessoryDescription">Thông Tin Mô Tả:</label>
                                     <textarea class="form-control" id="accessoryDescription" name="accessoryDescription" rows="3" required style="resize: vertical;"></textarea>
@@ -273,41 +402,53 @@
                     </section>
                 </div>
 
-                <div role="tabpanel" class="tab-pane fade" id="Section3" style="margin-left: 12%;">
-                    <section>
-                        <div class="container-fluid">
-                            <form action="UpdateAccessoryStaff" id="editLocationForm" method="POST" enctype="multipart/form-data">
-                                <input type="hidden" id="editAccessoryId" name="accessoryId" >
+                <!-- Modal Chỉnh Sửa Phụ Kiện -->
+                <div class="modal fade" id="editAccessoryModal" tabindex="-1" role="dialog" aria-labelledby="editAccessoryModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="border-radius: 12px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                            <div class="modal-header" style="background: #1a1816; border-bottom: none; padding: 20px 30px;">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff; opacity: 0.8; text-shadow: none; font-size: 24px;"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="editAccessoryModalLabel" style="font-weight: 700; color: #d4af37; text-transform: uppercase; font-size: 18px;">Chỉnh Sửa Phụ Kiện</h4>
+                            </div>
+                            <div class="modal-body" style="padding: 30px; background: #f8fafc;">
+                                <form action="UpdateAccessoryStaff" id="editLocationForm" method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" id="editAccessoryId" name="accessoryId" >
 
-                                <div class="form-group">
-                                    <label for="editAccessoryName">Tên Phụ Kiện:</label>
-                                    <input type="text" class="form-control" id="editAccessoryName" name="accessoryName" required>
-                                </div>
-                                <div class="form-group" style="max-width: 500px;">
-
-                                    <label for="editAccessoryImage">Hình ảnh:</label>
-                                    <div id="editAccessoryImagePreview"></div>
-                                    <input type="file" class="form-control" id="editAccessoryImage" name="accessoryImage" accept="image/*">
-                                </div>
-                                <div class="form-group" style="max-width: 400px;">  
-                                    <label for="editAccessoryImageIcon">Biểu Tượng:</label>
-
-                                    <div id="editAccessoryImageIconPreview"></div>
-                                    <input type="file" class="form-control" id="editAccessoryImageIcon" name="accessoryImageIcon" accept="image/*">
-                                </div>
-                                <div class="form-group">
-
-                                    <label for="editAccessoryDescription">Thông Tin Mô Tả:</label>
-                                    <textarea class="form-control" id="editAccessoryDescription" name="accessoryDescription" rows="3" required style="resize: vertical;"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editPrice">Giá:</label>
-                                    <input type="number" class="form-control" id="editPrice" name="price" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Cập Nhập Chỉnh Sửa</button>
-                            </form>
+                                    <div class="form-group">
+                                        <label for="editAccessoryName" style="color: #475569; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Tên Phụ Kiện:</label>
+                                        <input type="text" class="form-control" id="editAccessoryName" name="accessoryName" required style="border-radius: 8px;">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="editAccessoryImage" style="color: #475569; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Hình ảnh:</label>
+                                        <div id="editAccessoryImagePreview" style="margin-bottom: 15px; border-radius: 8px; overflow: hidden; display: inline-block;"></div>
+                                        <input type="file" class="form-control" id="editAccessoryImage" name="accessoryImage" accept="image/*" style="border-radius: 8px;">
+                                    </div>
+                                    
+                                    <div class="form-group" style="display: none;">  
+                                        <label for="editAccessoryImageIcon">Biểu Tượng:</label>
+                                        <div id="editAccessoryImageIconPreview"></div>
+                                        <input type="file" class="form-control" id="editAccessoryImageIcon" name="accessoryImageIcon" accept="image/*">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="editAccessoryDescription" style="color: #475569; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Thông Tin Mô Tả:</label>
+                                        <textarea class="form-control" id="editAccessoryDescription" name="accessoryDescription" rows="4" required style="resize: vertical; border-radius: 8px;"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="editPrice" style="color: #475569; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Giá:</label>
+                                        <input type="number" class="form-control" id="editPrice" name="price" required style="border-radius: 8px;">
+                                    </div>
+                                    
+                                    <div style="text-align: right; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-right: 12px; border-radius: 8px; padding: 10px 24px; font-weight: 600; color: #64748b; background: #fff; border: 1px solid #cbd5e1;">Hủy</button>
+                                        <button type="submit" class="btn btn-primary" style="background: #b59349; border: none; border-radius: 8px; padding: 10px 24px; font-weight: 600; color: #fff; box-shadow: 0 4px 12px rgba(181, 147, 73, 0.3);">Cập Nhật Lưu Lại</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </section>
+                    </div>
                 </div>
 
 
@@ -329,31 +470,85 @@ console.log("1");
                 imgContainer2.innerHTML = '';
 
                 // Display images if available
-                if (accessoryImage) {
+                if (accessoryImage && accessoryImage !== '') {
                     var img1 = document.createElement('img');
-                    img1.src = accessoryImage;
+                    img1.src = accessoryImage.startsWith('http') ? accessoryImage : 'images/' + accessoryImage;
                     img1.alt = 'Accessory Image';
                     img1.className = 'img-fluid img-thumbnail';
+                    img1.style.maxWidth = '150px';
                     imgContainer.appendChild(img1);
                 } else {
-                    imgContainer.innerHTML = 'No image available';
+                    imgContainer.innerHTML = '<span class="text-muted">Chưa có hình ảnh</span>';
                 }
-console.log("2");
-                if (accessoryImageicon) {
+
+                if (accessoryImageicon && accessoryImageicon !== '') {
                     var img2 = document.createElement('img');
-                    img2.src = accessoryImageicon;
+                    img2.src = accessoryImageicon.startsWith('http') ? accessoryImageicon : 'images/' + accessoryImageicon;
                     img2.alt = 'Accessory Image Icon';
                     img2.className = 'img-fluid img-thumbnail';
+                    img2.style.maxWidth = '150px';
                     imgContainer2.appendChild(img2);
-                } else {
-                    imgContainer2.innerHTML = 'No image icon available';
                 }
-                console.log("assffafas");
-                // Chuyển sang tab Section 3 (nếu cần thiết)
-                $('a[href="#Section3"]').tab('show');
-                document.
-                console.log("assffafas");
+
+                // Hiển thị modal thay vì chuyển tab
+                $('#editAccessoryModal').modal('show');
             }
+            
+            // Live Preview Function with Clear Button
+            function setupLivePreview(inputId, previewId) {
+                var input = document.getElementById(inputId);
+                var previewContainer = document.getElementById(previewId);
+                
+                if (input && previewContainer) {
+                    previewContainer.style.position = 'relative';
+                    previewContainer.style.display = 'inline-block';
+
+                    input.addEventListener('change', function(event) {
+                        var file = event.target.files[0];
+                        previewContainer.innerHTML = '';
+                        if (file) {
+                            var reader = new FileReader();
+                            reader.onload = function(e) {
+                                var img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'img-fluid img-thumbnail';
+                                img.style.maxWidth = '150px';
+                                
+                                var btn = document.createElement('button');
+                                btn.innerHTML = '&times;';
+                                btn.type = 'button';
+                                btn.style.position = 'absolute';
+                                btn.style.top = '-10px';
+                                btn.style.right = '-10px';
+                                btn.style.background = '#dc2626';
+                                btn.style.color = 'white';
+                                btn.style.border = 'none';
+                                btn.style.borderRadius = '50%';
+                                btn.style.width = '24px';
+                                btn.style.height = '24px';
+                                btn.style.lineHeight = '1';
+                                btn.style.cursor = 'pointer';
+                                btn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                                
+                                btn.onclick = function() {
+                                    input.value = '';
+                                    previewContainer.innerHTML = '';
+                                };
+                                
+                                previewContainer.appendChild(img);
+                                previewContainer.appendChild(btn);
+                            }
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            }
+            
+            // Khởi tạo live preview khi trang load
+            document.addEventListener('DOMContentLoaded', function() {
+                setupLivePreview('accessoryImage', 'addAccessoryImagePreview');
+                setupLivePreview('editAccessoryImage', 'editAccessoryImagePreview');
+            });
         </script>
 <script type="text/javascript">
             function confirmDelete(accessoryId) {
