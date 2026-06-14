@@ -26,13 +26,19 @@ public class CheckPaymentStatusServlet extends HttpServlet {
             return;
         }
 
-        BookingDAO dao = BookingDAO.getInstance();
-        Booking booking = dao.getBookingById(bookingId);
-        
-        if (booking != null && "ÄÃ£ thanh toÃ¡n".equals(booking.getStatusBooking())) {
+        // Kiểm tra trong in-memory map trước (để xử lý webhook ngay lập tức)
+        if (SepayWebhookServlet.paidOrders != null && SepayWebhookServlet.paidOrders.containsKey(bookingId)) {
             out.print("{\"status\":\"paid\"}");
         } else {
-            out.print("{\"status\":\"pending\"}");
+            // Dự phòng: Kiểm tra trong database
+            BookingDAO dao = BookingDAO.getInstance();
+            Booking booking = dao.getBookingById(bookingId);
+            
+            if (booking != null && "Đã thanh toán".equals(booking.getStatusBooking())) {
+                out.print("{\"status\":\"paid\"}");
+            } else {
+                out.print("{\"status\":\"pending\"}");
+            }
         }
         out.flush();
     }

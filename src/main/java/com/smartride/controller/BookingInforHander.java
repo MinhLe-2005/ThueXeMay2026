@@ -232,7 +232,10 @@ public class BookingInforHander extends HttpServlet {
         System.out.println(accountId);
         
         // Generate booking ID
-        String bookingid = generateBookingCode();
+        String bookingid = (String) dataMap.get("bookingId");
+        if (bookingid == null || bookingid.isEmpty() || "undefined".equals(bookingid)) {
+            bookingid = generateBookingCode();
+        }
 
         // Read voucherID (0 = no voucher)
         int voucherId = 0;

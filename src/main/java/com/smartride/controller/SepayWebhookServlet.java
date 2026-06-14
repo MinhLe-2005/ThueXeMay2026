@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "SepayWebhookServlet", urlPatterns = {"/sepay-webhook"})
 public class SepayWebhookServlet extends HttpServlet {
 
+    public static java.util.Map<String, Boolean> paidOrders = new java.util.concurrent.ConcurrentHashMap<>();
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -61,22 +63,29 @@ public class SepayWebhookServlet extends HttpServlet {
         try {
             int amount = (amountStr != null) ? Integer.parseInt(amountStr) : 0;
             
-            BookingDAO daoB = BookingDAO.getInstance();
-            daoB.updateBookingStatus(bookingId, "Đã thanh toán");
-
-            PaymentDAO daoP = PaymentDAO.getInstance();
-            LocalDateTime currentDateTime = LocalDateTime.now();
-            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String paymentDateText = currentDateTime.format(outputFormatter);
-            daoP.addPayment(bookingId, "SePay VietQR", paymentDateText, amount, "Giao dịch thành công");
+            // Lưu vào map tĩnh để frontend polling có thể lấy ngay lập tức!
+            paidOrders.put(bookingId, true);
             
-            MotorcycleStatusDAO daoMS = MotorcycleStatusDAO.getInstance();
-            BookingDetailDAO daoBD = BookingDetailDAO.getInstance();
-            List<com.smartride.dto.BookingDetail> listBD = daoBD.getListBookingDetails(bookingId);
-            for(com.smartride.dto.BookingDetail bd : listBD) {
-                int mcId = bd.getMotorcycleDetailID();
-                if(mcId > 0) {
-                    daoMS.insertMotorcycleStatus(mcId, "STAFF00001", "Đã thanh toán cọc", paymentDateText, "Xác nhận tự động qua SePay");
+            BookingDAO daoB = BookingDAO.getInstance();
+            com.smartride.dto.Booking existingBooking = daoB.getBookingById(bookingId);
+            
+            if (existingBooking != null) {
+                daoB.updateBookingStatus(bookingId, "Đã thanh toán");
+
+                PaymentDAO daoP = PaymentDAO.getInstance();
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String paymentDateText = currentDateTime.format(outputFormatter);
+                daoP.addPayment(bookingId, "SePay VietQR", paymentDateText, amount, "Giao dịch thành công");
+                
+                MotorcycleStatusDAO daoMS = MotorcycleStatusDAO.getInstance();
+                BookingDetailDAO daoBD = BookingDetailDAO.getInstance();
+                List<com.smartride.dto.BookingDetail> listBD = daoBD.getListBookingDetails(bookingId);
+                for(com.smartride.dto.BookingDetail bd : listBD) {
+                    int mcId = bd.getMotorcycleDetailID();
+                    if(mcId > 0) {
+                        daoMS.insertMotorcycleStatus(mcId, "STAFF00001", "Đã thanh toán cọc", paymentDateText, "Xác nhận tự động qua SePay");
+                    }
                 }
             }
             

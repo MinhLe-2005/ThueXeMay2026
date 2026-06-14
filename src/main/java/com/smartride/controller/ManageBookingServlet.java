@@ -73,12 +73,33 @@ public class ManageBookingServlet extends HttpServlet {
         String bookingID = request.getParameter("bookingID");
 
         if (bookingID != null && !bookingID.isEmpty()) {
-            String delistatus = request.getParameter("delistatus_" + bookingID);
-            if (delistatus != null && !delistatus.isEmpty()) {
-                BookingDAO.getInstance().updateDeliveryStatus(delistatus, bookingID);
+            String manualPayment = request.getParameter("manualPayment");
+            if ("true".equals(manualPayment)) {
+                BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã thanh toán");
+                com.smartride.dao.PaymentDAO daoP = com.smartride.dao.PaymentDAO.getInstance();
+                java.time.LocalDateTime currentDateTime = java.time.LocalDateTime.now();
+                java.time.format.DateTimeFormatter outputFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String paymentDateText = currentDateTime.format(outputFormatter);
+                // Tìm giá tiền từ form (hoặc để 0 vì Admin duyệt thủ công)
+                daoP.addPayment(bookingID, "Nhận chuyển khoản (Thủ công)", paymentDateText, 0, "Giao dịch thành công");
+                
+                com.smartride.dao.MotorcycleStatusDAO daoMS = com.smartride.dao.MotorcycleStatusDAO.getInstance();
+                com.smartride.dao.BookingDetailDAO daoBD = com.smartride.dao.BookingDetailDAO.getInstance();
+                List<com.smartride.dto.BookingDetail> listBD = daoBD.getListBookingDetails(bookingID);
+                for(com.smartride.dto.BookingDetail bd : listBD) {
+                    int mcId = bd.getMotorcycleDetailID();
+                    if(mcId > 0) {
+                        daoMS.insertMotorcycleStatus(mcId, "STAFF00001", "Đã thanh toán cọc", paymentDateText, "Xác nhận thủ công bởi Admin");
+                    }
+                }
             } else {
-                BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã xác nhận");
-                BookingDAO.getInstance().updateDeliveryStatus("Chưa giao", bookingID);
+                String delistatus = request.getParameter("delistatus_" + bookingID);
+                if (delistatus != null && !delistatus.isEmpty()) {
+                    BookingDAO.getInstance().updateDeliveryStatus(delistatus, bookingID);
+                } else {
+                    BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã xác nhận");
+                    BookingDAO.getInstance().updateDeliveryStatus("Chưa giao", bookingID);
+                }
             }
         }
         //--------------------------------------------------------------------------------

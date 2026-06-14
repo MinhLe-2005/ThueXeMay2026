@@ -12,6 +12,7 @@
         <meta name="author" content="colorlib.com">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Thuê xe</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
 
         <!-- Font Icon -->
         <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
@@ -3327,17 +3328,20 @@
                     pickupdateValue.setDate(pickupdateValue.getDate() + 1); // Minimum return date is one day after pick-up date
                     returndate.min = formatDate(pickupdateValue);
 
-                    if (new Date(returndate.value) <= new Date(pickupdate.min)) {
+                    // Nếu ngày trả đang nhỏ hơn ngày nhận + 1 thì tự điền lại ngày trả (KHÔNG đụng ngày nhận)
+                    if (returndate.value && new Date(returndate.value) < new Date(returndate.min)) {
                         returndate.value = formatDate(pickupdateValue);
+                        returndate.dispatchEvent(new Event('change'));
                     }
                 });
                 
+                // Không tự đổi ngày nhận khi người dùng sửa ngày trả — để tránh confuse
                 returndate.addEventListener('change', () => {
-                    // Không set max cho pickupdate để tránh giới hạn ngày nhận xe
-                    if (new Date(returndate.value) <= new Date(pickupdate.min)) {
-                        const returndateValue = new Date(returndate.value);
-                        returndateValue.setDate(returndateValue.getDate() - 1);
-                        pickupdate.value = formatDate(returndateValue);
+                    // Chỉ cảnh báo nếu ngày trả trước ngày nhận, không tự đổi ngày nhận
+                    if (returndate.value && pickupdate.value && new Date(returndate.value) <= new Date(pickupdate.value)) {
+                        const afterPickup = new Date(pickupdate.value);
+                        afterPickup.setDate(afterPickup.getDate() + 1);
+                        returndate.value = formatDate(afterPickup);
                     }
                 });
 
@@ -4006,9 +4010,19 @@
                 alert('Vui lòng chọn Ngày nhận xe trước!');
                 return;
             }
+            
+            // Toggle tắt nếu click lại nút đang chọn
             if (!autoEvent) {
-                window.activePackage = days === 7 ? 'week' : (days === 30 ? 'month' : null);
+                var clickedPackage = days === 7 ? 'week' : (days === 30 ? 'month' : null);
+                if (window.activePackage === clickedPackage) {
+                    window.activePackage = null;
+                    updateQuickButtonsStyle(0);
+                    return; // Không đổi ngày trả nữa
+                } else {
+                    window.activePackage = clickedPackage;
+                }
             }
+            
             var date = new Date(pickupInput.value);
             date.setDate(date.getDate() + days);
             var yyyy = date.getFullYear();
@@ -4063,7 +4077,7 @@
                     if (pickupInput.value && returnInput.value) {
                         var start = new Date(pickupInput.value);
                         var end = new Date(returnInput.value);
-                        var diffDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24));
+                        var diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
                         if (diffDays === 7) { window.activePackage = 'week'; updateQuickButtonsStyle(7); }
                         else if (diffDays === 30) { window.activePackage = 'month'; updateQuickButtonsStyle(30); }
                         else { window.activePackage = null; updateQuickButtonsStyle(0); }
