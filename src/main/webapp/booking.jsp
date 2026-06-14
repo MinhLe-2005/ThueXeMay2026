@@ -1807,7 +1807,8 @@
                     <i class="bi bi-x-lg"></i> Hủy đặt xe
                 </a>
               
-                <form method="POST" id="signup-form" class="signup-form" action="">
+                <form method="POST" id="signup-form" class="signup-form" action="" onkeydown="return event.key !== 'Enter' || event.target.tagName === 'TEXTAREA';"
+                    onsubmit="return false;">
                     
                     <div >
                         <button type="submit" id="paymentButton" style="display: none"></button>
@@ -2471,23 +2472,82 @@
                                     <!-- ĐIỀU KHOẢN -->
                                     <div style="background:#fffbf2; border:1px solid #f0e4b8; border-radius:12px; padding:20px;">
                                         <h4 style="margin:0 0 12px; color:#b59349; font-size:13px; text-transform:uppercase; letter-spacing:1px;">
-                                            <i class="bi bi-shield-check"></i> Điều Khoản & Chính Sách
+                                            <i class="bi bi-shield-check"></i> Điều Khoản &amp; Chính Sách
                                         </h4>
                                         <ul style="font-size:13px; color:#555; margin:0 0 14px; padding-left:18px; line-height:2;">
-                                            <li>Khách hàng cần xuất trình CCCD/Hộ chiếu khi nhận xe.</li>
-                                            <li>Xe được giao đúng địa điểm và thời gian đã chọn.</li>
-                                            <li>Tiền cọc sẽ được hoàn trả khi trả xe đúng hạn và nguyên vẹn.</li>
-                                            <li>Không chịu trách nhiệm với các sự cố do lỗi của khách hàng.</li>
+                                            <li>Người thuê phải có <strong>bằng lái xe hợp lệ</strong> và đủ <strong>18 tuổi</strong> trở lên.</li>
+                                            <li>Xuất trình <strong>CCCD/Hộ chiếu</strong> khi nhận xe.</li>
+                                            <li>Xe được giao đúng địa điểm và thời gian đã chọn. Trả muộn tính phí thêm.</li>
+                                            <li>Tiền cọc hoàn trả khi trả xe đúng hạn và nguyên vẹn.</li>
+                                            <li>Hủy miễn phí <strong>trước 24 giờ</strong> nhận xe. Hoàn tiền trong 7 ngày làm việc.</li>
                                         </ul>
+                                        <div style="margin-bottom:14px;">
+                                            <button type="button" onclick="document.getElementById('terms-modal').style.display='flex'"
+                                                style="background:none; border:none; padding:0; color:#b59349; font-size:13px; font-weight:600; cursor:pointer; text-decoration:underline;">
+                                                📄 Xem đầy đủ Chính sách &amp; Điều khoản →
+                                            </button>
+                                        </div>
                                         <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; font-weight:600; color:#333;">
                                             <input type="checkbox" id="daily-checkbox-term" style="width:18px; height:18px; accent-color:#b59349; cursor:pointer;" />
-                                            Tôi đã đọc và đồng ý với các điều khoản trên
+                                            Tôi đã đọc và đồng ý với <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('terms-modal').style.display='flex'">Điều khoản &amp; Chính sách</span> của SmartRide
                                         </label>
                                     </div>
 
                                 </div>
                             </div>
                         </fieldset>
+
+                        <!-- MODAL ĐIỀU KHOẢN SMARTRIDE -->
+                        <div id="terms-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:99999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+                            <div style="background:#fff; border-radius:16px; max-width:720px; width:100%; max-height:85vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.25);">
+                                <div style="padding:20px 24px; border-bottom:1px solid #f0e4b8; display:flex; align-items:center; justify-content:space-between; background:#fffbf2;">
+                                    <div>
+                                        <h3 style="margin:0; color:#b59349; font-size:18px;">🛡️ Chính sách &amp; Điều khoản SmartRide</h3>
+                                        <p style="margin:4px 0 0; font-size:12px; color:#888;">Vui lòng đọc kỹ trước khi xác nhận đặt xe</p>
+                                    </div>
+                                    <button type="button" onclick="document.getElementById('terms-modal').style.display='none'"
+                                        style="background:#f3f4f6; border:none; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; color:#555;">✕</button>
+                                </div>
+                                <div style="overflow-y:auto; padding:24px; flex:1; font-size:14px; color:#444; line-height:1.8;">
+                                    <h4 style="color:#b59349; margin:0 0 6px;">1. Giới thiệu</h4>
+                                    <p>Chào mừng bạn đến với <strong>SmartRide</strong>! Chúng tôi cung cấp dịch vụ cho thuê xe máy nhằm giúp bạn dễ dàng di chuyển và khám phá. Vui lòng đọc kỹ các điều khoản dưới đây.</p>
+                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                                    <h4 style="color:#b59349; margin:0 0 6px;">2. Đăng ký và Tài khoản</h4>
+                                    <p><strong>Đăng ký Tài khoản:</strong> Người dùng phải đăng ký tài khoản hợp lệ để sử dụng dịch vụ.<br>
+                                    <strong>Bảo mật Tài khoản:</strong> Người dùng tự chịu trách nhiệm bảo mật thông tin tài khoản.</p>
+                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                                    <h4 style="color:#b59349; margin:0 0 6px;">3. Điều khoản Thuê xe</h4>
+                                    <p><strong>Điều kiện:</strong> Có bằng lái hợp lệ, đủ 18 tuổi trở lên. Xuất trình CCCD/Hộ chiếu khi nhận xe.<br>
+                                    <strong>Đặt xe:</strong> Sau khi đặt, khách nhận xác nhận qua email với thông tin chi tiết.<br>
+                                    <strong>Thanh toán:</strong> Hoàn thành thanh toán trước khi nhận xe. Chấp nhận VNPay, thẻ tín dụng/ghi nợ.</p>
+                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                                    <h4 style="color:#b59349; margin:0 0 6px;">4. Sử dụng Xe</h4>
+                                    <p><strong>An toàn:</strong> Tuân thủ luật giao thông, đội mũ bảo hiểm khi lái xe.<br>
+                                    <strong>Bảo quản:</strong> Chịu trách nhiệm xe suốt thời gian thuê. Hư hại phải báo cáo ngay.<br>
+                                    <strong>Trả xe:</strong> Đúng giờ, đúng địa điểm. <strong>Trả muộn bị tính phí thêm.</strong></p>
+                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                                    <h4 style="color:#b59349; margin:0 0 6px;">5. Bảo hiểm &amp; Trách nhiệm</h4>
+                                    <p><strong>Bảo hiểm:</strong> SmartRide cung cấp bảo hiểm cơ bản cho xe thuê.<br>
+                                    <strong>Trách nhiệm:</strong> Người thuê chịu trách nhiệm pháp lý với mọi hành động khi sử dụng xe.</p>
+                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                                    <h4 style="color:#b59349; margin:0 0 6px;">6. Hủy Bỏ &amp; Hoàn Tiền</h4>
+                                    <p><strong>Hủy miễn phí:</strong> Trước 24 giờ so với thời gian nhận xe.<br>
+                                    <strong>Hoàn tiền:</strong> Xử lý trong vòng <strong>7 ngày làm việc</strong> sau khi xác nhận hủy.</p>
+                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                                    <h4 style="color:#b59349; margin:0 0 6px;">7. Quyền riêng tư</h4>
+                                    <p>SmartRide cam kết bảo vệ thông tin cá nhân và không chia sẻ cho bên thứ ba ngoài mục đích dịch vụ.</p>
+                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                                    <h4 style="color:#b59349; margin:0 0 6px;">8. Liên hệ</h4>
+                                    <p>Mọi thắc mắc về điều khoản, vui lòng liên hệ qua email hoặc số điện thoại trên website. Chi tiết đầy đủ tại <a href="policies.jsp" target="_blank" style="color:#b59349; font-weight:600;">trang Chính sách</a>.</p>
+                                </div>
+                                <div style="padding:14px 24px; border-top:1px solid #f0e4b8; display:flex; justify-content:flex-end; gap:10px; background:#fafafa;">
+                                    <button type="button" onclick="document.getElementById('terms-modal').style.display='none'"
+                                        style="padding:10px 20px; background:#f3f4f6; border:none; border-radius:8px; font-size:14px; cursor:pointer; color:#555; font-weight:600;">Đóng</button>
+                                    <button type="button" onclick="document.getElementById('daily-checkbox-term').checked=true; document.getElementById('terms-modal').style.display='none'; if(typeof toggleNextButton==='function') toggleNextButton();"
+                                        style="padding:10px 24px; background:#b59349; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer;">✓ Đã đọc &amp; Đồng ý</button>
+                                </div>
+                            </div>
+                        </div>
 
                         
                         <h3>Thanh toán</h3>
@@ -2993,7 +3053,13 @@
                                 document.getElementById('expdatetext').textContent = formData.expdate;   
                             }
                             // Thêm tiêu đề h4 và dữ liệu số lượng với giá tiền vào div cụ thể trong item-container
+                            buildStep5Table();
+                        }
+
+                        // Hàm toàn cục: có thể gọi lại bất kỳ lúc nào (VD: sau khi áp voucher)
+                        window.buildStep5Table = function() {
                             const formBoxTotal = document.getElementById('form-box-total');
+                            if (!formBoxTotal) return;
                             formBoxTotal.innerHTML = '';
                             let totalAmount = 0;
                             
@@ -3109,20 +3175,33 @@
                             const appliedDiscount = parseInt(document.getElementById('applied-discount').value) || 0;
                             const finalAmount = Math.max(0, totalAmount - appliedDiscount);
 
-                            let discountHtml = '';
+                            let totalFooterHtml = '';
                             if (appliedDiscount > 0) {
-                                discountHtml = `<div style="display:flex; justify-content:space-between; width: 100%; color:#16a34a; font-size:15px; margin-top:16px; margin-bottom:12px; font-weight: 600;">
-                                    <span>🎉 Giảm giá voucher:</span>
-                                    <span>-₫${appliedDiscount.toLocaleString()}</span>
-                                </div>`;
+                                // Giá gốc gạch ngang + dòng giảm + giá sau giảm
+                                totalFooterHtml = `
+                                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:2px solid #e0c87a;">
+                                        <h4 style="margin:0; font-size:16px; color:#888;">Tạm tính:</h4>
+                                        <span style="font-size:18px; color:#aaa; text-decoration:line-through; font-weight:600;">₫` + totalAmount.toLocaleString() + `</span>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:6px;">
+                                        <span style="font-size:14px; color:#16a34a; font-weight:600;">🎉 Voucher giảm:</span>
+                                        <span style="font-size:15px; color:#16a34a; font-weight:700;">-₫` + appliedDiscount.toLocaleString() + `</span>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:1px dashed #e0c87a;">
+                                        <h4 style="margin:0; font-size:18px; color:#333; font-weight:700;">Tổng thanh toán:</h4>
+                                        <h2 id="dataInput" style="margin:0; font-size:26px; color:#b59349; font-weight:700;">₫` + finalAmount.toLocaleString() + `</h2>
+                                    </div>
+                                `;
+                            } else {
+                                totalFooterHtml = `
+                                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:2px solid #e0c87a;">
+                                        <h4 style="margin:0; font-size:18px; color:#333;">Tổng thanh toán:</h4>
+                                        <h2 id="dataInput" style="margin:0; font-size:26px; color:#b59349; font-weight:700;">₫` + finalAmount.toLocaleString() + `</h2>
+                                    </div>
+                                `;
                             }
 
-                            tableHtml += discountHtml + `
-                                <div style="display:flex; justify-content:space-between; width: 100%; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 2px solid #e0c87a;">
-                                    <h4 style="margin: 0; font-size: 18px; color: #333;">Tổng thanh toán:</h4>
-                                    <h2 id="dataInput" style="margin: 0; font-size: 26px; color: #b59349; font-weight: 700;">₫`+ finalAmount.toLocaleString() +`</h2>
-                                </div>
-                            </div>`; // close wrapper div
+                            tableHtml += totalFooterHtml + `</div>`; // close wrapper div
                             
                             formBoxTotal.innerHTML = tableHtml;
                         }
@@ -3807,16 +3886,27 @@
                     document.getElementById('applied-voucher-id').value = data.voucherId;
                     document.getElementById('applied-discount').value = data.discount;
                     msgEl.style.color = '#16a34a';
-                    msgEl.textContent = '✓ Áp dụng thành công! Giảm ₫' + Number(data.discount).toLocaleString('vi-VN')
+                    msgEl.innerHTML = '✅ Áp dụng thành công! Giảm <strong>₫' + Number(data.discount).toLocaleString('vi-VN') + '</strong>'
                         + (data.description ? ' — ' + data.description : '');
-                    document.getElementById('apply-voucher-btn').textContent = 'Đã áp dụng';
-                    document.getElementById('apply-voucher-btn').style.background = '#16a34a';
-                    // Refresh total display
-                    const formBoxTotal = document.getElementById('form-box-total');
-                    if (formBoxTotal) { formBoxTotal.dispatchEvent(new Event('refresh')); }
-                    // Re-trigger total calculation by re-rendering
-                    const event4 = new CustomEvent('recalcTotal');
-                    document.dispatchEvent(event4);
+
+                    // Lock voucher: 1 đơn hàng chỉ 1 voucher
+                    const btn = document.getElementById('apply-voucher-btn');
+                    const inp = document.getElementById('voucher-code-input');
+                    if (btn) {
+                        btn.textContent = '✓ Đã áp dụng';
+                        btn.style.background = '#16a34a';
+                        btn.disabled = true;
+                        btn.style.opacity = '0.7';
+                        btn.style.cursor = 'not-allowed';
+                    }
+                    if (inp) {
+                        inp.disabled = true;
+                        inp.style.background = '#f0fdf4';
+                        inp.style.borderColor = '#16a34a';
+                    }
+
+                    // Re-render bảng tổng kết để hiện giá gạch ngang + giá mới
+                    if (typeof buildStep5Table === 'function') buildStep5Table();
                 } else {
                     msgEl.style.color = '#dc2626';
                     msgEl.textContent = '✗ ' + data.message;
