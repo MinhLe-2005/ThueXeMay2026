@@ -1829,6 +1829,17 @@
                                     <div class="form-group">
                                         <label for="returndate" class="form-label">Ngày trả xe <span class="note-star"> *</span></label>
                                         <input type="date" name="returndate" id="returndate"  />
+                                        <div style="margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+                                            <button type="button" id="btn-quick-week" style="background: #fff; color: #b59349; border: 1.5px solid #b59349; padding: 5px 14px; font-size: 12px; font-weight: 600; border-radius: 20px; cursor: pointer; transition: all 0.2s;" onclick="setQuickReturnDate(7)">
+                                                Thuê 1 Tuần &mdash; Giá ưu đãi hơn so với ngày lẻ
+                                            </button>
+                                            <button type="button" id="btn-quick-month" style="background: #fff; color: #b59349; border: 1.5px solid #b59349; padding: 5px 14px; font-size: 12px; font-weight: 600; border-radius: 20px; cursor: pointer; transition: all 0.2s;" onclick="setQuickReturnDate(30)">
+                                                Thuê 1 Tháng &mdash; Giá ưu đãi tốt nhất
+                                            </button>
+                                        </div>
+                                        <small style="display: block; margin-top: 6px; color: #888; font-size: 11px; font-style: italic;">
+                                            💡 Nhấn vào gói để tự động điền ngày trả xe &amp; áp dụng giá ưu đãi ở bước Chọn Xe
+                                        </small>
                                     </div>
                                     <div class="form-group">
                                         <label for="returntime" class="form-label">Giờ trả xe <span class="note-star"> *</span></label>
@@ -1881,6 +1892,11 @@
                             <p class="desc">Hãy chọn những chiếc xe tuyệt vời nhất cho hành trình của bạn</p>
                             
                             <div class="fieldset-content">
+                                <!-- Banner xe đã chọn realtime -->
+                                <div id="bike-selection-banner" style="display:none; background: linear-gradient(135deg,#fdf8ee,#fff8e1); border:1.5px solid #e0c87a; border-radius:10px; padding:10px 16px; margin-bottom:14px; font-size:13px; color:#7a5c00; font-weight:600;">
+                                    <i class="bi bi-check-circle-fill" style="color:#b59349;"></i>
+                                    Đã chọn: <span id="bike-selection-list"></span>
+                                </div>
                                 <div class="scrollable-vertical" id="motorcyclelist">
                                     <c:forEach items="${listM}" var="o">
                                         <c:if test="${o.motorcycleId eq chosenmotor}">
@@ -1900,20 +1916,38 @@
                                                             <c:choose>
                                                                 <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
                                                                     <div style="display: flex; gap: 8px; align-items: baseline;">
-                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${p.dailyPriceForDay}00</span>
+                                                                        <fmt:formatNumber var="origDay" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${origDay}</span>
                                                                         <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
                                                                     </div>
-                                                                    <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
-                                                                    <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
-                                                                    <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
-                                                                    <h2 class="main-price price-day" >₫${discountedDay}00/Ngày</h2>
-                                                                    <h2 class="main-price price-week" >₫${discountedWeek}00/Ngày</h2>
-                                                                    <h2 class="main-price price-month" >₫${discountedMonth}00/Ngày</h2>
+                                                                    <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedDayRaw" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedWeekRaw" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedMonthRaw" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <h2 class="main-price price-day" data-rawprice="${discountedDayRaw}">₫${discountedDay}/Ngày</h2>
+                                                                    <h2 class="main-price price-week" data-rawprice="${discountedWeekRaw}">₫${discountedWeek}/Ngày</h2>
+                                                                    <h2 class="main-price price-month" data-rawprice="${discountedMonthRaw}">₫${discountedMonth}/Ngày</h2>
+                                                                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                                                                        <span style="font-size: 11px; color: #15803d; background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tuần (&ge;7 ngày): ₫${discountedWeek}/ngày</span>
+                                                                        <span style="font-size: 11px; color: #6d28d9; background: #ede9fe; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tháng (&ge;30 ngày): ₫${discountedMonth}/ngày</span>
+                                                                    </div>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <h2 class="main-price price-day" >₫${p.dailyPriceForDay}00/Ngày</h2>
-                                                                    <h2 class="main-price price-week" >₫${p.dailyPriceForWeek}00/Ngày</h2>
-                                                                    <h2 class="main-price price-month" >₫${p.dailyPriceForMonth}00/Ngày</h2>
+                                                                    <fmt:formatNumber var="fmtDay" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="fmtWeek" value="${p.dailyPriceForWeek}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="fmtMonth" value="${p.dailyPriceForMonth}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="rawDay" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <fmt:formatNumber var="rawWeek" value="${p.dailyPriceForWeek}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <fmt:formatNumber var="rawMonth" value="${p.dailyPriceForMonth}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <h2 class="main-price price-day" data-rawprice="${rawDay}">₫${fmtDay}/Ngày</h2>
+                                                                    <h2 class="main-price price-week" data-rawprice="${rawWeek}">₫${fmtWeek}/Ngày</h2>
+                                                                    <h2 class="main-price price-month" data-rawprice="${rawMonth}">₫${fmtMonth}/Ngày</h2>
+                                                                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                                                                        <span style="font-size: 11px; color: #15803d; background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tuần (&ge;7 ngày): ₫${fmtWeek}/ngày</span>
+                                                                        <span style="font-size: 11px; color: #6d28d9; background: #ede9fe; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tháng (&ge;30 ngày): ₫${fmtMonth}/ngày</span>
+                                                                    </div>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </c:if>
@@ -1960,20 +1994,38 @@
                                                             <c:choose>
                                                                 <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
                                                                     <div style="display: flex; gap: 8px; align-items: baseline;">
-                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${p.dailyPriceForDay}00</span>
+                                                                        <fmt:formatNumber var="origDay2" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${origDay2}</span>
                                                                         <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
                                                                     </div>
-                                                                    <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
-                                                                    <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
-                                                                    <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
-                                                                    <h2 class="main-price price-day" >₫${discountedDay}00/Ngày</h2>
-                                                                    <h2 class="main-price price-week" >₫${discountedWeek}00/Ngày</h2>
-                                                                    <h2 class="main-price price-month" >₫${discountedMonth}00/Ngày</h2>
+                                                                    <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedDayRaw2" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedWeekRaw2" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedMonthRaw2" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <h2 class="main-price price-day" data-rawprice="${discountedDayRaw2}">₫${discountedDay}/Ngày</h2>
+                                                                    <h2 class="main-price price-week" data-rawprice="${discountedWeekRaw2}">₫${discountedWeek}/Ngày</h2>
+                                                                    <h2 class="main-price price-month" data-rawprice="${discountedMonthRaw2}">₫${discountedMonth}/Ngày</h2>
+                                                                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                                                                        <span style="font-size: 11px; color: #15803d; background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tuần (&ge;7 ngày): ₫${discountedWeek}/ngày</span>
+                                                                        <span style="font-size: 11px; color: #6d28d9; background: #ede9fe; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tháng (&ge;30 ngày): ₫${discountedMonth}/ngày</span>
+                                                                    </div>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <h2 class="main-price price-day" >₫${p.dailyPriceForDay}00/Ngày</h2>
-                                                                    <h2 class="main-price price-week" >₫${p.dailyPriceForWeek}00/Ngày</h2>
-                                                                    <h2 class="main-price price-month" >₫${p.dailyPriceForMonth}00/Ngày</h2>
+                                                                    <fmt:formatNumber var="fmtDay2" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="fmtWeek2" value="${p.dailyPriceForWeek}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="fmtMonth2" value="${p.dailyPriceForMonth}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="rawDay2" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <fmt:formatNumber var="rawWeek2" value="${p.dailyPriceForWeek}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <fmt:formatNumber var="rawMonth2" value="${p.dailyPriceForMonth}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <h2 class="main-price price-day" data-rawprice="${rawDay2}">₫${fmtDay2}/Ngày</h2>
+                                                                    <h2 class="main-price price-week" data-rawprice="${rawWeek2}">₫${fmtWeek2}/Ngày</h2>
+                                                                    <h2 class="main-price price-month" data-rawprice="${rawMonth2}">₫${fmtMonth2}/Ngày</h2>
+                                                                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                                                                        <span style="font-size: 11px; color: #15803d; background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tuần (&ge;7 ngày): ₫${fmtWeek2}/ngày</span>
+                                                                        <span style="font-size: 11px; color: #6d28d9; background: #ede9fe; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tháng (&ge;30 ngày): ₫${fmtMonth2}/ngày</span>
+                                                                    </div>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </c:if>
@@ -2009,7 +2061,13 @@
                         <fieldset>
                             <h2>PHỤ KIỆN ĐI KÈM</h2>
                             <p class="desc">Hãy chọn những phụ kiện có thể giúp ích cho hành trình của bạn</p>
-                            <div class="scrollable-vertical" id="protection">
+                            <div class="fieldset-content">
+                                <!-- Banner phụ kiện đã chọn realtime -->
+                                <div id="acc-selection-banner" style="display:none; background: linear-gradient(135deg,#f0fdf4,#e8fce8); border:1.5px solid #86efac; border-radius:10px; padding:10px 16px; margin-bottom:14px; font-size:13px; color:#166534; font-weight:600;">
+                                    <i class="bi bi-bag-check-fill" style="color:#16a34a;"></i>
+                                    Phụ kiện đã chọn: <span id="acc-selection-list"></span>
+                                </div>
+                                <div class="scrollable-vertical" id="protection">
 <!--                                <h4>SERVICES</h4>
                                 <div class="form-box">
                                     <div class="form-img">
@@ -2084,19 +2142,22 @@
                                         <div class="form-check">
                                             <div class="checkbox-container">
 <!--                                                <input type="checkbox" id="daily-checkbox-${a.accessoryId}" class="option-checkbox">-->
-                                                <select class="form-check-select" id="daily-select-${a.accessoryId}">
+                                                <select class="form-check-select" id="daily-select-${a.accessoryId}"
+                                                    data-rawprice="${a.price}">
                                                 </select>
                                                 <c:if test="${a.price eq 0}">
                                                     <label for="daily-checkbox" class="items-free">Free</label>
                                                 </c:if>
                                                 <c:if test="${a.price ne 0}">
-                                                    <label for="daily-checkbox">₫${a.price}00</label>
+                                                    <fmt:formatNumber var="fmtAcc" value="${a.price}" maxFractionDigits="0" groupingUsed="true"/>
+                                                    <label for="daily-checkbox" data-rawprice="${a.price}">₫${fmtAcc}/lượt</label>
                                                 </c:if>
                                             </div>
                                         </div>
                                     </div>
                                 </c:forEach>                               
-                            </div>
+                                </div><!-- end scrollable-vertical protection -->
+                            </div><!-- end fieldset-content -->
                         </fieldset>
 
                         <h3>Khách hàng</h3>
@@ -2311,118 +2372,123 @@
                         <h3>Xác nhận</h3>
                         <fieldset>
                             <h2>XÁC NHẬN ĐƠN ĐẶT XE</h2>
-                            <p class="desc">Hãy xác nhận thông tin và đồng ý với các điều khoản dịch vụ </p>
+                            <p class="desc">Hãy kiểm tra kỹ thông tin đơn đặt xe của bạn trước khi thanh toán.</p>
                             <div class="fieldset-content">
                                 <div class="scrollable-vertical">
-                                    <h4>NGÀY & GIỜ</h4>
-                                    <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                                        <div class="info-group">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày nhận xe</label>
-                                            <p id="pickupdatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+
+                                    <!-- THỜI GIAN -->
+                                    <div style="background:#fff; border:1px solid #eaeaea; border-radius:12px; padding:20px; margin-bottom:16px;">
+                                        <h4 style="margin:0 0 14px; color:#b59349; font-size:13px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
+                                            <i class="bi bi-clock-history"></i> Thời Gian Thuê
+                                        </h4>
+                                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                                            <div>
+                                                <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Nhận xe</div>
+                                                <div style="font-weight:600; color:#222; font-size:15px;"><span id="pickupdatetext"></span> <span id="pickuptimetext"></span></div>
+                                                <div id="pickuploctext" style="font-size:13px; color:#666; margin-top:3px;"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Trả xe</div>
+                                                <div style="font-weight:600; color:#222; font-size:15px;"><span id="returndatetext"></span> <span id="returntimetext"></span></div>
+                                                <div id="returnloctext" style="font-size:13px; color:#666; margin-top:3px;"></div>
+                                            </div>
                                         </div>
-                                        <div class="info-group">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giờ nhận xe</label>
-                                            <p id="pickuptimetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                        <div class="info-group">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày trả xe</label>
-                                            <p id="returndatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                        <div class="info-group">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giờ trả xe</label>
-                                            <p id="returntimetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                        <div class="info-group" style="grid-column: span 2;">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Địa điểm nhận xe</label>
-                                            <p id="pickuploctext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                        <div class="info-group" style="grid-column: span 2;">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Địa điểm trả xe</label>
-                                            <p id="returnloctext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                    </div>
-                                    <h4>ĐÃ CHỌN XE MÁY</h4>
-                                    <div id="savedBikeContainer"></div>
-                                    <h4>PHỤ KIỆN ĐI KÈM</h4>
-                                    <div id="savedItemsContainer">
-                                    </div>
-                                    <h4>TỔNG QUAN</h4>
-                                    <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                                        <div class="info-group">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Họ và Tên</label>
-                                            <p style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"><span id="firstnametext"></span> <span id="lastnametext"></span></p>
-                                        </div>
-                                        <div class="info-group">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giới tính</label>
-                                            <p id="gendertext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                        <div class="info-group">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Email</label>
-                                            <p id="emailaddresstext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                        <div class="info-group">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Số điện thoại</label>
-                                            <p id="phonetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                        <div class="info-group">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày sinh</label>
-                                            <p id="birthdaytext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                        <div class="info-group" style="grid-column: span 2;">
-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Địa chỉ</label>
-                                            <p id="addresstext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                        </div>
-                                    </div>
-                                    <h4 style="margin-top: 25px;">THÔNG TIN KHÁC</h4>
-                                     <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                                         <div class="info-group" style="grid-column: span 2;">
-                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Số CCCD/CMND</label>
-                                             <p id="identityCardtext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                         </div>
-                                         <div class="info-group">
-                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày cấp</label>
-                                             <p id="issuedontext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                         </div>
-                                         <div class="info-group">
-                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày hết hạn</label>
-                                             <p id="expdatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
-                                         </div>                                                                      
-                                    </div>
-                      
-                                    
-                                    <h4>MÃ GIẢM GIÁ</h4>
-                                    <div class="form-box" style="padding: 12px 16px; background: #f9f9f9; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 12px;">
-                                        <div style="display: flex; gap: 10px; align-items: center; width: 100%;">
-                                            <input type="text" id="voucher-code-input" placeholder="Nhập mã voucher..."
-                                                   style="flex:1; padding: 10px 14px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none;"
-                                                   oninput="document.getElementById('voucher-msg').textContent=''; resetVoucher();" />
-                                            <button type="button" id="apply-voucher-btn"
-                                                    onclick="applyVoucher()"
-                                                    style="padding: 10px 20px; background: linear-gradient(135deg, #b59349 0%, #8c6f32 100%); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap;">
-                                                Áp dụng
-                                            </button>
-                                        </div>
-                                        <div id="voucher-msg" style="margin-top: 8px; font-size: 13px;"></div>
-                                        <input type="hidden" id="applied-voucher-id" value="0" />
-                                        <input type="hidden" id="applied-discount" value="0" />
                                     </div>
 
-                                    <h4>TỔNG TIỀN</h4>
-                                    <div class="form-box-total" id="form-box-total">
-
-                                    </div>
-                                    <div class="form-check">
-                                        <div class="checkbox-container">
-                                            <input type="checkbox" id="daily-checkbox-term">
-                                            <label>Đồng ý <a href="policies.jsp" target="_blank" style="color: #b59349; text-decoration: underline; font-weight: 600;">điều khoản dịch vụ</a></label>
+                                    <!-- THÔNG TIN KHÁCH HÀNG -->
+                                    <div style="background:#fff; border:1px solid #eaeaea; border-radius:12px; padding:20px; margin-bottom:16px;">
+                                        <h4 style="margin:0 0 14px; color:#b59349; font-size:13px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
+                                            <i class="bi bi-person-lines-fill"></i> Thông Tin Khách Hàng
+                                        </h4>
+                                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">Họ</div>
+                                                <div style="font-weight:600;" id="firstnametext"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">Tên</div>
+                                                <div style="font-weight:600;" id="lastnametext"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">Số điện thoại</div>
+                                                <div style="font-weight:600;" id="phonetext"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">Email</div>
+                                                <div style="font-weight:600;" id="emailaddresstext"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">Địa chỉ</div>
+                                                <div style="font-weight:600;" id="addresstext"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">Ngày sinh</div>
+                                                <div style="font-weight:600;" id="birthdaytext"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">Giới tính</div>
+                                                <div style="font-weight:600;" id="gendertext"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">CCCD/CMND</div>
+                                                <div style="font-weight:600;" id="identityCardtext"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">Ngày cấp</div>
+                                                <div style="font-weight:600;" id="issuedontext"></div>
+                                            </div>
+                                            <div>
+                                                <div style="font-size:11px; color:#999; margin-bottom:3px;">Ngày hết hạn</div>
+                                                <div style="font-weight:600;" id="expdatetext"></div>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <!-- DỊCH VỤ ĐÃ CHỌN (xe + phụ kiện + tổng) -->
+                                    <div style="background:#faf9f7; border:1px solid #e0d5b7; border-radius:12px; padding:20px; margin-bottom:16px;">
+                                        <h4 style="margin:0 0 14px; color:#b59349; font-size:13px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #e0d5b7; padding-bottom:10px;">
+                                            <i class="bi bi-receipt"></i> Chi Tiết Dịch Vụ & Tổng Tiền
+                                        </h4>
+                                        <div id="savedBikeContainer" style="margin-bottom:12px; min-height:20px;"></div>
+                                        <div id="savedItemsContainer" style="margin-bottom:12px; min-height:20px;"></div>
+                                        <div id="form-box-total"></div>
+                                    </div>
+
+                                    <!-- VOUCHER -->
+                                    <div style="background:#fff; border:1px solid #eaeaea; border-radius:12px; padding:20px; margin-bottom:16px;">
+                                        <h4 style="margin:0 0 14px; color:#b59349; font-size:13px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
+                                            <i class="bi bi-ticket-perforated"></i> Mã Giảm Giá (Voucher)
+                                        </h4>
+                                        <div style="display:flex; gap:10px; align-items:center;">
+                                            <input type="text" id="voucher-code" placeholder="Nhập mã voucher..." style="flex:1; padding:10px 14px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; outline:none;" />
+                                            <button type="button" onclick="applyVoucher()" style="background:#b59349; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px; white-space:nowrap;">Áp dụng</button>
+                                        </div>
+                                        <div id="voucher-msg" style="font-size:13px; margin-top:8px;"></div>
+                                        <input type="hidden" id="applied-discount" value="0"/>
+                                    </div>
+
+                                    <!-- ĐIỀU KHOẢN -->
+                                    <div style="background:#fffbf2; border:1px solid #f0e4b8; border-radius:12px; padding:20px;">
+                                        <h4 style="margin:0 0 12px; color:#b59349; font-size:13px; text-transform:uppercase; letter-spacing:1px;">
+                                            <i class="bi bi-shield-check"></i> Điều Khoản & Chính Sách
+                                        </h4>
+                                        <ul style="font-size:13px; color:#555; margin:0 0 14px; padding-left:18px; line-height:2;">
+                                            <li>Khách hàng cần xuất trình CCCD/Hộ chiếu khi nhận xe.</li>
+                                            <li>Xe được giao đúng địa điểm và thời gian đã chọn.</li>
+                                            <li>Tiền cọc sẽ được hoàn trả khi trả xe đúng hạn và nguyên vẹn.</li>
+                                            <li>Không chịu trách nhiệm với các sự cố do lỗi của khách hàng.</li>
+                                        </ul>
+                                        <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; font-weight:600; color:#333;">
+                                            <input type="checkbox" id="daily-checkbox-term" style="width:18px; height:18px; accent-color:#b59349; cursor:pointer;" />
+                                            Tôi đã đọc và đồng ý với các điều khoản trên
+                                        </label>
+                                    </div>
+
                                 </div>
                             </div>
                         </fieldset>
 
-
-
+                        
                         <h3>Thanh toán</h3>
                         <fieldset>
 <!--                            <a onclick="yourFunctionName()">aaaaa</a>-->
@@ -2490,18 +2556,7 @@
 
                 var form = $("#signup-form");
                 
-                $.validator.addMethod("minAdvanceTime", function(value, element) {
-                    if (!value) return true;
-                    var dateStr = $("#pickupdate").val();
-                    if (!dateStr) return true;
-                    
-                    var pickupDateTime = new Date(dateStr + "T" + value);
-                    var minTime = new Date();
-                    minTime.setHours(minTime.getHours() + 1);
-                    minTime.setMinutes(minTime.getMinutes() - 5); // 5 min grace period
-                    
-                    return pickupDateTime >= minTime;
-                }, "Vui lòng đặt xe trước 1 tiếng");
+                // minAdvanceTime validation removed per user request
 
                 $.validator.addMethod("businessHours", function(value, element) {
                     if (!value) return true;
@@ -2524,8 +2579,7 @@
                             email: true
                         },
                         pickuptime: {
-                            businessHours: true,
-                            minAdvanceTime: true
+                            businessHours: true
                         },
                         returntime: {
                             businessHours: true
@@ -2826,7 +2880,12 @@
                                 if (quantity > 0) {
                                     const formMotorBox = selectBox.closest('.form-box');
                                     if (formMotorBox) {
-                                        savedBikeContainer.insertAdjacentHTML('beforeend', formMotorBox.outerHTML);
+                                        // Clone và lưu thông tin giá vào data attribute để tính đúng sau
+                                        const priceCurrentEl = formMotorBox.querySelector('.main-price.price-current') || formMotorBox.querySelector('.main-price');
+                                        const rawPrice = priceCurrentEl ? (priceCurrentEl.dataset.rawprice || '') : '';
+                                        const cloneBox = formMotorBox.cloneNode(true);
+                                        cloneBox.dataset.activeprice = rawPrice;
+                                        savedBikeContainer.insertAdjacentHTML('beforeend', cloneBox.outerHTML);
                                         numberMotorStates[selectBox.id] = quantity;
                                     }
                                 }
@@ -2914,22 +2973,28 @@
                             //calculator motorcycles
                             const  savedBikeCal = document.querySelectorAll('#savedBikeContainer .form-box');
                             savedBikeCal.forEach(formBox => { 
-                                const selects = formBox.querySelector('.form-check-select');
-                                const title = formBox.querySelector('h4').textContent;
-                                const priceLabel = formBox.querySelector('.main-price').textContent;
-                                const quantity = parseInt(selects.value, 10);
-                                let price = 0;
+                                 const selects = formBox.querySelector('.form-check-select');
+                                 const title = formBox.querySelector('h4') ? formBox.querySelector('h4').textContent.trim() : '?';
+                                 const quantity = parseInt(selects ? selects.value : 0, 10) || 0;
 
-                                if (priceLabel.trim().toLowerCase() !== 'free') {
-                                    price = parseInt(priceLabel.replace(/\D/g, ''), 10);
-                                }
+                                 // Ưu tiên data-activeprice (đã lưu khi clone), fallback sang .price-current rồi .main-price
+                                 let price = 0;
+                                 const activePrice = formBox.dataset.activeprice;
+                                 if (activePrice && activePrice !== '') {
+                                     price = parseInt(activePrice, 10) || 0;
+                                 } else {
+                                     const priceEl = formBox.querySelector('.main-price.price-current') || formBox.querySelector('.main-price');
+                                     if (priceEl) {
+                                         price = parseInt(priceEl.dataset.rawprice || priceEl.textContent.replace(/[^0-9]/g,''), 10) || 0;
+                                     }
+                                 }
 
-                                // Quantity là số ngày chênh lệch giữa ngày trả và ngày pickup
-                                const quantityDay = Math.max(1, Math.ceil(differenceInDays)); // Đảm bảo quantity ít nhất là 1
+                                 // Quantity là số ngày chênh lệch giữa ngày trả và ngày pickup
+                                 const quantityDay = Math.max(1, Math.ceil(differenceInDays)); // Đảm bảo quantity ít nhất là 1
 
-                                // Tính tổng giá
-                                const totalPrice = quantityDay * price * quantity;
-                                totalAmount += totalPrice;
+                                 // Tính tổng giá
+                                 const totalPrice = quantityDay * price * quantity;
+                                 totalAmount += totalPrice;
 
                                 // Create new div elements similar to formBoxTotal structure
                                 const itemContainer = document.createElement('div');
@@ -2964,15 +3029,19 @@
                             // Calculator items
                             const  savedAsseccCal = document.querySelectorAll('#savedItemsContainer .form-box');
                             savedAsseccCal.forEach(formBox => {                              
-                                // Lấy nội dung từ thẻ h4 và label
+                                // Lấy nội dung từ thẻ h4 và data-rawprice
                                 const selects = formBox.querySelector('.form-check-select');
-                                const title = formBox.querySelector('h4').textContent;
-                                const priceLabel = formBox.querySelector('label[for="daily-checkbox"]').textContent;
-                                const quantity = parseInt(selects.value, 10);
+                                const title = formBox.querySelector('h4') ? formBox.querySelector('h4').textContent.trim() : '?';
+                                const quantity = parseInt(selects ? selects.value : 0, 10) || 0;
                                 let price = 0;
 
-                                if (priceLabel.trim().toLowerCase() !== 'free') {
-                                    price = parseInt(priceLabel.replace(/\D/g, ''), 10);
+                                // Đọc raw price từ data attribute (chính xác nhất)
+                                const rawPriceAttr = selects ? selects.dataset.rawprice : null;
+                                if (rawPriceAttr && rawPriceAttr !== '0') {
+                                    price = parseInt(rawPriceAttr, 10) || 0;
+                                } else {
+                                    const priceLabel = formBox.querySelector('label[data-rawprice]');
+                                    if (priceLabel) price = parseInt(priceLabel.dataset.rawprice, 10) || 0;
                                 }
 
                                 // Tính tổng giá
@@ -3161,11 +3230,10 @@
                 });
                 
                 returndate.addEventListener('change', () => {
-                    const returndateValue = new Date(returndate.value);
-                    returndateValue.setDate(returndateValue.getDate() - 1); // Minimum return date is one day after pick-up date
-                    pickupdate.max = formatDate(returndateValue);
-
+                    // Không set max cho pickupdate để tránh giới hạn ngày nhận xe
                     if (new Date(returndate.value) <= new Date(pickupdate.min)) {
+                        const returndateValue = new Date(returndate.value);
+                        returndateValue.setDate(returndateValue.getDate() - 1);
                         pickupdate.value = formatDate(returndateValue);
                     }
                 });
@@ -3386,7 +3454,48 @@
                toggleBikeNextButton();
             });
             
-           function toggleBikeNextButton() {
+           
+
+            function updateSelectedBikesBanner() {
+                const pickupInput = document.getElementById('pickupdate').value;
+                const returnInput = document.getElementById('returndate').value;
+                let activeBadgeText = "";
+                if (pickupInput && returnInput) {
+                    const start = new Date(pickupInput);
+                    const end = new Date(returnInput);
+                    const differenceInDays = Math.abs(end - start) / (1000 * 3600 * 24);
+                    var quantityDay = Math.max(1, Math.ceil(differenceInDays));
+                    if(quantityDay >= 30) {
+                        activeBadgeText = " (Gói Tháng)";
+                    } else if(quantityDay >= 7) {
+                        activeBadgeText = " (Gói Tuần)";
+                    }
+                }
+                
+                const selectedBikesText = [];
+                const selectBoxes = document.querySelectorAll('#motorcyclelist .form-check-select');
+                selectBoxes.forEach(selectBox => {
+                    const quantity = parseInt(selectBox.value);
+                    if (quantity > 0) {
+                        const formMotorBox = selectBox.closest('.form-box');
+                        if (formMotorBox) {
+                            const bikeName = formMotorBox.querySelector('.motor-name').textContent;
+                            selectedBikesText.push(quantity + "x " + bikeName + activeBadgeText);
+                        }
+                    }
+                });
+                
+                const banner = document.getElementById('selected-bikes-banner');
+                const listSpan = document.getElementById('selected-bikes-list');
+                if (selectedBikesText.length > 0) {
+                    listSpan.textContent = selectedBikesText.join(", ");
+                    banner.style.display = 'block';
+                } else {
+                    banner.style.display = 'none';
+                }
+            }
+
+            function toggleBikeNextButton() {
                 var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
                 // Kiểm tra nếu có bất kỳ select box nào có giá trị lớn hơn 0
                 var anySelected = $(".form-check-select", "#motorcyclelist").toArray().some(function(select) {
@@ -3770,6 +3879,295 @@
 
             } catch(ex) {}
         })();
+        </script>
+
+        <script>
+        // ===== GÓI TUẦN / THÁNG QUICK SELECT =====
+        window.activePackage = null;
+
+        function setQuickReturnDate(days, autoEvent) {
+            var pickupInput = document.getElementById('pickupdate');
+            var returnInput = document.getElementById('returndate');
+            if (!pickupInput.value) {
+                alert('Vui lòng chọn Ngày nhận xe trước!');
+                return;
+            }
+            if (!autoEvent) {
+                window.activePackage = days === 7 ? 'week' : (days === 30 ? 'month' : null);
+            }
+            var date = new Date(pickupInput.value);
+            date.setDate(date.getDate() + days);
+            var yyyy = date.getFullYear();
+            var mm = String(date.getMonth() + 1).padStart(2, '0');
+            var dd = String(date.getDate()).padStart(2, '0');
+            returnInput.value = yyyy + '-' + mm + '-' + dd;
+            updateQuickButtonsStyle(days);
+            returnInput.dispatchEvent(new Event('change'));
+        }
+
+        function updateQuickButtonsStyle(days) {
+            var btnWeek = document.getElementById('btn-quick-week');
+            var btnMonth = document.getElementById('btn-quick-month');
+            if (btnWeek) {
+                if (days === 7) {
+                    btnWeek.style.background = '#b59349';
+                    btnWeek.style.color = '#fff';
+                } else {
+                    btnWeek.style.background = '#fff';
+                    btnWeek.style.color = '#b59349';
+                }
+            }
+            if (btnMonth) {
+                if (days === 30) {
+                    btnMonth.style.background = '#b59349';
+                    btnMonth.style.color = '#fff';
+                } else {
+                    btnMonth.style.background = '#fff';
+                    btnMonth.style.color = '#b59349';
+                }
+            }
+        }
+
+        function bindPickupListener() {
+            var pickupInput = document.getElementById('pickupdate');
+            var returnInput = document.getElementById('returndate');
+            if (!pickupInput || pickupInput._pkBound) return;
+            pickupInput._pkBound = true;
+
+            // Khi đổi ngày nhận xe: nếu đang chọn gói tuần/tháng thì tự cập nhật ngày trả
+            pickupInput.addEventListener('change', function() {
+                if (window.activePackage === 'week') {
+                    setQuickReturnDate(7, true);
+                } else if (window.activePackage === 'month') {
+                    setQuickReturnDate(30, true);
+                }
+            });
+
+            // Khi đổi ngày trả thủ công: detect xem có khớp gói nào không để highlight nút
+            if (returnInput) {
+                returnInput.addEventListener('change', function() {
+                    if (pickupInput.value && returnInput.value) {
+                        var start = new Date(pickupInput.value);
+                        var end = new Date(returnInput.value);
+                        var diffDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24));
+                        if (diffDays === 7) { window.activePackage = 'week'; updateQuickButtonsStyle(7); }
+                        else if (diffDays === 30) { window.activePackage = 'month'; updateQuickButtonsStyle(30); }
+                        else { window.activePackage = null; updateQuickButtonsStyle(0); }
+                    }
+                });
+            }
+        }
+
+        // Gắn listener ngay khi DOM sẵn sàng (dù script chạy sớm hay muộn)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bindPickupListener);
+        } else {
+            bindPickupListener();
+        }
+        </script>
+
+        <script>
+        // ===== FIX NÚT BACK TRÌNH DUYỆT =====
+        // Thay vì văng ra trang đăng nhập, nhấn Back sẽ lùi 1 bước trong wizard
+        (function() {
+            // Đẩy state vào history để bẫy sự kiện popstate
+            history.pushState({ wizardStep: true }, '', window.location.href);
+            window.addEventListener('popstate', function(event) {
+                // Tìm nút "Previous" của jQuery Steps và click
+                var prevBtn = document.querySelector('.wizard .actions a[href="#previous"]');
+                if (prevBtn) {
+                    prevBtn.click();
+                    // Đẩy lại state để tiếp tục bẫy lần sau
+                    history.pushState({ wizardStep: true }, '', window.location.href);
+                }
+            });
+        })();
+
+        // ===== FIX GIÁ TIỀN NaN Ở BƯỚC XÁC NHẬN =====
+        // Khi bước xác nhận được hiển thị, tính lại tổng tiền
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hook vào onStepChanged để recalculate khi vào bước 4 (Xác nhận)
+            var origStepChanged = null;
+            var checkInterval = setInterval(function() {
+                var wizard = $('#signup-form > div');
+                if (wizard.length && wizard.data('steps')) {
+                    clearInterval(checkInterval);
+                    wizard.on('stepChanged', function(event, currentIndex, priorIndex) {
+                        if (currentIndex === 4) { // Bước Xác nhận (index 4)
+                            recalcTotalOnConfirm();
+                        }
+                    });
+                }
+            }, 300);
+        });
+
+        function recalcTotalOnConfirm() {
+            var pickupDate = document.getElementById('pickupdate') ? document.getElementById('pickupdate').value : '';
+            var returnDate = document.getElementById('returndate') ? document.getElementById('returndate').value : '';
+            if (!pickupDate || !returnDate) return;
+
+            var start = new Date(pickupDate);
+            var end   = new Date(returnDate);
+            var diffMs   = Math.abs(end - start);
+            var diffDays = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+
+            // Tính tổng xe
+            var bikeTotal = 0;
+            document.querySelectorAll('#motorcyclelist .form-check-select').forEach(function(sel) {
+                var qty = parseInt(sel.value) || 0;
+                if (qty > 0) {
+                    var box = sel.closest('.form-box');
+                    if (box) {
+                        // Lấy giá theo gói đang active (tuần/tháng/ngày)
+                        var priceEl = null;
+                        if (diffDays >= 30)      priceEl = box.querySelector('.price-month');
+                        else if (diffDays >= 7)  priceEl = box.querySelector('.price-week');
+                        else                     priceEl = box.querySelector('.price-day');
+                        if (priceEl) {
+                            var priceText = priceEl.textContent.replace(/[^0-9]/g, '');
+                            var unitPrice = parseInt(priceText) * 100 || 0;
+                            bikeTotal += qty * unitPrice * diffDays;
+                        }
+                    }
+                }
+            });
+
+            // Tính tổng phụ kiện
+            var accTotal = 0;
+            document.querySelectorAll('.accessory-checkbox:checked').forEach(function(cb) {
+                var row = cb.closest('tr') || cb.closest('.accessory-row');
+                if (row) {
+                    var qtyEl    = row.querySelector('.accessory-quantity');
+                    var priceEl  = row.querySelector('.accessory-price');
+                    if (qtyEl && priceEl) {
+                        var qty   = parseInt(qtyEl.value) || 1;
+                        var price = parseInt(priceEl.textContent.replace(/[^0-9]/g,'')) * 100 || 0;
+                        accTotal += qty * price * diffDays;
+                    }
+                }
+            });
+
+            var total = bikeTotal + accTotal;
+            var totalEl = document.getElementById('totaltext');
+            var finalTotalInput = document.getElementById('finalTotal');
+            var daysTotalInput  = document.getElementById('daysTotal');
+
+            if (totalEl) {
+                totalEl.textContent = '₫' + total.toLocaleString('vi-VN');
+            }
+            if (finalTotalInput) finalTotalInput.value = total;
+            if (daysTotalInput)  daysTotalInput.value  = diffDays;
+        }
+        </script>
+
+        <script>
+        // ===== REALTIME BANNER XE ĐÃ CHỌN =====
+        function updateBikeBanner() {
+            var items = [];
+            var selects = document.querySelectorAll('#motorcyclelist .form-check-select');
+            selects.forEach(function(sel) {
+                var qty = parseInt(sel.value) || 0;
+                if (qty > 0) {
+                    var box = sel.closest('.form-box');
+                    if (box) {
+                        var nameEl = box.querySelector('.motor-name');
+                        if (nameEl) items.push(qty + ' x ' + nameEl.textContent.trim());
+                    }
+                }
+            });
+            var banner = document.getElementById('bike-selection-banner');
+            var list   = document.getElementById('bike-selection-list');
+            if (banner && list) {
+                if (items.length > 0) {
+                    list.textContent = items.join(', ');
+                    banner.style.display = 'block';
+                } else {
+                    banner.style.display = 'none';
+                }
+            }
+        }
+
+        // ===== REALTIME BANNER PHỤ KIỆN ĐÃ CHỌN =====
+        function updateAccBanner() {
+            var items = [];
+            var selects = document.querySelectorAll('#protection .form-check-select');
+            selects.forEach(function(sel) {
+                var qty = parseInt(sel.value) || 0;
+                if (qty > 0) {
+                    var box = sel.closest('.form-box');
+                    if (box) {
+                        var nameEl = box.querySelector('h4');
+                        if (nameEl) items.push(qty + ' x ' + nameEl.textContent.trim());
+                    }
+                }
+            });
+            var banner = document.getElementById('acc-selection-banner');
+            var list   = document.getElementById('acc-selection-list');
+            if (banner && list) {
+                if (items.length > 0) {
+                    list.textContent = items.join(', ');
+                    banner.style.display = 'block';
+                } else {
+                    banner.style.display = 'none';
+                }
+            }
+        }
+
+        // Hook vào các select box để update banner realtime
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.classList.contains('form-check-select')) {
+                var inMoto = e.target.closest('#motorcyclelist');
+                var inAcc  = e.target.closest('#protection');
+                if (inMoto) updateBikeBanner();
+                if (inAcc)  updateAccBanner();
+            }
+        });
+
+        // ===== VOUCHER =====
+        // Danh sách voucher mẫu (có thể fetch từ server sau)
+        var VOUCHERS = {
+            'SMART10': { discount: 0.10, label: 'Giảm 10%' },
+            'WEEK20':  { discount: 0.20, label: 'Giảm 20% cho gói tuần' },
+            'NEWUSER': { discount: 50000, fixed: true, label: 'Giảm 50,000₫' }
+        };
+
+        function applyVoucher() {
+            var code = (document.getElementById('voucher-code').value || '').trim().toUpperCase();
+            var msgEl = document.getElementById('voucher-msg');
+            var discountInput = document.getElementById('applied-discount');
+
+            if (!code) {
+                msgEl.style.color = '#dc2626';
+                msgEl.textContent = 'Vui lòng nhập mã voucher.';
+                return;
+            }
+
+            var voucher = VOUCHERS[code];
+            if (!voucher) {
+                msgEl.style.color = '#dc2626';
+                msgEl.textContent = '❌ Mã voucher không hợp lệ hoặc đã hết hạn.';
+                discountInput.value = 0;
+                return;
+            }
+
+            // Tính giá trị giảm
+            var totalEl = document.getElementById('dataInput');
+            var currentTotal = totalEl ? parseInt(totalEl.textContent.replace(/[^0-9]/g,'')) || 0 : 0;
+            var discountAmt = 0;
+            if (voucher.fixed) {
+                discountAmt = voucher.discount;
+            } else {
+                discountAmt = Math.round(currentTotal * voucher.discount);
+            }
+
+            discountInput.value = discountAmt;
+            msgEl.style.color = '#16a34a';
+            msgEl.textContent = '✓ Áp dụng thành công: ' + voucher.label + ' (−₫' + discountAmt.toLocaleString('vi-VN') + ')';
+
+            // Cập nhật lại tổng
+            var newTotal = Math.max(0, currentTotal - discountAmt);
+            if (totalEl) totalEl.textContent = '₫' + newTotal.toLocaleString('vi-VN');
+        }
         </script>
     </body>
 
