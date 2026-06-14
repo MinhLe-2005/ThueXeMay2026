@@ -1307,8 +1307,7 @@
            style="background: #b59349;"><i
                 class="bi bi-arrow-up-short"></i></a>
 
-        <!-- Preloader -->
-        <div id="preloader"></div>
+        <!-- Preloader Removed -->
 
 
         <script>
@@ -1368,14 +1367,14 @@
                     return false;
                 }
 
-                var minTime = new Date();
-                minTime.setHours(minTime.getHours() + 1); // Require at least 1 hour advance booking
-                minTime.setMinutes(minTime.getMinutes() - 5); // 5 min grace period for filling out the form
-
-                if (start < minTime) {
-                    showHeroError("Vui lòng đặt xe trước 1 tiếng");
+                var now = new Date();
+                now.setMinutes(now.getMinutes() - 5); // 5 min grace period
+                if (start < now) {
+                    showHeroError("Giờ nhận xe không được ở trong quá khứ!");
                     return false;
                 }
+
+
 
                 if (end <= start) {
                     showHeroError("Thời gian trả xe phải sau thời gian nhận xe!");

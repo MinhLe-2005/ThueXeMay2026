@@ -101,6 +101,9 @@
                                 amount: '<%= request.getParameter("vnp_Amount") %>',
                                 orderInfo: '<%= request.getParameter("vnp_OrderInfo") %>'
                             }));
+                            setTimeout(function() {
+                                window.close();
+                            }, 3000);
                         </script>
                         <%
                                 } else {

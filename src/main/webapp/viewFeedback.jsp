@@ -40,11 +40,13 @@
 
     /* --- Table Styles --- */
     .table-responsive { overflow-x: auto; border-radius: 0 0 12px 12px; }
-    .table { margin-bottom: 0; width: 100%; border-collapse: separate; border-spacing: 0; }
-    .table thead th { background: #f1f5f9; color: #334155; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: none; border-bottom: 2px solid #cbd5e1; padding: 14px 16px; text-align: center; vertical-align: middle; white-space: nowrap; }
-    .table tbody td { vertical-align: middle; border: none; border-bottom: 1px solid #e2e8f0; padding: 14px 16px; color: #334155; font-size: 0.9rem; text-align: center; transition: background-color 0.2s; }
+    .table { margin-bottom: 0; width: 100%; border-collapse: separate !important; border-spacing: 0 !important; border: 1px solid #e2e8f0 !important; border-radius: 8px !important; overflow: hidden !important;}
+    .table th { background-color: #f1f5f9 !important; color: #334155 !important; font-size: 0.85rem !important; font-weight: 600; text-transform: uppercase !important; letter-spacing: 0.5px !important; padding: 14px 16px !important; border-bottom: 2px solid #cbd5e1 !important; border-right: 1px solid #e2e8f0 !important; text-align: center; vertical-align: middle; white-space: nowrap; }
+    .table th:last-child { border-right: none !important; }
+    .table td { vertical-align: middle !important; padding: 16px 16px !important; border-bottom: 1px solid #e2e8f0 !important; border-right: 1px solid #e2e8f0 !important; color: #334155; font-size: 15px !important; text-align: center; transition: background-color 0.2s; }
+    .table td:last-child { border-right: none !important; }
     .table tbody tr:hover td { background-color: #f8fafc; }
-    .table tbody tr:last-child td { border-bottom: none; }
+    .table tr:last-child td { border-bottom: none !important; }
 
     
     /* --- Custom Select & Text Truncate --- */
@@ -63,58 +65,135 @@
 
     <body>
         <div class="container-fluid mt-4">
+            <div class="pagetitle" style="margin-bottom: 20px; padding-left: 0;">
+                <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ ĐÁNH GIÁ</h1>
+                <nav>
+                    <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
+                        <li style="display: inline-block;"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
+                        <li class="active" style="display: inline-block; font-weight: 500; color: #6c757d;">Quản lý đánh giá</li>
+                    </ol>
+                </nav>
+            </div>
     <div class="row">
         <div class="col-12">
+            <!-- Stats Cards -->
+            <div class="row" style="margin-bottom: 1.5rem;">
+                <div class="col-md-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 1.25rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="margin: 0; font-size: 0.85rem; opacity: 0.9;">Tổng Đánh Giá</p>
+                                <h3 style="margin: 5px 0 0 0; font-weight: 700; font-size: 1.75rem;" id="total-feedbacks">${listF.size()}</h3>
+                            </div>
+                            <i class="fa fa-comments" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1.25rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="margin: 0; font-size: 0.85rem; opacity: 0.9;">Đánh Giá Trung Bình</p>
+                                <h3 style="margin: 5px 0 0 0; font-weight: 700; font-size: 1.75rem;" id="avg-rating">-</h3>
+                            </div>
+                            <i class="fa fa-star" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 1.25rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="margin: 0; font-size: 0.85rem; opacity: 0.9;">5 Sao</p>
+                                <h3 style="margin: 5px 0 0 0; font-weight: 700; font-size: 1.75rem;" id="five-stars">0</h3>
+                            </div>
+                            <i class="fa fa-thumbs-up" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 1.25rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <p style="margin: 0; font-size: 0.85rem; opacity: 0.9;">1-2 Sao</p>
+                                <h3 style="margin: 5px 0 0 0; font-weight: 700; font-size: 1.75rem;" id="low-stars">0</h3>
+                            </div>
+                            <i class="fa fa-exclamation-triangle" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"><i class="fa fa-star text-warning mr-2"></i> DANH SÁCH ĐÁNH GIÁ</h3>
                 </div>
-                <div class="filters-container">
-                    
-                                    <select class="form-control" style="width: 200px;" onchange="sortTable(this.value)">
-                                        <option value="">Sắp xếp theo sao</option>
-                                        <option value="asc">Tăng dần</option>
-                                        <option value="desc">Giảm dần</option>
-                                    </select>
-                                    <select class="form-control" style="width: 200px; margin-left: 10px;" onchange="filterTable(this.value)">
-                                        <option value="">Lọc theo sao</option>
-                                        <option value="5">5 sao</option>
-                                        <option value="4">4 sao</option>
-                                        <option value="3">3 sao</option>
-                                        <option value="2">2 sao</option>
-                                        <option value="1">1 sao</option>
-                                    </select>
-                                
+                <div class="filters-container" style="padding: 1.25rem 1.5rem; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; gap: 12px;">
+                        <select class="form-control" style="width: 180px; border-radius: 8px; border: 2px solid #e2e8f0; padding: 8px 12px; font-weight: 500;" onchange="sortTable(this.value)">
+                            <option value="">📊 Sắp xếp theo sao</option>
+                            <option value="asc">⬆️ Tăng dần (1→5)</option>
+                            <option value="desc">⬇️ Giảm dần (5→1)</option>
+                        </select>
+                        <select class="form-control" style="width: 180px; border-radius: 8px; border: 2px solid #e2e8f0; padding: 8px 12px; font-weight: 500;" onchange="filterTable(this.value)">
+                            <option value="">🔍 Lọc theo sao</option>
+                            <option value="5">⭐⭐⭐⭐⭐ 5 sao</option>
+                            <option value="4">⭐⭐⭐⭐ 4 sao</option>
+                            <option value="3">⭐⭐⭐ 3 sao</option>
+                            <option value="2">⭐⭐ 2 sao</option>
+                            <option value="1">⭐ 1 sao</option>
+                        </select>
+                    </div>
+                    <div style="color: #64748b; font-weight: 500; font-size: 14px;">
+                        <span id="visible-count">${listF.size()}</span>/<span>${listF.size()}</span> đánh giá
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle" id="feedbackTable">
                             <thead>
                                         <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Nội Dung</th>
-                                            <th scope="col" style="padding: 6px 50px;">Đánh Giá</th>
-                                            <th scope="col">Tên Khách Hàng</th>
+                                            <th scope="col" style="width: 8%;">ID</th>
+                                            <th scope="col" style="width: 45%;">Nội Dung</th>
+                                            <th scope="col" style="width: 20%;">Đánh Giá</th>
+                                            <th scope="col" style="width: 27%;">Tên Khách Hàng</th>
 
                                         </tr>
                                     </thead>
                             <tbody id="table-body">
                                 <c:forEach items="${listF}" var="f">
                                     
-                                            <tr>
-                                                <th scope="row">${f.feedbackID}</th>                                                                                           
-                                                <td>${f.content}</td>
+                                            <tr data-rating="${f.serviceRate}">
+                                                <td style="font-weight: 600; color: #64748b;">#${f.feedbackID}</td>                                                                                           
+                                                <td style="text-align: left; padding-left: 20px;">
+                                                    <div style="display: flex; align-items: start; gap: 10px;">
+                                                        <i class="fa fa-quote-left" style="color: #cbd5e1; font-size: 18px; margin-top: 2px;"></i>
+                                                        <span style="color: #475569; line-height: 1.6; font-size: 14px;">${f.content}</span>
+                                                    </div>
+                                                </td>
                                                 <td>
-                                                    <c:forEach begin="1" end="${f.serviceRate}" var="star">
-                                                        <span style="color: #F7D000;" class="fa fa-star"></span>
-                                                    </c:forEach>
-                                                    <c:forEach begin="${f.serviceRate + 1}" end="5" var="emptyStar">
-                                                        <span class="fa fa-star-o"></span>
-                                                    </c:forEach>
-                                                    <span class="hidden-rate" style="display: none;">${f.serviceRate}</span>
+                                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                                                        <div style="display: flex; gap: 2px;">
+                                                            <c:forEach begin="1" end="${f.serviceRate}" var="star">
+                                                                <span style="color: #fbbf24; font-size: 18px;" class="fa fa-star"></span>
+                                                            </c:forEach>
+                                                            <c:forEach begin="${f.serviceRate + 1}" end="5" var="emptyStar">
+                                                                <span style="color: #e5e7eb; font-size: 18px;" class="fa fa-star"></span>
+                                                            </c:forEach>
+                                                        </div>
+                                                        <span class="hidden-rate" style="display: none;">${f.serviceRate}</span>
+                                                        <span style="font-size: 12px; font-weight: 600; color: #64748b;">${f.serviceRate}/5</span>
+                                                    </div>
                                                 </td>   
 
-                                                <td>${f.customerName}</td>
+                                                <td>
+                                                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                                        <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px;">
+                                                            ${f.customerName.substring(0, 1).toUpperCase()}
+                                                        </div>
+                                                        <span style="font-weight: 600; color: #1e293b;">${f.customerName}</span>
+                                                    </div>
+                                                </td>
 
 
                                             </tr>
@@ -127,9 +206,6 @@
                 </div>
             </div>
             
-            <div class="text-right mt-3 text-muted" style="margin-right: 1.5rem; margin-bottom: 2rem;">
-                <strong>Tổng cộng: <span id="total-feedbacks">${listF.size()}</span> feedbacks</strong>
-            </div>
         </div>
     </div>
 </div>
@@ -140,6 +216,32 @@
 
 
         <script type="text/javascript">
+            // Tính toán stats khi load trang
+            $(document).ready(function() {
+                calculateStats();
+            });
+            
+            function calculateStats() {
+                var rows = $("#feedbackTable tbody tr");
+                var total = rows.length;
+                var sum = 0;
+                var fiveStars = 0;
+                var lowStars = 0;
+                
+                rows.each(function() {
+                    var rating = parseInt($(this).find('.hidden-rate').text());
+                    sum += rating;
+                    if (rating === 5) fiveStars++;
+                    if (rating <= 2) lowStars++;
+                });
+                
+                var average = total > 0 ? (sum / total).toFixed(1) : 0;
+                
+                $('#avg-rating').text(average + " ⭐");
+                $('#five-stars').text(fiveStars);
+                $('#low-stars').text(lowStars);
+            }
+            
             function confirmDelete(motorcycleId) {
                 Swal.fire({
                     title: 'Bạn có chắc chắn?',
@@ -175,22 +277,22 @@
             }
 
             function filterTable(stars) {
-            var table = document.getElementById("feedbackTable");
-            var rows = Array.from(table.rows).slice(1);
-            var visibleCount = 0;
+                var table = document.getElementById("feedbackTable");
+                var rows = Array.from(table.rows).slice(1);
+                var visibleCount = 0;
 
-            rows.forEach(function(row) {
-                var rate = parseInt(row.querySelector('.hidden-rate').innerText);
-                if (stars === "" || rate == stars) {
-                    row.style.display = "";
-                    visibleCount++;
-                } else {
-                    row.style.display = "none";
-                }
-            });
+                rows.forEach(function(row) {
+                    var rate = parseInt(row.querySelector('.hidden-rate').innerText);
+                    if (stars === "" || rate == stars) {
+                        row.style.display = "";
+                        visibleCount++;
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
 
-            document.getElementById("feedbackCount").innerText = "Tổng cộng: " + visibleCount + " feedbacks";
-        }
+                document.getElementById("visible-count").innerText = visibleCount;
+            }
         </script>
 
 

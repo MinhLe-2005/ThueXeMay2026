@@ -357,7 +357,17 @@
                         </div>
                         <div class="col-md-7 block-9 mb-md-5">
                             <div class="contact-form-container">
+                                <c:if test="${not empty errorMsg}">
+                                    <div class="alert alert-danger" style="border-radius: 10px; background-color: #fdf2f2; color: #d9534f; border: 1px solid #f2dede; padding: 15px; margin-bottom: 25px; font-size: 0.95rem;">
+                                        <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> ${errorMsg}
+                                    </div>
+                                </c:if>
                                 <form action="contact" method="post" class="contact-form">
+                                    <!-- Honeypot field for spam prevention -->
+                                    <div style="display:none; visibility:hidden;">
+                                        <input type="text" name="website_url_honeypot" value="" autocomplete="off" tabindex="-1">
+                                    </div>
+                                    
                                     <div class="row">
                                         <div class="col-md-6 form-group mb-4">
                                             <label class="premium-label">Họ & Tên *</label>
@@ -432,6 +442,13 @@
         <script>
             // Kích hoạt animation khi cuộn
             $(document).ready(function () {
+                if (typeof AOS !== 'undefined') {
+                    AOS.init({
+                        duration: 1000,
+                        once: true,
+                        offset: 50
+                    });
+                }
                 $('.animate__animated').waypoint(function () {
                     $(this.element).addClass('animate__fadeInUp');
                 }, {

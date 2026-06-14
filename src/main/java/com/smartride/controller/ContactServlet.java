@@ -16,19 +16,7 @@ import jakarta.servlet.http.HttpSession;
 public class ContactServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ContactServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ContactServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        request.getRequestDispatcher("contact.jsp").forward(request, response);
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -41,13 +29,30 @@ public class ContactServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         
+        String honeypot = request.getParameter("website_url_honeypot");
+        if (honeypot != null && !honeypot.isEmpty()) {
+            // SPAM BOT DETECTED: Silently accept but do nothing
+            request.setAttribute("msg", "Gửi yêu cầu thành công! Cảm ơn bạn đã liên hệ, đội ngũ SmartRide sẽ phản hồi bạn trong vòng 24h làm việc.");
+            request.getRequestDispatcher("contact.jsp").forward(request, response);
+            return;
+        }
+
+        HttpSession session = request.getSession();
+        
+        Long lastContactTime = (Long) session.getAttribute("lastContactTime");
+        if (lastContactTime != null && (System.currentTimeMillis() - lastContactTime < 60000)) {
+            // Rate limit: 1 request per 60 seconds
+            request.setAttribute("errorMsg", "Bạn thao tác quá nhanh. Vui lòng chờ 1 phút trước khi gửi yêu cầu tiếp theo để tránh spam.");
+            request.getRequestDispatcher("contact.jsp").forward(request, response);
+            return;
+        }
+        session.setAttribute("lastContactTime", System.currentTimeMillis());
+
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
         String title = request.getParameter("title");
         String message = request.getParameter("message");
-        
-        HttpSession session = request.getSession();
         
         ContactDAO cd = ContactDAO.getInstance();
         Account acc = (Account) session.getAttribute("account");
@@ -58,9 +63,20 @@ public class ContactServlet extends HttpServlet {
             cd.insertContact(name, phone, email, title, message, null);
         }
         
+        // Gửi email thông báo cho Khách hàng
+        String customerContent = "<h3>Xin chào " + name + ",</h3>"
+                + "<p>Cảm ơn bạn đã liên hệ với <strong>SmartRide</strong>.</p>"
+                + "<p>Chúng tôi đã nhận được yêu cầu của bạn với nội dung sau:</p>"
+                + "<ul>"
+                + "<li><strong>Tiêu đề:</strong> " + title + "</li>"
+                + "<li><strong>Nội dung:</strong><br/>" + message.replace("\n", "<br>") + "</li>"
+                + "</ul>"
+                + "<p>Đội ngũ hỗ trợ của chúng tôi sẽ xem xét và phản hồi bạn qua email hoặc số điện thoại (" + phone + ") trong thời gian sớm nhất (thường trong vòng 24 giờ làm việc).</p>"
+                + "<br><p>Trân trọng,<br><strong>Đội ngũ SmartRide</strong></p>";
+
         // Gửi email thông báo về mail hệ thống
-        String to = "smartride.system@gmail.com";
-        String content = "<h3>Bạn vừa nhận được một liên hệ mới từ khách hàng trên hệ thống SmartRide.</h3>"
+        String adminTo = "smartride.system@gmail.com";
+        String adminContent = "<h3>Bạn vừa nhận được một liên hệ mới từ khách hàng trên hệ thống SmartRide.</h3>"
                 + "<p><strong>Thông tin khách hàng:</strong></p>"
                 + "<ul>"
                 + "<li><strong>Tên:</strong> " + name + "</li>"
@@ -71,7 +87,9 @@ public class ContactServlet extends HttpServlet {
                 + "<p><strong>Nội dung:</strong><br/>" + message.replace("\n", "<br>") + "</p>";
         
         try {
-            com.smartride.constant.SendEmail.sendVerificationEmail(to, content);
+            // Gửi cho Admin (Main Mail)
+            com.smartride.constant.SendEmail.sendVerificationEmail(adminTo, adminContent);
+
             request.setAttribute("msg", "Gửi yêu cầu thành công! Cảm ơn bạn đã liên hệ, đội ngũ SmartRide sẽ phản hồi bạn trong vòng 24h làm việc.");
         } catch (Exception e) {
             e.printStackTrace();

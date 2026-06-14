@@ -1,0 +1,1610 @@
+diff a/src/main/webapp/booking.jsp b/src/main/webapp/booking.jsp	(rejected hunks)
+@@ -1829,6 +1829,17 @@
+                                     <div class="form-group">
+                                         <label for="returndate" class="form-label">Ng├áy trß║ú xe <span class="note-star"> *</span></label>
+                                         <input type="date" name="returndate" id="returndate"  />
++                                        <div style="margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
++                                            <button type="button" style="background: #fff; color: #b59349; border: 1px solid #b59349; padding: 4px 12px; font-size: 12px; font-weight: 600; border-radius: 20px; cursor: pointer; transition: 0.3s;" onclick="setQuickReturnDate(7)" onmouseover="this.style.background='#b59349'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#b59349';">
++                                                Thu├¬ 1 Tuß║ºn (Gi├í ╞░u ─æ├úi theo Tuß║ºn)
++                                            </button>
++                                            <button type="button" style="background: #fff; color: #b59349; border: 1px solid #b59349; padding: 4px 12px; font-size: 12px; font-weight: 600; border-radius: 20px; cursor: pointer; transition: 0.3s;" onclick="setQuickReturnDate(30)" onmouseover="this.style.background='#b59349'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#b59349';">
++                                                Thu├¬ 1 Th├íng (Gi├í ╞░u ─æ├úi theo Th├íng)
++                                            </button>
++                                            <span style="font-size: 11px; color: #28a745; font-style: italic; margin-top: 2px;">
++                                                <i class="icon-check"></i> (Gi├í sß║╜ ─æ╞░ß╗úc giß║úm tß╗▒ ─æß╗Öng ß╗ƒ b╞░ß╗¢c Chß╗ìn Xe)
++                                            </span>
++                                        </div>
+                                     </div>
+                                     <div class="form-group">
+                                         <label for="returntime" class="form-label">Giß╗¥ trß║ú xe <span class="note-star"> *</span></label>
+@@ -1881,9 +1892,14 @@
+                             <p class="desc">H├úy chß╗ìn nhß╗»ng chiß║┐c xe tuyß╗çt vß╗¥i nhß║Ñt cho h├ánh tr├¼nh cß╗ºa bß║ín</p>
+                             
+                             <div class="fieldset-content">
++                                
++                                <div id="selected-bikes-banner" style="background: #fdf5e6; border-left: 4px solid #b59349; padding: 10px 15px; margin-bottom: 20px; font-weight: 600; color: #555; display: none; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
++                                    ≡ƒôî <span style="color: #b59349;">─Éang chß╗ìn:</span> <span id="selected-bikes-list" style="color: #333;"></span>
++                                </div>
+                                 <div class="scrollable-vertical" id="motorcyclelist">
++
+                                     <c:forEach items="${listM}" var="o">
+-                                        <c:if test="${o.motorcycleId eq chosenmotor}">
++                                        <c:if test="${o.motorcycleId == chosenmotor}">
+                                             <div class="form-box">
+                                                 <div class="form-img-bike">
+                                                     <label style="width: 100%" for="body-bg"><img src="${empty o.image ? 'images/default.jpg' : (o.image.startsWith('http') ? o.image : 'images/'.concat(o.image))}" alt=""></label>
+@@ -1900,25 +1916,26 @@
+                                                             <c:choose>
+                                                                 <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                     <div style="display: flex; gap: 8px; align-items: baseline;">
+-                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">Γé½${p.dailyPriceForDay}00</span>
++                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,##0"/> Γé½</span>
+                                                                         <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giß║úm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
+                                                                     </div>
+                                                                     <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                     <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                     <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+-                                                                    <h2 class="main-price price-day" >Γé½${discountedDay}00/Ng├áy</h2>
+-                                                                    <h2 class="main-price price-week" >Γé½${discountedWeek}00/Ng├áy</h2>
+-                                                                    <h2 class="main-price price-month" >Γé½${discountedMonth}00/Ng├áy</h2>
++                                                                    <h2 class="main-price price-day" data-price="${discountedDay}"><fmt:formatNumber value="${discountedDay}" pattern="#,##0"/> Γé½/Ng├áy</h2>
++                                                                    <h2 class="main-price price-week" data-price="${discountedWeek}"><fmt:formatNumber value="${discountedWeek}" pattern="#,##0"/> Γé½/Ng├áy</h2>
++                                                                    <h2 class="main-price price-month" data-price="${discountedMonth}"><fmt:formatNumber value="${discountedMonth}" pattern="#,##0"/> Γé½/Ng├áy</h2>
+                                                                 </c:when>
+                                                                 <c:otherwise>
+-                                                                    <h2 class="main-price price-day" >Γé½${p.dailyPriceForDay}00/Ng├áy</h2>
+-                                                                    <h2 class="main-price price-week" >Γé½${p.dailyPriceForWeek}00/Ng├áy</h2>
+-                                                                    <h2 class="main-price price-month" >Γé½${p.dailyPriceForMonth}00/Ng├áy</h2>
++                                                                    <h2 class="main-price price-day" data-price="${p.dailyPriceForDay}"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,##0"/> Γé½/Ng├áy</h2>
++                                                                    <h2 class="main-price price-week" data-price="${p.dailyPriceForWeek}"><fmt:formatNumber value="${p.dailyPriceForWeek}" pattern="#,##0"/> Γé½/Ng├áy</h2>
++                                                                    <h2 class="main-price price-month" data-price="${p.dailyPriceForMonth}"><fmt:formatNumber value="${p.dailyPriceForMonth}" pattern="#,##0"/> Γé½/Ng├áy</h2>
+                                                                 </c:otherwise>
+                                                             </c:choose>
+                                                         </c:if>
+                                                     </c:forEach>                                             
+-                                                    <p class="price-note">Kh├┤ng bao gß╗ôm thuß║┐ v├á bß║úo hiß╗âm</p>                                                    
++                                                    <p class="price-note">Kh├┤ng bao gß╗ôm thuß║┐ v├á bß║úo hiß╗âm</p>
++                                                    <div class="active-package-label" style="text-align: right;"></div>                                                    
+                                                         <input style="display: none" type="checkbox"  id="daily-checkbox-${o.motorcycleId}" class="option-checkbox">
+                                                         <div class="rent-button">                                                     
+                                                             <c:set var="found" value="false" />
+@@ -1928,7 +1945,7 @@
+                                                                     <a>Chß╗ìn sß╗æ l╞░ß╗úng xe: </a>
+                                                                     <select class="form-check-select" id="daily-select-${o.motorcycleId}">
+                                                                         <c:forEach begin="0" end="${entry.value}" var="i">
+-                                                                            <option value="${i}" ${i == "1" ? 'selected' : ''}>${i}</option>
++                                                                            <option value="${i}" ${i == 1 ? 'selected' : ''}>${i}</option>
+                                                                         </c:forEach>
+                                                                     </select>
+                                                                 </c:if>
+@@ -1943,7 +1960,7 @@
+                                         </c:if>
+                                     </c:forEach>
+                                     <c:forEach items="${listM}" var="o">
+-                                        <c:if test="${o.motorcycleId ne chosenmotor}">
++                                        <c:if test="${o.motorcycleId != chosenmotor}">
+                                             <div class="form-box">
+                                                 <div class="form-img-bike">
+                                                     <label style="width: 100%" for="body-bg"><img src="${empty o.image ? 'images/default.jpg' : (o.image.startsWith('http') ? o.image : 'images/'.concat(o.image))}" alt=""></label>
+@@ -1960,25 +1977,26 @@
+                                                             <c:choose>
+                                                                 <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                     <div style="display: flex; gap: 8px; align-items: baseline;">
+-                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">Γé½${p.dailyPriceForDay}00</span>
++                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,##0"/> Γé½</span>
+                                                                         <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giß║úm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
+                                                                     </div>
+                                                                     <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                     <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                     <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+-                                                                    <h2 class="main-price price-day" >Γé½${discountedDay}00/Ng├áy</h2>
+-                                                                    <h2 class="main-price price-week" >Γé½${discountedWeek}00/Ng├áy</h2>
+-                                                                    <h2 class="main-price price-month" >Γé½${discountedMonth}00/Ng├áy</h2>
++                                                                    <h2 class="main-price price-day" data-price="${discountedDay}"><fmt:formatNumber value="${discountedDay}" pattern="#,##0"/> Γé½/Ng├áy</h2>
++                                                                    <h2 class="main-price price-week" data-price="${discountedWeek}"><fmt:formatNumber value="${discountedWeek}" pattern="#,##0"/> Γé½/Ng├áy</h2>
++                                                                    <h2 class="main-price price-month" data-price="${discountedMonth}"><fmt:formatNumber value="${discountedMonth}" pattern="#,##0"/> Γé½/Ng├áy</h2>
+                                                                 </c:when>
+                                                                 <c:otherwise>
+-                                                                    <h2 class="main-price price-day" >Γé½${p.dailyPriceForDay}00/Ng├áy</h2>
+-                                                                    <h2 class="main-price price-week" >Γé½${p.dailyPriceForWeek}00/Ng├áy</h2>
+-                                                                    <h2 class="main-price price-month" >Γé½${p.dailyPriceForMonth}00/Ng├áy</h2>
++                                                                    <h2 class="main-price price-day" data-price="${p.dailyPriceForDay}"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,##0"/> Γé½/Ng├áy</h2>
++                                                                    <h2 class="main-price price-week" data-price="${p.dailyPriceForWeek}"><fmt:formatNumber value="${p.dailyPriceForWeek}" pattern="#,##0"/> Γé½/Ng├áy</h2>
++                                                                    <h2 class="main-price price-month" data-price="${p.dailyPriceForMonth}"><fmt:formatNumber value="${p.dailyPriceForMonth}" pattern="#,##0"/> Γé½/Ng├áy</h2>
+                                                                 </c:otherwise>
+                                                             </c:choose>
+                                                         </c:if>
+                                                     </c:forEach>                                             
+-                                                    <p class="price-note">Kh├┤ng bao gß╗ôm thuß║┐ v├á bß║úo hiß╗âm</p>                                                                                             
++                                                    <p class="price-note">Kh├┤ng bao gß╗ôm thuß║┐ v├á bß║úo hiß╗âm</p>
++                                                    <div class="active-package-label" style="text-align: right;"></div>                                                                                             
+                                                         <input style="display: none" type="checkbox"  id="daily-checkbox-${o.motorcycleId}" class="option-checkbox">
+                                                         <div class="rent-button">                                                     
+                                                             <c:set var="found" value="false" />
+@@ -2090,7 +2108,7 @@
+                                                     <label for="daily-checkbox" class="items-free">Free</label>
+                                                 </c:if>
+                                                 <c:if test="${a.price ne 0}">
+-                                                    <label for="daily-checkbox">Γé½${a.price}00</label>
++                                                    <label for="daily-checkbox" data-price="${a.price}"><fmt:formatNumber value="${a.price}" pattern="#,##0"/> Γé½</label>
+                                                 </c:if>
+                                             </div>
+                                         </div>
+@@ -2311,118 +2329,105 @@
+                         <h3>X├íc nhß║¡n</h3>
+                         <fieldset>
+                             <h2>X├üC NHß║¼N ─É╞áN ─Éß║╢T XE</h2>
+-                            <p class="desc">H├úy x├íc nhß║¡n th├┤ng tin v├á ─æß╗ông ├╜ vß╗¢i c├íc ─æiß╗üu khoß║ún dß╗ïch vß╗Ñ </p>
++                            <p class="desc">H├úy kiß╗âm tra kß╗╣ th├┤ng tin ─æ╞ín ─æß║╖t xe cß╗ºa bß║ín tr╞░ß╗¢c khi thanh to├ín.</p>
+                             <div class="fieldset-content">
+-                                <div class="scrollable-vertical">
+-                                    <h4>NG├ÇY & GIß╗£</h4>
+-                                    <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ng├áy nhß║¡n xe</label>
+-                                            <p id="pickupdatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giß╗¥ nhß║¡n xe</label>
+-                                            <p id="pickuptimetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ng├áy trß║ú xe</label>
+-                                            <p id="returndatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giß╗¥ trß║ú xe</label>
+-                                            <p id="returntimetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group" style="grid-column: span 2;">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">─Éß╗ïa ─æiß╗âm nhß║¡n xe</label>
+-                                            <p id="pickuploctext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group" style="grid-column: span 2;">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">─Éß╗ïa ─æiß╗âm trß║ú xe</label>
+-                                            <p id="returnloctext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                    </div>
+-                                    <h4>─É├â CHß╗îN XE M├üY</h4>
+-                                    <div id="savedBikeContainer"></div>
+-                                    <h4>PHß╗ñ KIß╗åN ─ÉI K├êM</h4>
+-                                    <div id="savedItemsContainer">
+-                                    </div>
+-                                    <h4>Tß╗öNG QUAN</h4>
+-                                    <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Hß╗ì v├á T├¬n</label>
+-                                            <p style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"><span id="firstnametext"></span> <span id="lastnametext"></span></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giß╗¢i t├¡nh</label>
+-                                            <p id="gendertext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Email</label>
+-                                            <p id="emailaddresstext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Sß╗æ ─æiß╗çn thoß║íi</label>
+-                                            <p id="phonetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ng├áy sinh</label>
+-                                            <p id="birthdaytext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group" style="grid-column: span 2;">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">─Éß╗ïa chß╗ë</label>
+-                                            <p id="addresstext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                    </div>
+-                                    <h4 style="margin-top: 25px;">TH├öNG TIN KH├üC</h4>
+-                                     <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+-                                         <div class="info-group" style="grid-column: span 2;">
+-                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Sß╗æ CCCD/CMND</label>
+-                                             <p id="identityCardtext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                         </div>
+-                                         <div class="info-group">
+-                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ng├áy cß║Ñp</label>
+-                                             <p id="issuedontext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                         </div>
+-                                         <div class="info-group">
+-                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ng├áy hß║┐t hß║ín</label>
+-                                             <p id="expdatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                         </div>                                                                      
+-                                    </div>
+-                      
++                                <div class="scrollable-vertical" style="display: flex; gap: 30px; flex-wrap: wrap;">
+                                     
+-                                    <h4>M├â GIß║óM GI├ü</h4>
+-                                    <div class="form-box" style="padding: 12px 16px; background: #f9f9f9; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 12px;">
+-                                        <div style="display: flex; gap: 10px; align-items: center; width: 100%;">
+-                                            <input type="text" id="voucher-code-input" placeholder="Nhß║¡p m├ú voucher..."
+-                                                   style="flex:1; padding: 10px 14px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none;"
+-                                                   oninput="document.getElementById('voucher-msg').textContent=''; resetVoucher();" />
+-                                            <button type="button" id="apply-voucher-btn"
+-                                                    onclick="applyVoucher()"
+-                                                    style="padding: 10px 20px; background: linear-gradient(135deg, #b59349 0%, #8c6f32 100%); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap;">
+-                                                ├üp dß╗Ñng
+-                                            </button>
++                                    <!-- Cß╗Öt tr├íi: Th├┤ng tin -->
++                                    <div style="flex: 1; min-width: 300px;">
++                                        <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; margin-bottom: 20px;">
++                                            <h4 style="margin-top: 0; color: #b59349; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 20px;"><i class="bi bi-clock-history"></i> THß╗£I GIAN</h4>
++                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Nhß║¡n xe</label>
++                                                    <p style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"><span id="pickupdatetext"></span> <span id="pickuptimetext"></span></p>
++                                                    <p id="pickuploctext" style="font-size: 13px; color: #666; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Trß║ú xe</label>
++                                                    <p style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"><span id="returndatetext"></span> <span id="returntimetext"></span></p>
++                                                    <p id="returnloctext" style="font-size: 13px; color: #666; margin: 4px 0 0;"></p>
++                                                </div>
++                                            </div>
++                                        </div>
++
++                                        <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea;">
++                                            <h4 style="margin-top: 0; color: #b59349; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 20px;"><i class="bi bi-person-lines-fill"></i> KH├üCH H├ÇNG</h4>
++                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Hß╗ì v├á T├¬n</label>
++                                                    <p style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"><span id="firstnametext"></span> <span id="lastnametext"></span></p>
++                                                </div>
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Sß╗æ ─æiß╗çn thoß║íi</label>
++                                                    <p id="phonetext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div style="grid-column: span 2;">
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Email</label>
++                                                    <p id="emailaddresstext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Ng├áy sinh</label>
++                                                    <p id="birthdaytext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Giß╗¢i t├¡nh</label>
++                                                    <p id="gendertext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div style="grid-column: span 2;">
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">CCCD/CMND</label>
++                                                    <p style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"><span id="identityCardtext"></span> (Cß║Ñp: <span id="issuedontext"></span> - Hß║┐t hß║ín: <span id="expdatetext"></span>)</p>
++                                                </div>
++                                                <div style="grid-column: span 2;">
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">─Éß╗ïa chß╗ë</label>
++                                                    <p id="addresstext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                            </div>
+                                         </div>
+-                                        <div id="voucher-msg" style="margin-top: 8px; font-size: 13px;"></div>
+-                                        <input type="hidden" id="applied-voucher-id" value="0" />
+-                                        <input type="hidden" id="applied-discount" value="0" />
+                                     </div>
+ 
+-                                    <h4>Tß╗öNG TIß╗ÇN</h4>
+-                                    <div class="form-box-total" id="form-box-total">
++                                    <!-- Cß╗Öt phß║úi: H├│a ─æ╞ín -->
++                                    <div style="flex: 1; min-width: 320px; max-width: 450px;">
++                                        <div class="receipt-box" style="padding: 24px; background: #fafafa; border-radius: 12px; border: 1px solid #e0e0e0; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
++                                            <h4 style="margin-top: 0; color: #333; font-weight: 800; text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 15px; margin-bottom: 20px;">H├ôA ─É╞áN Tß║áM T├ìNH</h4>
++                                            
++                                            <!-- Container ß║⌐n ─æß╗â clone JS nh╞░ng kh├┤ng hiß╗ân thß╗ï trß╗▒c tiß║┐p ß╗ƒ ─æ├óy nß╗»a m├á render thß║│ng v├áo receipt -->
++                                            <div id="savedBikeContainer" style="display:none;"></div>
++                                            <div id="savedItemsContainer" style="display:none;"></div>
+ 
+-                                    </div>
+-                                    <div class="form-check">
+-                                        <div class="checkbox-container">
+-                                            <input type="checkbox" id="daily-checkbox-term">
+-                                            <label>─Éß╗ông ├╜ <a href="policies.jsp" target="_blank" style="color: #b59349; text-decoration: underline; font-weight: 600;">─æiß╗üu khoß║ún dß╗ïch vß╗Ñ</a></label>
++                                            <div id="form-box-total" style="min-height: 100px;">
++                                                <!-- Javascript sß║╜ render c├íc item h├│a ─æ╞ín v├áo ─æ├óy -->
++                                            </div>
++
++                                            <div style="margin-top: 20px; border-top: 2px dashed #ccc; padding-top: 20px;">
++                                                <div style="display: flex; gap: 10px; align-items: center; width: 100%; margin-bottom: 15px;">
++                                                    <input type="text" id="voucher-code-input" placeholder="Nhß║¡p m├ú voucher..."
++                                                           style="flex:1; padding: 10px 14px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none;"
++                                                           oninput="document.getElementById('voucher-msg').textContent=''; resetVoucher();" />
++                                                    <button type="button" id="apply-voucher-btn"
++                                                            onclick="applyVoucher()"
++                                                            style="padding: 10px 20px; background: linear-gradient(135deg, #b59349 0%, #8c6f32 100%); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap;">
++                                                        ├üp dß╗Ñng
++                                                    </button>
++                                                </div>
++                                                <div id="voucher-msg" style="margin-top: -5px; margin-bottom: 10px; font-size: 13px;"></div>
++                                                <input type="hidden" id="applied-voucher-id" value="0" />
++                                                <input type="hidden" id="applied-discount" value="0" />
++                                            </div>
++                                            
++                                            <div class="form-check" style="margin-top: 15px;">
++                                                <div class="checkbox-container">
++                                                    <input type="checkbox" id="daily-checkbox-term" onchange="toggleNextButton()">
++                                                    <label for="daily-checkbox-term" style="font-size: 14px;">T├┤i ─æß╗ông ├╜ vß╗¢i <a href="policies.jsp" target="_blank" style="color: #b59349; text-decoration: underline; font-weight: 600;">─æiß╗üu khoß║ún dß╗ïch vß╗Ñ</a></label>
++                                                </div>
++                                            </div>
+                                         </div>
+                                     </div>
++                                    
+                                 </div>
+                             </div>
+                         </fieldset>
+ 
+-
+-
+                         <h3>Thanh to├ín</h3>
+                         <fieldset>
+ <!--                            <a onclick="yourFunctionName()">aaaaa</a>-->
+@@ -2490,6 +2495,18 @@
+ 
+                 var form = $("#signup-form");
+                 
++                $.validator.addMethod("notInPast", function(value, element) {
++                    if (!value) return true;
++                    var dateStr = $("#pickupdate").val();
++                    if (!dateStr) return true;
++                    
++                    var pickupDateTime = new Date(dateStr + "T" + value);
++                    var now = new Date();
++                    now.setMinutes(now.getMinutes() - 5); // 5 min grace period for form filling
++                    
++                    return pickupDateTime >= now;
++                }, "Giß╗¥ nhß║¡n xe kh├┤ng ─æ╞░ß╗úc ß╗ƒ trong qu├í khß╗⌐");
++
+                 $.validator.addMethod("minAdvanceTime", function(value, element) {
+                     if (!value) return true;
+                     var dateStr = $("#pickupdate").val();
+@@ -2497,11 +2514,11 @@
+                     
+                     var pickupDateTime = new Date(dateStr + "T" + value);
+                     var minTime = new Date();
+-                    minTime.setHours(minTime.getHours() + 1);
++                    minTime.setMinutes(minTime.getMinutes() + 30); // 30 min advance booking
+                     minTime.setMinutes(minTime.getMinutes() - 5); // 5 min grace period
+                     
+                     return pickupDateTime >= minTime;
+-                }, "Vui l├▓ng ─æß║╖t xe tr╞░ß╗¢c 1 tiß║┐ng");
++                }, "Vui l├▓ng ─æß║╖t xe tr╞░ß╗¢c 30 ph├║t");
+ 
+                 $.validator.addMethod("businessHours", function(value, element) {
+                     if (!value) return true;
+@@ -2525,7 +2542,8 @@
+                         },
+                         pickuptime: {
+                             businessHours: true,
+-                            minAdvanceTime: true
++                            notInPast: true,
++                            
+                         },
+                         returntime: {
+                             businessHours: true
+@@ -2563,1169 +2581,27 @@
+                         if (currentIndex === 4) {
+                             form.parent().parent().parent().find('.footer').removeClass('footer-3').addClass('footer-' + currentIndex + '');
+                         }
+-                        if (currentIndex === 5) {
+-                            form.parent().parent().parent().find('.footer').removeClass('footer-4').addClass('footer-' + currentIndex + '');
+-                        }
+-
+-                        // if(currentIndex === 4) {
+-                        //     form.parent().parent().parent().append('<div class="footer" style="height:752px;"></div>');
+-                        // }
+-                        form.validate().settings.ignore = ":disabled,:hidden";
+-                        return form.valid();
+-                    },
+-                    onFinishing: function (event, currentIndex) {
+-                        form.validate().settings.ignore = ":disabled";
+-                        return form.valid();
+-                    },
+-                    onFinished: function (event, currentIndex) {
+-                        
+-                        var formData = form.serialize();
+-                      
+-                        $.ajax({
+-                        url: 'forgotPassword', // Replace with your servlet URL
+-                        type: 'POST',
+-                        data: formData,
+-                       
+-                        success: function (response) {
+-                            // Handle success
+-                            alert('Submitted successfully');
+-                            console.log(response);
+-                        },
+-                        error: function (jqXHR, textStatus, errorThrown) {
+-                            // Handle error
+-                            alert('Submission failed');
+-                            console.error(textStatus, errorThrown);
+-                        }
+-                    });
+-                    },
+-                    onStepChanged: function (event, currentIndex, priorIndex) {
+-
+-                        var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
+-                        storedFormData = {
+-                                pickupdate: document.getElementById('pickupdate').value,
+-                                pickuptime: document.getElementById('pickuptime').value,
+-                                returndate: document.getElementById('returndate').value,
+-                                returntime: document.getElementById('returntime').value,
+-                                pickuplocation: document.getElementById('pickuplocation').value,
+-                                returnlocation: document.getElementById('returnlocation').value
+-                            };
+-                        const pickupDateText = storedFormData.pickupdate;
+-                        const returnDateText = storedFormData.returndate;
+-
+-                        // Chuyß╗ân c├íc chuß╗ùi ng├áy th├ánh ─æß╗æi t╞░ß╗úng Date
+-                        const pickupDate = new Date(pickupDateText);
+-                        const returnDate = new Date(returnDateText);
+-
+-                        // T├¡nh sß╗æ ng├áy ch├¬nh lß╗çch
+-                        const differenceInTime = returnDate.getTime() - pickupDate.getTime();
+-                        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+-                            
+-                        if(currentIndex === 0){
+-                            nextButton.style.pointerEvents = 'auto';
+-                            nextButton.style.color = '';
+-                            nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                        }
+-                        if (currentIndex === 1) {
+-//                            nextButton.style.pointerEvents = 'none';
+-//                            nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-//                            nextButton.style.color = '';
+-                            
+-                            toggleBikeNextButton();
+-                            changePrice();
+-                           
+-                       }
+-                       if(currentIndex === 5){
+-                           var finishButton = document.querySelector('.wizard .actions a[href="#finish"]');
+-                           finishButton.style.display = 'none';
+-                            // Lß║Ñy thß║╗ h2
+-                            const dataH2 = document.getElementById('dataInput');
+-
+-                            // Lß║Ñy iframe
+-                            const iframe = document.getElementById('myIframe');
+-
+-                            // Truyß╗ün dß╗» liß╗çu tß╗½ thß║╗ h2 v├áo iframe khi thß║╗ h2 thay ─æß╗òi
+-                            const sendDataToIframe = () => {
+-                                // Lß║Ñy gi├í trß╗ï cß╗ºa thß║╗ h2
+-                                const dataTotal = dataH2.textContent.replace(/[Γé½,.]/g, '').trim(); // Lß║Ñy dß╗» liß╗çu v├á x├│a dß║Ñu chß║Ñm v├á dß║Ñu chß║Ñm c├óu
+-                                console.log(dataTotal);
+-                                const data = {
+-                                    dataTotal: dataTotal
+-                                };
+-                                // Truyß╗ün gi├í trß╗ï v├áo iframe
+-                                iframe.contentWindow.postMessage(data, '*');
+-                            };
+-
+-                            // Gß╗ìi h├ám ─æß╗â gß╗¡i dß╗» liß╗çu ngay khi tß║úi trang
+-                            sendDataToIframe();
+-
+-                            // Theo d├╡i sß╗▒ thay ─æß╗òi cß╗ºa thß║╗ h2 v├á gß╗¡i dß╗» liß╗çu v├áo iframe
+-                            const observer = new MutationObserver(sendDataToIframe);
+-
+-                            observer.observe(dataH2, { childList: true, subtree: true });
+-                       }
+-                       
+-                       function changePrice(){
+-                            var quantityDay = Math.max(1, Math.ceil(differenceInDays));
+-                            const priceDayElements = document.querySelectorAll('.price-day');
+-                            const priceWeekElements = document.querySelectorAll('.price-week');
+-                            const priceMonthElements = document.querySelectorAll('.price-month');
+-                            
+-                            priceDayElements.forEach(element => {
+-                                   element.style.display = "none";
+-                                   element.classList.remove("price-current");
+-                            });
+-                            priceWeekElements.forEach(element => {
+-                                element.style.display = "none";
+-                                element.classList.remove("price-current");
+-                            });
+-                            priceMonthElements.forEach(element => {
+-                               element.style.display = "none";
+-                               element.classList.remove("price-current");
+-                            });
+-                            
+-                            console.log(differenceInDays);
+-                            
+-                            if(quantityDay >= 1 && quantityDay <= 7){
+-                                
+-                                priceDayElements.forEach(element => {
+-                                   element.style.display = "inline-block";
+-                                   element.classList.add("price-current");
+-                                });
+-                            }
+-                            else if(quantityDay >= 8 && quantityDay <= 30){
+-                                
+-                                priceWeekElements.forEach(element => {
+-                                   element.style.display = "inline-block";
+-                                   element.classList.add("price-current");
+-                                });
+-                            }
+-                            else if(quantityDay >= 30){
+-                                
+-                                priceMonthElements.forEach(element => {
+-                                   element.style.display = "inline-block";
+-                                   element.classList.add("price-current");
+-                                });
+-                            }
+-                       }
+-
+-                        if (currentIndex === 3) {
+-                            validateForm();
+-//                            nextButton.style.pointerEvents = 'auto';
+-//                            nextButton.style.color = '';
+-//                            nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                        }
+-                        
+-                        if (currentIndex === 2) {
+-                            nextButton.style.pointerEvents = 'auto';
+-                            nextButton.style.color = '';
+-                            nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                            let sum = 0;
+-                            const checkboxMotorContainer = document.getElementById('motorcyclelist');
+-                            const selectBoxes = checkboxMotorContainer.querySelectorAll('.form-check-select');
+-
+-                            // Lß║╖p qua tß╗½ng select box v├á lß║Ñy th├┤ng tin nß║┐u gi├í trß╗ï lß╗¢n h╞ín 0
+-                            selectBoxes.forEach(selectBox => {
+-                                const quantity = parseInt(selectBox.value);
+-                                if (quantity > 0) {
+-                                   sum += quantity;
+-                                }
+-                            });
+-                            
+-                            if(sum !== totalI){
+-                                totalI = sum;
+-                                const checkboxContainer = document.getElementById('protection');
+-                                // ─Éß║╖t max v├á min cho c├íc input c├│ class 'form-check-select'
+-                                checkboxContainer.querySelectorAll('.form-check-select').forEach(input => {
+-                                    const label = input.nextElementSibling;
+-                                    let max = sum * 2;
+-                                    const min = 0;
+-                                    
+-                                    if (label.classList.contains('items-free')) {
+-                                        max = sum;
+-                                    }
+-                                    createOptions(input, min, max);
+-                                    
+-                                });
+-                                
+-                                if (numberAccessStatesI) {
+-                                    console.log(Object.keys(numberAccessStatesI).length !== 0);
+-                                    if(Object.keys(numberAccessStatesI).length !== 0){
+-                                        Object.keys(numberAccessStatesI).forEach(numberId => {
+-                                            const numberSelect = document.querySelector(`#protection #` + numberId);
+-                                            if (numberSelect) {
+-                                               
+-                                                const value = typeof numberAccessStatesI[numberId] === 'number' && !isNaN(numberAccessStatesI[numberId]) ? numberAccessStatesI[numberId] : 0;
+-                                                numberSelect.value = value;
+-
+-                                            }
+-                                        });
+-                                    }
+-                                }                        
+-                                
+-                            }
+-                          
+-//                        
+-                            // H├ám tß║ío c├íc t├╣y chß╗ìn cho thß║╗ <select>
+-                            function createOptions(selectElement, min, max) {
+-                                selectElement.innerHTML = ''; // X├│a c├íc t├╣y chß╗ìn c┼⌐ nß║┐u c├│
+-                                for (let i = min; i <= max; i++) {
+-                                    const option = document.createElement('option');
+-                                    option.value = i;
+-                                    option.text = i;
+-                                    selectElement.appendChild(option);
+-                                }
+-                            }
+-                            
+-                            
+-                        }
+-                        
+-                        if(currentIndex !== 5){
+-                            const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
+-                            steps[5].classList.remove('done');
+-                            steps[5].classList.add('disabled');
+-                        }
+-                        
+-                        if (currentIndex === 4) { // B╞░ß╗¢c thß╗⌐ t╞░ (index bß║»t ─æß║ºu tß╗½ 0)
+-                            const checkbox = document.getElementById('daily-checkbox-term');
+-                            nextButton.style.pointerEvents = 'none';
+-                            nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                            nextButton.style.color = '';
+-                            
+-                            // Function to toggle the next button based on the checkbox state
+-                            checkbox.addEventListener('change', toggleNextButton);
+-                            // Initial check
+-                            toggleNextButton();
+-                            changePrice();
+-                            // Lß║Ñy dß╗» liß╗çu ─æ├ú l╞░u tß╗½ localStorage v├á th├¬m lß║íi v├áo savedItemsContainer
+-                            
+-                            if (storedFormData) {
+-                                document.getElementById('pickupdatetext').textContent = storedFormData.pickupdate;
+-                                document.getElementById('pickuploctext').textContent = storedFormData.pickuplocation;
+-                                document.getElementById('pickuptimetext').textContent = storedFormData.pickuptime;
+-                                document.getElementById('returnloctext').textContent = storedFormData.returnlocation;
+-                                document.getElementById('returndatetext').textContent = storedFormData.returndate;
+-                                document.getElementById('returntimetext').textContent = storedFormData.returntime;
+-                            }
+-
+-                            //Add motorcycle have chosen
+-                            const savedBikeContainer = document.getElementById('savedBikeContainer');
+-                            savedBikeContainer.innerHTML = '';
+-
+-                     
+-                            const numberMotorStates = {};
+-
+-
+-                            const checkboxMotorContainer = document.getElementById('motorcyclelist');
+-
+-                            //tß║Ñt cß║ú c├íc select box trong div
+-                            const selectBoxes = checkboxMotorContainer.querySelectorAll('.form-check-select');
+-
+-                            // Lß║╖p qua tß╗½ng select box v├á lß║Ñy th├┤ng tin nß║┐u gi├í trß╗ï lß╗¢n h╞ín 0
+-                            selectBoxes.forEach(selectBox => {
+-                                const quantity = parseInt(selectBox.value);
+-                                if (quantity > 0) {
+-                                    const formMotorBox = selectBox.closest('.form-box');
+-                                    if (formMotorBox) {
+-                                        savedBikeContainer.insertAdjacentHTML('beforeend', formMotorBox.outerHTML);
+-                                        numberMotorStates[selectBox.id] = quantity;
+-                                    }
+-                                }
+-                            });
+-
+-                             // Hiß╗ân thß╗ï c├íc gi├í trß╗ï ─æ├ú l╞░u trong numberMotorStates
+-                            if (numberMotorStates) {
+-                                Object.keys(numberMotorStates).forEach(numberId => {
+-                                    const numberSelect = document.querySelector(`#savedBikeContainer #` + numberId);
+-                                    if (numberSelect) {
+-                                        numberSelect.value = numberMotorStates[numberId];
+-                                        numberSelect.disabled = true;  // Nß║┐u bß║ín muß╗æn v├┤ hiß╗çu h├│a c├íc select box ─æ├ú ─æ╞░ß╗úc l╞░u
+-                                    }
+-                                });
+-                            }
+-                            
+-                            //Add assecc item have chosen
+-                            const savedItemsContainer = document.getElementById('savedItemsContainer');
+-                            savedItemsContainer.innerHTML = ''; // Clear any previous 
+-
+-                            const numberAccessStates = {};
+-
+-
+-                            const checkboxContainer = document.getElementById('protection');
+-
+-                            // Lß║Ñy tß║Ñt cß║ú c├íc checkbox trong div
+-                            const checkboxes = checkboxContainer.querySelectorAll('.form-check-select');
+-
+-                            // Lß║╖p qua tß╗½ng checkbox v├á lß║Ñy th├┤ng tin
+-                            checkboxes.forEach(selectBox => {
+-                                const quantity = parseInt(selectBox.value);
+-                                if (quantity > 0) {
+-                                    const formAccessBox = selectBox.closest('.form-box');
+-                                    if (formAccessBox) {
+-                                        savedItemsContainer.insertAdjacentHTML('beforeend', formAccessBox.outerHTML);
+-                                        numberAccessStates[selectBox.id] = quantity;
+-                                    }
+-                                }
+-                            });
+-                            if (numberAccessStates) {
+-                                Object.keys(numberAccessStates).forEach(numberId => {
+-                                    const numberSelect = document.querySelector(`#savedItemsContainer #` + numberId);
+-                                    if (numberSelect) {
+-                                        numberSelect.value = numberAccessStates[numberId];
+-                                        numberSelect.disabled = true;  // Nß║┐u bß║ín muß╗æn v├┤ hiß╗çu h├│a c├íc select box ─æ├ú ─æ╞░ß╗úc l╞░u
+-                                    }
+-                                });
+-                            }
+-                            
+-
+-                          
+-                            
+-                            formData = {
+-                                first_name: document.getElementById('first_name').value,
+-                                last_name: document.getElementById('last_name').value,
+-                                email: document.getElementById('email').value,
+-                                phonenumber: document.getElementById('phonenumber').value,
+-                                address: document.getElementById('address').value,                           
+-                                dob: document.getElementById('dob').value,                          
+-                                gender: document.querySelector('input[name="gender"]:checked') ? document.querySelector('input[name="gender"]:checked').value : '',
+-                                identityCard : document.getElementById("identityCard").value,
+-                                issuedon : document.getElementById("issuedon").value,
+-                                expdate : document.getElementById("expdate").value                              
+-                            };
+-
+-                            if (formData) {
+-                                document.getElementById('firstnametext').textContent = formData.first_name;
+-                                document.getElementById('lastnametext').textContent = formData.last_name;
+-                                document.getElementById('emailaddresstext').textContent = formData.email;
+-                                document.getElementById('phonetext').textContent = formData.phonenumber;
+-                                document.getElementById('addresstext').textContent = formData.address;                         
+-                                document.getElementById('birthdaytext').textContent = formData.dob;    
+-                                document.getElementById('gendertext').textContent = formData.gender;
+-                                document.getElementById('identityCardtext').textContent = formData.identityCard;
+-                                document.getElementById('issuedontext').textContent = formData.issuedon;   
+-                                document.getElementById('expdatetext').textContent = formData.expdate;   
+-                            }
+-                            
+-                           
+-                            
+-                            // Th├¬m ti├¬u ─æß╗ü h4 v├á dß╗» liß╗çu sß╗æ l╞░ß╗úng vß╗¢i gi├í tiß╗ün v├áo div cß╗Ñ thß╗â trong item-container
+-                            const formBoxTotal = document.getElementById('form-box-total');
+-                            formBoxTotal.innerHTML = '';
+-                            let totalAmount = 0;
+-                            //calculator motorcycles
+-                            const  savedBikeCal = document.querySelectorAll('#savedBikeContainer .form-box');
+-                            savedBikeCal.forEach(formBox => { 
+-                                const selects = formBox.querySelector('.form-check-select');
+-                                const title = formBox.querySelector('h4').textContent;
+-                                const priceLabel = formBox.querySelector('.main-price').textContent;
+-                                const quantity = parseInt(selects.value, 10);
+-                                let price = 0;
+-
+-                                if (priceLabel.trim().toLowerCase() !== 'free') {
+-                                    price = parseInt(priceLabel.replace(/\D/g, ''), 10);
+-                                }
+-
+-                                // Quantity l├á sß╗æ ng├áy ch├¬nh lß╗çch giß╗»a ng├áy trß║ú v├á ng├áy pickup
+-                                const quantityDay = Math.max(1, Math.ceil(differenceInDays)); // ─Éß║úm bß║úo quantity ├¡t nhß║Ñt l├á 1
+-
+-                                // T├¡nh tß╗òng gi├í
+-                                const totalPrice = quantityDay * price * quantity;
+-                                totalAmount += totalPrice;
+-
+-                                // Create new div elements similar to formBoxTotal structure
+-                                const itemContainer = document.createElement('div');
+-                                itemContainer.classList.add('item-container');
+-                                itemContainer.style.display = 'flex';
+-                                itemContainer.style.justifyContent = 'space-between';
+-                                itemContainer.style.alignItems = 'center';
+-                                itemContainer.style.padding = '15px 0';
+-                                itemContainer.style.borderBottom = '1px dashed #eaeaea';
+-
+-                                itemContainer.innerHTML = `
+-                                    <div style="flex: 2;">
+-                                        <h4 style="margin: 0; font-size: 16px; color: #333;">` + title + `</h4>
+-                                    </div>
+-                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
+-                                        x` + quantityDay + ` Ng├áy
+-                                    </div>
+-                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
+-                                        x` + quantity + ` Xe
+-                                    </div>
+-                                    <div style="flex: 1; text-align: right; color: #666; font-size: 14px;">
+-                                        Γé½` + price.toLocaleString() + `/Ng├áy
+-                                    </div>
+-                                    <div style="flex: 1.5; text-align: right;">
+-                                        <h4 style="margin: 0; font-size: 18px; color: #b59349;">Γé½` + totalPrice.toLocaleString() + `</h4>
+-                                    </div>
+-                                `;
+-
+-                                formBoxTotal.appendChild(itemContainer);                                  
+-                            });
+-                            
+-                            // Calculator items
+-                            const  savedAsseccCal = document.querySelectorAll('#savedItemsContainer .form-box');
+-                            savedAsseccCal.forEach(formBox => {                              
+-                                // Lß║Ñy nß╗Öi dung tß╗½ thß║╗ h4 v├á label
+-                                const selects = formBox.querySelector('.form-check-select');
+-                                const title = formBox.querySelector('h4').textContent;
+-                                const priceLabel = formBox.querySelector('label[for="daily-checkbox"]').textContent;
+-                                const quantity = parseInt(selects.value, 10);
+-                                let price = 0;
+-
+-                                if (priceLabel.trim().toLowerCase() !== 'free') {
+-                                    price = parseInt(priceLabel.replace(/\D/g, ''), 10);
+-                                }
+-
+-                                // T├¡nh tß╗òng gi├í
+-                                const totalPrice = quantity * price;
+-                                totalAmount += totalPrice;
+-
+-                                // Tß║ío c├íc thß║╗ div mß╗¢i
+-                                const itemContainer = document.createElement('div');
+-                                itemContainer.classList.add('item-container');
+-                                itemContainer.style.display = 'flex';
+-                                itemContainer.style.justifyContent = 'space-between';
+-                                itemContainer.style.alignItems = 'center';
+-                                itemContainer.style.padding = '15px 0';
+-                                itemContainer.style.borderBottom = '1px dashed #eaeaea';
+-
+-                                itemContainer.innerHTML = `
+-                                    <div style="flex: 2;">
+-                                        <h4 style="margin: 0; font-size: 16px; color: #333;">` + title + `</h4>
+-                                    </div>
+-                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
+-                                        x` + quantity + ` C├íi
+-                                    </div>
+-                                    <div style="flex: 1; text-align: right; color: #666; font-size: 14px;">
+-                                        ` + priceLabel + `
+-                                    </div>
+-                                    <div style="flex: 1.5; text-align: right;">
+-                                        <h4 style="margin: 0; font-size: 18px; color: #b59349;">Γé½` + totalPrice.toLocaleString() + `</h4>
+-                                    </div>
+-                                `;
+-
+-                                formBoxTotal.appendChild(itemContainer);
+-                                
+-                            });
+-                            // Tß║ío thß║╗ div item-total v├á th├¬m v├áo cuß╗æi savedItemsContainer
+-                            const itemTotalContainer = document.createElement('div');
+-                            itemTotalContainer.classList.add('item-total');
+-                            itemTotalContainer.style.paddingTop = '20px';
+-                            itemTotalContainer.style.display = 'flex';
+-                            itemTotalContainer.style.flexDirection = 'column';
+-                            itemTotalContainer.style.alignItems = 'flex-end';
+-
+-                            // Apply voucher discount if any
+-                            const appliedDiscount = parseInt(document.getElementById('applied-discount').value) || 0;
+-                            const finalAmount = Math.max(0, totalAmount - appliedDiscount);
+-
+-                            let discountHtml = '';
+-                            if (appliedDiscount > 0) {
+-                                discountHtml = `<div style="display:flex; justify-content:space-between; width: 100%; color:#16a34a; font-size:15px; margin-bottom:12px; font-weight: 600;">
+-                                    <span>≡ƒÄë Giß║úm gi├í voucher:</span>
+-                                    <span>-Γé½${appliedDiscount.toLocaleString()}</span>
+-                                </div>`;
+-                            }
+-
+-                            itemTotalContainer.innerHTML = discountHtml +
+-                                `<div style="display:flex; justify-content:space-between; width: 100%; align-items: center;">
+-                                    <h4 style="margin: 0; font-size: 18px; color: #333;">Tß╗òng thanh to├ín:</h4>
+-                                    <h2 id="dataInput" style="margin: 0; font-size: 26px; color: #b59349; font-weight: 700;">Γé½`+ finalAmount.toLocaleString() +`</h2>
+-                                </div>`;
+-                            formBoxTotal.appendChild(itemTotalContainer);
+-                        }
+-
+-                        function toggleNextButton() {
+-                               const checkbox =document.getElementById('daily-checkbox-term');
+-                               if (checkbox.checked) {
+-                                   nextButton.style.pointerEvents = 'auto';
+-                                   nextButton.style.color = '';
+-                                   nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                               } else {
+-                                   nextButton.style.pointerEvents = 'none';
+-                                   nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                                   nextButton.style.color = '';
+-                               }
+-                        }
+-                        
+-                        
+-                        
+-                        return true;
+-                    }
+-
+-
+-                });
+-                jQuery.extend(jQuery.validator.messages, {
+-                    required: "",
+-                    remote: "",
+-                    email: "",
+-                    url: "",
+-                    date: "",
+-                    dateISO: "",
+-                    number: "",
+-                    digits: "",
+-                    creditcard: "",
+-                    equalTo: ""
+-                });
+-
+-                $.dobPicker({
+-                    daySelector: '#birth_date',
+-                    monthSelector: '#birth_month',
+-                    yearSelector: '#birth_year',
+-                    dayDefault: '',
+-                    monthDefault: '',
+-                    yearDefault: '',
+-                    minimumAge: 0,
+-                    maximumAge: 120
+-                });
+-                var marginSlider = document.getElementById('slider-margin');
+-                if (marginSlider != undefined) {
+-                    noUiSlider.create(marginSlider, {
+-                        start: [1100],
+-                        step: 100,
+-                        connect: [true, false],
+-                        tooltips: [true],
+-                        range: {
+-                            'min': 100,
+-                            'max': 2000
+-                        },
+-                        pips: {
+-                            mode: 'values',
+-                            values: [100, 2000],
+-                            density: 4
+-                        },
+-                        format: wNumb({
+-                            decimals: 0,
+-                            thousand: '',
+-                            prefix: '$ ',
+-                        })
+-                    });
+-                    var marginMin = document.getElementById('value-lower'),
+-                            marginMax = document.getElementById('value-upper');
+-
+-                    marginSlider.noUiSlider.on('update', function (values, handle) {
+-                        if (handle) {
+-                            marginMax.innerHTML = values[handle];
+-                        } else {
+-                            marginMin.innerHTML = values[handle];
+-                        }
+-                    });
+-                }
+-
+-
+-
+-
+-
+-            })(jQuery);
+-            
+-            
+-            document.addEventListener('DOMContentLoaded', () => {
+-                              
+-                const requiredFields = [
+-                    document.getElementById('pickupdate'),
+-                    document.getElementById('pickuptime'),
+-                    document.getElementById('returndate'),
+-                    document.getElementById('returntime'),
+-                    document.getElementById('pickuplocation'),
+-                    document.getElementById('returnlocation')
+-                ];
+-                
+-                // Function to format date to YYYY-MM-DD
+-                const formatDate = (date) => {
+-                    const d = new Date(date);
+-                    let month = '' + (d.getMonth() + 1);
+-                    let day = '' + d.getDate();
+-                    const year = d.getFullYear();
+-
+-                    if (month.length < 2) month = '0' + month;
+-                    if (day.length < 2) day = '0' + day;
+-
+-                    return [year, month, day].join('-');
+-                };
+-                
+-                const pickupdate = requiredFields[0];
+-                const returndate = requiredFields[2];
+-                // Set the min attribute for pickupdate
+-                const today = new Date();
+-                // today.setDate(today.getDate() + 1); // Minimum pick-up date is tomorrow
+-                pickupdate.min = formatDate(today);
+-                returndate.min = formatDate(today);
+-                
+-                pickupdate.addEventListener('change', () => {
+-                    const pickupdateValue = new Date(pickupdate.value);
+-                    pickupdateValue.setDate(pickupdateValue.getDate() + 1); // Minimum return date is one day after pick-up date
+-                    returndate.min = formatDate(pickupdateValue);
+-
+-                    if (new Date(returndate.value) <= new Date(pickupdate.min)) {
+-                        returndate.value = formatDate(pickupdateValue);
+-                    }
+-                });
+-                
+-                returndate.addEventListener('change', () => {
+-                    const returndateValue = new Date(returndate.value);
+-                    returndateValue.setDate(returndateValue.getDate() - 1); // Minimum return date is one day after pick-up date
+-                    pickupdate.max = formatDate(returndateValue);
+-
+-                    if (new Date(returndate.value) <= new Date(pickupdate.min)) {
+-                        pickupdate.value = formatDate(returndateValue);
+-                    }
+-                });
+-
+-                // Initialize the values if they are empty
+-                if (!pickupdate.value) {
+-                    pickupdate.value = formatDate(today);
+-                }
+-
+-                if (!returndate.value) {
+-                    const defaultReturnDate = new Date(pickupdate.value);
+-                    defaultReturnDate.setDate(defaultReturnDate.getDate() + 1);
+-                    returndate.value = formatDate(defaultReturnDate);
+-                }
+-                
+-                function checkFields() {
+-                    var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
+-                    const allFieldsFilled = requiredFields.every(field => field.value.trim() !== '');
+-                    if (allFieldsFilled) {
+-                        nextButton.style.pointerEvents = 'auto';
+-                        nextButton.style.color = '';
+-                        nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                    } else {
+-                        nextButton.style.pointerEvents = 'none';
+-                        nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                        nextButton.style.color = '';
+-
+-                         const currentStepIndex = 1;
+-                         const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
+-
+-                         steps.forEach((step, index) => {
+-                             console.log(index);
+-                             if (index > currentStepIndex) {
+-                                 step.classList.remove('done');
+-                                 step.classList.add('disabled');
++                        if(currentIndex === 5){
++                             var finishButton = document.querySelector('.wizard .actions a[href="#finish"]');
++                             finishButton.style.display = 'none';
++                             
++                             if (!window.currentOrderId) {
++                                  const dataH2 = document.getElementById('dataInput');
++                                  const dataTotalStr = dataH2.textContent.replace(/[^0-9]/g, ''); 
++                                  const dataTotal = parseInt(dataTotalStr, 10);
++                                  const depositAmount = Math.round(dataTotal / 2);
++                                  
++                                  window.currentTotalAmount = dataTotal;
++                                  window.currentPaymentAmount = depositAmount;
++                                  
++                                  document.getElementById("sepay-total-amount").textContent = dataTotal.toLocaleString() + ' VN?';
++                                  document.getElementById("sepay-deposit-amount").textContent = depositAmount.toLocaleString() + ' VN?';
++                                  document.getElementById("sepay-qr-img").style.opacity = "0.3";
++                                  document.getElementById("sepay-status-text").innerHTML = "<i class='fas fa-spinner fa-spin'></i> ?ang kh?i t?o d?n hA?ng...";
++                                  
++                                  BookingHandler({ action: 'create_only' });
+                              }
+-                         });
+-                    }
+-                }
+-                
+-                
+-                requiredFields.forEach(field => {
+-                    field.addEventListener('input', checkFields);
+-                    field.addEventListener('change', checkFields);
+-                });
+-                
+-               
+-                // Initial check in case some fields are pre-filled
+-                checkFields();
+-                
+-                // Image preview for CCCD/CMND
+-                document.querySelectorAll('input[type="file"][name^="image"]').forEach(fileInput => {
+-                    fileInput.addEventListener('change', function(event) {
+-                        const file = event.target.files[0];
+-                        const wrapper = fileInput.closest('.upload-card-wrapper');
+-                        const card = wrapper.querySelector('.upload-card');
+-                        const cardTitle = card ? card.querySelector('.upload-title') : null;
+-                        const cardSubtitle = card ? card.querySelector('.upload-subtitle') : null;
+-                        const cardIcon = card ? card.querySelector('i') : null;
+-                        const dynamicPreviewContainer = wrapper.querySelector('.image-preview-container:not(.existing-image)');
+-                        const existingPreviewContainer = wrapper.querySelector('.existing-image');
+-
+-                        if (file) {
+-                            // Mark card as uploaded (green state)
+-                            if (card) card.classList.add('uploaded');
+-                            if (cardIcon) { cardIcon.className = 'bi bi-check-circle-fill'; }
+-                            if (cardTitle) cardTitle.textContent = 'Γ£ô ─É├ú chß╗ìn: ' + file.name.substring(0, 20) + (file.name.length > 20 ? '...' : '');
+-                            if (cardSubtitle) cardSubtitle.textContent = 'Nhß║Ñn ─æß╗â thay ─æß╗òi ß║únh';
+-
+-                            const reader = new FileReader();
+-                            reader.onload = function(e) {
+-                                if (dynamicPreviewContainer) {
+-                                    const img = dynamicPreviewContainer.querySelector('.img-preview');
+-                                    img.src = e.target.result;
+-                                    dynamicPreviewContainer.style.display = 'flex';
+-                                    dynamicPreviewContainer.style.position = 'relative';
+-                                    
+-                                    // Add clear button if not exists
+-                                    let clearBtn = dynamicPreviewContainer.querySelector('.clear-btn');
+-                                    if (!clearBtn) {
+-                                        clearBtn = document.createElement('button');
+-                                        clearBtn.className = 'clear-btn';
+-                                        clearBtn.innerHTML = '&times;';
+-                                        clearBtn.type = 'button';
+-                                        clearBtn.title = 'X├│a ß║únh';
+-                                        clearBtn.style.position = 'absolute';
+-                                        clearBtn.style.top = '-10px';
+-                                        clearBtn.style.right = '-10px';
+-                                        clearBtn.style.background = '#dc2626';
+-                                        clearBtn.style.color = 'white';
+-                                        clearBtn.style.border = 'none';
+-                                        clearBtn.style.borderRadius = '50%';
+-                                        clearBtn.style.width = '24px';
+-                                        clearBtn.style.height = '24px';
+-                                        clearBtn.style.lineHeight = '1';
+-                                        clearBtn.style.cursor = 'pointer';
+-                                        clearBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+-                                        clearBtn.style.display = 'flex';
+-                                        clearBtn.style.alignItems = 'center';
+-                                        clearBtn.style.justifyContent = 'center';
+-                                        clearBtn.style.fontSize = '18px';
+-                                        clearBtn.style.fontWeight = 'bold';
+-                                        clearBtn.style.zIndex = '10';
+-                                        
+-                                        clearBtn.onclick = function(e) {
+-                                            e.stopPropagation();
+-                                            e.preventDefault();
+-                                            fileInput.value = '';
+-                                            fileInput.dispatchEvent(new Event('change'));
+-                                        };
+-                                        dynamicPreviewContainer.appendChild(clearBtn);
+-                                    }
+-                                }
+-                                if (existingPreviewContainer) {
+-                                    existingPreviewContainer.style.display = 'none';
+-                                }
+-                            };
+-                            reader.readAsDataURL(file);
+-                        } else {
+-                            // Reset card state
+-                            if (card) card.classList.remove('uploaded');
+-                            if (cardIcon) { cardIcon.className = fileInput.name === 'imageFront' ? 'bi bi-person-vcard' : 'bi bi-credit-card-2-back'; }
+-                            if (dynamicPreviewContainer) dynamicPreviewContainer.style.display = 'none';
+-                            if (existingPreviewContainer) existingPreviewContainer.style.display = 'flex';
+-                        }
+-                    });
+-                });
+-                
+-                // Add event listeners to validate form on image change
+-                const frontInput = document.getElementById('imageFront');
+-                const backInput = document.getElementById('imageBack');
+-                if (frontInput) frontInput.addEventListener('change', validateForm);
+-                if (backInput) backInput.addEventListener('change', validateForm);
+-                
+-            });
+-            
+-            document.addEventListener('DOMContentLoaded', () => {
+-                
+-                storedFormData = {
+-                        pickupdate: document.getElementById('pickupdate').value,                             
+-                        returndate: document.getElementById('returndate').value                    
+-                    };
+-                const pickupDateText = storedFormData.pickupdate;
+-                const returnDateText = storedFormData.returndate;
+-                
+-                
+-                // Chuyß╗ân c├íc chuß╗ùi ng├áy th├ánh ─æß╗æi t╞░ß╗úng Date
+-                const pickupDate = new Date(pickupDateText);
+-                const returnDate = new Date(returnDateText);
+-                
+-                console.log(pickupDate);
+-                console.log(returnDateText);
+-                
+-                // T├¡nh sß╗æ ng├áy ch├¬nh lß╗çch
+-                const differenceInTime = returnDate.getTime() - pickupDate.getTime();
+-                const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+-                
+-                
+-                
+-            });
+-            
+-            function validateIdentityCard() {
+-                const identityCard = document.getElementById('identityCard');
+-                return identityCard.value.length === 12;
+-            }
+-            
+-            function validateForm() {
+-                const requiredFields = [
+-                    document.getElementById('first_name'),
+-                    document.getElementById('last_name'),
+-                    document.getElementById('email'),
+-                    document.getElementById('phonenumber'),
+-                    document.getElementById('address'),
+-                    document.getElementById('dob'),
+-                    document.querySelector('input[name="gender"]:checked'),
+-                    document.getElementById('identityCard'),
+-                    document.getElementById('issuedon'),
+-                    document.getElementById('expdate')
+-                ];
+-                
+-                const allFieldsFilled = requiredFields.every(field => field && field.value.trim() !== '');
+-                const identityCardValid = validateIdentityCard();
+-                
+-                let filesValid = true;
+-                const custIdEl = document.getElementById('customerId');
+-                if (custIdEl && custIdEl.textContent.trim() === 'Not') {
+-                    const frontFile = document.getElementById('imageFront');
+-                    const backFile = document.getElementById('imageBack');
+-                    filesValid = (frontFile && frontFile.files.length > 0) && (backFile && backFile.files.length > 0);
+-                }
+-                
+-                var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
+-                if (allFieldsFilled && identityCardValid && filesValid) {
+-                    nextButton.disabled = false;
+-                    nextButton.style.pointerEvents = 'auto';
+-                    nextButton.style.color = '';
+-                    nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                } else {
+-                    nextButton.disabled = true;
+-                    nextButton.style.pointerEvents = 'none';
+-                    nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                    nextButton.style.color = '';
+-                    
+-                    const currentStepIndex = 3;
+-                    const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
+-
+-                    steps.forEach((step, index) => {
+-
+-                        if (index > currentStepIndex) {
+-                            step.classList.remove('done');
+-                            step.classList.add('disabled');
+-                        }
+-                    });
+-                }
+-            }
+-
+-            $("#motorcyclelist").on("change", ".form-check-select", function() {
+-               toggleBikeNextButton();
+-            });
+-            
+-           function toggleBikeNextButton() {
+-                var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
+-                // Kiß╗âm tra nß║┐u c├│ bß║Ñt kß╗│ select box n├áo c├│ gi├í trß╗ï lß╗¢n h╞ín 0
+-                var anySelected = $(".form-check-select", "#motorcyclelist").toArray().some(function(select) {
+-                    return parseInt($(select).val()) > 0;
+-                });
+-
+-                // Nß║┐u c├│ ├¡t nhß║Ñt mß╗Öt select box ─æ├ú chß╗ìn, k├¡ch hoß║ít n├║t "Next"
+-                if (anySelected) {
+-                    nextButton.style.pointerEvents = 'auto';
+-                    nextButton.style.color = '';
+-                    nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                    const checkboxContainer = document.getElementById('protection');
+-                    // Lß║Ñy tß║Ñt cß║ú c├íc checkbox trong div
+-                    const checkboxes = checkboxContainer.querySelectorAll('.form-check-select');
+-                    // Lß║╖p qua tß╗½ng checkbox v├á lß║Ñy th├┤ng tin
+-                    checkboxes.forEach(selectBox => {
+-                        const quantity = parseInt(selectBox.value);                     
+-                        const formAccessBox = selectBox.closest('.form-box');
+-                        if (formAccessBox) {
+-                            numberAccessStatesI[selectBox.id] = quantity;
+-                        }
+-                    });
+-                    
+-                } else {
+-                    nextButton.style.pointerEvents = 'none';
+-                    nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                    nextButton.style.color = '';
+-
+-                     const currentStepIndex = 1;
+-                     const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
+-
+-                     steps.forEach((step, index) => {
+-                       
+-                         if (index > currentStepIndex) {
+-                             step.classList.remove('done');
+-                             step.classList.add('disabled');
+                          }
+-                     });
+-                }
+-            }
+-                            
+-            function incrementQuantity(motorcycleId) {
+-                var checkbox = document.getElementById('daily-checkbox-' + motorcycleId);
+-                var quantityInput = document.getElementById('daily-quantity-' + motorcycleId);
+-                quantityInput.value = parseInt(quantityInput.value) + 1;
+-                if (!checkbox.checked) {
+-                    checkbox.checked = true;
+-                    checkbox.parentElement.style.borderColor = '#28a745';
+-                }
+-                toggleBikeNextButton();
+-            }
+-
+-            function decrementQuantity(motorcycleId) {
+-                var checkbox = document.getElementById('daily-checkbox-' + motorcycleId);
+-                var quantityInput = document.getElementById('daily-quantity-' + motorcycleId);
+-                if (quantityInput.value > 0) {
+-                    quantityInput.value = parseInt(quantityInput.value) - 1;
+-                    if(parseInt(quantityInput.value) === 0){
+-                        checkbox.checked = false;
+-                        checkbox.parentElement.style.borderColor = '';
+-                    }
+-                }
+-                toggleBikeNextButton();
+-
+-            }
+-            
+-            function clearQuantity(motorcycleId) {
+-                var checkbox = document.getElementById('daily-checkbox-' + motorcycleId);
+-                var quantityInput = document.getElementById('daily-quantity-' + motorcycleId);              
+-                checkbox.checked = false;
+-                checkbox.parentElement.style.borderColor = '';
+-                quantityInput.value = 0;   
+-                toggleBikeNextButton();
+-            }
+-            
+-           
+-
+-        window.addEventListener('message', (event) => {
+-            if (event.data === 'activateOverlay') {
+-                const overlay = document.getElementById('overlay');
+-                overlay.classList.add('active');
+-//                
+-//                // Thß╗▒c hiß╗çn c├íc h├ánh ─æß╗Öng cß║ºn thiß║┐t tß║íi ─æ├óy, v├¡ dß╗Ñ: tß║»t overlay sau 3 gi├óy
+-//                setTimeout(() => {
+-//                    overlay.classList.remove('active');
+-//                }, 30000000);
+-            }
+-            if(event.data === 'stopOverlay') {
+-                const overlay = document.getElementById('overlay');
+-                overlay.classList.remove('active');
+-            }
+-        });
+-           // Kiß╗âm tra nß║┐u c├│ dß╗» liß╗çu n├áo ─æ╞░ß╗úc gß╗¡i tß╗½ servlet
+-        function handlePaymentStatus(data) {
+-            if (data.status === 'success') {
+-                BookingHandler(data);
+-            }
+-        }
+-        
+-        window.addEventListener('storage', function(event) {
+-            console.log(event.key);
+-            if (event.key === 'payment_status') {
+-                var paymentStatus = JSON.parse(event.newValue);
+-                handlePaymentStatus(paymentStatus);
+-            }
+-        });
+-
+-        
+-        function collectAccessoryData() {
+-            const accessories = [];
+-            const savedItemsContainer = document.getElementById('savedItemsContainer');
+-            // Lß║╖p qua tß║Ñt cß║ú c├íc phß║ºn tß╗¡ c├│ class "form-box"
+-            savedItemsContainer.querySelectorAll('.form-box').forEach(box => {
+-                const select = box.querySelector('.form-check-select');
+-                const quantity = parseInt(select.value);
+-                const id = select.id.split('-').pop();  // Lß║Ñy accessoryId tß╗½ id cß╗ºa select box
+-                const priceLabel = box.querySelector('.form-check .checkbox-container label');
+-                const priceText = priceLabel ? priceLabel.textContent.replace('Γé½', '').replace('.000', '').trim() : '0';
+-                const price = priceText.includes('Free') ? 0 : parseInt(priceText, 10);
+-                // Nß║┐u sß╗æ l╞░ß╗úng lß╗¢n h╞ín 0, th├¬m v├áo danh s├ích
+-                if (quantity > 0) {
+-                    accessories.push({
+-                        id: id,
+-                        quantity: quantity.toString(),
+-                        price: parseInt(price)
+-                    });
+-                }
+-            });
+-
+-            return accessories;
+-        }
+-        function BookingHandler(dataReturn) {
+-            var formData = new FormData();
+-            
+-//            alert("Thanh to├ín th├ánh c├┤ng vß╗¢i m├ú giao dß╗ïch: " + data.txnRef);
+-             // Lß║Ñy c├íc gi├í trß╗ï tß╗½ c├íc thß║╗ <p>
+-            var pickupDate = document.getElementById("pickupdatetext").textContent.trim();
+-            var pickupTime = document.getElementById("pickuptimetext").textContent.trim();
+-            var pickupLocation = document.getElementById("pickuploctext").textContent.trim();
+-            var returnLocation = document.getElementById("returnloctext").textContent.trim();
+-            var returnDate = document.getElementById("returndatetext").textContent.trim();
+-            var returnTime = document.getElementById("returntimetext").textContent.trim();
+-            var accountId = document.getElementById("accountId").textContent.trim();
+-            var fistname = document.getElementById("firstnametext").textContent.trim();
+-            var lastname = document.getElementById("lastnametext").textContent.trim();
+-            var phone = document.getElementById("phonetext").textContent.trim();
+-            var email = document.getElementById("emailaddresstext").textContent.trim();
+-            var address = document.getElementById("addresstext").textContent.trim();
+-            var dob = document.getElementById("birthdaytext").textContent.trim();
+-            var gender = document.getElementById("gendertext").textContent.trim();
+-            var customerId = document.getElementById("customerId").textContent.trim();
+-            var identityCard = document.getElementById("identityCard").value;
+-            var issuedon = document.getElementById("issuedon").value;
+-            var expdate = document.getElementById("expdate").value;
+-            var total = document.getElementById("dataInput").textContent.trim();
+-            
+-            
+-            // Chuyß╗ân c├íc chuß╗ùi ng├áy th├ánh ─æß╗æi t╞░ß╗úng Date
+-            const pickupD = new Date(pickupDate);
+-            const returnD = new Date(returnDate);
+-
+-            // T├¡nh sß╗æ ng├áy ch├¬nh lß╗çch
+-            const differenceInTime = returnD.getTime() - pickupD.getTime();
+-            const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+-            
+-             // Quantity l├á sß╗æ ng├áy ch├¬nh lß╗çch giß╗»a ng├áy trß║ú v├á ng├áy pickup
+-            const quantityDay = Math.max(1, Math.ceil(differenceInDays));
+-            
+-            const bikeDetails = [];
+-
+-            const checkboxMotorContainer = document.getElementById('savedBikeContainer');
+-
+-            // tß║Ñt cß║ú c├íc select box trong div
+-            const selectBoxes = checkboxMotorContainer.querySelectorAll('.form-check-select');
+-
+-            // Lß║╖p qua tß╗½ng select box v├á lß║Ñy th├┤ng tin nß║┐u gi├í trß╗ï lß╗¢n h╞ín 0
+-            selectBoxes.forEach(selectBox => {
+-                const quantity = parseInt(selectBox.value);
+-                if (quantity > 0) {
+-                    const formMotorBox = selectBox.closest('.form-box');
+-                    if (formMotorBox) {
+-                        const bikeName = formMotorBox.querySelector('.motor-name').textContent;
+-                        const bikePrice = formMotorBox.querySelector('.price-current').textContent;
+-                        const price = parseInt(bikePrice.replace('Γé½', '').replace('.000/Day', '').trim());
+-                        const totalPrice = quantityDay * price;
+-//                        const price = priceLabel ? priceLabel.textContent.replace('Γé½', '').replace('.000', '').trim() : 0;
+-                        // L╞░u tß╗½ng chiß║┐c xe theo sß╗æ l╞░ß╗úng
+-                        for (let i = 0; i < quantity; i++) {                                                                                    
+-                            bikeDetails.push({ name: bikeName, price: totalPrice.toString() });
+-                        }
+-                    }
+-                }
+-            });
+-            const accessoriesData = collectAccessoryData();
+-
+-            console.log(bikeDetails);
+-            console.log(accessoriesData);
+-            console.log(fistname);
+-            var data = {
+-                pickupDate: pickupDate + " " + pickupTime,
+-                pickupLocation: pickupLocation,
+-                returnLocation: returnLocation,
+-                returnDate: returnDate + " " + returnTime,
+-                accountId: accountId,          
+-                fistname : fistname,
+-                lastname : lastname, 
+-                phone : phone,
+-                email : email,
+-                address: address,
+-                dob: dob,
+-                gender: gender,
+-                customerId : customerId,
+-                identityCard : identityCard,
+-                issuedon : issuedon,
+-                expdate : expdate,
+-                bikeDetails: bikeDetails,
+-                accessories: accessoriesData,
+-                total : total,
+-                amount: dataReturn.amount,
+-                paymenttime: dataReturn.time,
+-                voucherId: document.getElementById('applied-voucher-id').value || '0'
+-            };
+-            
+-             // Convert object to JSON and append to formData
+-            formData.append("jsonData", JSON.stringify(data));
+-
+-            // Add files to formData
+-            var fileInputFront = document.getElementById('imageFront');
+-            var fileInputBack = document.getElementById('imageBack');
+-            if (fileInputFront && fileInputFront.files.length > 0) {
+-                formData.append("fileFront", fileInputFront.files[0]);
+-            }
+-            if (fileInputBack && fileInputBack.files.length > 0) {
+-                formData.append("fileBack", fileInputBack.files[0]);
+-            }
+-            // Gß╗¡i dß╗» liß╗çu tß╗¢i servlet bß║▒ng AJAX
+-            $.ajax({
+-                type: "POST",
+-                url: "bookinghandler", // Thay ─æß╗òi URL tß╗¢i servlet cß╗ºa bß║ín
+-//                data: JSON.stringify(data),              
+-//                contentType: "application/json",
+-                data: formData,
+-                processData: false,
+-                contentType: false,
+-                success: function(response) {
+-                    console.log("Data sent successfully:", response);
+-                },
+-                error: function(xhr, status, error) {
+-                    console.error("Error sending data:", error);
+-                }
+-            });
+-            window.location.href = 'home';
+-        }
+-
+-        // Nß║┐u dß╗» liß╗çu ─æ├ú c├│ sß║╡n trong LocalStorage khi trang ─æ╞░ß╗úc tß║úi lß║íi
+-        var existingStatus = localStorage.getItem('payment_status');
+-        if (existingStatus) {
+-            handlePaymentStatus(JSON.parse(existingStatus));
+-            localStorage.removeItem('payment_status');
+-        }
+-        
+-        
+-       
+-
+-        // ===== VOUCHER FUNCTIONS =====
+-        function applyVoucher() {
+-            const code = document.getElementById('voucher-code-input').value.trim();
+-            const msgEl = document.getElementById('voucher-msg');
+-            if (!code) {
+-                msgEl.style.color = '#dc2626';
+-                msgEl.textContent = 'Vui l├▓ng nhß║¡p m├ú voucher';
+-                return;
+-            }
+-            msgEl.style.color = '#6b7280';
+-            msgEl.textContent = '─Éang kiß╗âm tra...';
+-
+-            fetch('applyVoucher', {
+-                method: 'POST',
+-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+-                body: 'code=' + encodeURIComponent(code)
+-            })
+-            .then(r => r.json())
+-            .then(data => {
+-                if (data.valid) {
+-                    document.getElementById('applied-voucher-id').value = data.voucherId;
+-                    document.getElementById('applied-discount').value = data.discount;
+-                    msgEl.style.color = '#16a34a';
+-                    msgEl.textContent = 'Γ£ô ├üp dß╗Ñng th├ánh c├┤ng! Giß║úm Γé½' + Number(data.discount).toLocaleString('vi-VN')
+-                        + (data.description ? ' ΓÇö ' + data.description : '');
+-                    document.getElementById('apply-voucher-btn').textContent = '─É├ú ├íp dß╗Ñng';
+-                    document.getElementById('apply-voucher-btn').style.background = '#16a34a';
+-                    // Refresh total display
+-                    const formBoxTotal = document.getElementById('form-box-total');
+-                    if (formBoxTotal) { formBoxTotal.dispatchEvent(new Event('refresh')); }
+-                    // Re-trigger total calculation by re-rendering
+-                    const event4 = new CustomEvent('recalcTotal');
+-                    document.dispatchEvent(event4);
+-                } else {
+-                    msgEl.style.color = '#dc2626';
+-                    msgEl.textContent = 'Γ£ù ' + data.message;
+-                    resetVoucher();
+-                }
+-            })
+-            .catch(() => {
+-                msgEl.style.color = '#dc2626';
+-                msgEl.textContent = 'Lß╗ùi kß║┐t nß╗æi, vui l├▓ng thß╗¡ lß║íi';
+-            });
+-        }
+-
+-        function resetVoucher() {
+-            document.getElementById('applied-voucher-id').value = '0';
+-            document.getElementById('applied-discount').value = '0';
+-            const btn = document.getElementById('apply-voucher-btn');
+-            if (btn) {
+-                btn.textContent = '├üp dß╗Ñng';
+-                btn.style.background = 'linear-gradient(135deg, #02b8af, #046fd4)';
+-            }
+-        }
+-        </script>
+-        <iframe id="myI" src="vnpay_return.jsp" style="width: 100%; height: 1000px; display:none;"></iframe>
+-<!--        <link href="https://pay.vnpay.vn/lib/vnpay/vnpay.css" rel="stylesheet" />
+-        <script src="https://pay.vnpay.vn/lib/vnpay/vnpay.min.js"></script>-->
+-         
+-        <!-- Pre-fill from hero booking widget -->
+-        <script>
+-        (function() {
+-            try {
+-                var startDate = sessionStorage.getItem('hs_startDate');
+-                var endDate   = sessionStorage.getItem('hs_endDate');
+-                var pickup    = sessionStorage.getItem('hs_pickup');
+-                var returnL   = sessionStorage.getItem('hs_returnLoc');
+-                if (!startDate) return;
+-
+-                // Fill date fields (split datetime-local ΓåÆ date + time)
+-                function splitDT(dtStr) {
+-                    if (!dtStr) return {date:'', time:''};
+-                    var parts = dtStr.split('T');
+-                    return { date: parts[0] || '', time: parts[1] ? parts[1].substring(0,5) : '' };
+-                }
+                 var sd = splitDT(startDate);
+                 var ed = splitDT(endDate);
+ 
+@@ -3771,6 +2647,38 @@
+             } catch(ex) {}
+         })();
+         </script>
+-    </body>
++        <script>
++        function setQuickReturnDate(days) {
++            const pickupInput = document.getElementById('pickupdate');
++            const returnInput = document.getElementById('returndate');
++            if (!pickupInput.value) {
++                alert('Vui l├▓ng chß╗ìn Ng├áy nhß║¡n xe tr╞░ß╗¢c!');
++                return;
++            }
++            const date = new Date(pickupInput.value);
++            date.setDate(date.getDate() + days);
++            
++            const yyyy = date.getFullYear();
++            const mm = String(date.getMonth() + 1).padStart(2, '0');
++            const dd = String(date.getDate()).padStart(2, '0');
++            returnInput.value = yyyy + '-' + mm + '-' + dd;
++            
++            // Dispatch change event to trigger differenceInDays calculation
++            returnInput.dispatchEvent(new Event('change'));
++        }
++        </script>
++    
++    <!-- Success Overlay -->
++    <div id="booking-success-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
++        <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; width: 90%;">
++            <div style="width: 80px; height: 80px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
++                <i class="fas fa-check" style="color: white; font-size: 40px;"></i>
++            </div>
++            <h2 style="color: #1f2937; font-weight: 800; margin-bottom: 10px;">─Éß║╖t Xe Th├ánh C├┤ng!</h2>
++            <p style="color: #6b7280; margin-bottom: 30px; line-height: 1.5;">Cß║úm ╞ín bß║ín ─æ├ú tin t╞░ß╗ƒng dß╗ïch vß╗Ñ cß╗ºa ch├║ng t├┤i. Th├┤ng tin ─æ╞ín ─æß║╖t xe ─æ├ú ─æ╞░ß╗úc ghi nhß║¡n tr├¬n hß╗ç thß╗æng.</p>
++            <button onclick="window.location.href='home'" style="background: #b59349; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; width: 100%;">Vß╗ü Trang Chß╗º</button>
++        </div>
++    </div>
+ 
++</body>
+ </html>

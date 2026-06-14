@@ -3,6 +3,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="/includes/customer/header.jsp"/>
 
+<!-- Top Loading Bar -->
+<jsp:include page="/includes/loading.jsp" />
 
 <header id="header" class="header fixed-top d-flex flex-column align-items-stretch" style="padding: 0 !important; transition: all 0.4s ease-in-out !important;">
     <!-- Top Announcement Bar -->

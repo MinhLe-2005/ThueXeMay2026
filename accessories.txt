@@ -1,7 +1,0 @@
-(1, 'Mũ bảo hiểm 3/4', 'imageAccess1.jpg', 'imageAccIcon1.jpg', 'Mũ bảo hiểm chất lượng cao, đảm bảo an toàn và thoải mái.', Decimal('100.000'))
-(2, 'Găng tay', 'imageAccess2.jpg', 'imageAccIcon2.jpg', 'Găng tay bảo vệ chống nắng và gió.', Decimal('0.000'))
-(3, 'Giá đỡ điện thoại', 'imageAccess3.jpg', 'imageAccIcon3.jpg', 'Giá đỡ điện thoại chắc chắn, dễ lắp đặt.', Decimal('0.000'))
-(4, 'Mũ bảo hiểm full face', 'imageAccess4.jpg', 'imageAccIcon4.jpg', 'Mũ bảo hiểm chất lượng cao, đảm bảo an toàn.', Decimal('130.000'))
-(5, 'Áo mưa rời', 'imageAccess5.jpg', 'imageAccIcon5.jpg', 'Áo mưa tiện lợi, dễ mang theo.', Decimal('50.000'))
-(6, 'Nylon bọc giày', 'imageAccess6.jpg', 'imageAccIcon6.jpg', 'Bảo vệ giày khi trời mưa.', Decimal('0.000'))
-(7, 'Dụng cụ vá xe', 'imageAccess7.jpg', 'imageAccIcon7.jpg', 'Bộ dụng cụ vá xe tiện lợi.', Decimal('0.000'))

@@ -1,5 +1,7 @@
 <%@page import="com.smartride.dao.AccountDAO"%>
 <%@page import="com.smartride.dto.Account"%>
+<%@page import="com.smartride.dao.CustomerDAO"%>
+<%@page import="com.smartride.dto.Customer"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -22,24 +24,6 @@
         <!-- Bootstrap 5 JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <style>
-            /* === FORCE LAYOUT FIX === */
-            #main {
-                margin-left: 280px !important;
-                margin-top: 56px !important;
-                padding: 24px 28px !important;
-                min-height: calc(100vh - 56px) !important;
-                transition: all 0.3s !important;
-            }
-            
-            @media (max-width: 1199px) {
-                #main {
-                    margin-left: 0 !important;
-                }
-            }
-            
-            body.toggle-sidebar #main {
-                margin-left: 0 !important;
-            }
             
             /* Custom styles - chỉ giữ lại những gì cần override */
             .booking-item {
@@ -397,6 +381,8 @@
                                                         com.smartride.dto.Booking b = (com.smartride.dto.Booking) pageContext.getAttribute("listB");
                                                         com.smartride.dto.Account acc = com.smartride.dao.AccountDAO.getInstance().getAccountbyCustomerId(b.getCustomerID());
                                                         pageContext.setAttribute("acc", acc);
+                                                        com.smartride.dto.Customer cus = com.smartride.dao.CustomerDAO.getInstance().getCustomerById(b.getCustomerID());
+                                                        pageContext.setAttribute("cus", cus);
                                                     %>
                                                     <form action="manageBooking" method="post" id="form-update-${listB.bookingID}" class="row">
                                                         <input type="hidden" name="bookingID" value="${listB.bookingID}">
@@ -461,6 +447,7 @@
                                                                             data-cusName="${acc.lastName} ${acc.firstName}"
                                                                             data-cusPhone="${acc.phoneNumber}"
                                                                             data-cusEmail="${acc.email}"
+                                                                            data-cusIdCard="${cus.identityCardImage}"
                                                                             data-customerId="searchCustomer?id=${listB.customerID}"
                                                                             data-cusId="${listB.customerID}"
                                                                             onclick="openUserModal(this)">
@@ -857,6 +844,7 @@
             modal.find('#modal-customerId').attr('data-cusName', button.getAttribute('data-cusName'));
             modal.find('#modal-customerId').attr('data-cusPhone', button.getAttribute('data-cusPhone'));
             modal.find('#modal-customerId').attr('data-cusEmail', button.getAttribute('data-cusEmail'));
+            modal.find('#modal-customerId').attr('data-cusIdCard', button.getAttribute('data-cusIdCard'));
             modal.find('#modal-cusId').text(button.getAttribute('data-cusId'));
             var statusBooking = modal.find('#modal-statusBooking').text().trim();
             if (statusBooking === 'Chờ xác nhận') {
@@ -871,13 +859,36 @@
             modal.modal('show');
         }
         
+        function viewImageFull(src) {
+            $('#image-viewer-modal-img').attr('src', src);
+            $('#image-viewer-modal').modal('show');
+        }
+
         function openCustomerModal() {
             var cusName = $('#modal-customerId').attr('data-cusName');
             var cusPhone = $('#modal-customerId').attr('data-cusPhone');
             var cusEmail = $('#modal-customerId').attr('data-cusEmail');
+            var cusIdCard = $('#modal-customerId').attr('data-cusIdCard');
             $('#cinfo-name').text(cusName);
             $('#cinfo-phone').text(cusPhone);
             $('#cinfo-email').text(cusEmail);
+            
+            var idCardHtml = '';
+            if (cusIdCard && cusIdCard.trim() !== '') {
+                var images = cusIdCard.split(',');
+                images.forEach(function(img) {
+                    if(img.trim() !== '') {
+                        var imgSrc = "upload/" + img.trim();
+                        idCardHtml += `<div style="flex: 1; text-align: center; cursor: pointer; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; margin: 0 4px;" onclick="viewImageFull('${imgSrc}')">
+                                           <img src="${imgSrc}" style="width: 100%; height: 100px; object-fit: cover; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                       </div>`;
+                    }
+                });
+            } else {
+                idCardHtml = '<span style="color: #94a3b8; font-style: italic; font-size: 13px;">Chưa có ảnh xác thực</span>';
+            }
+            $('#cinfo-idcards').html(idCardHtml);
+            
             $('#customer-info-modal').modal('show');
         }
 

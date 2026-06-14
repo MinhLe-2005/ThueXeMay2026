@@ -38,7 +38,7 @@
 
 
         <main id="main" class="main" style="padding: 0; position: relative;">
-            <iframe id="contentIframe" src="${param.iframeSrc}${param.iframeSrc.contains('?') ? '&' : '?'}iframe=true" style="width: 100%; height: calc(100vh - 60px); border: none;" scrolling="yes"></iframe>
+            <iframe id="contentIframe" onload="if(window.NProgress) window.NProgress.done();" src="${param.iframeSrc}${param.iframeSrc.contains('?') ? '&' : '?'}iframe=true" style="width: 100%; height: calc(100vh - 60px); border: none;" scrolling="yes"></iframe>
         </main>
         
         <!-- Vendor JS Files -->

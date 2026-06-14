@@ -26,11 +26,13 @@
 
     /* --- Table Styles --- */
     .table-responsive { overflow-x: auto; border-radius: 0 0 12px 12px; }
-    .table { margin-bottom: 0; width: 100%; border-collapse: separate; border-spacing: 0; }
-    .table thead th { background: #f1f5f9; color: #334155; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: none; border-bottom: 2px solid #cbd5e1; padding: 14px 16px; text-align: center; vertical-align: middle; white-space: nowrap; }
-    .table tbody td { vertical-align: middle; border: none; border-bottom: 1px solid #e2e8f0; padding: 14px 16px; color: #334155; font-size: 0.9rem; text-align: center; transition: background-color 0.2s; }
+    .table { margin-bottom: 0; width: 100%; border-collapse: separate !important; border-spacing: 0 !important; border: 1px solid #e2e8f0 !important; border-radius: 8px !important; overflow: hidden !important;}
+    .table th { background-color: #f1f5f9 !important; color: #334155 !important; font-size: 0.85rem !important; font-weight: 600; text-transform: uppercase !important; letter-spacing: 0.5px !important; padding: 14px 16px !important; border-bottom: 2px solid #cbd5e1 !important; border-right: 1px solid #e2e8f0 !important; text-align: center; vertical-align: middle; white-space: nowrap; }
+    .table th:last-child { border-right: none !important; }
+    .table td { vertical-align: middle !important; padding: 16px 16px !important; border-bottom: 1px solid #e2e8f0 !important; border-right: 1px solid #e2e8f0 !important; color: #334155; font-size: 15px !important; text-align: center; transition: background-color 0.2s; }
+    .table td:last-child { border-right: none !important; }
     .table tbody tr:hover td { background-color: #f8fafc; }
-    .table tbody tr:last-child td { border-bottom: none; }
+    .table tr:last-child td { border-bottom: none !important; }
     .table img { max-width: 80px; height: auto; max-height: 80px; object-fit: contain; border-radius: 6px; border: 1px solid #e2e8f0; padding: 2px; }
 
     
@@ -42,13 +44,15 @@
     .desc-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 160px; color: #6c757d; font-size: 13px; text-align: center; margin: 0 auto; }
 
     /* --- Button Styles --- */
-    .btn-custom-add { background: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%); color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(212, 175, 55, 0.3); }
-    .btn-custom-add:hover { background: linear-gradient(135deg, #c5a030 0%, #e3b70e 100%); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(212, 175, 55, 0.4); }
-    .action-buttons .btn { border-radius: 6px; padding: 6px 10px; margin: 0 3px; font-size: 0.85rem; transition: all 0.2s; }
-    .btn-edit { background-color: #ecfeff; color: #0891b2; border: 1px solid #a5f3fc; }
-    .btn-edit:hover { background-color: #cffafe; color: #0e7490; }
-    .btn-delete { background-color: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
-    .btn-delete:hover { background-color: #fee2e2; color: #b91c1c; }
+    .btn-custom-add { background: #f59e0b; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-weight: 500; font-size: 0.9rem; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-custom-add:hover { background: #d97706; color: #fff; transform: translateY(-1px); }
+    
+    .action-buttons { white-space: nowrap; }
+    .action-buttons .btn { border-radius: 5px; padding: 5px 10px; margin: 0 2px; font-size: 0.85rem; transition: all 0.15s; border: 1px solid; cursor: pointer; }
+    .btn-edit { background-color: #e0f2fe; color: #0369a1; border-color: #bae6fd !important; }
+    .btn-edit:hover { background-color: #bae6fd; color: #075985; }
+    .btn-delete { background-color: #fee2e2; color: #dc2626; border-color: #fecaca !important; }
+    .btn-delete:hover { background-color: #fecaca; color: #991b1b; }
 
     /* --- Modal Styles --- */
     .modal-content { border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
@@ -61,11 +65,23 @@
     .form-control, .form-control-file { border-radius: 6px; border: 1px solid #cbd5e1; padding: 0.5rem 0.75rem; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
     .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
     label { font-weight: 500; color: #475569; margin-bottom: 0.5rem; display: inline-block; }
+    label .required { color: #ef4444; }
+    .input-group-addon { background: #f8fafc; border: 1px solid #cbd5e1; padding: 0.5rem 0.75rem; font-weight: 600; color: #64748b; }
+    .help-block { font-size: 0.875rem; color: #64748b; margin-top: 0.5rem; }
 </style>
     </head>
 
     <body>
         <div class="container-fluid mt-4">
+            <div class="pagetitle" style="margin-bottom: 20px; padding-left: 0;">
+                <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ SỰ KIỆN</h1>
+                <nav>
+                    <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
+                        <li style="display: inline-block;"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
+                        <li class="active" style="display: inline-block; font-weight: 500; color: #6c757d;">Quản lý sự kiện</li>
+                    </ol>
+                </nav>
+            </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -88,7 +104,6 @@
                                             <th scope="col">Nội Dung</th>
                                             <th scope="col">Ảnh</th>
                                             <th scope="col">Giảm Giá</th>
-                                            <th scope="col">Nhân Viên</th>
                                             <th scope="col">Hành Động</th>
 
                                         </tr>
@@ -105,10 +120,13 @@
                                                 <td style="max-width: 250px;">${eventLists.content}</td>
                                                 <td class="w-25" style="max-width: 150px;">
                                                     <img src="${empty eventLists.eventImage ? 'images/default.jpg' : (eventLists.eventImage.startsWith('http') ? eventLists.eventImage : 'images/'.concat(eventLists.eventImage))}"
-                                                         class="img-fluid img-thumbnail" alt="Sheep">
+                                                         class="img-fluid img-thumbnail" loading="lazy" alt="Event Image">
                                                 </td>
-                                                <td>${eventLists.discount}<a style="color: black;">%</a></td>
-                                                <td>${eventLists.staffID}</td>
+                                                <td>
+                                                    <span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 13px;">
+                                                        <fmt:formatNumber value="${eventLists.discount * 100}" maxFractionDigits="1" minFractionDigits="0"/>%
+                                                    </span>
+                                                </td>
                                                 <td class="action-buttons">
                                                     <div class="buttons">
                                                         <button class="btn btn-edit" onclick="editEventForm('${eventLists.eventID}', '${eventLists.eventTitle}', '${eventLists.createdDate}', '${eventLists.startDate}', '${eventLists.endDate}', '${eventLists.content}', '${eventLists.eventImage}', '${eventLists.discount}', '${eventLists.staffID}')">
@@ -134,80 +152,63 @@
 <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="addEventModalLabel"><i class="fa fa-plus-circle text-primary"></i> Thêm Mới Sự Kiện</h4>
+            <div class="modal-header" style="background: #3b82f6; border-bottom: none; padding: 1.25rem 1.5rem;">
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 0.9;"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addEventModalLabel" style="color: #fff; font-weight: 600; font-size: 1.125rem;"><i class="fa fa-plus-circle"></i> Thêm Mới Sự Kiện</h4>
             </div>
-            <form class="addnew-event-form" id="addLocationForm" action="AddNewEventStaff" method="post" enctype="multipart/form-data">
-                <div class="modal-body">
+            <form class="form-horizontal addnew-event-form" id="addLocationForm" action="AddNewEventStaff" method="post" enctype="multipart/form-data">
+                <div class="modal-body" style="padding: 1.5rem;">
                     
                                         <!-- Event Title -->
                                         <div class="form-group">
-                                            <label for="eventTitle">Tiêu Đề Sự Kiện:</label>
-                                            
+                                            <label class="control-label col-sm-3" for="eventTitle">Tiêu Đề <span class="required">*</span></label>
+                                            <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="Nhập tiêu đề sự kiện" required>
-                                            
+                                            </div>
                                         </div>
-                                        <!-- Created Date -->
-                                        <!--                                        <div class="form-group">
-                                                                                    <label for="createdDate" class="col-sm-2 col-form-label">Created Date</label>
-                                                                                    
-                                                                                        <input type="date" class="form-control" id="createdDate" name="createdDate" required>
-                                                                                    
-                                                                                </div>-->
                                         <!-- Start Date -->
                                         <div class="form-group">
-                                            <label for="startDate">Ngày Bắt Đầu:</label>
-                                            
+                                            <label class="control-label col-sm-3" for="startDate">Ngày Bắt Đầu <span class="required">*</span></label>
+                                            <div class="col-sm-9">
                                                 <input type="date" class="form-control" id="startDate" name="startDate" required>
-                                            
+                                            </div>
                                         </div>
                                         <!-- End Date -->
                                         <div class="form-group">
-                                            <label for="endDate">Ngày Kết Thúc:</label>
-                                            
+                                            <label class="control-label col-sm-3" for="endDate">Ngày Kết Thúc <span class="required">*</span></label>
+                                            <div class="col-sm-9">
                                                 <input type="date" class="form-control" id="endDate" name="endDate" required>
-                                            
+                                            </div>
                                         </div>
                                         <!-- Content -->
                                         <div class="form-group">
-                                            <label for="content">Nôi Dung:</label>
-                                            
-                                                <textarea class="form-control" id="content" name="content" rows="3" placeholder="Nhập nội dung sự kiện" required style="resize: vertical;"></textarea>
-                                            
+                                            <label class="control-label col-sm-3" for="content">Nội Dung <span class="required">*</span></label>
+                                            <div class="col-sm-9">
+                                                <textarea class="form-control" id="content" name="content" rows="3" placeholder="Nhập nội dung sự kiện" required></textarea>
+                                            </div>
                                         </div>
                                         <!-- Event Image -->
                                         <div class="form-group">
-                                            <label for="eventImage">Hình Ảnh Sự Kiện:</label>
-                                            
-                                                <div id="eventImagePreview" style="margin-bottom: 15px; border-radius: 8px; overflow: hidden; display: inline-block;"></div>
+                                            <label class="control-label col-sm-3" for="eventImage">Hình Ảnh <span class="required">*</span></label>
+                                            <div class="col-sm-9">
                                                 <input type="file" class="form-control-file" id="eventImage" name="eventImage" accept="image/*" required>
-                                            
+                                            </div>
                                         </div>
                                         <!-- Discount -->
                                         <div class="form-group">
-                                            <label for="discount">Giảm Giá</label>
-                                            
-                                                <input type="number" class="form-control" id="discount" name="discount" placeholder="Nhập phần trăm giảm giá" step="0.01" oninput="validateDiscount(this)" required>
-                                            
-                                        </div>
-                                        <!-- Staff ID -->
-                                        <div class="form-group">
-                                            <label for="staffID">Lựa Chọn Nhân Viên:</label>
-                                            <select class="form-control custom-select" id="staffID" name="staffID" required>
-                                                <!--<option value="">Select Staff</option>-->
-                                                <c:forEach var="staff" items="${staffList}" varStatus="loop">
-                                                    <option value="${staff.staffID}">${staff.staffID}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="buttons">
-                                            
+                                            <label class="control-label col-sm-3" for="discount">Giảm Giá (%) <span class="required">*</span></label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" id="discount" name="discount" placeholder="VD: 5" step="0.01" min="0" max="100" oninput="validateDiscount(this)" required>
+                                                    <span class="input-group-addon">%</span>
+                                                </div>
+                                                <small class="help-block">Nhập số từ 0-100. VD: nhập <strong>5</strong> để giảm <strong>5%</strong></small>
+                                            </div>
                                         </div>
                                     
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Thêm Sự Kiện</button>
                 </div>
             </form>
@@ -225,62 +226,74 @@
 <div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="editEventModalLabel"><i class="fa fa-edit text-info"></i> Chỉnh Sửa Sự Kiện</h4>
+            <div class="modal-header" style="background: #06b6d4; border-bottom: none; padding: 1.25rem 1.5rem;">
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 0.9;"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="editEventModalLabel" style="color: #fff; font-weight: 600; font-size: 1.125rem;"><i class="fa fa-edit"></i> Chỉnh Sửa Sự Kiện</h4>
             </div>
-            <form class="edit-event-form" id="editEventForm" action="UpdateEventStaff" method="post" enctype="multipart/form-data">
-                <div class="modal-body">
+            <form class="form-horizontal edit-event-form" id="editEventForm" action="UpdateEventStaff" method="post" enctype="multipart/form-data">
+                <div class="modal-body" style="padding: 1.5rem;">
                     
                                         <div class="form-group">
-                                            <label for="editEventID">ID:</label>
-                                            <input type="text" class="form-control" id="editEventID" name="editEventID" readonly>
-                                            <!-- 'readonly' attribute is added assuming this field is not editable during update -->
+                                            <label class="control-label col-sm-3" for="editEventID" style="font-weight: 600; color: #334155;">ID:</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="editEventID" name="editEventID" readonly style="border-radius: 8px; border: 2px solid #e2e8f0; padding: 10px 14px; background: #f1f5f9; color: #64748b;">
+                                            </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="editEventTitle">Tiêu Đề Sự Kiện</label>
-                                            <input type="text" class="form-control" id="editEventTitle" name="editEventTitle" placeholder="Nhập tiêu đề sự kiện">
+                                            <label class="control-label col-sm-3" for="editEventTitle" style="font-weight: 600; color: #334155;">Tiêu Đề: <span style="color: #ef4444;">*</span></label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="editEventTitle" name="editEventTitle" placeholder="Nhập tiêu đề" style="border-radius: 8px; border: 2px solid #e2e8f0; padding: 10px 14px;">
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="editCreatedDate">Ngày Tạo:</label>
-                                            <input type="date" class="form-control" id="editCreatedDate" name="editCreatedDate" readonly>
+                                            <label class="control-label col-sm-3" for="editCreatedDate" style="font-weight: 600; color: #334155;">Ngày Tạo:</label>
+                                            <div class="col-sm-9">
+                                                <input type="date" class="form-control" id="editCreatedDate" name="editCreatedDate" readonly style="border-radius: 8px; border: 2px solid #e2e8f0; padding: 10px 14px; background: #f1f5f9; color: #64748b;">
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="editStartDate">Ngày Bắt Đầu:</label>
-                                            <input type="date" class="form-control" id="editStartDate" name="editStartDate">
+                                            <label class="control-label col-sm-3" for="editStartDate" style="font-weight: 600; color: #334155;">Ngày Bắt Đầu: <span style="color: #ef4444;">*</span></label>
+                                            <div class="col-sm-9">
+                                                <input type="date" class="form-control" id="editStartDate" name="editStartDate" style="border-radius: 8px; border: 2px solid #e2e8f0; padding: 10px 14px;">
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="editEndDate">Ngày Kết Thúc:</label>
-                                            <input type="date" class="form-control" id="editEndDate" name="editEndDate">
+                                            <label class="control-label col-sm-3" for="editEndDate" style="font-weight: 600; color: #334155;">Ngày Kết Thúc: <span style="color: #ef4444;">*</span></label>
+                                            <div class="col-sm-9">
+                                                <input type="date" class="form-control" id="editEndDate" name="editEndDate" style="border-radius: 8px; border: 2px solid #e2e8f0; padding: 10px 14px;">
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="editContent">Nội Dung</label>
-                                            <textarea class="form-control" id="editContent" name="editContent" rows="3" placeholder="Nhập nội dung sự kiện" style="resize: vertical;"></textarea>
+                                            <label class="control-label col-sm-3" for="editContent" style="font-weight: 600; color: #334155;">Nội Dung: <span style="color: #ef4444;">*</span></label>
+                                            <div class="col-sm-9">
+                                                <textarea class="form-control" id="editContent" name="editContent" rows="4" placeholder="Nhập nội dung" style="resize: vertical; border-radius: 8px; border: 2px solid #e2e8f0; padding: 10px 14px;"></textarea>
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="editEventImage">Hình Ảnh Sự Kiện:</label>
-                                            <div id="editEventImagePreview"></div>
-                                            <input type="file" class="form-control-file" id="editEventImage" name="editEventImage" accept="image/*">
+                                            <label class="control-label col-sm-3" for="editEventImage" style="font-weight: 600; color: #334155;">Hình Ảnh:</label>
+                                            <div class="col-sm-9">
+                                                <div id="editEventImagePreview" style="margin-bottom: 10px;"></div>
+                                                <input type="file" class="form-control-file" id="editEventImage" name="editEventImage" accept="image/*" style="border: 2px dashed #cbd5e1; padding: 12px; border-radius: 8px; background: #fff;">
+                                            </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="editDiscount">Phần trăm giảm giá (%):</label>
-                                            <input type="number" class="form-control" id="editDiscount" name="editDiscount" placeholder="Nhập phần trăm giảm giá" step="0.01" oninput="validateDiscount(this)">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editStaffID">Lựa Chọn Nhân Viên:</label>
-                                            <select class="form-control custom-select" id="editStaffID" name="editStaffID">
-                                                <!-- Options will be dynamically populated using JSTL -->
-                                                <c:forEach var="staff" items="${staffList}" varStatus="loop">
-                                                    <option value="${staff.staffID}">${staff.staffID}</option>
-                                                </c:forEach>
-                                            </select>
+                                            <label class="control-label col-sm-3" for="editDiscount" style="font-weight: 600; color: #334155;">Giảm Giá (%): <span style="color: #ef4444;">*</span></label>
+                                            <div class="col-sm-9">
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" id="editDiscount" name="editDiscount" placeholder="VD: 5 (tương đương 5%)" step="0.01" min="0" max="100" oninput="validateDiscount(this)" style="border-radius: 8px 0 0 8px; border: 2px solid #e2e8f0; padding: 10px 14px;">
+                                                    <span class="input-group-addon" style="background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border: 2px solid #e2e8f0; border-left: none; font-weight: 700; color: #475569; border-radius: 0 8px 8px 0; padding: 10px 16px; display: flex; align-items: center;">%</span>
+                                                </div>
+                                                <small class="help-block" style="color: #64748b; font-style: italic; margin-top: 8px; display: block;">
+                                                    <i class="fa fa-info-circle" style="color: #06b6d4;"></i> Nhập số từ 0-100. VD: nhập <strong style="color: #059669;">5</strong> để giảm <strong style="color: #059669;">5%</strong>
+                                                </small>
+                                            </div>
                                         </div>
                                         
                                     
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
                     <button type="submit" class="btn btn-info"><i class="fa fa-save"></i> Cập Nhật</button>
                 </div>
             </form>
@@ -316,7 +329,8 @@
                 document.getElementById('editStartDate').value = formattedStartDate.year + "-" + formattedStartDate.month + "-" + formattedStartDate.day;
                 document.getElementById('editEndDate').value = formattedEndDate.year + "-" + formattedEndDate.month + "-" + formattedEndDate.day;
                 document.getElementById('editContent').value = content;
-                document.getElementById('editDiscount').value = discount;
+                // Chuyển đổi từ thập phân (0.05) sang phần trăm (5) để hiển thị cho user
+                document.getElementById('editDiscount').value = parseFloat(discount) * 100;
                 document.getElementById('editStaffID').value = staffID;
 
                 var imgContainer = document.getElementById('editEventImagePreview');
@@ -327,11 +341,36 @@
                     console.log("hihihi");
                     var img = document.createElement('img');
                     img.src = eventImage;
-                    img.alt = 'Location Image';
-                    img.className = 'img-fluid img-thumbnail';
+                    img.alt = 'Event Image';
+                    img.className = 'img-thumbnail';
+                    img.style.maxWidth = '150px';
+                    img.style.maxHeight = '150px';
+                    
+                    var btn = document.createElement('button');
+                    btn.innerHTML = '&times;';
+                    btn.type = 'button';
+                    btn.title = 'Remove Image';
+                    btn.style.position = 'absolute';
+                    btn.style.top = '0px';
+                    btn.style.right = '-10px';
+                    btn.style.background = '#dc2626';
+                    btn.style.color = 'white';
+                    btn.style.border = 'none';
+                    btn.style.borderRadius = '50%';
+                    btn.style.width = '24px';
+                    btn.style.height = '24px';
+                    btn.style.cursor = 'pointer';
+                    btn.onclick = function() {
+                        document.getElementById('editEventImage').value = '';
+                        imgContainer.innerHTML = '';
+                    };
+                    
+                    imgContainer.style.position = 'relative';
+                    imgContainer.style.display = 'inline-block';
                     imgContainer.appendChild(img);
+                    imgContainer.appendChild(btn);
                 } else {
-                    imgContainer.innerHTML = 'No image available';
+                    imgContainer.innerHTML = '<span class="text-muted">No image available</span>';
                 }
 
                 // Chuyển sang tab Section 3 (nếu cần thiết)

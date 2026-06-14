@@ -1,0 +1,1613 @@
+diff --git a/src/main/webapp/booking.jsp b/src/main/webapp/booking.jsp
+index 96e5406..2cbdfe3 100644
+--- a/src/main/webapp/booking.jsp
++++ b/src/main/webapp/booking.jsp
+@@ -1829,6 +1829,17 @@
+                                     <div class="form-group">
+                                         <label for="returndate" class="form-label">Ngày trả xe <span class="note-star"> *</span></label>
+                                         <input type="date" name="returndate" id="returndate"  />
++                                        <div style="margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
++                                            <button type="button" style="background: #fff; color: #b59349; border: 1px solid #b59349; padding: 4px 12px; font-size: 12px; font-weight: 600; border-radius: 20px; cursor: pointer; transition: 0.3s;" onclick="setQuickReturnDate(7)" onmouseover="this.style.background='#b59349'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#b59349';">
++                                                Thuê 1 Tuần (Giá ưu đãi theo Tuần)
++                                            </button>
++                                            <button type="button" style="background: #fff; color: #b59349; border: 1px solid #b59349; padding: 4px 12px; font-size: 12px; font-weight: 600; border-radius: 20px; cursor: pointer; transition: 0.3s;" onclick="setQuickReturnDate(30)" onmouseover="this.style.background='#b59349'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#b59349';">
++                                                Thuê 1 Tháng (Giá ưu đãi theo Tháng)
++                                            </button>
++                                            <span style="font-size: 11px; color: #28a745; font-style: italic; margin-top: 2px;">
++                                                <i class="icon-check"></i> (Giá sẽ được giảm tự động ở bước Chọn Xe)
++                                            </span>
++                                        </div>
+                                     </div>
+                                     <div class="form-group">
+                                         <label for="returntime" class="form-label">Giờ trả xe <span class="note-star"> *</span></label>
+@@ -1881,9 +1892,14 @@
+                             <p class="desc">Hãy chọn những chiếc xe tuyệt vời nhất cho hành trình của bạn</p>
+                             
+                             <div class="fieldset-content">
++                                
++                                <div id="selected-bikes-banner" style="background: #fdf5e6; border-left: 4px solid #b59349; padding: 10px 15px; margin-bottom: 20px; font-weight: 600; color: #555; display: none; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
++                                    📌 <span style="color: #b59349;">Đang chọn:</span> <span id="selected-bikes-list" style="color: #333;"></span>
++                                </div>
+                                 <div class="scrollable-vertical" id="motorcyclelist">
++
+                                     <c:forEach items="${listM}" var="o">
+-                                        <c:if test="${o.motorcycleId eq chosenmotor}">
++                                        <c:if test="${o.motorcycleId == chosenmotor}">
+                                             <div class="form-box">
+                                                 <div class="form-img-bike">
+                                                     <label style="width: 100%" for="body-bg"><img src="${empty o.image ? 'images/default.jpg' : (o.image.startsWith('http') ? o.image : 'images/'.concat(o.image))}" alt=""></label>
+@@ -1900,25 +1916,26 @@
+                                                             <c:choose>
+                                                                 <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                     <div style="display: flex; gap: 8px; align-items: baseline;">
+-                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${p.dailyPriceForDay}00</span>
++                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,##0"/> ₫</span>
+                                                                         <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
+                                                                     </div>
+                                                                     <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                     <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                     <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+-                                                                    <h2 class="main-price price-day" >₫${discountedDay}00/Ngày</h2>
+-                                                                    <h2 class="main-price price-week" >₫${discountedWeek}00/Ngày</h2>
+-                                                                    <h2 class="main-price price-month" >₫${discountedMonth}00/Ngày</h2>
++                                                                    <h2 class="main-price price-day" data-price="${discountedDay}"><fmt:formatNumber value="${discountedDay}" pattern="#,##0"/> ₫/Ngày</h2>
++                                                                    <h2 class="main-price price-week" data-price="${discountedWeek}"><fmt:formatNumber value="${discountedWeek}" pattern="#,##0"/> ₫/Ngày</h2>
++                                                                    <h2 class="main-price price-month" data-price="${discountedMonth}"><fmt:formatNumber value="${discountedMonth}" pattern="#,##0"/> ₫/Ngày</h2>
+                                                                 </c:when>
+                                                                 <c:otherwise>
+-                                                                    <h2 class="main-price price-day" >₫${p.dailyPriceForDay}00/Ngày</h2>
+-                                                                    <h2 class="main-price price-week" >₫${p.dailyPriceForWeek}00/Ngày</h2>
+-                                                                    <h2 class="main-price price-month" >₫${p.dailyPriceForMonth}00/Ngày</h2>
++                                                                    <h2 class="main-price price-day" data-price="${p.dailyPriceForDay}"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,##0"/> ₫/Ngày</h2>
++                                                                    <h2 class="main-price price-week" data-price="${p.dailyPriceForWeek}"><fmt:formatNumber value="${p.dailyPriceForWeek}" pattern="#,##0"/> ₫/Ngày</h2>
++                                                                    <h2 class="main-price price-month" data-price="${p.dailyPriceForMonth}"><fmt:formatNumber value="${p.dailyPriceForMonth}" pattern="#,##0"/> ₫/Ngày</h2>
+                                                                 </c:otherwise>
+                                                             </c:choose>
+                                                         </c:if>
+                                                     </c:forEach>                                             
+-                                                    <p class="price-note">Không bao gồm thuế và bảo hiểm</p>                                                    
++                                                    <p class="price-note">Không bao gồm thuế và bảo hiểm</p>
++                                                    <div class="active-package-label" style="text-align: right;"></div>                                                    
+                                                         <input style="display: none" type="checkbox"  id="daily-checkbox-${o.motorcycleId}" class="option-checkbox">
+                                                         <div class="rent-button">                                                     
+                                                             <c:set var="found" value="false" />
+@@ -1928,7 +1945,7 @@
+                                                                     <a>Chọn số lượng xe: </a>
+                                                                     <select class="form-check-select" id="daily-select-${o.motorcycleId}">
+                                                                         <c:forEach begin="0" end="${entry.value}" var="i">
+-                                                                            <option value="${i}" ${i == "1" ? 'selected' : ''}>${i}</option>
++                                                                            <option value="${i}" ${i == 1 ? 'selected' : ''}>${i}</option>
+                                                                         </c:forEach>
+                                                                     </select>
+                                                                 </c:if>
+@@ -1943,7 +1960,7 @@
+                                         </c:if>
+                                     </c:forEach>
+                                     <c:forEach items="${listM}" var="o">
+-                                        <c:if test="${o.motorcycleId ne chosenmotor}">
++                                        <c:if test="${o.motorcycleId != chosenmotor}">
+                                             <div class="form-box">
+                                                 <div class="form-img-bike">
+                                                     <label style="width: 100%" for="body-bg"><img src="${empty o.image ? 'images/default.jpg' : (o.image.startsWith('http') ? o.image : 'images/'.concat(o.image))}" alt=""></label>
+@@ -1960,25 +1977,26 @@
+                                                             <c:choose>
+                                                                 <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                     <div style="display: flex; gap: 8px; align-items: baseline;">
+-                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${p.dailyPriceForDay}00</span>
++                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,##0"/> ₫</span>
+                                                                         <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
+                                                                     </div>
+                                                                     <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                     <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                     <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+-                                                                    <h2 class="main-price price-day" >₫${discountedDay}00/Ngày</h2>
+-                                                                    <h2 class="main-price price-week" >₫${discountedWeek}00/Ngày</h2>
+-                                                                    <h2 class="main-price price-month" >₫${discountedMonth}00/Ngày</h2>
++                                                                    <h2 class="main-price price-day" data-price="${discountedDay}"><fmt:formatNumber value="${discountedDay}" pattern="#,##0"/> ₫/Ngày</h2>
++                                                                    <h2 class="main-price price-week" data-price="${discountedWeek}"><fmt:formatNumber value="${discountedWeek}" pattern="#,##0"/> ₫/Ngày</h2>
++                                                                    <h2 class="main-price price-month" data-price="${discountedMonth}"><fmt:formatNumber value="${discountedMonth}" pattern="#,##0"/> ₫/Ngày</h2>
+                                                                 </c:when>
+                                                                 <c:otherwise>
+-                                                                    <h2 class="main-price price-day" >₫${p.dailyPriceForDay}00/Ngày</h2>
+-                                                                    <h2 class="main-price price-week" >₫${p.dailyPriceForWeek}00/Ngày</h2>
+-                                                                    <h2 class="main-price price-month" >₫${p.dailyPriceForMonth}00/Ngày</h2>
++                                                                    <h2 class="main-price price-day" data-price="${p.dailyPriceForDay}"><fmt:formatNumber value="${p.dailyPriceForDay}" pattern="#,##0"/> ₫/Ngày</h2>
++                                                                    <h2 class="main-price price-week" data-price="${p.dailyPriceForWeek}"><fmt:formatNumber value="${p.dailyPriceForWeek}" pattern="#,##0"/> ₫/Ngày</h2>
++                                                                    <h2 class="main-price price-month" data-price="${p.dailyPriceForMonth}"><fmt:formatNumber value="${p.dailyPriceForMonth}" pattern="#,##0"/> ₫/Ngày</h2>
+                                                                 </c:otherwise>
+                                                             </c:choose>
+                                                         </c:if>
+                                                     </c:forEach>                                             
+-                                                    <p class="price-note">Không bao gồm thuế và bảo hiểm</p>                                                                                             
++                                                    <p class="price-note">Không bao gồm thuế và bảo hiểm</p>
++                                                    <div class="active-package-label" style="text-align: right;"></div>                                                                                             
+                                                         <input style="display: none" type="checkbox"  id="daily-checkbox-${o.motorcycleId}" class="option-checkbox">
+                                                         <div class="rent-button">                                                     
+                                                             <c:set var="found" value="false" />
+@@ -2090,7 +2108,7 @@
+                                                     <label for="daily-checkbox" class="items-free">Free</label>
+                                                 </c:if>
+                                                 <c:if test="${a.price ne 0}">
+-                                                    <label for="daily-checkbox">₫${a.price}00</label>
++                                                    <label for="daily-checkbox" data-price="${a.price}"><fmt:formatNumber value="${a.price}" pattern="#,##0"/> ₫</label>
+                                                 </c:if>
+                                             </div>
+                                         </div>
+@@ -2311,118 +2329,105 @@
+                         <h3>Xác nhận</h3>
+                         <fieldset>
+                             <h2>XÁC NHẬN ĐƠN ĐẶT XE</h2>
+-                            <p class="desc">Hãy xác nhận thông tin và đồng ý với các điều khoản dịch vụ </p>
++                            <p class="desc">Hãy kiểm tra kỹ thông tin đơn đặt xe của bạn trước khi thanh toán.</p>
+                             <div class="fieldset-content">
+-                                <div class="scrollable-vertical">
+-                                    <h4>NGÀY & GIỜ</h4>
+-                                    <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày nhận xe</label>
+-                                            <p id="pickupdatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giờ nhận xe</label>
+-                                            <p id="pickuptimetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày trả xe</label>
+-                                            <p id="returndatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giờ trả xe</label>
+-                                            <p id="returntimetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group" style="grid-column: span 2;">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Địa điểm nhận xe</label>
+-                                            <p id="pickuploctext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group" style="grid-column: span 2;">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Địa điểm trả xe</label>
+-                                            <p id="returnloctext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                    </div>
+-                                    <h4>ĐÃ CHỌN XE MÁY</h4>
+-                                    <div id="savedBikeContainer"></div>
+-                                    <h4>PHỤ KIỆN ĐI KÈM</h4>
+-                                    <div id="savedItemsContainer">
+-                                    </div>
+-                                    <h4>TỔNG QUAN</h4>
+-                                    <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Họ và Tên</label>
+-                                            <p style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"><span id="firstnametext"></span> <span id="lastnametext"></span></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Giới tính</label>
+-                                            <p id="gendertext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Email</label>
+-                                            <p id="emailaddresstext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Số điện thoại</label>
+-                                            <p id="phonetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày sinh</label>
+-                                            <p id="birthdaytext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                        <div class="info-group" style="grid-column: span 2;">
+-                                            <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Địa chỉ</label>
+-                                            <p id="addresstext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                        </div>
+-                                    </div>
+-                                    <h4 style="margin-top: 25px;">THÔNG TIN KHÁC</h4>
+-                                     <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+-                                         <div class="info-group" style="grid-column: span 2;">
+-                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Số CCCD/CMND</label>
+-                                             <p id="identityCardtext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                         </div>
+-                                         <div class="info-group">
+-                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày cấp</label>
+-                                             <p id="issuedontext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                         </div>
+-                                         <div class="info-group">
+-                                             <label style="font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; display: block; margin-bottom: 6px;">Ngày hết hạn</label>
+-                                             <p id="expdatetext" style="font-size: 16px; color: #333; font-weight: 600; margin: 0;"></p>
+-                                         </div>                                                                      
+-                                    </div>
+-                      
++                                <div class="scrollable-vertical" style="display: flex; gap: 30px; flex-wrap: wrap;">
+                                     
+-                                    <h4>MÃ GIẢM GIÁ</h4>
+-                                    <div class="form-box" style="padding: 12px 16px; background: #f9f9f9; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 12px;">
+-                                        <div style="display: flex; gap: 10px; align-items: center; width: 100%;">
+-                                            <input type="text" id="voucher-code-input" placeholder="Nhập mã voucher..."
+-                                                   style="flex:1; padding: 10px 14px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none;"
+-                                                   oninput="document.getElementById('voucher-msg').textContent=''; resetVoucher();" />
+-                                            <button type="button" id="apply-voucher-btn"
+-                                                    onclick="applyVoucher()"
+-                                                    style="padding: 10px 20px; background: linear-gradient(135deg, #b59349 0%, #8c6f32 100%); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap;">
+-                                                Áp dụng
+-                                            </button>
++                                    <!-- Cột trái: Thông tin -->
++                                    <div style="flex: 1; min-width: 300px;">
++                                        <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea; margin-bottom: 20px;">
++                                            <h4 style="margin-top: 0; color: #b59349; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 20px;"><i class="bi bi-clock-history"></i> THỜI GIAN</h4>
++                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Nhận xe</label>
++                                                    <p style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"><span id="pickupdatetext"></span> <span id="pickuptimetext"></span></p>
++                                                    <p id="pickuploctext" style="font-size: 13px; color: #666; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Trả xe</label>
++                                                    <p style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"><span id="returndatetext"></span> <span id="returntimetext"></span></p>
++                                                    <p id="returnloctext" style="font-size: 13px; color: #666; margin: 4px 0 0;"></p>
++                                                </div>
++                                            </div>
++                                        </div>
++
++                                        <div class="form-box" style="padding: 24px; background: #fff; border-radius: 12px; border: 1px solid #eaeaea;">
++                                            <h4 style="margin-top: 0; color: #b59349; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 20px;"><i class="bi bi-person-lines-fill"></i> KHÁCH HÀNG</h4>
++                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Họ và Tên</label>
++                                                    <p style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"><span id="firstnametext"></span> <span id="lastnametext"></span></p>
++                                                </div>
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Số điện thoại</label>
++                                                    <p id="phonetext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div style="grid-column: span 2;">
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Email</label>
++                                                    <p id="emailaddresstext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Ngày sinh</label>
++                                                    <p id="birthdaytext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div>
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Giới tính</label>
++                                                    <p id="gendertext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                                <div style="grid-column: span 2;">
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">CCCD/CMND</label>
++                                                    <p style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"><span id="identityCardtext"></span> (Cấp: <span id="issuedontext"></span> - Hết hạn: <span id="expdatetext"></span>)</p>
++                                                </div>
++                                                <div style="grid-column: span 2;">
++                                                    <label style="font-size: 11px; text-transform: uppercase; color: #888; font-weight: 700;">Địa chỉ</label>
++                                                    <p id="addresstext" style="font-size: 15px; color: #333; font-weight: 600; margin: 4px 0 0;"></p>
++                                                </div>
++                                            </div>
+                                         </div>
+-                                        <div id="voucher-msg" style="margin-top: 8px; font-size: 13px;"></div>
+-                                        <input type="hidden" id="applied-voucher-id" value="0" />
+-                                        <input type="hidden" id="applied-discount" value="0" />
+                                     </div>
+ 
+-                                    <h4>TỔNG TIỀN</h4>
+-                                    <div class="form-box-total" id="form-box-total">
++                                    <!-- Cột phải: Hóa đơn -->
++                                    <div style="flex: 1; min-width: 320px; max-width: 450px;">
++                                        <div class="receipt-box" style="padding: 24px; background: #fafafa; border-radius: 12px; border: 1px solid #e0e0e0; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
++                                            <h4 style="margin-top: 0; color: #333; font-weight: 800; text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 15px; margin-bottom: 20px;">HÓA ĐƠN TẠM TÍNH</h4>
++                                            
++                                            <!-- Container ẩn để clone JS nhưng không hiển thị trực tiếp ở đây nữa mà render thẳng vào receipt -->
++                                            <div id="savedBikeContainer" style="display:none;"></div>
++                                            <div id="savedItemsContainer" style="display:none;"></div>
+ 
+-                                    </div>
+-                                    <div class="form-check">
+-                                        <div class="checkbox-container">
+-                                            <input type="checkbox" id="daily-checkbox-term">
+-                                            <label>Đồng ý <a href="policies.jsp" target="_blank" style="color: #b59349; text-decoration: underline; font-weight: 600;">điều khoản dịch vụ</a></label>
++                                            <div id="form-box-total" style="min-height: 100px;">
++                                                <!-- Javascript sẽ render các item hóa đơn vào đây -->
++                                            </div>
++
++                                            <div style="margin-top: 20px; border-top: 2px dashed #ccc; padding-top: 20px;">
++                                                <div style="display: flex; gap: 10px; align-items: center; width: 100%; margin-bottom: 15px;">
++                                                    <input type="text" id="voucher-code-input" placeholder="Nhập mã voucher..."
++                                                           style="flex:1; padding: 10px 14px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none;"
++                                                           oninput="document.getElementById('voucher-msg').textContent=''; resetVoucher();" />
++                                                    <button type="button" id="apply-voucher-btn"
++                                                            onclick="applyVoucher()"
++                                                            style="padding: 10px 20px; background: linear-gradient(135deg, #b59349 0%, #8c6f32 100%); color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap;">
++                                                        Áp dụng
++                                                    </button>
++                                                </div>
++                                                <div id="voucher-msg" style="margin-top: -5px; margin-bottom: 10px; font-size: 13px;"></div>
++                                                <input type="hidden" id="applied-voucher-id" value="0" />
++                                                <input type="hidden" id="applied-discount" value="0" />
++                                            </div>
++                                            
++                                            <div class="form-check" style="margin-top: 15px;">
++                                                <div class="checkbox-container">
++                                                    <input type="checkbox" id="daily-checkbox-term" onchange="toggleNextButton()">
++                                                    <label for="daily-checkbox-term" style="font-size: 14px;">Tôi đồng ý với <a href="policies.jsp" target="_blank" style="color: #b59349; text-decoration: underline; font-weight: 600;">điều khoản dịch vụ</a></label>
++                                                </div>
++                                            </div>
+                                         </div>
+                                     </div>
++                                    
+                                 </div>
+                             </div>
+                         </fieldset>
+ 
+-
+-
+                         <h3>Thanh toán</h3>
+                         <fieldset>
+ <!--                            <a onclick="yourFunctionName()">aaaaa</a>-->
+@@ -2490,6 +2495,18 @@
+ 
+                 var form = $("#signup-form");
+                 
++                $.validator.addMethod("notInPast", function(value, element) {
++                    if (!value) return true;
++                    var dateStr = $("#pickupdate").val();
++                    if (!dateStr) return true;
++                    
++                    var pickupDateTime = new Date(dateStr + "T" + value);
++                    var now = new Date();
++                    now.setMinutes(now.getMinutes() - 5); // 5 min grace period for form filling
++                    
++                    return pickupDateTime >= now;
++                }, "Giờ nhận xe không được ở trong quá khứ");
++
+                 $.validator.addMethod("minAdvanceTime", function(value, element) {
+                     if (!value) return true;
+                     var dateStr = $("#pickupdate").val();
+@@ -2497,11 +2514,11 @@
+                     
+                     var pickupDateTime = new Date(dateStr + "T" + value);
+                     var minTime = new Date();
+-                    minTime.setHours(minTime.getHours() + 1);
++                    minTime.setMinutes(minTime.getMinutes() + 30); // 30 min advance booking
+                     minTime.setMinutes(minTime.getMinutes() - 5); // 5 min grace period
+                     
+                     return pickupDateTime >= minTime;
+-                }, "Vui lòng đặt xe trước 1 tiếng");
++                }, "Vui lòng đặt xe trước 30 phút");
+ 
+                 $.validator.addMethod("businessHours", function(value, element) {
+                     if (!value) return true;
+@@ -2525,7 +2542,8 @@
+                         },
+                         pickuptime: {
+                             businessHours: true,
+-                            minAdvanceTime: true
++                            notInPast: true,
++                            
+                         },
+                         returntime: {
+                             businessHours: true
+@@ -2563,1169 +2581,27 @@
+                         if (currentIndex === 4) {
+                             form.parent().parent().parent().find('.footer').removeClass('footer-3').addClass('footer-' + currentIndex + '');
+                         }
+-                        if (currentIndex === 5) {
+-                            form.parent().parent().parent().find('.footer').removeClass('footer-4').addClass('footer-' + currentIndex + '');
+-                        }
+-
+-                        // if(currentIndex === 4) {
+-                        //     form.parent().parent().parent().append('<div class="footer" style="height:752px;"></div>');
+-                        // }
+-                        form.validate().settings.ignore = ":disabled,:hidden";
+-                        return form.valid();
+-                    },
+-                    onFinishing: function (event, currentIndex) {
+-                        form.validate().settings.ignore = ":disabled";
+-                        return form.valid();
+-                    },
+-                    onFinished: function (event, currentIndex) {
+-                        
+-                        var formData = form.serialize();
+-                      
+-                        $.ajax({
+-                        url: 'forgotPassword', // Replace with your servlet URL
+-                        type: 'POST',
+-                        data: formData,
+-                       
+-                        success: function (response) {
+-                            // Handle success
+-                            alert('Submitted successfully');
+-                            console.log(response);
+-                        },
+-                        error: function (jqXHR, textStatus, errorThrown) {
+-                            // Handle error
+-                            alert('Submission failed');
+-                            console.error(textStatus, errorThrown);
+-                        }
+-                    });
+-                    },
+-                    onStepChanged: function (event, currentIndex, priorIndex) {
+-
+-                        var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
+-                        storedFormData = {
+-                                pickupdate: document.getElementById('pickupdate').value,
+-                                pickuptime: document.getElementById('pickuptime').value,
+-                                returndate: document.getElementById('returndate').value,
+-                                returntime: document.getElementById('returntime').value,
+-                                pickuplocation: document.getElementById('pickuplocation').value,
+-                                returnlocation: document.getElementById('returnlocation').value
+-                            };
+-                        const pickupDateText = storedFormData.pickupdate;
+-                        const returnDateText = storedFormData.returndate;
+-
+-                        // Chuyển các chuỗi ngày thành đối tượng Date
+-                        const pickupDate = new Date(pickupDateText);
+-                        const returnDate = new Date(returnDateText);
+-
+-                        // Tính số ngày chênh lệch
+-                        const differenceInTime = returnDate.getTime() - pickupDate.getTime();
+-                        const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+-                            
+-                        if(currentIndex === 0){
+-                            nextButton.style.pointerEvents = 'auto';
+-                            nextButton.style.color = '';
+-                            nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                        }
+-                        if (currentIndex === 1) {
+-//                            nextButton.style.pointerEvents = 'none';
+-//                            nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-//                            nextButton.style.color = '';
+-                            
+-                            toggleBikeNextButton();
+-                            changePrice();
+-                           
+-                       }
+-                       if(currentIndex === 5){
+-                           var finishButton = document.querySelector('.wizard .actions a[href="#finish"]');
+-                           finishButton.style.display = 'none';
+-                            // Lấy thẻ h2
+-                            const dataH2 = document.getElementById('dataInput');
+-
+-                            // Lấy iframe
+-                            const iframe = document.getElementById('myIframe');
+-
+-                            // Truyền dữ liệu từ thẻ h2 vào iframe khi thẻ h2 thay đổi
+-                            const sendDataToIframe = () => {
+-                                // Lấy giá trị của thẻ h2
+-                                const dataTotal = dataH2.textContent.replace(/[₫,.]/g, '').trim(); // Lấy dữ liệu và xóa dấu chấm và dấu chấm câu
+-                                console.log(dataTotal);
+-                                const data = {
+-                                    dataTotal: dataTotal
+-                                };
+-                                // Truyền giá trị vào iframe
+-                                iframe.contentWindow.postMessage(data, '*');
+-                            };
+-
+-                            // Gọi hàm để gửi dữ liệu ngay khi tải trang
+-                            sendDataToIframe();
+-
+-                            // Theo dõi sự thay đổi của thẻ h2 và gửi dữ liệu vào iframe
+-                            const observer = new MutationObserver(sendDataToIframe);
+-
+-                            observer.observe(dataH2, { childList: true, subtree: true });
+-                       }
+-                       
+-                       function changePrice(){
+-                            var quantityDay = Math.max(1, Math.ceil(differenceInDays));
+-                            const priceDayElements = document.querySelectorAll('.price-day');
+-                            const priceWeekElements = document.querySelectorAll('.price-week');
+-                            const priceMonthElements = document.querySelectorAll('.price-month');
+-                            
+-                            priceDayElements.forEach(element => {
+-                                   element.style.display = "none";
+-                                   element.classList.remove("price-current");
+-                            });
+-                            priceWeekElements.forEach(element => {
+-                                element.style.display = "none";
+-                                element.classList.remove("price-current");
+-                            });
+-                            priceMonthElements.forEach(element => {
+-                               element.style.display = "none";
+-                               element.classList.remove("price-current");
+-                            });
+-                            
+-                            console.log(differenceInDays);
+-                            
+-                            if(quantityDay >= 1 && quantityDay <= 7){
+-                                
+-                                priceDayElements.forEach(element => {
+-                                   element.style.display = "inline-block";
+-                                   element.classList.add("price-current");
+-                                });
+-                            }
+-                            else if(quantityDay >= 8 && quantityDay <= 30){
+-                                
+-                                priceWeekElements.forEach(element => {
+-                                   element.style.display = "inline-block";
+-                                   element.classList.add("price-current");
+-                                });
+-                            }
+-                            else if(quantityDay >= 30){
+-                                
+-                                priceMonthElements.forEach(element => {
+-                                   element.style.display = "inline-block";
+-                                   element.classList.add("price-current");
+-                                });
+-                            }
+-                       }
+-
+-                        if (currentIndex === 3) {
+-                            validateForm();
+-//                            nextButton.style.pointerEvents = 'auto';
+-//                            nextButton.style.color = '';
+-//                            nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                        }
+-                        
+-                        if (currentIndex === 2) {
+-                            nextButton.style.pointerEvents = 'auto';
+-                            nextButton.style.color = '';
+-                            nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                            let sum = 0;
+-                            const checkboxMotorContainer = document.getElementById('motorcyclelist');
+-                            const selectBoxes = checkboxMotorContainer.querySelectorAll('.form-check-select');
+-
+-                            // Lặp qua từng select box và lấy thông tin nếu giá trị lớn hơn 0
+-                            selectBoxes.forEach(selectBox => {
+-                                const quantity = parseInt(selectBox.value);
+-                                if (quantity > 0) {
+-                                   sum += quantity;
+-                                }
+-                            });
+-                            
+-                            if(sum !== totalI){
+-                                totalI = sum;
+-                                const checkboxContainer = document.getElementById('protection');
+-                                // Đặt max và min cho các input có class 'form-check-select'
+-                                checkboxContainer.querySelectorAll('.form-check-select').forEach(input => {
+-                                    const label = input.nextElementSibling;
+-                                    let max = sum * 2;
+-                                    const min = 0;
+-                                    
+-                                    if (label.classList.contains('items-free')) {
+-                                        max = sum;
+-                                    }
+-                                    createOptions(input, min, max);
+-                                    
+-                                });
+-                                
+-                                if (numberAccessStatesI) {
+-                                    console.log(Object.keys(numberAccessStatesI).length !== 0);
+-                                    if(Object.keys(numberAccessStatesI).length !== 0){
+-                                        Object.keys(numberAccessStatesI).forEach(numberId => {
+-                                            const numberSelect = document.querySelector(`#protection #` + numberId);
+-                                            if (numberSelect) {
+-                                               
+-                                                const value = typeof numberAccessStatesI[numberId] === 'number' && !isNaN(numberAccessStatesI[numberId]) ? numberAccessStatesI[numberId] : 0;
+-                                                numberSelect.value = value;
+-
+-                                            }
+-                                        });
+-                                    }
+-                                }                        
+-                                
+-                            }
+-                          
+-//                        
+-                            // Hàm tạo các tùy chọn cho thẻ <select>
+-                            function createOptions(selectElement, min, max) {
+-                                selectElement.innerHTML = ''; // Xóa các tùy chọn cũ nếu có
+-                                for (let i = min; i <= max; i++) {
+-                                    const option = document.createElement('option');
+-                                    option.value = i;
+-                                    option.text = i;
+-                                    selectElement.appendChild(option);
+-                                }
+-                            }
+-                            
+-                            
+-                        }
+-                        
+-                        if(currentIndex !== 5){
+-                            const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
+-                            steps[5].classList.remove('done');
+-                            steps[5].classList.add('disabled');
+-                        }
+-                        
+-                        if (currentIndex === 4) { // Bước thứ tư (index bắt đầu từ 0)
+-                            const checkbox = document.getElementById('daily-checkbox-term');
+-                            nextButton.style.pointerEvents = 'none';
+-                            nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                            nextButton.style.color = '';
+-                            
+-                            // Function to toggle the next button based on the checkbox state
+-                            checkbox.addEventListener('change', toggleNextButton);
+-                            // Initial check
+-                            toggleNextButton();
+-                            changePrice();
+-                            // Lấy dữ liệu đã lưu từ localStorage và thêm lại vào savedItemsContainer
+-                            
+-                            if (storedFormData) {
+-                                document.getElementById('pickupdatetext').textContent = storedFormData.pickupdate;
+-                                document.getElementById('pickuploctext').textContent = storedFormData.pickuplocation;
+-                                document.getElementById('pickuptimetext').textContent = storedFormData.pickuptime;
+-                                document.getElementById('returnloctext').textContent = storedFormData.returnlocation;
+-                                document.getElementById('returndatetext').textContent = storedFormData.returndate;
+-                                document.getElementById('returntimetext').textContent = storedFormData.returntime;
+-                            }
+-
+-                            //Add motorcycle have chosen
+-                            const savedBikeContainer = document.getElementById('savedBikeContainer');
+-                            savedBikeContainer.innerHTML = '';
+-
+-                     
+-                            const numberMotorStates = {};
+-
+-
+-                            const checkboxMotorContainer = document.getElementById('motorcyclelist');
+-
+-                            //tất cả các select box trong div
+-                            const selectBoxes = checkboxMotorContainer.querySelectorAll('.form-check-select');
+-
+-                            // Lặp qua từng select box và lấy thông tin nếu giá trị lớn hơn 0
+-                            selectBoxes.forEach(selectBox => {
+-                                const quantity = parseInt(selectBox.value);
+-                                if (quantity > 0) {
+-                                    const formMotorBox = selectBox.closest('.form-box');
+-                                    if (formMotorBox) {
+-                                        savedBikeContainer.insertAdjacentHTML('beforeend', formMotorBox.outerHTML);
+-                                        numberMotorStates[selectBox.id] = quantity;
+-                                    }
+-                                }
+-                            });
+-
+-                             // Hiển thị các giá trị đã lưu trong numberMotorStates
+-                            if (numberMotorStates) {
+-                                Object.keys(numberMotorStates).forEach(numberId => {
+-                                    const numberSelect = document.querySelector(`#savedBikeContainer #` + numberId);
+-                                    if (numberSelect) {
+-                                        numberSelect.value = numberMotorStates[numberId];
+-                                        numberSelect.disabled = true;  // Nếu bạn muốn vô hiệu hóa các select box đã được lưu
+-                                    }
+-                                });
+-                            }
+-                            
+-                            //Add assecc item have chosen
+-                            const savedItemsContainer = document.getElementById('savedItemsContainer');
+-                            savedItemsContainer.innerHTML = ''; // Clear any previous 
+-
+-                            const numberAccessStates = {};
+-
+-
+-                            const checkboxContainer = document.getElementById('protection');
+-
+-                            // Lấy tất cả các checkbox trong div
+-                            const checkboxes = checkboxContainer.querySelectorAll('.form-check-select');
+-
+-                            // Lặp qua từng checkbox và lấy thông tin
+-                            checkboxes.forEach(selectBox => {
+-                                const quantity = parseInt(selectBox.value);
+-                                if (quantity > 0) {
+-                                    const formAccessBox = selectBox.closest('.form-box');
+-                                    if (formAccessBox) {
+-                                        savedItemsContainer.insertAdjacentHTML('beforeend', formAccessBox.outerHTML);
+-                                        numberAccessStates[selectBox.id] = quantity;
+-                                    }
+-                                }
+-                            });
+-                            if (numberAccessStates) {
+-                                Object.keys(numberAccessStates).forEach(numberId => {
+-                                    const numberSelect = document.querySelector(`#savedItemsContainer #` + numberId);
+-                                    if (numberSelect) {
+-                                        numberSelect.value = numberAccessStates[numberId];
+-                                        numberSelect.disabled = true;  // Nếu bạn muốn vô hiệu hóa các select box đã được lưu
+-                                    }
+-                                });
+-                            }
+-                            
+-
+-                          
+-                            
+-                            formData = {
+-                                first_name: document.getElementById('first_name').value,
+-                                last_name: document.getElementById('last_name').value,
+-                                email: document.getElementById('email').value,
+-                                phonenumber: document.getElementById('phonenumber').value,
+-                                address: document.getElementById('address').value,                           
+-                                dob: document.getElementById('dob').value,                          
+-                                gender: document.querySelector('input[name="gender"]:checked') ? document.querySelector('input[name="gender"]:checked').value : '',
+-                                identityCard : document.getElementById("identityCard").value,
+-                                issuedon : document.getElementById("issuedon").value,
+-                                expdate : document.getElementById("expdate").value                              
+-                            };
+-
+-                            if (formData) {
+-                                document.getElementById('firstnametext').textContent = formData.first_name;
+-                                document.getElementById('lastnametext').textContent = formData.last_name;
+-                                document.getElementById('emailaddresstext').textContent = formData.email;
+-                                document.getElementById('phonetext').textContent = formData.phonenumber;
+-                                document.getElementById('addresstext').textContent = formData.address;                         
+-                                document.getElementById('birthdaytext').textContent = formData.dob;    
+-                                document.getElementById('gendertext').textContent = formData.gender;
+-                                document.getElementById('identityCardtext').textContent = formData.identityCard;
+-                                document.getElementById('issuedontext').textContent = formData.issuedon;   
+-                                document.getElementById('expdatetext').textContent = formData.expdate;   
+-                            }
+-                            
+-                           
+-                            
+-                            // Thêm tiêu đề h4 và dữ liệu số lượng với giá tiền vào div cụ thể trong item-container
+-                            const formBoxTotal = document.getElementById('form-box-total');
+-                            formBoxTotal.innerHTML = '';
+-                            let totalAmount = 0;
+-                            //calculator motorcycles
+-                            const  savedBikeCal = document.querySelectorAll('#savedBikeContainer .form-box');
+-                            savedBikeCal.forEach(formBox => { 
+-                                const selects = formBox.querySelector('.form-check-select');
+-                                const title = formBox.querySelector('h4').textContent;
+-                                const priceLabel = formBox.querySelector('.main-price').textContent;
+-                                const quantity = parseInt(selects.value, 10);
+-                                let price = 0;
+-
+-                                if (priceLabel.trim().toLowerCase() !== 'free') {
+-                                    price = parseInt(priceLabel.replace(/\D/g, ''), 10);
+-                                }
+-
+-                                // Quantity là số ngày chênh lệch giữa ngày trả và ngày pickup
+-                                const quantityDay = Math.max(1, Math.ceil(differenceInDays)); // Đảm bảo quantity ít nhất là 1
+-
+-                                // Tính tổng giá
+-                                const totalPrice = quantityDay * price * quantity;
+-                                totalAmount += totalPrice;
+-
+-                                // Create new div elements similar to formBoxTotal structure
+-                                const itemContainer = document.createElement('div');
+-                                itemContainer.classList.add('item-container');
+-                                itemContainer.style.display = 'flex';
+-                                itemContainer.style.justifyContent = 'space-between';
+-                                itemContainer.style.alignItems = 'center';
+-                                itemContainer.style.padding = '15px 0';
+-                                itemContainer.style.borderBottom = '1px dashed #eaeaea';
+-
+-                                itemContainer.innerHTML = `
+-                                    <div style="flex: 2;">
+-                                        <h4 style="margin: 0; font-size: 16px; color: #333;">` + title + `</h4>
+-                                    </div>
+-                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
+-                                        x` + quantityDay + ` Ngày
+-                                    </div>
+-                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
+-                                        x` + quantity + ` Xe
+-                                    </div>
+-                                    <div style="flex: 1; text-align: right; color: #666; font-size: 14px;">
+-                                        ₫` + price.toLocaleString() + `/Ngày
+-                                    </div>
+-                                    <div style="flex: 1.5; text-align: right;">
+-                                        <h4 style="margin: 0; font-size: 18px; color: #b59349;">₫` + totalPrice.toLocaleString() + `</h4>
+-                                    </div>
+-                                `;
+-
+-                                formBoxTotal.appendChild(itemContainer);                                  
+-                            });
+-                            
+-                            // Calculator items
+-                            const  savedAsseccCal = document.querySelectorAll('#savedItemsContainer .form-box');
+-                            savedAsseccCal.forEach(formBox => {                              
+-                                // Lấy nội dung từ thẻ h4 và label
+-                                const selects = formBox.querySelector('.form-check-select');
+-                                const title = formBox.querySelector('h4').textContent;
+-                                const priceLabel = formBox.querySelector('label[for="daily-checkbox"]').textContent;
+-                                const quantity = parseInt(selects.value, 10);
+-                                let price = 0;
+-
+-                                if (priceLabel.trim().toLowerCase() !== 'free') {
+-                                    price = parseInt(priceLabel.replace(/\D/g, ''), 10);
+-                                }
+-
+-                                // Tính tổng giá
+-                                const totalPrice = quantity * price;
+-                                totalAmount += totalPrice;
+-
+-                                // Tạo các thẻ div mới
+-                                const itemContainer = document.createElement('div');
+-                                itemContainer.classList.add('item-container');
+-                                itemContainer.style.display = 'flex';
+-                                itemContainer.style.justifyContent = 'space-between';
+-                                itemContainer.style.alignItems = 'center';
+-                                itemContainer.style.padding = '15px 0';
+-                                itemContainer.style.borderBottom = '1px dashed #eaeaea';
+-
+-                                itemContainer.innerHTML = `
+-                                    <div style="flex: 2;">
+-                                        <h4 style="margin: 0; font-size: 16px; color: #333;">` + title + `</h4>
+-                                    </div>
+-                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
+-                                        x` + quantity + ` Cái
+-                                    </div>
+-                                    <div style="flex: 1; text-align: right; color: #666; font-size: 14px;">
+-                                        ` + priceLabel + `
+-                                    </div>
+-                                    <div style="flex: 1.5; text-align: right;">
+-                                        <h4 style="margin: 0; font-size: 18px; color: #b59349;">₫` + totalPrice.toLocaleString() + `</h4>
+-                                    </div>
+-                                `;
+-
+-                                formBoxTotal.appendChild(itemContainer);
+-                                
+-                            });
+-                            // Tạo thẻ div item-total và thêm vào cuối savedItemsContainer
+-                            const itemTotalContainer = document.createElement('div');
+-                            itemTotalContainer.classList.add('item-total');
+-                            itemTotalContainer.style.paddingTop = '20px';
+-                            itemTotalContainer.style.display = 'flex';
+-                            itemTotalContainer.style.flexDirection = 'column';
+-                            itemTotalContainer.style.alignItems = 'flex-end';
+-
+-                            // Apply voucher discount if any
+-                            const appliedDiscount = parseInt(document.getElementById('applied-discount').value) || 0;
+-                            const finalAmount = Math.max(0, totalAmount - appliedDiscount);
+-
+-                            let discountHtml = '';
+-                            if (appliedDiscount > 0) {
+-                                discountHtml = `<div style="display:flex; justify-content:space-between; width: 100%; color:#16a34a; font-size:15px; margin-bottom:12px; font-weight: 600;">
+-                                    <span>🎉 Giảm giá voucher:</span>
+-                                    <span>-₫${appliedDiscount.toLocaleString()}</span>
+-                                </div>`;
+-                            }
+-
+-                            itemTotalContainer.innerHTML = discountHtml +
+-                                `<div style="display:flex; justify-content:space-between; width: 100%; align-items: center;">
+-                                    <h4 style="margin: 0; font-size: 18px; color: #333;">Tổng thanh toán:</h4>
+-                                    <h2 id="dataInput" style="margin: 0; font-size: 26px; color: #b59349; font-weight: 700;">₫`+ finalAmount.toLocaleString() +`</h2>
+-                                </div>`;
+-                            formBoxTotal.appendChild(itemTotalContainer);
+-                        }
+-
+-                        function toggleNextButton() {
+-                               const checkbox =document.getElementById('daily-checkbox-term');
+-                               if (checkbox.checked) {
+-                                   nextButton.style.pointerEvents = 'auto';
+-                                   nextButton.style.color = '';
+-                                   nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                               } else {
+-                                   nextButton.style.pointerEvents = 'none';
+-                                   nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                                   nextButton.style.color = '';
+-                               }
+-                        }
+-                        
+-                        
+-                        
+-                        return true;
+-                    }
+-
+-
+-                });
+-                jQuery.extend(jQuery.validator.messages, {
+-                    required: "",
+-                    remote: "",
+-                    email: "",
+-                    url: "",
+-                    date: "",
+-                    dateISO: "",
+-                    number: "",
+-                    digits: "",
+-                    creditcard: "",
+-                    equalTo: ""
+-                });
+-
+-                $.dobPicker({
+-                    daySelector: '#birth_date',
+-                    monthSelector: '#birth_month',
+-                    yearSelector: '#birth_year',
+-                    dayDefault: '',
+-                    monthDefault: '',
+-                    yearDefault: '',
+-                    minimumAge: 0,
+-                    maximumAge: 120
+-                });
+-                var marginSlider = document.getElementById('slider-margin');
+-                if (marginSlider != undefined) {
+-                    noUiSlider.create(marginSlider, {
+-                        start: [1100],
+-                        step: 100,
+-                        connect: [true, false],
+-                        tooltips: [true],
+-                        range: {
+-                            'min': 100,
+-                            'max': 2000
+-                        },
+-                        pips: {
+-                            mode: 'values',
+-                            values: [100, 2000],
+-                            density: 4
+-                        },
+-                        format: wNumb({
+-                            decimals: 0,
+-                            thousand: '',
+-                            prefix: '$ ',
+-                        })
+-                    });
+-                    var marginMin = document.getElementById('value-lower'),
+-                            marginMax = document.getElementById('value-upper');
+-
+-                    marginSlider.noUiSlider.on('update', function (values, handle) {
+-                        if (handle) {
+-                            marginMax.innerHTML = values[handle];
+-                        } else {
+-                            marginMin.innerHTML = values[handle];
+-                        }
+-                    });
+-                }
+-
+-
+-
+-
+-
+-            })(jQuery);
+-            
+-            
+-            document.addEventListener('DOMContentLoaded', () => {
+-                              
+-                const requiredFields = [
+-                    document.getElementById('pickupdate'),
+-                    document.getElementById('pickuptime'),
+-                    document.getElementById('returndate'),
+-                    document.getElementById('returntime'),
+-                    document.getElementById('pickuplocation'),
+-                    document.getElementById('returnlocation')
+-                ];
+-                
+-                // Function to format date to YYYY-MM-DD
+-                const formatDate = (date) => {
+-                    const d = new Date(date);
+-                    let month = '' + (d.getMonth() + 1);
+-                    let day = '' + d.getDate();
+-                    const year = d.getFullYear();
+-
+-                    if (month.length < 2) month = '0' + month;
+-                    if (day.length < 2) day = '0' + day;
+-
+-                    return [year, month, day].join('-');
+-                };
+-                
+-                const pickupdate = requiredFields[0];
+-                const returndate = requiredFields[2];
+-                // Set the min attribute for pickupdate
+-                const today = new Date();
+-                // today.setDate(today.getDate() + 1); // Minimum pick-up date is tomorrow
+-                pickupdate.min = formatDate(today);
+-                returndate.min = formatDate(today);
+-                
+-                pickupdate.addEventListener('change', () => {
+-                    const pickupdateValue = new Date(pickupdate.value);
+-                    pickupdateValue.setDate(pickupdateValue.getDate() + 1); // Minimum return date is one day after pick-up date
+-                    returndate.min = formatDate(pickupdateValue);
+-
+-                    if (new Date(returndate.value) <= new Date(pickupdate.min)) {
+-                        returndate.value = formatDate(pickupdateValue);
+-                    }
+-                });
+-                
+-                returndate.addEventListener('change', () => {
+-                    const returndateValue = new Date(returndate.value);
+-                    returndateValue.setDate(returndateValue.getDate() - 1); // Minimum return date is one day after pick-up date
+-                    pickupdate.max = formatDate(returndateValue);
+-
+-                    if (new Date(returndate.value) <= new Date(pickupdate.min)) {
+-                        pickupdate.value = formatDate(returndateValue);
+-                    }
+-                });
+-
+-                // Initialize the values if they are empty
+-                if (!pickupdate.value) {
+-                    pickupdate.value = formatDate(today);
+-                }
+-
+-                if (!returndate.value) {
+-                    const defaultReturnDate = new Date(pickupdate.value);
+-                    defaultReturnDate.setDate(defaultReturnDate.getDate() + 1);
+-                    returndate.value = formatDate(defaultReturnDate);
+-                }
+-                
+-                function checkFields() {
+-                    var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
+-                    const allFieldsFilled = requiredFields.every(field => field.value.trim() !== '');
+-                    if (allFieldsFilled) {
+-                        nextButton.style.pointerEvents = 'auto';
+-                        nextButton.style.color = '';
+-                        nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                    } else {
+-                        nextButton.style.pointerEvents = 'none';
+-                        nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                        nextButton.style.color = '';
+-
+-                         const currentStepIndex = 1;
+-                         const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
+-
+-                         steps.forEach((step, index) => {
+-                             console.log(index);
+-                             if (index > currentStepIndex) {
+-                                 step.classList.remove('done');
+-                                 step.classList.add('disabled');
++                        if(currentIndex === 5){
++                             var finishButton = document.querySelector('.wizard .actions a[href="#finish"]');
++                             finishButton.style.display = 'none';
++                             
++                             if (!window.currentOrderId) {
++                                  const dataH2 = document.getElementById('dataInput');
++                                  const dataTotalStr = dataH2.textContent.replace(/[^0-9]/g, ''); 
++                                  const dataTotal = parseInt(dataTotalStr, 10);
++                                  const depositAmount = Math.round(dataTotal / 2);
++                                  
++                                  window.currentTotalAmount = dataTotal;
++                                  window.currentPaymentAmount = depositAmount;
++                                  
++                                  document.getElementById("sepay-total-amount").textContent = dataTotal.toLocaleString() + ' VN?';
++                                  document.getElementById("sepay-deposit-amount").textContent = depositAmount.toLocaleString() + ' VN?';
++                                  document.getElementById("sepay-qr-img").style.opacity = "0.3";
++                                  document.getElementById("sepay-status-text").innerHTML = "<i class='fas fa-spinner fa-spin'></i> ?ang kh?i t?o d?n hA?ng...";
++                                  
++                                  BookingHandler({ action: 'create_only' });
+                              }
+-                         });
+-                    }
+-                }
+-                
+-                
+-                requiredFields.forEach(field => {
+-                    field.addEventListener('input', checkFields);
+-                    field.addEventListener('change', checkFields);
+-                });
+-                
+-               
+-                // Initial check in case some fields are pre-filled
+-                checkFields();
+-                
+-                // Image preview for CCCD/CMND
+-                document.querySelectorAll('input[type="file"][name^="image"]').forEach(fileInput => {
+-                    fileInput.addEventListener('change', function(event) {
+-                        const file = event.target.files[0];
+-                        const wrapper = fileInput.closest('.upload-card-wrapper');
+-                        const card = wrapper.querySelector('.upload-card');
+-                        const cardTitle = card ? card.querySelector('.upload-title') : null;
+-                        const cardSubtitle = card ? card.querySelector('.upload-subtitle') : null;
+-                        const cardIcon = card ? card.querySelector('i') : null;
+-                        const dynamicPreviewContainer = wrapper.querySelector('.image-preview-container:not(.existing-image)');
+-                        const existingPreviewContainer = wrapper.querySelector('.existing-image');
+-
+-                        if (file) {
+-                            // Mark card as uploaded (green state)
+-                            if (card) card.classList.add('uploaded');
+-                            if (cardIcon) { cardIcon.className = 'bi bi-check-circle-fill'; }
+-                            if (cardTitle) cardTitle.textContent = '✓ Đã chọn: ' + file.name.substring(0, 20) + (file.name.length > 20 ? '...' : '');
+-                            if (cardSubtitle) cardSubtitle.textContent = 'Nhấn để thay đổi ảnh';
+-
+-                            const reader = new FileReader();
+-                            reader.onload = function(e) {
+-                                if (dynamicPreviewContainer) {
+-                                    const img = dynamicPreviewContainer.querySelector('.img-preview');
+-                                    img.src = e.target.result;
+-                                    dynamicPreviewContainer.style.display = 'flex';
+-                                    dynamicPreviewContainer.style.position = 'relative';
+-                                    
+-                                    // Add clear button if not exists
+-                                    let clearBtn = dynamicPreviewContainer.querySelector('.clear-btn');
+-                                    if (!clearBtn) {
+-                                        clearBtn = document.createElement('button');
+-                                        clearBtn.className = 'clear-btn';
+-                                        clearBtn.innerHTML = '&times;';
+-                                        clearBtn.type = 'button';
+-                                        clearBtn.title = 'Xóa ảnh';
+-                                        clearBtn.style.position = 'absolute';
+-                                        clearBtn.style.top = '-10px';
+-                                        clearBtn.style.right = '-10px';
+-                                        clearBtn.style.background = '#dc2626';
+-                                        clearBtn.style.color = 'white';
+-                                        clearBtn.style.border = 'none';
+-                                        clearBtn.style.borderRadius = '50%';
+-                                        clearBtn.style.width = '24px';
+-                                        clearBtn.style.height = '24px';
+-                                        clearBtn.style.lineHeight = '1';
+-                                        clearBtn.style.cursor = 'pointer';
+-                                        clearBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+-                                        clearBtn.style.display = 'flex';
+-                                        clearBtn.style.alignItems = 'center';
+-                                        clearBtn.style.justifyContent = 'center';
+-                                        clearBtn.style.fontSize = '18px';
+-                                        clearBtn.style.fontWeight = 'bold';
+-                                        clearBtn.style.zIndex = '10';
+-                                        
+-                                        clearBtn.onclick = function(e) {
+-                                            e.stopPropagation();
+-                                            e.preventDefault();
+-                                            fileInput.value = '';
+-                                            fileInput.dispatchEvent(new Event('change'));
+-                                        };
+-                                        dynamicPreviewContainer.appendChild(clearBtn);
+-                                    }
+-                                }
+-                                if (existingPreviewContainer) {
+-                                    existingPreviewContainer.style.display = 'none';
+-                                }
+-                            };
+-                            reader.readAsDataURL(file);
+-                        } else {
+-                            // Reset card state
+-                            if (card) card.classList.remove('uploaded');
+-                            if (cardIcon) { cardIcon.className = fileInput.name === 'imageFront' ? 'bi bi-person-vcard' : 'bi bi-credit-card-2-back'; }
+-                            if (dynamicPreviewContainer) dynamicPreviewContainer.style.display = 'none';
+-                            if (existingPreviewContainer) existingPreviewContainer.style.display = 'flex';
+-                        }
+-                    });
+-                });
+-                
+-                // Add event listeners to validate form on image change
+-                const frontInput = document.getElementById('imageFront');
+-                const backInput = document.getElementById('imageBack');
+-                if (frontInput) frontInput.addEventListener('change', validateForm);
+-                if (backInput) backInput.addEventListener('change', validateForm);
+-                
+-            });
+-            
+-            document.addEventListener('DOMContentLoaded', () => {
+-                
+-                storedFormData = {
+-                        pickupdate: document.getElementById('pickupdate').value,                             
+-                        returndate: document.getElementById('returndate').value                    
+-                    };
+-                const pickupDateText = storedFormData.pickupdate;
+-                const returnDateText = storedFormData.returndate;
+-                
+-                
+-                // Chuyển các chuỗi ngày thành đối tượng Date
+-                const pickupDate = new Date(pickupDateText);
+-                const returnDate = new Date(returnDateText);
+-                
+-                console.log(pickupDate);
+-                console.log(returnDateText);
+-                
+-                // Tính số ngày chênh lệch
+-                const differenceInTime = returnDate.getTime() - pickupDate.getTime();
+-                const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+-                
+-                
+-                
+-            });
+-            
+-            function validateIdentityCard() {
+-                const identityCard = document.getElementById('identityCard');
+-                return identityCard.value.length === 12;
+-            }
+-            
+-            function validateForm() {
+-                const requiredFields = [
+-                    document.getElementById('first_name'),
+-                    document.getElementById('last_name'),
+-                    document.getElementById('email'),
+-                    document.getElementById('phonenumber'),
+-                    document.getElementById('address'),
+-                    document.getElementById('dob'),
+-                    document.querySelector('input[name="gender"]:checked'),
+-                    document.getElementById('identityCard'),
+-                    document.getElementById('issuedon'),
+-                    document.getElementById('expdate')
+-                ];
+-                
+-                const allFieldsFilled = requiredFields.every(field => field && field.value.trim() !== '');
+-                const identityCardValid = validateIdentityCard();
+-                
+-                let filesValid = true;
+-                const custIdEl = document.getElementById('customerId');
+-                if (custIdEl && custIdEl.textContent.trim() === 'Not') {
+-                    const frontFile = document.getElementById('imageFront');
+-                    const backFile = document.getElementById('imageBack');
+-                    filesValid = (frontFile && frontFile.files.length > 0) && (backFile && backFile.files.length > 0);
+-                }
+-                
+-                var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
+-                if (allFieldsFilled && identityCardValid && filesValid) {
+-                    nextButton.disabled = false;
+-                    nextButton.style.pointerEvents = 'auto';
+-                    nextButton.style.color = '';
+-                    nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                } else {
+-                    nextButton.disabled = true;
+-                    nextButton.style.pointerEvents = 'none';
+-                    nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                    nextButton.style.color = '';
+-                    
+-                    const currentStepIndex = 3;
+-                    const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
+-
+-                    steps.forEach((step, index) => {
+-
+-                        if (index > currentStepIndex) {
+-                            step.classList.remove('done');
+-                            step.classList.add('disabled');
+-                        }
+-                    });
+-                }
+-            }
+-
+-            $("#motorcyclelist").on("change", ".form-check-select", function() {
+-               toggleBikeNextButton();
+-            });
+-            
+-           function toggleBikeNextButton() {
+-                var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
+-                // Kiểm tra nếu có bất kỳ select box nào có giá trị lớn hơn 0
+-                var anySelected = $(".form-check-select", "#motorcyclelist").toArray().some(function(select) {
+-                    return parseInt($(select).val()) > 0;
+-                });
+-
+-                // Nếu có ít nhất một select box đã chọn, kích hoạt nút "Next"
+-                if (anySelected) {
+-                    nextButton.style.pointerEvents = 'auto';
+-                    nextButton.style.color = '';
+-                    nextButton.style.background = ''; nextButton.style.opacity = '1';
+-                    const checkboxContainer = document.getElementById('protection');
+-                    // Lấy tất cả các checkbox trong div
+-                    const checkboxes = checkboxContainer.querySelectorAll('.form-check-select');
+-                    // Lặp qua từng checkbox và lấy thông tin
+-                    checkboxes.forEach(selectBox => {
+-                        const quantity = parseInt(selectBox.value);                     
+-                        const formAccessBox = selectBox.closest('.form-box');
+-                        if (formAccessBox) {
+-                            numberAccessStatesI[selectBox.id] = quantity;
+-                        }
+-                    });
+-                    
+-                } else {
+-                    nextButton.style.pointerEvents = 'none';
+-                    nextButton.style.background = ''; nextButton.style.opacity = '0.5';
+-                    nextButton.style.color = '';
+-
+-                     const currentStepIndex = 1;
+-                     const steps = document.querySelectorAll('.wizard ul[role="tablist"] li');
+-
+-                     steps.forEach((step, index) => {
+-                       
+-                         if (index > currentStepIndex) {
+-                             step.classList.remove('done');
+-                             step.classList.add('disabled');
+                          }
+-                     });
+-                }
+-            }
+-                            
+-            function incrementQuantity(motorcycleId) {
+-                var checkbox = document.getElementById('daily-checkbox-' + motorcycleId);
+-                var quantityInput = document.getElementById('daily-quantity-' + motorcycleId);
+-                quantityInput.value = parseInt(quantityInput.value) + 1;
+-                if (!checkbox.checked) {
+-                    checkbox.checked = true;
+-                    checkbox.parentElement.style.borderColor = '#28a745';
+-                }
+-                toggleBikeNextButton();
+-            }
+-
+-            function decrementQuantity(motorcycleId) {
+-                var checkbox = document.getElementById('daily-checkbox-' + motorcycleId);
+-                var quantityInput = document.getElementById('daily-quantity-' + motorcycleId);
+-                if (quantityInput.value > 0) {
+-                    quantityInput.value = parseInt(quantityInput.value) - 1;
+-                    if(parseInt(quantityInput.value) === 0){
+-                        checkbox.checked = false;
+-                        checkbox.parentElement.style.borderColor = '';
+-                    }
+-                }
+-                toggleBikeNextButton();
+-
+-            }
+-            
+-            function clearQuantity(motorcycleId) {
+-                var checkbox = document.getElementById('daily-checkbox-' + motorcycleId);
+-                var quantityInput = document.getElementById('daily-quantity-' + motorcycleId);              
+-                checkbox.checked = false;
+-                checkbox.parentElement.style.borderColor = '';
+-                quantityInput.value = 0;   
+-                toggleBikeNextButton();
+-            }
+-            
+-           
+-
+-        window.addEventListener('message', (event) => {
+-            if (event.data === 'activateOverlay') {
+-                const overlay = document.getElementById('overlay');
+-                overlay.classList.add('active');
+-//                
+-//                // Thực hiện các hành động cần thiết tại đây, ví dụ: tắt overlay sau 3 giây
+-//                setTimeout(() => {
+-//                    overlay.classList.remove('active');
+-//                }, 30000000);
+-            }
+-            if(event.data === 'stopOverlay') {
+-                const overlay = document.getElementById('overlay');
+-                overlay.classList.remove('active');
+-            }
+-        });
+-           // Kiểm tra nếu có dữ liệu nào được gửi từ servlet
+-        function handlePaymentStatus(data) {
+-            if (data.status === 'success') {
+-                BookingHandler(data);
+-            }
+-        }
+-        
+-        window.addEventListener('storage', function(event) {
+-            console.log(event.key);
+-            if (event.key === 'payment_status') {
+-                var paymentStatus = JSON.parse(event.newValue);
+-                handlePaymentStatus(paymentStatus);
+-            }
+-        });
+-
+-        
+-        function collectAccessoryData() {
+-            const accessories = [];
+-            const savedItemsContainer = document.getElementById('savedItemsContainer');
+-            // Lặp qua tất cả các phần tử có class "form-box"
+-            savedItemsContainer.querySelectorAll('.form-box').forEach(box => {
+-                const select = box.querySelector('.form-check-select');
+-                const quantity = parseInt(select.value);
+-                const id = select.id.split('-').pop();  // Lấy accessoryId từ id của select box
+-                const priceLabel = box.querySelector('.form-check .checkbox-container label');
+-                const priceText = priceLabel ? priceLabel.textContent.replace('₫', '').replace('.000', '').trim() : '0';
+-                const price = priceText.includes('Free') ? 0 : parseInt(priceText, 10);
+-                // Nếu số lượng lớn hơn 0, thêm vào danh sách
+-                if (quantity > 0) {
+-                    accessories.push({
+-                        id: id,
+-                        quantity: quantity.toString(),
+-                        price: parseInt(price)
+-                    });
+-                }
+-            });
+-
+-            return accessories;
+-        }
+-        function BookingHandler(dataReturn) {
+-            var formData = new FormData();
+-            
+-//            alert("Thanh toán thành công với mã giao dịch: " + data.txnRef);
+-             // Lấy các giá trị từ các thẻ <p>
+-            var pickupDate = document.getElementById("pickupdatetext").textContent.trim();
+-            var pickupTime = document.getElementById("pickuptimetext").textContent.trim();
+-            var pickupLocation = document.getElementById("pickuploctext").textContent.trim();
+-            var returnLocation = document.getElementById("returnloctext").textContent.trim();
+-            var returnDate = document.getElementById("returndatetext").textContent.trim();
+-            var returnTime = document.getElementById("returntimetext").textContent.trim();
+-            var accountId = document.getElementById("accountId").textContent.trim();
+-            var fistname = document.getElementById("firstnametext").textContent.trim();
+-            var lastname = document.getElementById("lastnametext").textContent.trim();
+-            var phone = document.getElementById("phonetext").textContent.trim();
+-            var email = document.getElementById("emailaddresstext").textContent.trim();
+-            var address = document.getElementById("addresstext").textContent.trim();
+-            var dob = document.getElementById("birthdaytext").textContent.trim();
+-            var gender = document.getElementById("gendertext").textContent.trim();
+-            var customerId = document.getElementById("customerId").textContent.trim();
+-            var identityCard = document.getElementById("identityCard").value;
+-            var issuedon = document.getElementById("issuedon").value;
+-            var expdate = document.getElementById("expdate").value;
+-            var total = document.getElementById("dataInput").textContent.trim();
+-            
+-            
+-            // Chuyển các chuỗi ngày thành đối tượng Date
+-            const pickupD = new Date(pickupDate);
+-            const returnD = new Date(returnDate);
+-
+-            // Tính số ngày chênh lệch
+-            const differenceInTime = returnD.getTime() - pickupD.getTime();
+-            const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+-            
+-             // Quantity là số ngày chênh lệch giữa ngày trả và ngày pickup
+-            const quantityDay = Math.max(1, Math.ceil(differenceInDays));
+-            
+-            const bikeDetails = [];
+-
+-            const checkboxMotorContainer = document.getElementById('savedBikeContainer');
+-
+-            // tất cả các select box trong div
+-            const selectBoxes = checkboxMotorContainer.querySelectorAll('.form-check-select');
+-
+-            // Lặp qua từng select box và lấy thông tin nếu giá trị lớn hơn 0
+-            selectBoxes.forEach(selectBox => {
+-                const quantity = parseInt(selectBox.value);
+-                if (quantity > 0) {
+-                    const formMotorBox = selectBox.closest('.form-box');
+-                    if (formMotorBox) {
+-                        const bikeName = formMotorBox.querySelector('.motor-name').textContent;
+-                        const bikePrice = formMotorBox.querySelector('.price-current').textContent;
+-                        const price = parseInt(bikePrice.replace('₫', '').replace('.000/Day', '').trim());
+-                        const totalPrice = quantityDay * price;
+-//                        const price = priceLabel ? priceLabel.textContent.replace('₫', '').replace('.000', '').trim() : 0;
+-                        // Lưu từng chiếc xe theo số lượng
+-                        for (let i = 0; i < quantity; i++) {                                                                                    
+-                            bikeDetails.push({ name: bikeName, price: totalPrice.toString() });
+-                        }
+-                    }
+-                }
+-            });
+-            const accessoriesData = collectAccessoryData();
+-
+-            console.log(bikeDetails);
+-            console.log(accessoriesData);
+-            console.log(fistname);
+-            var data = {
+-                pickupDate: pickupDate + " " + pickupTime,
+-                pickupLocation: pickupLocation,
+-                returnLocation: returnLocation,
+-                returnDate: returnDate + " " + returnTime,
+-                accountId: accountId,          
+-                fistname : fistname,
+-                lastname : lastname, 
+-                phone : phone,
+-                email : email,
+-                address: address,
+-                dob: dob,
+-                gender: gender,
+-                customerId : customerId,
+-                identityCard : identityCard,
+-                issuedon : issuedon,
+-                expdate : expdate,
+-                bikeDetails: bikeDetails,
+-                accessories: accessoriesData,
+-                total : total,
+-                amount: dataReturn.amount,
+-                paymenttime: dataReturn.time,
+-                voucherId: document.getElementById('applied-voucher-id').value || '0'
+-            };
+-            
+-             // Convert object to JSON and append to formData
+-            formData.append("jsonData", JSON.stringify(data));
+-
+-            // Add files to formData
+-            var fileInputFront = document.getElementById('imageFront');
+-            var fileInputBack = document.getElementById('imageBack');
+-            if (fileInputFront && fileInputFront.files.length > 0) {
+-                formData.append("fileFront", fileInputFront.files[0]);
+-            }
+-            if (fileInputBack && fileInputBack.files.length > 0) {
+-                formData.append("fileBack", fileInputBack.files[0]);
+-            }
+-            // Gửi dữ liệu tới servlet bằng AJAX
+-            $.ajax({
+-                type: "POST",
+-                url: "bookinghandler", // Thay đổi URL tới servlet của bạn
+-//                data: JSON.stringify(data),              
+-//                contentType: "application/json",
+-                data: formData,
+-                processData: false,
+-                contentType: false,
+-                success: function(response) {
+-                    console.log("Data sent successfully:", response);
+-                },
+-                error: function(xhr, status, error) {
+-                    console.error("Error sending data:", error);
+-                }
+-            });
+-            window.location.href = 'home';
+-        }
+-
+-        // Nếu dữ liệu đã có sẵn trong LocalStorage khi trang được tải lại
+-        var existingStatus = localStorage.getItem('payment_status');
+-        if (existingStatus) {
+-            handlePaymentStatus(JSON.parse(existingStatus));
+-            localStorage.removeItem('payment_status');
+-        }
+-        
+-        
+-       
+-
+-        // ===== VOUCHER FUNCTIONS =====
+-        function applyVoucher() {
+-            const code = document.getElementById('voucher-code-input').value.trim();
+-            const msgEl = document.getElementById('voucher-msg');
+-            if (!code) {
+-                msgEl.style.color = '#dc2626';
+-                msgEl.textContent = 'Vui lòng nhập mã voucher';
+-                return;
+-            }
+-            msgEl.style.color = '#6b7280';
+-            msgEl.textContent = 'Đang kiểm tra...';
+-
+-            fetch('applyVoucher', {
+-                method: 'POST',
+-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+-                body: 'code=' + encodeURIComponent(code)
+-            })
+-            .then(r => r.json())
+-            .then(data => {
+-                if (data.valid) {
+-                    document.getElementById('applied-voucher-id').value = data.voucherId;
+-                    document.getElementById('applied-discount').value = data.discount;
+-                    msgEl.style.color = '#16a34a';
+-                    msgEl.textContent = '✓ Áp dụng thành công! Giảm ₫' + Number(data.discount).toLocaleString('vi-VN')
+-                        + (data.description ? ' — ' + data.description : '');
+-                    document.getElementById('apply-voucher-btn').textContent = 'Đã áp dụng';
+-                    document.getElementById('apply-voucher-btn').style.background = '#16a34a';
+-                    // Refresh total display
+-                    const formBoxTotal = document.getElementById('form-box-total');
+-                    if (formBoxTotal) { formBoxTotal.dispatchEvent(new Event('refresh')); }
+-                    // Re-trigger total calculation by re-rendering
+-                    const event4 = new CustomEvent('recalcTotal');
+-                    document.dispatchEvent(event4);
+-                } else {
+-                    msgEl.style.color = '#dc2626';
+-                    msgEl.textContent = '✗ ' + data.message;
+-                    resetVoucher();
+-                }
+-            })
+-            .catch(() => {
+-                msgEl.style.color = '#dc2626';
+-                msgEl.textContent = 'Lỗi kết nối, vui lòng thử lại';
+-            });
+-        }
+-
+-        function resetVoucher() {
+-            document.getElementById('applied-voucher-id').value = '0';
+-            document.getElementById('applied-discount').value = '0';
+-            const btn = document.getElementById('apply-voucher-btn');
+-            if (btn) {
+-                btn.textContent = 'Áp dụng';
+-                btn.style.background = 'linear-gradient(135deg, #02b8af, #046fd4)';
+-            }
+-        }
+-        </script>
+-        <iframe id="myI" src="vnpay_return.jsp" style="width: 100%; height: 1000px; display:none;"></iframe>
+-<!--        <link href="https://pay.vnpay.vn/lib/vnpay/vnpay.css" rel="stylesheet" />
+-        <script src="https://pay.vnpay.vn/lib/vnpay/vnpay.min.js"></script>-->
+-         
+-        <!-- Pre-fill from hero booking widget -->
+-        <script>
+-        (function() {
+-            try {
+-                var startDate = sessionStorage.getItem('hs_startDate');
+-                var endDate   = sessionStorage.getItem('hs_endDate');
+-                var pickup    = sessionStorage.getItem('hs_pickup');
+-                var returnL   = sessionStorage.getItem('hs_returnLoc');
+-                if (!startDate) return;
+-
+-                // Fill date fields (split datetime-local → date + time)
+-                function splitDT(dtStr) {
+-                    if (!dtStr) return {date:'', time:''};
+-                    var parts = dtStr.split('T');
+-                    return { date: parts[0] || '', time: parts[1] ? parts[1].substring(0,5) : '' };
+-                }
+                 var sd = splitDT(startDate);
+                 var ed = splitDT(endDate);
+ 
+@@ -3771,6 +2647,38 @@
+             } catch(ex) {}
+         })();
+         </script>
+-    </body>
++        <script>
++        function setQuickReturnDate(days) {
++            const pickupInput = document.getElementById('pickupdate');
++            const returnInput = document.getElementById('returndate');
++            if (!pickupInput.value) {
++                alert('Vui lòng chọn Ngày nhận xe trước!');
++                return;
++            }
++            const date = new Date(pickupInput.value);
++            date.setDate(date.getDate() + days);
++            
++            const yyyy = date.getFullYear();
++            const mm = String(date.getMonth() + 1).padStart(2, '0');
++            const dd = String(date.getDate()).padStart(2, '0');
++            returnInput.value = yyyy + '-' + mm + '-' + dd;
++            
++            // Dispatch change event to trigger differenceInDays calculation
++            returnInput.dispatchEvent(new Event('change'));
++        }
++        </script>
++    
++    <!-- Success Overlay -->
++    <div id="booking-success-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
++        <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; width: 90%;">
++            <div style="width: 80px; height: 80px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
++                <i class="fas fa-check" style="color: white; font-size: 40px;"></i>
++            </div>
++            <h2 style="color: #1f2937; font-weight: 800; margin-bottom: 10px;">Đặt Xe Thành Công!</h2>
++            <p style="color: #6b7280; margin-bottom: 30px; line-height: 1.5;">Cảm ơn bạn đã tin tưởng dịch vụ của chúng tôi. Thông tin đơn đặt xe đã được ghi nhận trên hệ thống.</p>
++            <button onclick="window.location.href='home'" style="background: #b59349; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; width: 100%;">Về Trang Chủ</button>
++        </div>
++    </div>
+ 
++</body>
+ </html>

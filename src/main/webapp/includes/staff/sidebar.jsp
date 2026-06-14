@@ -284,7 +284,14 @@
         // Highlight active submenu item
         if (element) {
             $('.nav-content a').removeClass('active-submenu');
-            $(element).addClass('active-submenu');
+            $('.sidebar-nav .nav-link').removeClass('active-page').addClass('collapsed');
+            
+            if ($(element).hasClass('nav-link')) {
+                $(element).removeClass('collapsed').addClass('active-page');
+            } else {
+                $(element).addClass('active-submenu');
+                $(element).closest('.nav-item').find('.nav-link').removeClass('collapsed').addClass('active-page');
+            }
         }
 
         var iframe = document.querySelector('iframe');

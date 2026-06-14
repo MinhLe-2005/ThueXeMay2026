@@ -36,8 +36,12 @@ public class AddNewEventStaff extends HttpServlet {
             if (publicUrl == null) publicUrl = name;
 
             // Retrieve other form data
-            double discount = Double.parseDouble(request.getParameter("discount"));
-            String staffID = request.getParameter("staffID");
+            double discountInput = Double.parseDouble(request.getParameter("discount"));
+            // Chuyển đổi từ phần trăm (5) sang thập phân (0.05) để lưu database
+            double discount = discountInput / 100.0;
+            
+            // Không cần staffID nữa, set null
+            String staffID = null;
 
             // Create Event object
             Event event = new Event(0, eventTitle, createdDate, startDate, endDate, content, publicUrl, discount, staffID);

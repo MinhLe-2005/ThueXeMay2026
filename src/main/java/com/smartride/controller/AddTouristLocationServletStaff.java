@@ -37,7 +37,9 @@ public class AddTouristLocationServletStaff extends HttpServlet {
 
             String description = request.getParameter("description");
             String urlArticle = request.getParameter("urlArticle");
-            String staffID = request.getParameter("staffID");
+            
+            // Không cần staffID nữa, set null hoặc giá trị mặc định
+            String staffID = null;
 
             TouristLocation touristLocation = new TouristLocation(0, locationName, publicUrl, description, urlArticle, staffID);
             touristLocationDAO.addNewTouristLocation(touristLocation);

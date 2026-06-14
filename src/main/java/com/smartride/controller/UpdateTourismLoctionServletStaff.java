@@ -48,7 +48,7 @@ public class UpdateTourismLoctionServletStaff extends HttpServlet {
         TouristLocationDAO touristLocationDAO = TouristLocationDAO.getInstance();
         FileUploaded fileUploaded = new FileUploaded(getServletContext().getRealPath("/images"));
         
-        // RÃ©cupÃ©rer les paramÃ¨tres depuis la requÃªte
+        // Récupérer les paramètres depuis la requête
         String locationIdStr = request.getParameter("locationId");
         String locationName = request.getParameter("locationName");
 
@@ -59,11 +59,15 @@ public class UpdateTourismLoctionServletStaff extends HttpServlet {
         
         String description = request.getParameter("description");
         String urlArticle = request.getParameter("urlArticle");
-        String staffID = request.getParameter("staffID");
+        
         try {
             int locationId = Integer.parseInt(locationIdStr);
+            
+            // Lấy thông tin địa điểm cũ để giữ lại staffID
+            TouristLocation oldLoc = touristLocationDAO.getTouristLocationbyID(locationId);
+            String staffID = oldLoc != null ? oldLoc.getStaffID() : null;
+            
             if (publicUrl == null) {
-                TouristLocation oldLoc = touristLocationDAO.getTouristLocationbyID(locationId);
                 if (oldLoc != null) {
                     publicUrl = oldLoc.getLocationImage();
                 } else {

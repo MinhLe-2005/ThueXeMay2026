@@ -1540,7 +1540,7 @@
             .form-img-bike img, .form-img img {
                 width: 100% !important;
                 height: 100% !important;
-                object-fit: cover !important;
+                object-fit: contain !important;
                 transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
             }
             .form-box:hover .form-img-bike img, .form-box:hover .form-img img {
@@ -2150,7 +2150,7 @@
                                                 </c:if>
                                                 <c:if test="${a.price ne 0}">
                                                     <fmt:formatNumber var="fmtAcc" value="${a.price}" maxFractionDigits="0" groupingUsed="true"/>
-                                                    <label for="daily-checkbox" data-rawprice="${a.price}">₫${fmtAcc}/lượt</label>
+                                                    <label for="daily-checkbox" data-rawprice="${a.price}">₫${fmtAcc}</label>
                                                 </c:if>
                                             </div>
                                         </div>
@@ -2460,11 +2460,12 @@
                                             <i class="bi bi-ticket-perforated"></i> Mã Giảm Giá (Voucher)
                                         </h4>
                                         <div style="display:flex; gap:10px; align-items:center;">
-                                            <input type="text" id="voucher-code" placeholder="Nhập mã voucher..." style="flex:1; padding:10px 14px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; outline:none;" />
-                                            <button type="button" onclick="applyVoucher()" style="background:#b59349; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px; white-space:nowrap;">Áp dụng</button>
+                                            <input type="text" id="voucher-code-input" placeholder="Nhập mã voucher..." style="flex:1; padding:10px 14px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; outline:none;" />
+                                            <button type="button" id="apply-voucher-btn" onclick="applyVoucher()" style="background:#b59349; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px; white-space:nowrap;">Áp dụng</button>
                                         </div>
                                         <div id="voucher-msg" style="font-size:13px; margin-top:8px;"></div>
                                         <input type="hidden" id="applied-discount" value="0"/>
+                                        <input type="hidden" id="applied-voucher-id" value="0"/>
                                     </div>
 
                                     <!-- ĐIỀU KHOẢN -->
@@ -2625,6 +2626,34 @@
                         //     form.parent().parent().parent().append('<div class="footer" style="height:752px;"></div>');
                         // }
                         form.validate().settings.ignore = ":disabled,:hidden";
+
+                        // ===== VALIDATE: Không cho đặt xe trong quá khứ =====
+                        if (currentIndex === 0 && newIndex > 0) {
+                            var pickupDateVal = document.getElementById('pickupdate').value;
+                            var pickupTimeVal = document.getElementById('pickuptime').value || '00:00';
+                            if (pickupDateVal) {
+                                var pickupDateTime = new Date(pickupDateVal + 'T' + pickupTimeVal + ':00');
+                                var now = new Date();
+                                if (pickupDateTime <= now) {
+                                    // Hiển thị lỗi dưới ô ngày nhận xe
+                                    var errEl = document.getElementById('pickup-past-error');
+                                    if (!errEl) {
+                                        errEl = document.createElement('div');
+                                        errEl.id = 'pickup-past-error';
+                                        errEl.style.cssText = 'color:#dc2626; font-size:13px; margin-top:6px; font-weight:600;';
+                                        document.getElementById('pickupdate').parentNode.appendChild(errEl);
+                                    }
+                                    errEl.textContent = '⚠️ Ngày & giờ nhận xe phải ở tương lai, không thể đặt xe trong quá khứ!';
+                                    document.getElementById('pickupdate').style.borderColor = '#dc2626';
+                                    return false;
+                                } else {
+                                    var errEl2 = document.getElementById('pickup-past-error');
+                                    if (errEl2) errEl2.remove();
+                                    document.getElementById('pickupdate').style.borderColor = '';
+                                }
+                            }
+                        }
+
                         return form.valid();
                     },
                     onFinishing: function (event, currentIndex) {
@@ -2963,13 +2992,26 @@
                                 document.getElementById('issuedontext').textContent = formData.issuedon;   
                                 document.getElementById('expdatetext').textContent = formData.expdate;   
                             }
-                            
-                           
-                            
                             // Thêm tiêu đề h4 và dữ liệu số lượng với giá tiền vào div cụ thể trong item-container
                             const formBoxTotal = document.getElementById('form-box-total');
                             formBoxTotal.innerHTML = '';
                             let totalAmount = 0;
+                            
+                            let tableHtml = `
+                                <div style="background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 0;">
+                                        <thead>
+                                            <tr style="border-bottom: 2px solid #e0c87a; text-align: left; color: #b59349; font-size: 14px;">
+                                                <th style="padding: 12px 10px; font-weight: bold;">Dịch vụ</th>
+                                                <th style="padding: 12px 10px; text-align: center; font-weight: bold; width: 12%;">Thời gian</th>
+                                                <th style="padding: 12px 10px; text-align: center; font-weight: bold; width: 12%;">Số lượng</th>
+                                                <th style="padding: 12px 10px; text-align: right; font-weight: bold; width: 18%;">Đơn giá</th>
+                                                <th style="padding: 12px 10px; text-align: right; font-weight: bold; width: 22%;">Thành tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                            `;
+                            
                             //calculator motorcycles
                             const  savedBikeCal = document.querySelectorAll('#savedBikeContainer .form-box');
                             savedBikeCal.forEach(formBox => { 
@@ -2977,111 +3019,91 @@
                                  const title = formBox.querySelector('h4') ? formBox.querySelector('h4').textContent.trim() : '?';
                                  const quantity = parseInt(selects ? selects.value : 0, 10) || 0;
 
-                                 // Ưu tiên data-activeprice (đã lưu khi clone), fallback sang .price-current rồi .main-price
-                                 let price = 0;
-                                 const activePrice = formBox.dataset.activeprice;
-                                 if (activePrice && activePrice !== '') {
-                                     price = parseInt(activePrice, 10) || 0;
-                                 } else {
-                                     const priceEl = formBox.querySelector('.main-price.price-current') || formBox.querySelector('.main-price');
-                                     if (priceEl) {
-                                         price = parseInt(priceEl.dataset.rawprice || priceEl.textContent.replace(/[^0-9]/g,''), 10) || 0;
-                                     }
-                                 }
-
                                  // Quantity là số ngày chênh lệch giữa ngày trả và ngày pickup
                                  const quantityDay = Math.max(1, Math.ceil(differenceInDays)); // Đảm bảo quantity ít nhất là 1
+
+                                 // Động chọn giá dựa trên số ngày thuê
+                                 let price = 0;
+                                 let priceLabelDesc = "Ngày";
+                                 if (quantityDay >= 30) {
+                                     const priceEl = formBox.querySelector('.price-month');
+                                     if (priceEl) price = parseInt(priceEl.dataset.rawprice, 10) || 0;
+                                     priceLabelDesc = "Tháng (Ưu đãi)";
+                                 } else if (quantityDay >= 7) {
+                                     const priceEl = formBox.querySelector('.price-week');
+                                     if (priceEl) price = parseInt(priceEl.dataset.rawprice, 10) || 0;
+                                     priceLabelDesc = "Tuần (Ưu đãi)";
+                                 } else {
+                                     const priceEl = formBox.querySelector('.price-day');
+                                     if (priceEl) price = parseInt(priceEl.dataset.rawprice, 10) || 0;
+                                     priceLabelDesc = "Ngày";
+                                 }
+
+                                 // Fallback nếu không tìm thấy thẻ giá
+                                 if (price === 0) {
+                                     const activePrice = formBox.dataset.activeprice;
+                                     if (activePrice && activePrice !== '') price = parseInt(activePrice, 10) || 0;
+                                 }
 
                                  // Tính tổng giá
                                  const totalPrice = quantityDay * price * quantity;
                                  totalAmount += totalPrice;
 
-                                // Create new div elements similar to formBoxTotal structure
-                                const itemContainer = document.createElement('div');
-                                itemContainer.classList.add('item-container');
-                                itemContainer.style.display = 'flex';
-                                itemContainer.style.justifyContent = 'space-between';
-                                itemContainer.style.alignItems = 'center';
-                                itemContainer.style.padding = '15px 0';
-                                itemContainer.style.borderBottom = '1px dashed #eaeaea';
-
-                                itemContainer.innerHTML = `
-                                    <div style="flex: 2;">
-                                        <h4 style="margin: 0; font-size: 16px; color: #333;">` + title + `</h4>
-                                    </div>
-                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
-                                        x` + quantityDay + ` Ngày
-                                    </div>
-                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
-                                        x` + quantity + ` Xe
-                                    </div>
-                                    <div style="flex: 1; text-align: right; color: #666; font-size: 14px;">
-                                        ₫` + price.toLocaleString() + `/Ngày
-                                    </div>
-                                    <div style="flex: 1.5; text-align: right;">
-                                        <h4 style="margin: 0; font-size: 18px; color: #b59349;">₫` + totalPrice.toLocaleString() + `</h4>
-                                    </div>
-                                `;
-
-                                formBoxTotal.appendChild(itemContainer);                                  
+                                 tableHtml += `
+                                    <tr style="border-bottom: 1px dashed #eee;">
+                                        <td style="padding: 16px 10px;">
+                                            <h4 style="margin: 0 0 6px 0; font-size: 15px; color: #333; font-weight: bold;">` + title + `</h4>
+                                            <div style="font-size: 11px; color: #888; display: inline-block; padding: 2px 8px; border-radius: 4px; border: 1px solid #e0c87a; background: #fffdf5;">
+                                                Gói áp dụng: <strong style="color: #b59349;">` + priceLabelDesc + `</strong>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 16px 10px; text-align: center; color: #555; font-size: 14px; font-weight: 500;">` + quantityDay + ` Ngày</td>
+                                        <td style="padding: 16px 10px; text-align: center; color: #555; font-size: 14px; font-weight: 500;">` + quantity + ` Xe</td>
+                                        <td style="padding: 16px 10px; text-align: right; color: #555; font-size: 14px; font-weight: 500;">₫` + price.toLocaleString() + `/Ngày</td>
+                                        <td style="padding: 16px 10px; text-align: right; color: #b59349; font-size: 16px; font-weight: bold;">₫` + totalPrice.toLocaleString() + `</td>
+                                    </tr>
+                                 `;
                             });
                             
                             // Calculator items
-                            const  savedAsseccCal = document.querySelectorAll('#savedItemsContainer .form-box');
+                            const savedAsseccCal = document.querySelectorAll('#savedItemsContainer .form-box');
                             savedAsseccCal.forEach(formBox => {                              
-                                // Lấy nội dung từ thẻ h4 và data-rawprice
-                                const selects = formBox.querySelector('.form-check-select');
-                                const title = formBox.querySelector('h4') ? formBox.querySelector('h4').textContent.trim() : '?';
-                                const quantity = parseInt(selects ? selects.value : 0, 10) || 0;
-                                let price = 0;
+                                 // Lấy nội dung từ thẻ h4 và data-rawprice
+                                 const selects = formBox.querySelector('.form-check-select');
+                                 const title = formBox.querySelector('h4') ? formBox.querySelector('h4').textContent.trim() : '?';
+                                 const quantity = parseInt(selects ? selects.value : 0, 10) || 0;
+                                 let price = 0;
 
-                                // Đọc raw price từ data attribute (chính xác nhất)
-                                const rawPriceAttr = selects ? selects.dataset.rawprice : null;
-                                if (rawPriceAttr && rawPriceAttr !== '0') {
-                                    price = parseInt(rawPriceAttr, 10) || 0;
-                                } else {
-                                    const priceLabel = formBox.querySelector('label[data-rawprice]');
-                                    if (priceLabel) price = parseInt(priceLabel.dataset.rawprice, 10) || 0;
-                                }
+                                 // Đọc raw price từ data attribute (chính xác nhất)
+                                 const rawPriceAttr = selects ? selects.dataset.rawprice : null;
+                                 if (rawPriceAttr && rawPriceAttr !== '0') {
+                                     price = parseInt(rawPriceAttr, 10) || 0;
+                                 } else {
+                                     const priceLabel = formBox.querySelector('label[data-rawprice]');
+                                     if (priceLabel) price = parseInt(priceLabel.dataset.rawprice, 10) || 0;
+                                 }
 
-                                // Tính tổng giá
-                                const totalPrice = quantity * price;
-                                totalAmount += totalPrice;
+                                 // Tính tổng giá
+                                 const totalPrice = quantity * price;
+                                 totalAmount += totalPrice;
 
-                                // Tạo các thẻ div mới
-                                const itemContainer = document.createElement('div');
-                                itemContainer.classList.add('item-container');
-                                itemContainer.style.display = 'flex';
-                                itemContainer.style.justifyContent = 'space-between';
-                                itemContainer.style.alignItems = 'center';
-                                itemContainer.style.padding = '15px 0';
-                                itemContainer.style.borderBottom = '1px dashed #eaeaea';
-
-                                itemContainer.innerHTML = `
-                                    <div style="flex: 2;">
-                                        <h4 style="margin: 0; font-size: 16px; color: #333;">` + title + `</h4>
-                                    </div>
-                                    <div style="flex: 1; text-align: center; color: #666; font-size: 14px;">
-                                        x` + quantity + ` Cái
-                                    </div>
-                                    <div style="flex: 1; text-align: right; color: #666; font-size: 14px;">
-                                        ` + priceLabel + `
-                                    </div>
-                                    <div style="flex: 1.5; text-align: right;">
-                                        <h4 style="margin: 0; font-size: 18px; color: #b59349;">₫` + totalPrice.toLocaleString() + `</h4>
-                                    </div>
-                                `;
-
-                                formBoxTotal.appendChild(itemContainer);
-                                
+                                 tableHtml += `
+                                    <tr style="border-bottom: 1px dashed #eee;">
+                                        <td style="padding: 16px 10px;">
+                                            <h4 style="margin: 0; font-size: 15px; color: #444; font-weight: bold;">` + title + `</h4>
+                                        </td>
+                                        <td style="padding: 16px 10px; text-align: center; color: #aaa; font-size: 14px;">-</td>
+                                        <td style="padding: 16px 10px; text-align: center; color: #555; font-size: 14px; font-weight: 500;">` + quantity + ` Cái</td>
+                                        <td style="padding: 16px 10px; text-align: right; color: #555; font-size: 14px; font-weight: 500;">₫` + price.toLocaleString() + `</td>
+                                        <td style="padding: 16px 10px; text-align: right; color: #555; font-size: 15px; font-weight: bold;">₫` + totalPrice.toLocaleString() + `</td>
+                                    </tr>
+                                 `;
                             });
-                            // Tạo thẻ div item-total và thêm vào cuối savedItemsContainer
-                            const itemTotalContainer = document.createElement('div');
-                            itemTotalContainer.classList.add('item-total');
-                            itemTotalContainer.style.paddingTop = '20px';
-                            itemTotalContainer.style.display = 'flex';
-                            itemTotalContainer.style.flexDirection = 'column';
-                            itemTotalContainer.style.alignItems = 'flex-end';
+
+                            tableHtml += `
+                                        </tbody>
+                                    </table>
+                            `;
 
                             // Apply voucher discount if any
                             const appliedDiscount = parseInt(document.getElementById('applied-discount').value) || 0;
@@ -3089,18 +3111,20 @@
 
                             let discountHtml = '';
                             if (appliedDiscount > 0) {
-                                discountHtml = `<div style="display:flex; justify-content:space-between; width: 100%; color:#16a34a; font-size:15px; margin-bottom:12px; font-weight: 600;">
+                                discountHtml = `<div style="display:flex; justify-content:space-between; width: 100%; color:#16a34a; font-size:15px; margin-top:16px; margin-bottom:12px; font-weight: 600;">
                                     <span>🎉 Giảm giá voucher:</span>
                                     <span>-₫${appliedDiscount.toLocaleString()}</span>
                                 </div>`;
                             }
 
-                            itemTotalContainer.innerHTML = discountHtml +
-                                `<div style="display:flex; justify-content:space-between; width: 100%; align-items: center;">
+                            tableHtml += discountHtml + `
+                                <div style="display:flex; justify-content:space-between; width: 100%; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 2px solid #e0c87a;">
                                     <h4 style="margin: 0; font-size: 18px; color: #333;">Tổng thanh toán:</h4>
                                     <h2 id="dataInput" style="margin: 0; font-size: 26px; color: #b59349; font-weight: 700;">₫`+ finalAmount.toLocaleString() +`</h2>
-                                </div>`;
-                            formBoxTotal.appendChild(itemTotalContainer);
+                                </div>
+                            </div>`; // close wrapper div
+                            
+                            formBoxTotal.innerHTML = tableHtml;
                         }
 
                         function toggleNextButton() {
@@ -4079,7 +4103,9 @@
             var list   = document.getElementById('bike-selection-list');
             if (banner && list) {
                 if (items.length > 0) {
-                    list.textContent = items.join(', ');
+                    list.innerHTML = items.map(function(item) {
+                        return '<span style="display:inline-block; padding: 3px 10px; margin-right: 6px; margin-top: 4px; margin-bottom: 4px; background: #fff; border: 1px solid #e0c87a; border-radius: 6px; color: #b59349; font-weight: 600; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">' + item + '</span>';
+                    }).join('');
                     banner.style.display = 'block';
                 } else {
                     banner.style.display = 'none';
@@ -4105,7 +4131,9 @@
             var list   = document.getElementById('acc-selection-list');
             if (banner && list) {
                 if (items.length > 0) {
-                    list.textContent = items.join(', ');
+                    list.innerHTML = items.map(function(item) {
+                        return '<span style="display:inline-block; padding: 3px 10px; margin-right: 6px; margin-top: 4px; margin-bottom: 4px; background: #fff; border: 1px solid #16a34a; border-radius: 6px; color: #15803d; font-weight: 600; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">' + item + '</span>';
+                    }).join('');
                     banner.style.display = 'block';
                 } else {
                     banner.style.display = 'none';
@@ -4114,60 +4142,21 @@
         }
 
         // Hook vào các select box để update banner realtime
-        document.addEventListener('change', function(e) {
-            if (e.target && e.target.classList.contains('form-check-select')) {
-                var inMoto = e.target.closest('#motorcyclelist');
-                var inAcc  = e.target.closest('#protection');
+        $(document).ready(function() {
+            // Trigger cập nhật ngay khi load trang để xử lý các xe được pre-select
+            updateBikeBanner();
+            updateAccBanner();
+
+            // Sử dụng jQuery event delegation để bắt chính xác event khi elements bị re-render bởi jquery-steps
+            $(document).on('change', '.form-check-select', function(e) {
+                var inMoto = $(this).closest('#motorcyclelist').length > 0;
+                var inAcc  = $(this).closest('#protection').length > 0;
                 if (inMoto) updateBikeBanner();
                 if (inAcc)  updateAccBanner();
-            }
+            });
         });
 
-        // ===== VOUCHER =====
-        // Danh sách voucher mẫu (có thể fetch từ server sau)
-        var VOUCHERS = {
-            'SMART10': { discount: 0.10, label: 'Giảm 10%' },
-            'WEEK20':  { discount: 0.20, label: 'Giảm 20% cho gói tuần' },
-            'NEWUSER': { discount: 50000, fixed: true, label: 'Giảm 50,000₫' }
-        };
-
-        function applyVoucher() {
-            var code = (document.getElementById('voucher-code').value || '').trim().toUpperCase();
-            var msgEl = document.getElementById('voucher-msg');
-            var discountInput = document.getElementById('applied-discount');
-
-            if (!code) {
-                msgEl.style.color = '#dc2626';
-                msgEl.textContent = 'Vui lòng nhập mã voucher.';
-                return;
-            }
-
-            var voucher = VOUCHERS[code];
-            if (!voucher) {
-                msgEl.style.color = '#dc2626';
-                msgEl.textContent = '❌ Mã voucher không hợp lệ hoặc đã hết hạn.';
-                discountInput.value = 0;
-                return;
-            }
-
-            // Tính giá trị giảm
-            var totalEl = document.getElementById('dataInput');
-            var currentTotal = totalEl ? parseInt(totalEl.textContent.replace(/[^0-9]/g,'')) || 0 : 0;
-            var discountAmt = 0;
-            if (voucher.fixed) {
-                discountAmt = voucher.discount;
-            } else {
-                discountAmt = Math.round(currentTotal * voucher.discount);
-            }
-
-            discountInput.value = discountAmt;
-            msgEl.style.color = '#16a34a';
-            msgEl.textContent = '✓ Áp dụng thành công: ' + voucher.label + ' (−₫' + discountAmt.toLocaleString('vi-VN') + ')';
-
-            // Cập nhật lại tổng
-            var newTotal = Math.max(0, currentTotal - discountAmt);
-            if (totalEl) totalEl.textContent = '₫' + newTotal.toLocaleString('vi-VN');
-        }
+        // Voucher được xử lý qua hàm applyVoucher() ở script phía trên (kết nối servlet /applyVoucher → database)
         </script>
     </body>
 

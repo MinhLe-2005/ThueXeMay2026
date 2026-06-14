@@ -27,24 +27,23 @@ public class VoucherDAO implements Serializable {
      * If customerID > 0, also checks that the voucher belongs to that customer OR is a general voucher (customerID=0).
      */
     public Voucher getVoucherByCode(String code, int customerId) {
-        // Status values from DB: 'Đang hoạt động' = available, 'Ngừng hoạt động' = used
-        // A voucher is valid if it belongs to this customer AND has not been used
         String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\" "
                    + "FROM \"Voucher\" "
                    + "WHERE \"Code\" = ? AND \"Status\" = 'Đang hoạt động'";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, code);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Voucher v = new Voucher();
-                v.setVoucherId(rs.getInt("VoucherID"));
-                v.setCode(rs.getString("Code"));
-                v.setDiscountAmount(rs.getDouble("DiscountAmount"));
-                v.setDescription(rs.getString("Description"));
-                v.setCreatedTime(rs.getString("CreatedTime"));
-                v.setStatus(rs.getString("Status"));
-                return v;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Voucher v = new Voucher();
+                    v.setVoucherId(rs.getInt("VoucherID"));
+                    v.setCode(rs.getString("Code"));
+                    v.setDiscountAmount(rs.getDouble("DiscountAmount"));
+                    v.setDescription(rs.getString("Description"));
+                    v.setCreatedTime(rs.getString("CreatedTime"));
+                    v.setStatus(rs.getString("Status"));
+                    return v;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,8 +56,8 @@ public class VoucherDAO implements Serializable {
      */
     public void markVoucherUsed(int voucherId) {
         String sql = "UPDATE \"Voucher\" SET \"Status\" = 'Ngừng hoạt động' WHERE \"VoucherID\" = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, voucherId);
             ps.executeUpdate();
         } catch (SQLException e) {

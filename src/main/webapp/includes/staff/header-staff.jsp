@@ -1,6 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<c:if test="${empty param.iframe}">
+<!-- Top Loading Bar -->
+<jsp:include page="/includes/loading.jsp" />
+</c:if>
+
 <!-- Favicons -->
 <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
 <script>

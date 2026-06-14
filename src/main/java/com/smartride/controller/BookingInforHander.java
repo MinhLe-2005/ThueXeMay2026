@@ -217,8 +217,8 @@ public class BookingInforHander extends HttpServlet {
         String dob = (String) dataMap.get("dob");
         String gender = (String) dataMap.get("gender");
         String total = (String) dataMap.get("total");
-        String paymentDate = (String) dataMap.get("paymenttime");
-        int amount = Integer.parseInt((String) dataMap.get("amount"));
+        String paymentDate = dataMap.containsKey("paymenttime") ? (String) dataMap.get("paymenttime") : "";
+        int amount = dataMap.containsKey("amount") ? Integer.parseInt((String) dataMap.get("amount")) : 0;
 
         // Get current date and time
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -307,6 +307,15 @@ public class BookingInforHander extends HttpServlet {
             daoAD.insert(new AccessoryDetail(bookingid, accessoryId, quantity, price));
         }
         
+        // Check if this is just order creation
+        String action = request.getParameter("action");
+        if ("create_only".equals(action)) {
+            String jsonResponse = "{\"status\":\"success\", \"bookingId\":\"" + bookingid + "\"}";
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(jsonResponse);
+            return;
+        }
+
         //Payment
         // Äá»‹nh dáº¡ng chuá»—i Ä‘áº§u vÃ o
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");

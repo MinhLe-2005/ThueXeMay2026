@@ -79,8 +79,13 @@ public class UpdateEventStaff extends HttpServlet {
             String formattedDateTime = currentDateTime.format(formatter);
             
             String discount = request.getParameter("editDiscount");
-            String staffID = request.getParameter("editStaffID");
-            double dis = Double.parseDouble(discount);
+            double discountInput = Double.parseDouble(discount);
+            // Chuyển đổi từ phần trăm (5) sang thập phân (0.05) để lưu database
+            double dis = discountInput / 100.0;
+            
+            // Lấy staffID từ event cũ để giữ nguyên
+            Event oldEvent = eventDAO.getEventbyID(eventID);
+            String staffID = oldEvent != null ? oldEvent.getStaffID() : null;
             
             Event event = new Event(eventID, eventTitle, formattedDateTime, startDate, endDate, content, publicUrl, dis, staffID);
             eventDAO.updateEvent(event);
