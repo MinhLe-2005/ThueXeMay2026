@@ -1,4 +1,4 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+﻿<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -2555,9 +2555,55 @@
                         <fieldset>
 <!--                            <a onclick="yourFunctionName()">aaaaa</a>-->
                             <h2>THANH TOÁN CỌC</h2>
-                            <p class="desc">Hãy thanh toán số tiền cọc theo bên dưới để hoàn thành đơn đặt xe của bạn</p>
-                            <iframe id="myIframe" src="vnpay_pay.jsp" style="width: 100%; height: 550px; border-style: hidden"></iframe>
-                            
+                            <p class="desc">Quét mã QR bên dưới để chuyển khoản đúng số tiền — đơn hàng sẽ được xác nhận tự động</p>
+
+                            <!-- ===== SEPAY QR PAYMENT UI ===== -->
+                            <div id="sepay-payment-section" style="display:none; max-width:480px; margin:0 auto; font-family:'Plus Jakarta Sans',sans-serif;">
+                                
+                                <!-- Countdown Timer -->
+                                <div style="text-align:center; margin-bottom:18px;">
+                                    <div style="display:inline-flex; align-items:center; gap:8px; background:#fff3f3; border:1.5px solid #f87171; border-radius:12px; padding:8px 20px;">
+                                        <span style="font-size:14px; color:#ef4444; font-weight:600;">⏱ Thời gian còn lại:</span>
+                                        <span id="sepay-countdown" style="font-size:22px; font-weight:800; color:#ef4444; min-width:56px; display:inline-block; text-align:center;">10:00</span>
+                                    </div>
+                                </div>
+
+                                <!-- QR Code Image -->
+                                <div style="text-align:center; background:#fff; border:2px solid #e5e7eb; border-radius:16px; padding:20px; margin-bottom:18px;">
+                                    <img id="sepay-qr-img" src="" alt="QR SePay" style="width:220px; height:220px; border-radius:8px; display:block; margin:0 auto;">
+                                    <div style="margin-top:12px;">
+                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Ngân hàng: <strong>Vietcombank (VCB)</strong></div>
+                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Số tài khoản: <strong>1037077133</strong></div>
+                                        <div style="font-size:13px; color:#666;">Số tiền: <strong id="sepay-amount-text" style="color:#b59349;"></strong></div>
+                                    </div>
+                                </div>
+
+                                <!-- Transfer note -->
+                                <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:14px 18px; margin-bottom:18px; text-align:center;">
+                                    <div style="font-size:13px; color:#16a34a; font-weight:600; margin-bottom:4px;">📋 Nội dung chuyển khoản:</div>
+                                    <div id="sepay-transfer-note" style="font-size:17px; font-weight:800; color:#15803d; letter-spacing:1px;"></div>
+                                    <div style="font-size:11px; color:#666; margin-top:4px;">Vui lòng ghi đúng nội dung để hệ thống xác nhận tự động</div>
+                                </div>
+
+                                <!-- Status -->
+                                <div id="sepay-status" style="text-align:center; padding:12px; border-radius:10px; background:#fef9c3; color:#92400e; font-weight:600; font-size:14px;">
+                                    ⏳ Đang chờ thanh toán...
+                                </div>
+
+                                <!-- Dev test button (remove in production) -->
+                                <div style="text-align:center; margin-top:12px;">
+                                    <button type="button" onclick="simulatePaymentSuccess()" style="background:#6b7280; color:#fff; border:none; padding:8px 18px; border-radius:8px; cursor:pointer; font-size:12px; opacity:0.6;">
+                                        [Dev] Giả lập thanh toán thành công
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Hiển thị khi chưa tạo QR -->
+                            <div id="sepay-placeholder" style="text-align:center; padding:40px 20px; color:#888;">
+                                <div style="font-size:48px; margin-bottom:12px;">💳</div>
+                                <div style="font-size:15px; font-weight:600; margin-bottom:8px;">Chuẩn bị thanh toán</div>
+                                <div style="font-size:13px; color:#aaa;">Vui lòng hoàn tất các bước trước để tiến hành thanh toán</div>
+                            </div>
                         </fieldset>
                     </div>
                 </form>
@@ -2778,36 +2824,68 @@
                             changePrice();
                            
                        }
-                       if(currentIndex === 5){
+                                              if(currentIndex === 5){
                            var finishButton = document.querySelector('.wizard .actions a[href="#finish"]');
-                           finishButton.style.display = 'none';
-                            // Lấy thẻ h2
-                            const dataH2 = document.getElementById('dataInput');
-
-                            // Lấy iframe
-                            const iframe = document.getElementById('myIframe');
-
-                            // Truyền dữ liệu từ thẻ h2 vào iframe khi thẻ h2 thay đổi
-                            const sendDataToIframe = () => {
-                                // Lấy giá trị của thẻ h2
-                                const dataTotal = dataH2.textContent.replace(/[₫,.]/g, '').trim(); // Lấy dữ liệu và xóa dấu chấm và dấu chấm câu
-                                console.log(dataTotal);
-                                const data = {
-                                    dataTotal: dataTotal
-                                };
-                                // Truyền giá trị vào iframe
-                                iframe.contentWindow.postMessage(data, '*');
-                            };
-
-                            // Gọi hàm để gửi dữ liệu ngay khi tải trang
-                            sendDataToIframe();
-
-                            // Theo dõi sự thay đổi của thẻ h2 và gửi dữ liệu vào iframe
-                            const observer = new MutationObserver(sendDataToIframe);
-
-                            observer.observe(dataH2, { childList: true, subtree: true });
+                           if (finishButton) finishButton.style.display = 'none';
+                           
+                           // ===== SEPAY QR LOGIC =====
+                           var dataH2 = document.getElementById('dataInput');
+                           var rawAmount = dataH2 ? dataH2.textContent.replace(/[^0-9]/g, '').trim() : '0';
+                           var amount = parseInt(rawAmount) || 0;
+                           
+                           if (!window._sepayBookingId) {
+                               window._sepayBookingId = 'BK' + Date.now();
+                           }
+                           var bookingId = window._sepayBookingId;
+                           
+                           document.getElementById('sepay-placeholder').style.display = 'none';
+                           document.getElementById('sepay-payment-section').style.display = 'block';
+                           
+                           document.getElementById('sepay-transfer-note').textContent = bookingId;
+                           document.getElementById('sepay-amount-text').textContent = amount.toLocaleString('vi-VN') + ' ₫';
+                           
+                           var qrUrl = 'https://qr.sepay.vn/img?bank=VCB&acc=1037077133&template=compact&amount=' + amount + '&des=' + encodeURIComponent(bookingId);
+                           document.getElementById('sepay-qr-img').src = qrUrl;
+                           
+                           if (typeof BookingHandler === 'function') {
+                               BookingHandler({ action: 'create_only', bookingId: bookingId });
+                           }
+                           
+                           if (window.sepayInterval) clearInterval(window.sepayInterval);
+                           if (window.sepayPollInterval) clearInterval(window.sepayPollInterval);
+                           
+                           var timeLeft = 10 * 60;
+                           var countdownEl = document.getElementById('sepay-countdown');
+                           
+                           window.sepayInterval = setInterval(function() {
+                               timeLeft--;
+                               var min = Math.floor(timeLeft / 60);
+                               var sec = timeLeft % 60;
+                               if (countdownEl) countdownEl.textContent = String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+                               if (timeLeft <= 60 && countdownEl) countdownEl.style.color = '#dc2626';
+                               if (timeLeft <= 0) {
+                                   clearInterval(window.sepayInterval);
+                                   clearInterval(window.sepayPollInterval);
+                                   var st = document.getElementById('sepay-status');
+                                   if (st) { st.innerHTML = '❌ Hết thời gian thanh toán.'; st.style.background = '#fee2e2'; st.style.color = '#dc2626'; }
+                               }
+                           }, 1000);
+                           
+                           var ctxPath = '${pageContext.request.contextPath}';
+                           window.sepayPollInterval = setInterval(function() {
+                               fetch(ctxPath + '/CheckPaymentStatus?bookingId=' + bookingId)
+                                   .then(function(r) { return r.json(); })
+                                   .then(function(d) {
+                                       if (d.paid === true) {
+                                           clearInterval(window.sepayInterval);
+                                           clearInterval(window.sepayPollInterval);
+                                           var st = document.getElementById('sepay-status');
+                                           if (st) { st.innerHTML = '✅ Thanh toán thành công! Đang chuyển hướng...'; st.style.background = '#dcfce7'; st.style.color = '#16a34a'; }
+                                           setTimeout(function() { window.location.href = ctxPath + '/bookingHistory'; }, 2000);
+                                       }
+                                   }).catch(function() {});
+                           }, 5000);
                        }
-                       
                        function changePrice(){
                             var quantityDay = Math.max(1, Math.ceil(differenceInDays));
                             const priceDayElements = document.querySelectorAll('.price-day');
