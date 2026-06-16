@@ -401,6 +401,7 @@
                                                                 </c:forEach>
                                                             </td>
                                                             <td class="text-center align-middle">
+                                                                <c:choose>
                                                                     <c:when test="${listB.statusBooking == 'Đã xác nhận' || listB.statusBooking == 'Đã thanh toán'}">
                                                                         <span class="badge bg-success border"><i class="fas fa-check-circle me-1"></i>${listB.statusBooking}</span>
                                                                     </c:when>
@@ -1062,22 +1063,32 @@
             window._currentCusName = cusName;
             
             var idCardHtml = '';
+            var frontImg = '';
+            var backImg = '';
             if (cusIdCard && cusIdCard.trim() !== '') {
                 var images = cusIdCard.split(',');
-                images.forEach(function(img, i) {
-                    if(img.trim() !== '') {
-                        var isUrl = img.trim().startsWith('http');
-                        var imgSrc = isUrl ? img.trim() : 'upload/' + img.trim();
-                        var label = i === 0 ? 'Mặt trước' : 'Mặt sau';
-                        idCardHtml += `<div style="flex: 1; min-width: 200px; text-align: center; cursor: pointer; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0; background:#f8fafc;" onclick="viewImageFull('${imgSrc}')">
-                                           <div style="font-size:11px; font-weight:700; color:#64748b; padding:8px; text-transform:uppercase; letter-spacing:1px;">${label}</div>
-                                           <img src="${imgSrc}" style="width: 100%; height: 130px; object-fit: cover; transition: transform 0.2s; display:block;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src=''; this.parentElement.innerHTML='<div style=\'padding:20px; color:#94a3b8; font-size:12px;\'>Không tải được ảnh</div>';">
-                                       </div>`;
-                    }
-                });
-            } else {
-                idCardHtml = '<div style="width:100%; text-align:center; padding:24px; color: #94a3b8; font-style: italic;"><i class="fas fa-image fa-2x mb-2 d-block"></i>Chưa có ảnh giấy tờ</div>';
+                frontImg = images.length > 0 ? images[0].trim() : '';
+                backImg = images.length > 1 ? images[1].trim() : '';
             }
+
+            function generateImgHtml(imgStr, label) {
+                if (imgStr === '' || imgStr === 'null') {
+                    return `<div style="flex: 1; min-width: 200px; text-align: center; border-radius: 12px; border: 2px dashed #cbd5e1; background:#f8fafc; display:flex; flex-direction:column; justify-content:center; align-items:center; height:170px;">
+                                <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">${label}</div>
+                                <i class="fas fa-image fa-2x" style="color:#e2e8f0; margin-bottom:4px;"></i>
+                                <div style="font-size:12px; color:#94a3b8;">Chưa cập nhật</div>
+                            </div>`;
+                }
+                var isUrl = imgStr.startsWith('http');
+                var imgSrc = isUrl ? imgStr : 'upload/' + imgStr;
+                return `<div style="flex: 1; min-width: 200px; text-align: center; cursor: pointer; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0; background:#f8fafc;" onclick="viewImageFull('${imgSrc}')">
+                            <div style="font-size:11px; font-weight:700; color:#64748b; padding:8px; border-bottom: 1px solid #e2e8f0; text-transform:uppercase; letter-spacing:1px;">${label}</div>
+                            <img src="${imgSrc}" style="width: 100%; height: 130px; object-fit: cover; transition: transform 0.2s; display:block;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src=''; this.parentElement.innerHTML='<div style=\\\'padding:20px; color:#94a3b8; font-size:12px; height:130px; display:flex; align-items:center; justify-content:center; flex-direction:column;\\\'><i class=\\\'fas fa-unlink fa-2x mb-2\\\'></i>Không tải được ảnh</div>';">
+                        </div>`;
+            }
+
+            idCardHtml += generateImgHtml(frontImg, 'Mặt trước');
+            idCardHtml += generateImgHtml(backImg, 'Mặt sau');
             $('#cinfo-idcards').html(idCardHtml);
             
             $('#customer-info-modal').modal('show');

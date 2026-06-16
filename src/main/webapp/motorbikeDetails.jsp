@@ -809,8 +809,9 @@
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h1 class="model-title mb-0" style="margin-bottom: 0;">${motorcycleDetail.model}</h1>
                                     <c:if test="${sessionScope.account != null}">
-                                        <button id="fav-btn" class="btn btn-light shadow-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; transition: all 0.3s; border: 1px solid #e2e8f0;" onclick="toggleFavorite('${motorcycleDetail.motorcycleId}')">
-                                            <i class="fa-regular fa-heart" id="fav-icon" style="font-size: 1.5rem; color: #94a3b8; transition: all 0.2s;"></i>
+                                        <button id="fav-btn" class="btn shadow-sm d-flex align-items-center justify-content-center" style="height: 45px; padding: 0 20px; font-weight: 600; border-radius: 8px; transition: all 0.3s; background-color: #c4a14b; color: white; border: none;" onclick="toggleFavorite('${motorcycleDetail.motorcycleId}')">
+                                            <i class="fa-solid fa-cart-plus me-2" id="fav-icon" style="font-size: 1.2rem; transition: all 0.2s;"></i>
+                                            <span id="fav-text">Thêm vào giỏ hàng</span>
                                         </button>
                                     </c:if>
                                 </div>
@@ -1176,19 +1177,25 @@
                         var icon = document.getElementById('fav-icon');
                         var btn = document.getElementById('fav-btn');
                         if(data.isFavorite) {
-                            btn.style.background = '#fee2e2';
-                            btn.style.borderColor = '#fca5a5';
-                            icon.className = 'fa-solid fa-heart';
-                            icon.style.color = '#ef4444';
+                            btn.style.background = '#28a745';
+                            btn.style.borderColor = '#28a745';
+                            btn.style.color = '#ffffff';
+                            icon.className = 'fa-solid fa-cart-arrow-down';
+                            icon.style.color = '#ffffff';
                             icon.style.transform = 'scale(1.15)';
                             btn.classList.add('added');
+                            var textEl = document.getElementById('fav-text');
+                            if(textEl) textEl.innerText = 'Đã thêm vào giỏ';
                         } else {
-                            btn.style.background = '';
-                            btn.style.borderColor = '#e2e8f0';
-                            icon.className = 'fa-regular fa-heart';
-                            icon.style.color = '#94a3b8';
+                            btn.style.background = '#c4a14b';
+                            btn.style.borderColor = '#c4a14b';
+                            btn.style.color = '#ffffff';
+                            icon.className = 'fa-solid fa-cart-plus';
+                            icon.style.color = '#ffffff';
                             icon.style.transform = 'scale(1)';
                             btn.classList.remove('added');
+                            var textEl = document.getElementById('fav-text');
+                            if(textEl) textEl.innerText = 'Thêm vào giỏ hàng';
                         }
                     }
                 });

@@ -325,6 +325,29 @@ public class BookingDAO {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void cancelExpiredPendingBookings(int minutes) {
+        String sql = "SELECT \"BookingID\" FROM \"Booking\" "
+                   + "WHERE \"StatusBooking\" = N'Chờ thanh toán' "
+                   + "  AND DATEDIFF(MINUTE, CAST(\"BookingDate\" AS DATETIME), GETDATE()) >= ?";
+        java.util.List<String> expiredBookings = new java.util.ArrayList<>();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, minutes);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    expiredBookings.add(rs.getString("BookingID"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (String bookingId : expiredBookings) {
+            updateBookingStatus(bookingId, "Đã huỷ");
+            makeMotorcyclesStatus(bookingId, "Có sẵn", "Đơn hàng quá hạn thanh toán");
+            System.out.println("Auto-cancelled expired booking: " + bookingId);
+        }
+    }
     
     public Booking getLastestBooking(int accountId) {
         PreparedStatement stm;

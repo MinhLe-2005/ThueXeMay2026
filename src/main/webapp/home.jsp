@@ -820,7 +820,7 @@
                     </div>
                 </div>
             </div>
-            <iframe id="motorcycleSlideIframe" src="slide.jsp" style="width: 100%; height: 720px; padding: 0; margin: 0; border: none; overflow: hidden;" scrolling="no"></iframe>
+            <iframe id="motorcycleSlideIframe" src="slide.jsp?v=2.0" style="width: 100%; height: 720px; padding: 0; margin: 0; border: none; overflow: hidden;" scrolling="no"></iframe>
             
             <script>
                 window.addEventListener('message', function(e) {

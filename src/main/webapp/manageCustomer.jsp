@@ -368,14 +368,18 @@
                                             <!-- Ảnh CMND -->
                                             <h6 class="fw-bold text-muted text-uppercase mb-3" style="font-size: 0.75rem; letter-spacing: 1px;"><i class="fa fa-camera me-2"></i>Ảnh giấy tờ</h6>
                                             <div class="bg-light border rounded-3 p-3 text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 220px; border-style: dashed !important; border-width: 2px !important;">
-                                                <div id="modal-id-card-images" class="w-100 d-none flex-column gap-3">
-                                                    <div>
+                                                <div id="modal-id-card-images" class="w-100 d-none row g-3 m-0">
+                                                    <div class="col-6 p-0 pe-2">
                                                         <p class="small text-muted mb-1 fw-bold text-start"><i class="fa fa-id-card-o me-1"></i> Mặt trước</p>
-                                                        <img id="modal-id-card-front" src="" alt="Mặt trước" class="img-fluid rounded shadow-sm w-100" style="max-height: 250px; object-fit: contain; background: #fff; cursor: pointer;" onclick="zoomImage(this.src)" onerror="this.onerror=null; this.src='https://placehold.co/600x400/f8f9fa/a0aec0?text=Loi+Hien+Thi';">
+                                                        <div class="border rounded shadow-sm" style="height: 160px; overflow: hidden; background: #fff;">
+                                                            <img id="modal-id-card-front" src="" alt="Mặt trước" class="w-100 h-100" style="object-fit: cover; cursor: pointer;" onclick="zoomImage(this.src)" onerror="this.onerror=null; this.src='https://placehold.co/600x400/f8f9fa/a0aec0?text=Loi+Hien+Thi';">
+                                                        </div>
                                                     </div>
-                                                    <div>
+                                                    <div class="col-6 p-0 ps-2">
                                                         <p class="small text-muted mb-1 fw-bold text-start"><i class="fa fa-id-card me-1"></i> Mặt sau</p>
-                                                        <img id="modal-id-card-back" src="" alt="Mặt sau" class="img-fluid rounded shadow-sm w-100" style="max-height: 250px; object-fit: contain; background: #fff; cursor: pointer;" onclick="zoomImage(this.src)" onerror="this.onerror=null; this.src='https://placehold.co/600x400/f8f9fa/a0aec0?text=Loi+Hien+Thi';">
+                                                        <div class="border rounded shadow-sm" style="height: 160px; overflow: hidden; background: #fff;">
+                                                            <img id="modal-id-card-back" src="" alt="Mặt sau" class="w-100 h-100" style="object-fit: cover; cursor: pointer;" onclick="zoomImage(this.src)" onerror="this.onerror=null; this.src='https://placehold.co/600x400/f8f9fa/a0aec0?text=Loi+Hien+Thi';">
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div id="modal-id-card-placeholder" class="text-muted">

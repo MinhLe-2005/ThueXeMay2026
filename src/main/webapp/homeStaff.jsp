@@ -435,7 +435,23 @@
                     chart: { 
                         height: '100%', 
                         type: 'area',
-                        toolbar: { show: true },
+                        toolbar: { 
+                            show: true,
+                            tools: {
+                                selection: false,
+                                zoom: false,
+                                zoomin: true,
+                                zoomout: false, // Tắt nút zoom out để khỏi bị lố
+                                pan: true,
+                                reset: true
+                            },
+                            autoSelected: 'pan'
+                        },
+                        zoom: {
+                            enabled: true,
+                            type: 'x',
+                            autoScaleYaxis: true
+                        },
                         fontFamily: 'Be Vietnam Pro'
                     },
                     markers: {
@@ -555,8 +571,14 @@
                             let newCus = rawCus;
 
                             // Update Line Chart (Reports)
+                            let minTime = newCats.length > 0 ? new Date(newCats[0]).getTime() : undefined;
+                            let maxTime = newCats.length > 0 ? new Date(newCats[newCats.length - 1]).getTime() : undefined;
                             window.reportsChart.updateOptions({
-                                xaxis: { categories: newCats }
+                                xaxis: { 
+                                    categories: newCats,
+                                    min: minTime,
+                                    max: maxTime
+                                }
                             });
                             window.reportsChart.updateSeries([
                                 { name: 'Đơn Hàng', type: 'area', data: newOrd },
@@ -624,7 +646,8 @@
                             // Update Pie Chart (Category)
                             let pieSeries = Object.keys(data.charts.pieChart)
                                 .map(k => ({ value: data.charts.pieChart[k], name: k }))
-                                .filter(item => item.value > 0); // Lọc bỏ các xe có số lượng bằng 0
+                                .filter(item => item.value > 0);
+                            let totalRentals = pieSeries.reduce((s, i) => s + i.value, 0);
                             
                             window.trafficChart.setOption({
                                 tooltip: { 
@@ -632,17 +655,25 @@
                                     formatter: '<strong>{b}</strong> <br/>Số lượng: {c} chiếc ({d}%)'
                                 },
                                 legend: { 
-                                    bottom: '0%', 
-                                    left: 'center',
-                                    icon: 'circle'
+                                    type: 'scroll',
+                                    orient: 'vertical',
+                                    left: '65%', 
+                                    top: 'center',
+                                    icon: 'circle',
+                                    itemGap: 20,
+                                    itemWidth: 16,
+                                    itemHeight: 16,
+                                    textStyle: {
+                                        fontSize: 16,
+                                        fontWeight: '500'
+                                    }
                                 },
                                 color: ['#4154f1', '#2eca6a', '#ff771d', '#C09D62', '#0dcaf0', '#6610f2'],
                                 series: [{
                                     name: 'Đã thuê', 
                                     type: 'pie', 
-                                    radius: ['25%', '75%'],
-                                    center: ['50%', '50%'],
-                                    roseType: 'radius',
+                                    radius: ['55%', '85%'],
+                                    center: ['40%', '50%'],
                                     itemStyle: {
                                         borderRadius: 10,
                                         borderColor: '#fff',
@@ -652,10 +683,15 @@
                                     },
                                     label: { 
                                         show: false,
-                                        formatter: '{b}\n({c})'
+                                        position: 'center'
                                     },
                                     emphasis: { 
-                                        label: { show: true, fontSize: '15', fontWeight: 'bold' },
+                                        label: { 
+                                            show: true, 
+                                            fontSize: '18', 
+                                            fontWeight: 'bold',
+                                            formatter: '{b}\n{c} xe'
+                                        },
                                         itemStyle: {
                                             shadowBlur: 25,
                                             shadowColor: 'rgba(0, 0, 0, 0.2)'

@@ -294,13 +294,39 @@ public class BookingInforHander extends HttpServlet {
         }
         // ───────────────────────────────────────────────────
 
+        // Process bike details first to PRE-CHECK availability
+        Type bikeListType = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();
+        ArrayList<HashMap<String, String>> bikeDetails = gson.fromJson(gson.toJson(dataMap.get("bikeDetails")), bikeListType);
+        
+        HashMap<String, Integer> requestedCounts = new HashMap<>();
+        for (HashMap<String, String> bikeDetail : bikeDetails) {
+            String bikeName = bikeDetail.get("name");
+            requestedCounts.put(bikeName, requestedCounts.getOrDefault(bikeName, 0) + 1);
+        }
+        
+        MotorcycleDetailDAO daoMD = MotorcycleDetailDAO.getInstance();
+        for (String bikeName : requestedCounts.keySet()) {
+            List<Integer> list = daoMD.getListAvailableMotorcycleDetailIdByMotorcycleName(bikeName);
+            if (list == null || list.size() < requestedCounts.get(bikeName)) {
+                String errJson = "{\"status\":\"error\",\"message\":\"Rất tiếc, dòng xe '" + bikeName + "' hiện đã được khách hàng khác thuê hoặc đang trong quá trình thanh toán. Vui lòng chọn một mẫu xe khác, hoặc quay lại kiểm tra sau 10 phút nhé!\"}";
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write(errJson);
+                return; // Stop, don't save booking
+            }
+        }
+
         // Save booking data to database
         BookingDAO dao = BookingDAO.getInstance();
         dao.addBooking(bookingid, formattedDateTime, pickupDate, returnDate, pickupLocation, returnLocation, voucherId == 0 ? 0 : voucherId, daoC.getCustomerbyAccountID(accountId).getCustomerId());
         
         // Vì AI đã vượt qua (hoặc chưa cấu hình), đơn hàng hợp lệ để được lưu.
-        // Trạng thái được set là "Chờ xác nhận" để Admin review và duyệt thủ công.
-        dao.updateBookingStatus(bookingid, "Chờ xác nhận");
+        // Trạng thái được set là "Chờ xác nhận" (cash) hoặc "Chờ thanh toán" (sepay soft lock)
+        String action = request.getParameter("action");
+        if ("create_only".equals(action)) {
+            dao.updateBookingStatus(bookingid, "Chờ thanh toán");
+        } else {
+            dao.updateBookingStatus(bookingid, "Chờ xác nhận");
+        }
 
         // Mark voucher as used
         if (voucherId > 0) {
@@ -309,14 +335,12 @@ public class BookingInforHander extends HttpServlet {
 
 
 
-        // Process bike details
-        Type bikeListType = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();
-        ArrayList<HashMap<String, String>> bikeDetails = gson.fromJson(gson.toJson(dataMap.get("bikeDetails")), bikeListType);
+        // Process bike details (already parsed above for pre-check)
 
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDateString = currentDateTime.format(formatterDate);
 
-        MotorcycleDetailDAO daoMD = MotorcycleDetailDAO.getInstance();
+        daoMD = MotorcycleDetailDAO.getInstance();
         MotorcycleDAO daoM = MotorcycleDAO.getInstance();
         PriceListDAO daoPrice = PriceListDAO.getInstance();
         MotorcycleStatusDAO daoMS = MotorcycleStatusDAO.getInstance();
@@ -365,7 +389,7 @@ public class BookingInforHander extends HttpServlet {
         }
         
         // Check if this is just order creation
-        String action = request.getParameter("action");
+        action = request.getParameter("action");
         if ("create_only".equals(action)) {
             String jsonResponse = "{\"status\":\"success\", \"bookingId\":\"" + bookingid + "\"}";
             response.setContentType("application/json;charset=UTF-8");
