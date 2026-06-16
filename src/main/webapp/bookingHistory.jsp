@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -6,7 +6,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Lịch sử thuê xe</title>
+        <title>Lá»‹ch sá»­ thuÃª xe</title>
         <!-- Tailwind CSS -->
         <link href="https://www.loopple.com/css/vendor/tailwind.min.css" rel="stylesheet">
         <link href="https://www.loopple.com/css/tailwind/app.css?v=1.0.0" rel="stylesheet">
@@ -246,30 +246,30 @@
                 top: 5px;
             }
             .tabs-container {
-                background-color: #f8f9fa; /* Màu nền của thanh chọn */
-                border: 1px solid #ddd; /* Đường viền của thanh chọn */
+                background-color: #f8f9fa; /* MÃ u ná»n cá»§a thanh chá»n */
+                border: 1px solid #ddd; /* ÄÆ°á»ng viá»n cá»§a thanh chá»n */
             }
 
             .tab {
                 padding: 10px 20px;
                 cursor: pointer;
-                background-color: #ffffff; /* Màu nền của từng tab */
-                border-right: 1px solid #ddd; /* Đường viền giữa các tab */
+                background-color: #ffffff; /* MÃ u ná»n cá»§a tá»«ng tab */
+                border-right: 1px solid #ddd; /* ÄÆ°á»ng viá»n giá»¯a cÃ¡c tab */
                 text-align: center;
-                flex: 1; /* Đảm bảo các tab có kích thước đều nhau */
+                flex: 1; /* Äáº£m báº£o cÃ¡c tab cÃ³ kÃ­ch thÆ°á»›c Ä‘á»u nhau */
             }
 
             .tab:last-child {
-                border-right: none; /* Loại bỏ đường viền phải của tab cuối cùng */
+                border-right: none; /* Loáº¡i bá» Ä‘Æ°á»ng viá»n pháº£i cá»§a tab cuá»‘i cÃ¹ng */
             }
 
             .tab:hover {
-                background-color: #e9ecef; /* Màu nền khi hover */
+                background-color: #e9ecef; /* MÃ u ná»n khi hover */
             }
 
             .tab.active {
-                background-color: #007bff; /* Màu nền của tab đang hoạt động */
-                color: #ffffff; /* Màu chữ của tab đang hoạt động */
+                background-color: #007bff; /* MÃ u ná»n cá»§a tab Ä‘ang hoáº¡t Ä‘á»™ng */
+                color: #ffffff; /* MÃ u chá»¯ cá»§a tab Ä‘ang hoáº¡t Ä‘á»™ng */
             }
 
             .booking-history h1 {
@@ -365,24 +365,24 @@
                                             </c:if>
 
                                             <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
-                                                <i class="fas fa-history mr-2 text-amber-500"></i> Lịch sử thuê xe
+                                                <i class="fas fa-history mr-2 text-amber-500"></i> Lá»‹ch sá»­ thuÃª xe
                                             </h3>
 
                                             <div class="filters flex gap-6 mb-6 border-b border-slate-200">
-                                                <a href="bookingHistory?status=all" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${empty param.status || param.status eq 'all' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Tất cả</a>
-                                                <a href="bookingHistory?status=pending" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'pending' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Chờ xác nhận</a>
-                                                <a href="bookingHistory?status=confirmed" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'confirmed' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Đã xác nhận</a>
-                                                <a href="bookingHistory?status=cancelled" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'cancelled' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Đã hủy</a>
+                                                <a href="bookingHistory?status=all" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${empty param.status || param.status eq 'all' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Táº¥t cáº£</a>
+                                                <a href="bookingHistory?status=pending" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'pending' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">Chá» xÃ¡c nháº­n</a>
+                                                <a href="bookingHistory?status=confirmed" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'confirmed' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">ÄÃ£ xÃ¡c nháº­n</a>
+                                                <a href="bookingHistory?status=cancelled" style="text-decoration:none" class="filter-btn pb-2 font-semibold transition-all duration-200 border-b-2 ${param.status eq 'cancelled' ? 'text-slate-800 border-amber-500 font-bold' : 'text-slate-500 border-transparent hover:text-slate-800 hover:border-slate-300'}">ÄÃ£ há»§y</a>
                                             </div>
 
                                             <c:if test="${param.status eq 'confirmed'}">
                                             <div class="confirmed-filters mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-3" id="confirmed-filters">
-                                                <label for="confirmed-status" class="text-sm font-semibold text-slate-600">Trạng thái giao nhận:</label>
+                                                <label for="confirmed-status" class="text-sm font-semibold text-slate-600">Tráº¡ng thÃ¡i giao nháº­n:</label>
                                                 <select id="confirmed-status" onchange="window.location.href='bookingHistory?status=confirmed&deliveryStatus='+this.value" class="ml-2 border border-slate-200 rounded-lg p-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 w-48">
-                                                    <option value="all" <c:if test="${empty deliveryStatus || 'all' eq deliveryStatus}">selected</c:if>>Tất cả trạng thái</option>
-                                                    <option value="notDelivered" <c:if test="${'notDelivered' eq deliveryStatus}">selected</c:if>>Chưa giao</option>
-                                                    <option value="delivered" <c:if test="${'delivered' eq deliveryStatus}">selected</c:if>>Đã giao</option>
-                                                    <option value="returned" <c:if test="${'returned' eq deliveryStatus}">selected</c:if>>Đã trả</option>
+                                                    <option value="all" <c:if test="${empty deliveryStatus || 'all' eq deliveryStatus}">selected</c:if>>Táº¥t cáº£ tráº¡ng thÃ¡i</option>
+                                                    <option value="notDelivered" <c:if test="${'notDelivered' eq deliveryStatus}">selected</c:if>>ChÆ°a giao</option>
+                                                    <option value="delivered" <c:if test="${'delivered' eq deliveryStatus}">selected</c:if>>ÄÃ£ giao</option>
+                                                    <option value="returned" <c:if test="${'returned' eq deliveryStatus}">selected</c:if>>ÄÃ£ tráº£</option>
                                                 </select>
                                             </div>
                                             </c:if>
@@ -390,25 +390,25 @@
                                                 <table class="table min-w-full align-middle mb-0" id="booking-table">
                                                     <thead class="bg-slate-50 border-b border-slate-100">
                                                         <tr class="bg-slate-50">
-                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Mã đơn</th>
-                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Thời gian thuê</th>
-                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Số lượng xe</th>
-                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Trạng thái</th>
-                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tổng giá</th>
-                                                            <th scope="col" class="px-6 py-3.5 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Hành động</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">MÃ£ Ä‘Æ¡n</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Thá»i gian thuÃª</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Sá»‘ lÆ°á»£ng xe</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tráº¡ng thÃ¡i</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tá»•ng giÃ¡</th>
+                                                            <th scope="col" class="px-6 py-3.5 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">HÃ nh Ä‘á»™ng</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="divide-y divide-slate-100">
                                                     <c:if test="${empty listB}">
                                                         <tr>
-                                                            <td colspan="6" class="text-center italic py-8 text-slate-400">Không có thông tin Booking nào ở đây</td>
+                                                            <td colspan="6" class="text-center italic py-8 text-slate-400">KhÃ´ng cÃ³ thÃ´ng tin Booking nÃ o á»Ÿ Ä‘Ã¢y</td>
                                                         </tr>
                                                     </c:if>
                                                     <c:forEach items="${listB}" var="o">
-                                                        <c:set var="status" value="${o.statusBooking == 'Chờ xác nhận' ? 'pending' : (o.statusBooking == 'Đã xác nhận' ? 'confirmed' : 'cancelled')}" />
-                                                        <c:set var="delivery" value="${o.deliveryStatus == 'Đã trả' ? 'returned' : (o.deliveryStatus == 'Đã giao' ? 'delivered' : 'notDelivered')}" />
+                                                        <c:set var="status" value="${o.statusBooking == 'Chá» xÃ¡c nháº­n' ? 'pending' : (o.statusBooking == 'ÄÃ£ xÃ¡c nháº­n' ? 'confirmed' : 'cancelled')}" />
+                                                        <c:set var="delivery" value="${o.deliveryStatus == 'ÄÃ£ tráº£' ? 'returned' : (o.deliveryStatus == 'ÄÃ£ giao' ? 'delivered' : 'notDelivered')}" />
                                                         
-                                                        <tr class="${status} ${delivery} hover:bg-slate-50 transition-colors duration-150">
+                                                        <tr class="${status} ${delivery} hover:bg-slate-50 transition-colors duration-150 border-b border-gray-200">
                                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-amber-600">
                                                                 #${o.bookingID}
                                                             </td>
@@ -438,29 +438,29 @@
                                                             </td>
                                                             <td class="px-6 py-4 whitespace-nowrap">
                                                                     <c:choose>
-                                                                        <c:when test="${o.statusBooking == 'Đã hủy'}">
+                                                                        <c:when test="${o.statusBooking == 'ÄÃ£ há»§y'}">
                                                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-100">
-                                                                                <i class="fas fa-times-circle"></i> Đã hủy
+                                                                                <i class="fas fa-times-circle"></i> ÄÃ£ há»§y
                                                                             </span>
                                                                         </c:when>
-                                                                        <c:when test="${o.deliveryStatus == 'Đã trả'}">
-                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                                                                                <i class="fas fa-check-circle text-slate-500"></i> Hoàn tất
+                                                                        <c:when test="${o.deliveryStatus == 'ÄÃ£ tráº£'}">
+                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold" style="background-color: #f3f4f6; color: #374151; border: 1px solid #e5e7eb;">
+                                                                                <i class="fas fa-check-circle" style="color: #6b7280;"></i> HoÃ n táº¥t
                                                                             </span>
                                                                         </c:when>
-                                                                        <c:when test="${o.deliveryStatus == 'Đã giao'}">
-                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
-                                                                                <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span> Đang thuê
+                                                                        <c:when test="${o.deliveryStatus == 'ÄÃ£ giao'}">
+                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-100">
+                                                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span> Äang thuÃª
                                                                             </span>
                                                                         </c:when>
-                                                                        <c:when test="${o.statusBooking == 'Đã xác nhận'}">
+                                                                        <c:when test="${o.statusBooking == 'ÄÃ£ xÃ¡c nháº­n'}">
                                                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                                                                <i class="fas fa-calendar-check text-emerald-500"></i> Sắp nhận xe
+                                                                                <i class="fas fa-calendar-check text-emerald-500"></i> Sáº¯p nháº­n xe
                                                                             </span>
                                                                         </c:when>
-                                                                        <c:when test="${o.statusBooking == 'Chờ xác nhận'}">
+                                                                        <c:when test="${o.statusBooking == 'Chá» xÃ¡c nháº­n'}">
                                                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-100">
-                                                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Chờ duyệt
+                                                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Chá» duyá»‡t
                                                                             </span>
                                                                         </c:when>
                                                                         <c:otherwise>
@@ -479,24 +479,24 @@
                                                             </td>
                                                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                                                 <div class="inline-flex items-center justify-center gap-2">
-                                                                    <a href="bookingHistoryDetail?bookingId=${o.bookingID}" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm flex items-center h-[28px]" title="Chi tiết / Gia hạn">
-                                                                        <i class="fas fa-file-invoice mr-1.5"></i> Chi tiết / Gia hạn
+                                                                    <a href="bookingHistoryDetail?bookingId=${o.bookingID}" class="px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm flex items-center h-[28px]" style="background-color: #1e293b; color: #ffffff;" title="Chi tiáº¿t / Gia háº¡n" onmouseover="this.style.backgroundColor='#0f172a'" onmouseout="this.style.backgroundColor='#1e293b'">
+                                                                        <i class="fas fa-file-invoice mr-1.5"></i> Chi tiáº¿t / Gia háº¡n
                                                                     </a>
                                                                     
                                                                     <input type="hidden" name="bookingId" value="${o.bookingID}" />
                                                                     <c:set var="feedback" value="${feedbackMap[o.bookingID]}"/>
                                                                     <c:choose>
                                                                         <c:when test="${not empty feedback}">
-                                                                            <c:if test="${o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả'}">
-                                                                                <a href="feedback?bookingId=${o.bookingID}" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm border border-emerald-100" title="Xem đánh giá">
-                                                                                    <i class="fas fa-star text-[10px] mr-1"></i> Xem ĐG
+                                                                            <c:if test="${o.statusBooking == 'ÄÃ£ xÃ¡c nháº­n' && o.deliveryStatus == 'ÄÃ£ tráº£'}">
+                                                                                <a href="feedback?bookingId=${o.bookingID}" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm border border-emerald-100" title="Xem Ä‘Ã¡nh giÃ¡">
+                                                                                    <i class="fas fa-star text-[10px] mr-1"></i> Xem ÄG
                                                                                 </a>
                                                                             </c:if>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <c:if test="${o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả'}">
-                                                                                <a href="feedback?bookingId=${o.bookingID}" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm border border-rose-100 animate-pulse" title="Viết đánh giá">
-                                                                                    <i class="fas fa-pen text-[10px] mr-1"></i> Viết ĐG
+                                                                            <c:if test="${o.statusBooking == 'ÄÃ£ xÃ¡c nháº­n' && o.deliveryStatus == 'ÄÃ£ tráº£'}">
+                                                                                <a href="feedback?bookingId=${o.bookingID}" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm border border-rose-100 animate-pulse" title="Viáº¿t Ä‘Ã¡nh giÃ¡">
+                                                                                    <i class="fas fa-pen text-[10px] mr-1"></i> Viáº¿t ÄG
                                                                                 </a>
                                                                             </c:if>
                                                                         </c:otherwise>
@@ -523,3 +523,4 @@
         </div> <!-- .builder-container -->
     </body>
 </html>
+
