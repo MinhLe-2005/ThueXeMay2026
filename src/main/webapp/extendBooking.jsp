@@ -1,4 +1,4 @@
-﻿<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <fmt:setLocale value="vi_VN" />
@@ -1289,7 +1289,7 @@
 <!--                            <a onclick="yourFunctionName()">aaaaa</a>-->
                             <h2>THANH TOÁN CỌC</h2>
                             <p class="desc">Hãy thanh toán số tiền cọc theo bên dưới để hoàn thành đơn đặt xe của bạn</p>
-                            <iframe id="myIframe" src="vnpay_pay.jsp" style="width: 100%; height: 550px; border-style: hidden"></iframe>
+                            <iframe id="myIframe" src="sepay_pay.jsp" style="width: 100%; height: 550px; border-style: hidden"></iframe>
                             
                         </fieldset>
                     </div>
@@ -1438,7 +1438,8 @@
                                 // Tạo một đối tượng chứa dữ liệu từ cả hai thẻ h2
                                 const data = {
                                     dataTotal: dataTotal,
-                                    dataPayment: dataPayment
+                                    dataPayment: dataPayment,
+                                    bookingId: '${booking.bookingID}'
                                 };
             
                                 // Truyền giá trị vào iframe
@@ -1986,10 +1987,11 @@
        
 
         </script>
-        <iframe id="myI" src="vnpay_return.jsp" style="width: 100%; height: 1000px; display:none;"></iframe>
-<!--        <link href="https://pay.vnpay.vn/lib/vnpay/vnpay.css" rel="stylesheet" />
-        <script src="https://pay.vnpay.vn/lib/vnpay/vnpay.min.js"></script>-->
+        <iframe id="myI" src="sepay_return.jsp" style="width: 100%; height: 1000px; display:none;"></iframe>
+<!--        <link href="https://pay.SePay VietQR.vn/lib/SePay VietQR/SePay VietQR.css" rel="stylesheet" />
+        <script src="https://pay.SePay VietQR.vn/lib/SePay VietQR/SePay VietQR.min.js"></script>-->
          
     </body>
 
 </html>
+
