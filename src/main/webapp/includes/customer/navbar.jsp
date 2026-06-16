@@ -6,6 +6,35 @@
 <!-- Top Loading Bar -->
 <jsp:include page="/includes/loading.jsp" />
 
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    /* Default Action Icons (White on transparent header) */
+    .nav-action-icon {
+        color: rgba(255,255,255,0.8);
+    }
+    .nav-action-icon:hover {
+        color: #ffffff;
+    }
+    
+    /* Action Icons when scrolled (Gold on white header) or on subpages */
+    body.index-page.scrolled .nav-action-icon,
+    body.index-page.scrolled .header .nav-action-icon,
+    body:not(.index-page) .nav-action-icon,
+    body:not(.index-page) .header .nav-action-icon {
+        color: #b59349;
+    }
+    body.index-page.scrolled .nav-action-icon:hover,
+    body.index-page.scrolled .header .nav-action-icon:hover,
+    body:not(.index-page) .nav-action-icon:hover,
+    body:not(.index-page) .header .nav-action-icon:hover {
+        color: #927535;
+    }
+</style>
+
 <header id="header" class="header fixed-top d-flex flex-column align-items-stretch" style="padding: 0 !important; transition: all 0.4s ease-in-out !important;">
     <!-- Top Announcement Bar -->
     <div class="top-announcement-bar d-flex align-items-center justify-content-center" style="background: #1a1816 !important; height: 32px; border-bottom: 1px solid rgba(181, 147, 73, 0.12); width: 100%; z-index: 10;">
@@ -45,6 +74,32 @@
             <a class="btn login" href="login.jsp" style="color: white;">Đăng Nhập</a>
         </c:if>
         <c:if test="${sessionScope.account != null}">
+            <!-- Action Icons (Cart & Notifications) -->
+            <div class="d-flex align-items-center ms-4 me-4" style="gap: 20px;">
+                <a href="favorites.jsp" class="nav-action-icon position-relative" title="Giỏ hàng" style="font-size: 1.4rem; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='scale(1)';">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="cart-badge" class="position-absolute translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; top: 2px; left: 90%; display: none; padding: 0.35em 0.55em; border: 2px solid white;">0</span>
+                </a>
+                
+                <div class="nav-action-icon position-relative notif-dropdown-trigger" style="font-size: 1.4rem; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='scale(1)';">
+                    <i class="fas fa-bell"></i>
+                    <span id="notif-badge" class="position-absolute translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; top: 2px; left: 90%; display: none; padding: 0.35em 0.55em; border: 2px solid white;">0</span>
+                    
+                    <!-- Notification Dropdown -->
+                    <div id="notif-dropdown" class="notif-dropdown shadow-lg rounded-3" style="display: none; position: absolute; top: 150%; right: -10px; width: 320px; background: white; z-index: 1000; border: 1px solid #e2e8f0;">
+                        <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background: #f8fafc; border-radius: 8px 8px 0 0;">
+                            <h6 class="m-0 fw-bold text-dark">Thông báo mới</h6>
+                            <span class="text-primary text-decoration-none" style="font-size: 0.8rem; cursor: pointer;" onclick="markAllNotifAsRead()">Đánh dấu đã đọc</span>
+                        </div>
+                        <div id="notif-list" class="notif-list" style="max-height: 350px; overflow-y: auto;">
+                            <!-- Items injected by JS -->
+                        </div>
+                        <div class="p-2 border-top text-center" style="background: #f8fafc; border-radius: 0 0 8px 8px;">
+                            <a href="#" class="text-muted" style="font-size: 0.85rem; text-decoration: none;">Xem tất cả</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="user-menu-wrap">
                 <c:choose>
@@ -606,6 +661,108 @@
         });
     }
 
+</script>
+
+<!-- Notification and Favorites Scripts -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var notifTrigger = document.querySelector('.notif-dropdown-trigger');
+        var notifDropdown = document.getElementById('notif-dropdown');
+        
+        if (notifTrigger && notifDropdown) {
+            notifTrigger.addEventListener('click', function(e) {
+                if(e.target.closest('#notif-dropdown') && !e.target.closest('.border-bottom')) return; // ignore clicks inside dropdown except header
+                notifDropdown.style.display = notifDropdown.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notifTrigger.contains(e.target)) {
+                    notifDropdown.style.display = 'none';
+                }
+            });
+            
+            // Initial fetch
+            fetchNotifications();
+            // Poll every 30s
+            setInterval(fetchNotifications, 30000);
+        }
+    });
+
+    function fetchNotifications() {
+        fetch('notification?action=get')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                updateNotificationUI(data.unreadCount, data.data);
+            }
+        }).catch(err => console.error("Error fetching notifications", err));
+    }
+
+    function updateNotificationUI(unreadCount, items) {
+        var badge = document.getElementById('notif-badge');
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+            badge.style.display = 'block';
+        } else {
+            badge.style.display = 'none';
+        }
+        
+        var list = document.getElementById('notif-list');
+        if (!items || items.length === 0) {
+            list.innerHTML = '<div class="p-3 text-center text-muted"><small>Không có thông báo nào</small></div>';
+            return;
+        }
+        
+        var html = '';
+        items.forEach(function(item) {
+            var bgClass = item.isRead ? 'bg-white' : 'bg-light';
+            var link = item.link ? item.link : '#';
+            html += '<a href="' + link + '" class="d-block p-3 border-bottom text-decoration-none ' + bgClass + '" onclick="markNotifAsRead(' + item.notificationId + ')">';
+            html += '<div class="fw-bold text-dark" style="font-size:0.9rem;">' + item.title + '</div>';
+            html += '<div class="text-muted mt-1" style="font-size:0.8rem; line-height:1.4;">' + item.message + '</div>';
+            html += '</a>';
+        });
+        list.innerHTML = html;
+    }
+
+    function markNotifAsRead(id) {
+        fetch('notification?action=markRead&id=' + id, { method: 'POST' })
+        .then(() => fetchNotifications()); // refresh
+    }
+
+    function markAllNotifAsRead() {
+        fetch('notification?action=markAllRead', { method: 'POST' })
+        .then(() => fetchNotifications()); // refresh
+    }
+    
+    function updateCartBadge() {
+        fetch('favorite?action=count', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            var cartBadge = document.getElementById('cart-badge');
+            if(cartBadge && data.status === 'success') {
+                if(data.totalFavorites > 0) {
+                    cartBadge.textContent = data.totalFavorites > 99 ? '99+' : data.totalFavorites;
+                    cartBadge.style.display = 'block';
+                } else {
+                    cartBadge.style.display = 'none';
+                }
+            }
+        });
+    }
+    
+    // Listen for cart update messages from iframe or child elements
+    window.addEventListener('message', function(event) {
+        if (event.data === 'fav_updated') {
+            updateCartBadge();
+        }
+    });
+    
+    // Init cart badge on load
+    document.addEventListener("DOMContentLoaded", function() {
+        updateCartBadge();
+    });
 </script>
 
 <!--

@@ -1,4 +1,4 @@
-﻿<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -2184,17 +2184,18 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div style="width:100%; margin-bottom:15px; padding:12px; background:#fff1f2; border-left:4px solid #ef4444; border-radius:4px; color:#b91c1c; font-size:13px; font-weight:600; line-height:1.5;">
+                                        ⚠️ Vui lòng nhập chính xác Email và Số điện thoại để hệ thống gửi thông báo và hỗ trợ hoàn tiền khi cần thiết.
+                                    </div>
                                     <div class="form-row">
                                         <div class="form-flex">
                                             <div class="form-group">
                                                 <label for="email" class="form-label">Email <span class="note-star"> *</span></label>
                                                 <input type="email" name="email" id="email" value="${account.email}" oninput="validateForm()" />
-<!--                                                <span class="text-input">Example :<span> Jeff@gmail.com</span></span>-->
                                             </div>
                                             <div class="form-group">
                                                 <label for="phonenumber" class="form-label">Số điện thoại <span class="note-star"> *</span></label>
                                                 <input type="text" name="phonenumber" id="phonenumber" value="${account.phoneNumber}" oninput="validateForm()"/>
-<!--                                                <span class="text-input">+84</span>-->
                                             </div>
                                         </div>
                                     </div>
@@ -2497,65 +2498,137 @@
                                 </div>
                             </div>
                         </fieldset>
-
-                        <!-- MODAL ĐIỀU KHOẢN SMARTRIDE -->
-                        <div id="terms-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:99999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
-                            <div style="background:#fff; border-radius:16px; max-width:720px; width:100%; max-height:85vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.25);">
-                                <div style="padding:20px 24px; border-bottom:1px solid #f0e4b8; display:flex; align-items:center; justify-content:space-between; background:#fffbf2;">
-                                    <div>
-                                        <h3 style="margin:0; color:#b59349; font-size:18px;">🛡️ Chính sách &amp; Điều khoản SmartRide</h3>
-                                        <p style="margin:4px 0 0; font-size:12px; color:#888;">Vui lòng đọc kỹ trước khi xác nhận đặt xe</p>
-                                    </div>
-                                    <button type="button" onclick="document.getElementById('terms-modal').style.display='none'"
-                                        style="background:#f3f4f6; border:none; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; color:#555;">✕</button>
-                                </div>
-                                <div style="overflow-y:auto; padding:24px; flex:1; font-size:14px; color:#444; line-height:1.8;">
-                                    <h4 style="color:#b59349; margin:0 0 6px;">1. Giới thiệu</h4>
-                                    <p>Chào mừng bạn đến với <strong>SmartRide</strong>! Chúng tôi cung cấp dịch vụ cho thuê xe máy nhằm giúp bạn dễ dàng di chuyển và khám phá. Vui lòng đọc kỹ các điều khoản dưới đây.</p>
-                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
-                                    <h4 style="color:#b59349; margin:0 0 6px;">2. Đăng ký và Tài khoản</h4>
-                                    <p><strong>Đăng ký Tài khoản:</strong> Người dùng phải đăng ký tài khoản hợp lệ để sử dụng dịch vụ.<br>
-                                    <strong>Bảo mật Tài khoản:</strong> Người dùng tự chịu trách nhiệm bảo mật thông tin tài khoản.</p>
-                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
-                                    <h4 style="color:#b59349; margin:0 0 6px;">3. Điều khoản Thuê xe</h4>
-                                    <p><strong>Điều kiện:</strong> Có bằng lái hợp lệ, đủ 18 tuổi trở lên. Xuất trình CCCD/Hộ chiếu khi nhận xe.<br>
-                                    <strong>Đặt xe:</strong> Sau khi đặt, khách nhận xác nhận qua email với thông tin chi tiết.<br>
-                                    <strong>Thanh toán:</strong> Hoàn thành thanh toán trước khi nhận xe. Chấp nhận VNPay, thẻ tín dụng/ghi nợ.</p>
-                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
-                                    <h4 style="color:#b59349; margin:0 0 6px;">4. Sử dụng Xe</h4>
-                                    <p><strong>An toàn:</strong> Tuân thủ luật giao thông, đội mũ bảo hiểm khi lái xe.<br>
-                                    <strong>Bảo quản:</strong> Chịu trách nhiệm xe suốt thời gian thuê. Hư hại phải báo cáo ngay.<br>
-                                    <strong>Trả xe:</strong> Đúng giờ, đúng địa điểm. <strong>Trả muộn bị tính phí thêm.</strong></p>
-                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
-                                    <h4 style="color:#b59349; margin:0 0 6px;">5. Bảo hiểm &amp; Trách nhiệm</h4>
-                                    <p><strong>Bảo hiểm:</strong> SmartRide cung cấp bảo hiểm cơ bản cho xe thuê.<br>
-                                    <strong>Trách nhiệm:</strong> Người thuê chịu trách nhiệm pháp lý với mọi hành động khi sử dụng xe.</p>
-                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
-                                    <h4 style="color:#b59349; margin:0 0 6px;">6. Hủy Bỏ &amp; Hoàn Tiền</h4>
-                                    <p><strong>Hủy miễn phí:</strong> Trước 24 giờ so với thời gian nhận xe.<br>
-                                    <strong>Hoàn tiền:</strong> Xử lý trong vòng <strong>7 ngày làm việc</strong> sau khi xác nhận hủy.</p>
-                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
-                                    <h4 style="color:#b59349; margin:0 0 6px;">7. Quyền riêng tư</h4>
-                                    <p>SmartRide cam kết bảo vệ thông tin cá nhân và không chia sẻ cho bên thứ ba ngoài mục đích dịch vụ.</p>
-                                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
-                                    <h4 style="color:#b59349; margin:0 0 6px;">8. Liên hệ</h4>
-                                    <p>Mọi thắc mắc về điều khoản, vui lòng liên hệ qua email hoặc số điện thoại trên website. Chi tiết đầy đủ tại <a href="policies.jsp" target="_blank" style="color:#b59349; font-weight:600;">trang Chính sách</a>.</p>
-                                </div>
-                                <div style="padding:14px 24px; border-top:1px solid #f0e4b8; display:flex; justify-content:flex-end; gap:10px; background:#fafafa;">
-                                    <button type="button" onclick="document.getElementById('terms-modal').style.display='none'"
-                                        style="padding:10px 20px; background:#f3f4f6; border:none; border-radius:8px; font-size:14px; cursor:pointer; color:#555; font-weight:600;">Đóng</button>
-                                    <button type="button" onclick="document.getElementById('daily-checkbox-term').checked=true; document.getElementById('terms-modal').style.display='none'; if(typeof toggleNextButton==='function') toggleNextButton();"
-                                        style="padding:10px 24px; background:#b59349; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer;">✓ Đã đọc &amp; Đồng ý</button>
-                                </div>
-                            </div>
-                        </div>
-
                         
-                        <h3>Thanh toán</h3>
+                        <h3>Thanh toán cọc</h3>
                         <fieldset>
-<!--                            <a onclick="yourFunctionName()">aaaaa</a>-->
-                            <h2>THANH TOÁN CỌC</h2>
-                            <p class="desc">Quét mã QR bên dưới để chuyển khoản đúng số tiền — đơn hàng sẽ được xác nhận tự động</p>
+                            <h2 style="margin-bottom:20px;">PHƯƠNG THỨC THANH TOÁN</h2>
+                            <p class="desc" style="margin-bottom:24px;">Vui lòng chọn hình thức thanh toán cho đơn đặt xe của bạn.</p>
+
+
+                            <div id="payment-method-container" style="max-width:540px; margin:0 auto; display:flex; flex-direction:column; gap:0;">
+
+                                <!-- Deposit Summary Card -->
+                                <div style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);border-radius:20px;padding:28px 28px 22px;margin-bottom:22px;position:relative;overflow:hidden;">
+                                    <div style="position:absolute;top:-30px;right:-30px;width:130px;height:130px;background:rgba(181,147,73,0.12);border-radius:50%;"></div>
+                                    <div style="position:absolute;bottom:-20px;left:40px;width:80px;height:80px;background:rgba(181,147,73,0.08);border-radius:50%;"></div>
+                                    <div style="font-size:11px;color:#b59349;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;margin-bottom:10px;position:relative;">Số tiền đặt cọc</div>
+                                    <div id="deposit-summary-amount" style="font-size:40px;font-weight:900;color:#fff;margin-bottom:5px;position:relative;letter-spacing:-1px;">—</div>
+                                    <div id="deposit-summary-label" style="font-size:13px;color:rgba(255,255,255,0.5);position:relative;">Đang tính toán...</div>
+                                    <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:24px;position:relative;">
+                                        <span style="font-size:11px;color:rgba(255,255,255,0.4);">Thanh toán bảo mật</span>
+                                        <span style="font-size:11px;color:rgba(255,255,255,0.4);">Hoàn cọc nếu huỷ đúng hạn</span>
+                                    </div>
+                                </div>
+
+                                <!-- Label section -->
+                                <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;">Phương thức thanh toán</div>
+
+                                <!-- Option: Tiền mặt -->
+                                <label id="lbl-cash" onclick="highlightPayment('cash')" style="display:flex;align-items:center;padding:18px 20px;border:2px solid #e5e7eb;border-radius:14px;cursor:pointer;background:#fff;margin-bottom:10px;transition:border 0.2s,background 0.2s;">
+                                    <input type="radio" name="payment_method" value="cash" checked style="display:none;">
+                                    <div style="flex:1;">
+                                        <div style="font-size:15px;font-weight:700;color:#0f172a;">Tiền mặt</div>
+                                        <div style="font-size:12px;color:#94a3b8;margin-top:3px;font-weight:400;">Thanh toán trực tiếp khi nhận xe</div>
+                                    </div>
+                                    <div id="check-cash" style="width:20px;height:20px;border-radius:50%;border:2px solid #b59349;background:#b59349;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;color:#fff;font-weight:900;line-height:1;">&#10003;</div>
+                                </label>
+
+                                <!-- Option: Chuyển khoản -->
+                                <label id="lbl-transfer" onclick="highlightPayment('transfer')" style="display:flex;align-items:center;padding:18px 20px;border:2px solid #e5e7eb;border-radius:14px;cursor:pointer;background:#fff;margin-bottom:18px;transition:border 0.2s,background 0.2s;">
+                                    <input type="radio" name="payment_method" value="transfer" style="display:none;">
+                                    <div style="flex:1;">
+                                        <div style="font-size:15px;font-weight:700;color:#0f172a;">
+                                            Chuyển khoản / Mã QR
+                                            <span style="margin-left:8px;background:#f0fdf4;color:#15803d;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;vertical-align:middle;letter-spacing:0.5px;">TỰ ĐỘNG</span>
+                                        </div>
+                                        <div style="font-size:12px;color:#94a3b8;margin-top:3px;font-weight:400;">Quét QR — hệ thống xác nhận tức thì qua SePay</div>
+                                    </div>
+                                    <div id="check-transfer" style="width:20px;height:20px;border-radius:50%;border:2px solid #e2e8f0;background:transparent;flex-shrink:0;"></div>
+                                </label>
+
+                                <!-- Bank info đã bị ẩn theo yêu cầu để tránh khách CK nhầm -->
+
+                                <!-- CTA Button -->
+                                <button type="button" onclick="confirmPaymentMethod()" style="width:100%;padding:16px;background:linear-gradient(135deg,#b59349,#d4aa5f);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.3px;box-shadow:0 4px 14px rgba(181,147,73,0.28);">
+                                    Xác nhận thanh toán
+                                </button>
+
+                                <!-- Fine print -->
+                                <div style="text-align:center;margin-top:12px;font-size:11px;color:#cbd5e1;">
+                                    Giao dịch được mã hoá SSL 256-bit &bull; Thông tin bảo mật tuyệt đối
+                                </div>
+
+                            </div>
+
+                            <script>
+                            function highlightPayment(method) {
+                                var lblCash     = document.getElementById('lbl-cash');
+                                var lblTransfer = document.getElementById('lbl-transfer');
+                                var chkCash     = document.getElementById('check-cash');
+                                var chkTransfer = document.getElementById('check-transfer');
+                                var bankInfo    = document.getElementById('bank-info-preview');
+                                if (!lblCash || !lblTransfer) return;
+
+                                if (method === 'cash') {
+                                    document.querySelector('input[value="cash"]').checked = true;
+                                    lblCash.style.border     = '2px solid #b59349';
+                                    lblCash.style.background = '#fffbeb';
+                                    lblTransfer.style.border     = '2px solid #e5e7eb';
+                                    lblTransfer.style.background = '#fff';
+                                    chkCash.style.background = '#b59349';
+                                    chkCash.style.border     = '2px solid #b59349';
+                                    chkCash.innerHTML        = '&#10003;';
+                                    chkCash.style.color      = '#fff';
+                                    chkTransfer.style.background = 'transparent';
+                                    chkTransfer.style.border     = '2px solid #e2e8f0';
+                                    chkTransfer.innerHTML        = '';
+                                } else {
+                                    document.querySelector('input[value="transfer"]').checked = true;
+                                    lblTransfer.style.border     = '2px solid #b59349';
+                                    lblTransfer.style.background = '#fffbeb';
+                                    lblCash.style.border     = '2px solid #e5e7eb';
+                                    lblCash.style.background = '#fff';
+                                    chkTransfer.style.background = '#b59349';
+                                    chkTransfer.style.border     = '2px solid #b59349';
+                                    chkTransfer.innerHTML        = '&#10003;';
+                                    chkTransfer.style.color      = '#fff';
+                                    chkTransfer.style.display    = 'flex';
+                                    chkTransfer.style.alignItems = 'center';
+                                    chkTransfer.style.justifyContent = 'center';
+                                    chkTransfer.style.fontSize   = '12px';
+                                    chkTransfer.style.fontWeight = '900';
+                                    chkCash.style.background = 'transparent';
+                                    chkCash.style.border     = '2px solid #e2e8f0';
+                                    chkCash.innerHTML        = '';
+                                }
+                            }
+
+                            function syncDepositSummary() {
+                                var dataEl     = document.getElementById('dataInput');
+                                var summaryAmt = document.getElementById('deposit-summary-amount');
+                                var summaryLbl = document.getElementById('deposit-summary-label');
+                                if (!dataEl || !summaryAmt) return;
+                                var rawAmt = dataEl.getAttribute('data-amount');
+                                var amt = rawAmt ? parseInt(rawAmt) : 0;
+                                if (amt > 0) {
+                                    summaryAmt.textContent = '&#8363;' + amt.toLocaleString('vi-VN');
+                                    try {
+                                        var h4 = dataEl.parentElement ? dataEl.parentElement.querySelector('h4') : null;
+                                        summaryLbl.textContent = h4 ? h4.textContent.trim() : 'Số tiền cần thanh toán trước';
+                                    } catch(e) {}
+                                }
+                            }
+                            window.syncDepositSummary = syncDepositSummary;
+                            document.addEventListener('DOMContentLoaded', function() {
+                                highlightPayment('cash');
+                                setTimeout(syncDepositSummary, 500);
+                            });
+                            </script>
+
+
+                            <!-- ===== AI VERIFY ERROR BOX ===== -->
+
+                            <div id="ai-verify-error-box" style="display:none; max-width:480px; margin:10px auto 0 auto;"></div>
 
                             <!-- ===== SEPAY QR PAYMENT UI ===== -->
                             <div id="sepay-payment-section" style="display:none; max-width:480px; margin:0 auto; font-family:'Plus Jakarta Sans',sans-serif;">
@@ -2599,16 +2672,64 @@
                             </div>
 
                             <!-- Hiển thị khi chưa tạo QR -->
-                            <div id="sepay-placeholder" style="text-align:center; padding:40px 20px; color:#888;">
-                                <div style="font-size:48px; margin-bottom:12px;">💳</div>
-                                <div style="font-size:15px; font-weight:600; margin-bottom:8px;">Chuẩn bị thanh toán</div>
-                                <div style="font-size:13px; color:#aaa;">Vui lòng hoàn tất các bước trước để tiến hành thanh toán</div>
-                            </div>
+                            <!-- sepay-placeholder removed -->
                         </fieldset>
                     </div>
                 </form>
             </div>
 
+        </div>
+
+        <!-- MODAL ĐIỀU KHOẢN SMARTRIDE -->
+        <div id="terms-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:99999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+            <div style="background:#fff; border-radius:16px; max-width:720px; width:100%; max-height:85vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.25);">
+                <div style="padding:20px 24px; border-bottom:1px solid #f0e4b8; display:flex; align-items:center; justify-content:space-between; background:#fffbf2;">
+                    <div>
+                        <h3 style="margin:0; color:#b59349; font-size:18px;">🛡️ Chính sách &amp; Điều khoản SmartRide</h3>
+                        <p style="margin:4px 0 0; font-size:12px; color:#888;">Vui lòng đọc kỹ trước khi xác nhận đặt xe</p>
+                    </div>
+                    <button type="button" onclick="document.getElementById('terms-modal').style.display='none'"
+                        style="background:#f3f4f6; border:none; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; color:#555;">✕</button>
+                </div>
+                <div style="overflow-y:auto; padding:24px; flex:1; font-size:14px; color:#444; line-height:1.8;">
+                    <h4 style="color:#b59349; margin:0 0 6px;">1. Giới thiệu</h4>
+                    <p>Chào mừng bạn đến với <strong>SmartRide</strong>! Chúng tôi cung cấp dịch vụ cho thuê xe máy nhằm giúp bạn dễ dàng di chuyển và khám phá. Vui lòng đọc kỹ các điều khoản dưới đây.</p>
+                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                    <h4 style="color:#b59349; margin:0 0 6px;">2. Đăng ký và Tài khoản</h4>
+                    <p><strong>Đăng ký Tài khoản:</strong> Người dùng phải đăng ký tài khoản hợp lệ để sử dụng dịch vụ.<br>
+                    <strong>Bảo mật Tài khoản:</strong> Người dùng tự chịu trách nhiệm bảo mật thông tin tài khoản.</p>
+                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                    <h4 style="color:#b59349; margin:0 0 6px;">3. Điều khoản Thuê xe</h4>
+                    <p><strong>Điều kiện:</strong> Có bằng lái hợp lệ, đủ 18 tuổi trở lên. Xuất trình CCCD/Hộ chiếu khi nhận xe.<br>
+                    <strong>Đặt xe:</strong> Sau khi đặt, khách nhận xác nhận qua email với thông tin chi tiết.<br>
+                    <strong>Thanh toán:</strong> Hoàn thành thanh toán trước khi nhận xe. Chấp nhận VNPay, thẻ tín dụng/ghi nợ.</p>
+                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                    <h4 style="color:#b59349; margin:0 0 6px;">4. Sử dụng Xe</h4>
+                    <p><strong>An toàn:</strong> Tuân thủ luật giao thông, đội mũ bảo hiểm khi lái xe.<br>
+                    <strong>Bảo quản:</strong> Chịu trách nhiệm xe suốt thời gian thuê. Hư hại phải báo cáo ngay.<br>
+                    <strong>Trả xe:</strong> Đúng giờ, đúng địa điểm. <strong>Trả muộn bị tính phí thêm.</strong></p>
+                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                    <h4 style="color:#b59349; margin:0 0 6px;">5. Bảo hiểm &amp; Trách nhiệm</h4>
+                    <p><strong>Bảo hiểm:</strong> SmartRide cung cấp bảo hiểm cơ bản cho xe thuê.<br>
+                    <strong>Trách nhiệm:</strong> Người thuê chịu trách nhiệm pháp lý với mọi hành động khi sử dụng xe.</p>
+                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                    <h4 style="color:#b59349; margin:0 0 6px;">6. Hủy Bỏ &amp; Hoàn Tiền</h4>
+                    <p><strong>Hủy miễn phí:</strong> Trước 24 giờ so với thời gian nhận xe.<br>
+                    <strong>Hoàn tiền:</strong> Xử lý trong vòng <strong>7 ngày làm việc</strong> sau khi xác nhận hủy.</p>
+                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                    <h4 style="color:#b59349; margin:0 0 6px;">7. Quyền riêng tư</h4>
+                    <p>SmartRide cam kết bảo vệ thông tin cá nhân và không chia sẻ cho bên thứ ba ngoài mục đích dịch vụ.</p>
+                    <hr style="border:none; border-top:1px solid #f0e4b8; margin:14px 0;">
+                    <h4 style="color:#b59349; margin:0 0 6px;">8. Liên hệ</h4>
+                    <p>Mọi thắc mắc về điều khoản, vui lòng liên hệ qua email hoặc số điện thoại trên website. Chi tiết đầy đủ tại <a href="policies.jsp" target="_blank" style="color:#b59349; font-weight:600;">trang Chính sách</a>.</p>
+                </div>
+                <div style="padding:14px 24px; border-top:1px solid #f0e4b8; display:flex; justify-content:flex-end; gap:10px; background:#fafafa;">
+                    <button type="button" onclick="document.getElementById('terms-modal').style.display='none'"
+                        style="padding:10px 20px; background:#f3f4f6; border:none; border-radius:8px; font-size:14px; cursor:pointer; color:#555; font-weight:600;">Đóng</button>
+                    <button type="button" onclick="document.getElementById('daily-checkbox-term').checked=true; document.getElementById('terms-modal').style.display='none'; if(typeof toggleNextButton==='function') toggleNextButton();"
+                        style="padding:10px 24px; background:#b59349; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer;">✓ Đã đọc &amp; Đồng ý</button>
+                </div>
+            </div>
         </div>
 
         <!-- JS -->
@@ -2824,68 +2945,77 @@
                             changePrice();
                            
                        }
-                                              if(currentIndex === 5){
-                           var finishButton = document.querySelector('.wizard .actions a[href="#finish"]');
-                           if (finishButton) finishButton.style.display = 'none';
-                           
-                           // ===== SEPAY QR LOGIC =====
-                           var dataH2 = document.getElementById('dataInput');
-                           var rawAmount = dataH2 ? dataH2.textContent.replace(/[^0-9]/g, '').trim() : '0';
-                           var amount = parseInt(rawAmount) || 0;
-                           
-                           if (!window._sepayBookingId) {
-                               window._sepayBookingId = 'BK' + Date.now();
-                           }
-                           var bookingId = window._sepayBookingId;
-                           
-                           document.getElementById('sepay-placeholder').style.display = 'none';
-                           document.getElementById('sepay-payment-section').style.display = 'block';
-                           
-                           document.getElementById('sepay-transfer-note').textContent = bookingId;
-                           document.getElementById('sepay-amount-text').textContent = amount.toLocaleString('vi-VN') + ' ₫';
-                           
-                           var qrUrl = 'https://qr.sepay.vn/img?bank=VCB&acc=1037077133&template=compact&amount=' + amount + '&des=' + encodeURIComponent(bookingId);
-                           document.getElementById('sepay-qr-img').src = qrUrl;
-                           
-                           if (typeof BookingHandler === 'function') {
-                               BookingHandler({ action: 'create_only', bookingId: bookingId });
-                           }
-                           
-                           if (window.sepayInterval) clearInterval(window.sepayInterval);
-                           if (window.sepayPollInterval) clearInterval(window.sepayPollInterval);
-                           
-                           var timeLeft = 10 * 60;
-                           var countdownEl = document.getElementById('sepay-countdown');
-                           
-                           window.sepayInterval = setInterval(function() {
-                               timeLeft--;
-                               var min = Math.floor(timeLeft / 60);
-                               var sec = timeLeft % 60;
-                               if (countdownEl) countdownEl.textContent = String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
-                               if (timeLeft <= 60 && countdownEl) countdownEl.style.color = '#dc2626';
-                               if (timeLeft <= 0) {
-                                   clearInterval(window.sepayInterval);
-                                   clearInterval(window.sepayPollInterval);
-                                   var st = document.getElementById('sepay-status');
-                                   if (st) { st.innerHTML = '❌ Hết thời gian thanh toán.'; st.style.background = '#fee2e2'; st.style.color = '#dc2626'; }
-                               }
-                           }, 1000);
-                           
-                           var ctxPath = '${pageContext.request.contextPath}';
-                           window.sepayPollInterval = setInterval(function() {
-                               fetch(ctxPath + '/CheckPaymentStatus?bookingId=' + bookingId)
-                                   .then(function(r) { return r.json(); })
-                                   .then(function(d) {
-                                       if (d.paid === true) {
-                                           clearInterval(window.sepayInterval);
-                                           clearInterval(window.sepayPollInterval);
-                                           var st = document.getElementById('sepay-status');
-                                           if (st) { st.innerHTML = '✅ Thanh toán thành công! Đang chuyển hướng...'; st.style.background = '#dcfce7'; st.style.color = '#16a34a'; }
-                                           setTimeout(function() { window.location.href = ctxPath + '/bookingHistory'; }, 2000);
-                                       }
-                                   }).catch(function() {});
-                           }, 5000);
-                       }
+                        if(currentIndex === 5){
+                             var finishButton = document.querySelector('.wizard .actions a[href="#finish"]');
+                             if (finishButton) finishButton.style.display = 'none';
+                             
+                             document.getElementById('payment-method-container').style.display = 'flex';
+                             document.getElementById('sepay-payment-section').style.display = 'none';
+
+                             // Reset lại nút xác nhận (tránh kẹt ở trạng thái "Đang xử lý...")
+                             var paymentBtn = document.querySelector('#payment-method-container button');
+                             if (paymentBtn) {
+                                 paymentBtn.innerHTML = 'Xác nhận thanh toán';
+                                 paymentBtn.style.opacity = '1';
+                                 paymentBtn.style.pointerEvents = 'auto';
+                             }
+
+                             // Tính ngay số tiền cọc — không chờ timeout
+                             (function() {
+                                 // Thử đọc từ dataInput (bước Xác nhận đã tính sẵn)
+                                 var dataEl = document.getElementById('dataInput');
+                                 var summaryAmt = document.getElementById('deposit-summary-amount');
+                                 var summaryLbl = document.getElementById('deposit-summary-label');
+                                 if (!summaryAmt) return;
+
+                                 var amt = 0;
+                                 var lbl = '';
+
+                                 if (dataEl) {
+                                     var raw = dataEl.getAttribute('data-amount');
+                                     if (raw) amt = parseInt(raw) || 0;
+                                     try {
+                                         var h4 = dataEl.parentElement ? dataEl.parentElement.querySelector('h4') : null;
+                                         if (h4) lbl = h4.textContent.trim();
+                                     } catch(e) {}
+                                 }
+
+                                 // Fallback: tính thẳng từ ngày + giá nếu dataInput chưa có
+                                 if (amt === 0) {
+                                     var pickup = document.getElementById('pickupdate') ? document.getElementById('pickupdate').value : '';
+                                     var ret    = document.getElementById('returndate') ? document.getElementById('returndate').value : '';
+                                     if (pickup && ret) {
+                                         var s = new Date(pickup), e = new Date(ret);
+                                         var days = Math.max(1, Math.ceil((e - s) / (1000*60*60*24)));
+                                         var rate = days >= 30 ? 0.20 : (days >= 7 ? 0.30 : 0.50);
+                                         var pct  = Math.round(rate * 100);
+                                         var plan = days >= 30 ? 'theo tháng' : (days >= 7 ? 'theo tuần' : 'theo ngày');
+
+                                         // Tổng tiền từ các xe đã chọn
+                                         var total = 0;
+                                         document.querySelectorAll('#savedBikeContainer .form-box').forEach(function(fb) {
+                                             var qty = parseInt((fb.querySelector('.form-check-select') || {}).value) || 0;
+                                             var priceEl = days >= 30 ? fb.querySelector('.price-month')
+                                                         : days >= 7  ? fb.querySelector('.price-week')
+                                                         : fb.querySelector('.price-day');
+                                             var price = priceEl ? (parseInt(priceEl.dataset.rawprice) || 0) : 0;
+                                             total += qty * price * days;
+                                         });
+                                         // Voucher
+                                         var disc = parseInt((document.getElementById('applied-discount') || {}).value) || 0;
+                                         var final = Math.max(0, total - disc);
+                                         amt = Math.round(final * rate);
+                                         lbl = 'Cần đặt cọc (' + pct + '% ' + plan + ')';
+                                     }
+                                 }
+
+                                 if (amt > 0) {
+                                     summaryAmt.textContent = '₫' + amt.toLocaleString('vi-VN');
+                                     if (lbl) summaryLbl.textContent = lbl;
+                                 }
+                             })();
+                         }
+
                        function changePrice(){
                             var quantityDay = Math.max(1, Math.ceil(differenceInDays));
                             const priceDayElements = document.querySelectorAll('.price-day');
@@ -3255,6 +3385,22 @@
                             const finalAmount = Math.max(0, totalAmount - appliedDiscount);
 
                             let totalFooterHtml = '';
+                            // Tính % cọc theo gói thuê
+                            const rentalDaysForDeposit = Math.max(1, Math.ceil(differenceInDays));
+                            let depositRate, depositPlanLabel;
+                            if (rentalDaysForDeposit >= 30) {
+                                depositRate = 0.20; // 20% cho thuê theo tháng
+                                depositPlanLabel = 'theo tháng';
+                            } else if (rentalDaysForDeposit >= 7) {
+                                depositRate = 0.30; // 30% cho thuê theo tuần
+                                depositPlanLabel = 'theo tuần';
+                            } else {
+                                depositRate = 0.50; // 50% cho thuê theo ngày
+                                depositPlanLabel = 'theo ngày';
+                            }
+                            const depositPercent = Math.round(depositRate * 100);
+                            const depositAmount = Math.round(finalAmount * depositRate);
+
                             if (appliedDiscount > 0) {
                                 // Giá gốc gạch ngang + dòng giảm + giá sau giảm
                                 totalFooterHtml = `
@@ -3267,15 +3413,23 @@
                                         <span style="font-size:15px; color:#16a34a; font-weight:700;">-₫` + appliedDiscount.toLocaleString() + `</span>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:1px dashed #e0c87a;">
-                                        <h4 style="margin:0; font-size:18px; color:#333; font-weight:700;">Tổng thanh toán:</h4>
-                                        <h2 id="dataInput" style="margin:0; font-size:26px; color:#b59349; font-weight:700;">₫` + finalAmount.toLocaleString() + `</h2>
+                                        <h4 style="margin:0; font-size:16px; color:#333; font-weight:600;">Tổng thanh toán:</h4>
+                                        <h4 style="margin:0; font-size:16px; color:#333; font-weight:600;">₫` + finalAmount.toLocaleString() + `</h4>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:2px solid #b59349;">
+                                        <h4 style="margin:0; font-size:18px; color:#333; font-weight:700;">Cần đặt cọc (` + depositPercent + `% ` + depositPlanLabel + `):</h4>
+                                        <h2 id="dataInput" data-amount="` + depositAmount + `" style="margin:0; font-size:26px; color:#b59349; font-weight:700;">₫` + depositAmount.toLocaleString('vi-VN') + `</h2>
                                     </div>
                                 `;
                             } else {
                                 totalFooterHtml = `
-                                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:2px solid #e0c87a;">
-                                        <h4 style="margin:0; font-size:18px; color:#333;">Tổng thanh toán:</h4>
-                                        <h2 id="dataInput" style="margin:0; font-size:26px; color:#b59349; font-weight:700;">₫` + finalAmount.toLocaleString() + `</h2>
+                                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:1px dashed #e0c87a;">
+                                        <h4 style="margin:0; font-size:16px; color:#333; font-weight:600;">Tổng thanh toán:</h4>
+                                        <h4 style="margin:0; font-size:16px; color:#333; font-weight:600;">₫` + finalAmount.toLocaleString() + `</h4>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:2px solid #b59349;">
+                                        <h4 style="margin:0; font-size:18px; color:#333; font-weight:700;">Cần đặt cọc (` + depositPercent + `% ` + depositPlanLabel + `):</h4>
+                                        <h2 id="dataInput" data-amount="` + depositAmount + `" style="margin:0; font-size:26px; color:#b59349; font-weight:700;">₫` + depositAmount.toLocaleString('vi-VN') + `</h2>
                                     </div>
                                 `;
                             }
@@ -3756,7 +3910,147 @@
                 toggleBikeNextButton();
             }
             
-           
+            function confirmPaymentMethod() {
+            // Xóa thông báo lỗi AI cũ (nếu có) khi người dùng thử lại
+            var aiErrBox = document.getElementById('ai-verify-error-box');
+            if (aiErrBox) { aiErrBox.innerHTML = ''; aiErrBox.style.display = 'none'; }
+
+            var method = document.querySelector('input[name="payment_method"]:checked').value;
+            var dataH2 = document.getElementById('dataInput');
+            // Ưu tiên đọc từ data-amount (số nguyên thuần, không bị ảnh hưởng locale)
+            // Fallback: parse từ text nếu không có attribute
+            var amount = 0;
+            if (dataH2) {
+                var attrAmt = dataH2.getAttribute('data-amount');
+                if (attrAmt && !isNaN(parseInt(attrAmt))) {
+                    amount = parseInt(attrAmt);
+                } else {
+                    amount = parseInt(dataH2.textContent.replace(/[^0-9]/g, '').trim()) || 0;
+                }
+            }
+
+            var btn = document.querySelector('#payment-method-container button');
+            if(btn) {
+                btn.innerHTML = 'Đang xử lý...';
+                btn.style.opacity = '0.7';
+                btn.style.pointerEvents = 'none';
+            }
+
+            var onSuccess = function(response) {
+                document.getElementById('payment-method-container').style.display = 'none';
+                if (method === 'cash') {
+                    window.location.href = 'home';
+                } else {
+                    if (!window._sepayBookingId) window._sepayBookingId = 'BK' + Date.now();
+                    var bookingId = window._sepayBookingId;
+                    
+                    var sepaySection = document.getElementById('sepay-payment-section');
+                    if (sepaySection) sepaySection.style.display = 'block';
+                    
+                    var pLabel = document.getElementById('sepay-placeholder');
+                    if (pLabel) pLabel.style.display = 'none';
+                    
+                    document.getElementById('sepay-transfer-note').textContent = bookingId;
+                    document.getElementById('sepay-amount-text').textContent = amount.toLocaleString('vi-VN') + ' ₫';
+                    
+                    var qrUrl = 'https://qr.sepay.vn/img?bank=VCB&acc=1037077133&template=compact&amount=' + amount + '&des=' + encodeURIComponent(bookingId);
+                    document.getElementById('sepay-qr-img').src = qrUrl;
+                    
+                    if (window.sepayInterval) clearInterval(window.sepayInterval);
+                    if (window.sepayPollInterval) clearInterval(window.sepayPollInterval);
+                    
+                    var timeLeft = 10 * 60;
+                    var countdownEl = document.getElementById('sepay-countdown');
+                    
+                    window.sepayInterval = setInterval(function() {
+                        timeLeft--;
+                        var min = Math.floor(timeLeft / 60);
+                        var sec = timeLeft % 60;
+                        if (countdownEl) countdownEl.textContent = String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+                        if (timeLeft <= 60 && countdownEl) countdownEl.style.color = '#dc2626';
+                        if (timeLeft <= 0) {
+                            clearInterval(window.sepayInterval);
+                            clearInterval(window.sepayPollInterval);
+                            var st = document.getElementById('sepay-status');
+                            if (st) { st.innerHTML = '❌ Hết thời gian thanh toán.'; st.style.background = '#fee2e2'; st.style.color = '#dc2626'; }
+                        }
+                    }, 1000);
+                    
+                    var ctxPath = '${pageContext.request.contextPath}';
+                    window.sepayPollInterval = setInterval(function() {
+                        fetch(ctxPath + '/CheckPaymentStatus?bookingId=' + bookingId)
+                            .then(function(r) { return r.json(); })
+                            .then(function(d) {
+                                if (d.paid === true) {
+                                    clearInterval(window.sepayInterval);
+                                    clearInterval(window.sepayPollInterval);
+                                    var st = document.getElementById('sepay-status');
+                                    if (st) { st.innerHTML = '✅ Thanh toán thành công! Đang chuyển hướng...'; st.style.background = '#dcfce7'; st.style.color = '#16a34a'; }
+                                    setTimeout(function() { window.location.href = ctxPath + '/bookingHistory'; }, 2000);
+                                }
+                            }).catch(function() {});
+                    }, 5000);
+                }
+            };
+
+            var onError = function(errMsg, aiErrorData) {
+                if(btn) {
+                    btn.innerHTML = 'Xác nhận thanh toán';
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                }
+                // Nếu là lỗi AI với chi tiết từng trường
+                if (aiErrorData && aiErrorData.fieldErrors && aiErrorData.fieldErrors.length > 0) {
+                    var errHtml = '<div style="background:#fff; border:2px solid #dc2626; border-radius:14px; overflow:hidden; margin-top:16px; box-shadow:0 4px 20px rgba(220,38,38,0.15);">';
+                    errHtml += '<div style="background:#dc2626; padding:14px 18px; color:#fff; font-weight:800; font-size:15px; display:flex; align-items:center; gap:10px;">';
+                    errHtml += '<i class="fas fa-shield-alt"></i> Xác thực CCCD/CMND thất bại</div>';
+                    errHtml += '<div style="padding:16px 18px;">';
+                    errHtml += '<p style="color:#7f1d1d; font-size:13px; margin:0 0 12px 0; font-weight:600;">Hệ thống AI phát hiện thông tin <strong>không khớp</strong> với ảnh giấy tờ. Vui lòng kiểm tra và sửa lại:</p>';
+                    errHtml += '<ul style="margin:0; padding-left:18px; list-style:none;">';
+                    aiErrorData.fieldErrors.forEach(function(fe) {
+                        errHtml += '<li style="background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:10px 14px; margin-bottom:8px; color:#991b1b; font-size:13px; font-weight:600;">' + fe + '</li>';
+                    });
+                    errHtml += '</ul>';
+                    if (!aiErrorData.idMatch) {
+                        errHtml += '<div style="margin-top:10px; padding:10px; background:#fff7ed; border-radius:8px; border:1px solid #fed7aa; color:#9a3412; font-size:12px;"><i class="fas fa-info-circle me-1"></i>Vui lòng kiểm tra lại số CCCD/CMND bạn đã nhập ở bước 4.</div>';
+                    }
+                    if (!aiErrorData.nameMatch) {
+                        errHtml += '<div style="margin-top:8px; padding:10px; background:#fff7ed; border-radius:8px; border:1px solid #fed7aa; color:#9a3412; font-size:12px;"><i class="fas fa-info-circle me-1"></i>Vui lòng kiểm tra lại Họ và tên bạn đã nhập ở bước 4 (kể cả dấu, chính tả).</div>';
+                    }
+                    if (aiErrorData.doeValid === false) {
+                        errHtml += '<div style="margin-top:8px; padding:10px; background:#fff7ed; border-radius:8px; border:1px solid #fed7aa; color:#9a3412; font-size:12px;"><i class="fas fa-calendar-times me-1"></i>CCCD/CMND đã hết hạn. Vui lòng dùng giấy tờ còn hiệu lực.</div>';
+                    }
+                    errHtml += '</div></div>';
+
+                    // Hiển thị trong phần step 5 thay vì alert popup
+                    var aiErrBox = document.getElementById('ai-verify-error-box');
+                    if (aiErrBox) {
+                        aiErrBox.innerHTML = errHtml;
+                        aiErrBox.style.display = 'block';
+                        aiErrBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    } else if (typeof Swal !== 'undefined') {
+                        var listHtml = aiErrorData.fieldErrors.map(function(e) { return '<li style="text-align:left; margin-bottom:6px;">' + e + '</li>'; }).join('');
+                        Swal.fire({ icon: 'error', title: 'Xác thực CCCD thất bại', html: '<ul>' + listHtml + '</ul>' });
+                    }
+                } else {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({ icon: 'error', title: 'Lỗi xác thực', text: errMsg });
+                    } else {
+                        alert('Lỗi: ' + errMsg);
+                    }
+                }
+            };
+
+            if (method === 'cash') {
+                BookingHandler({ action: 'finish', method: 'CASH', amount: amount, time: formatDateVN() }, onSuccess, onError);
+            } else {
+                if (!window._sepayBookingId) {
+                    window._sepayBookingId = 'BK' + Date.now();
+                }
+                var bookingId = window._sepayBookingId;
+                BookingHandler({ action: 'create_only', bookingId: bookingId, method: 'SEPAY', amount: amount, time: formatDateVN() }, onSuccess, onError);
+            }
+        }
 
         window.addEventListener('message', (event) => {
             if (event.data === 'activateOverlay') {
@@ -3812,7 +4106,18 @@
 
             return accessories;
         }
-        function BookingHandler(dataReturn) {
+        function formatDateVN() {
+            var d = new Date();
+            var yyyy = d.getFullYear();
+            var mm = String(d.getMonth() + 1).padStart(2, '0');
+            var dd = String(d.getDate()).padStart(2, '0');
+            var hh = String(d.getHours()).padStart(2, '0');
+            var mi = String(d.getMinutes()).padStart(2, '0');
+            var ss = String(d.getSeconds()).padStart(2, '0');
+            return yyyy + mm + dd + hh + mi + ss;
+        }
+
+        function BookingHandler(dataReturn, onSuccess, onError) {
             var formData = new FormData();
             
 //            alert("Thanh toán thành công với mã giao dịch: " + data.txnRef);
@@ -3844,10 +4149,7 @@
 
             // Tính số ngày chênh lệch
             const differenceInTime = returnD.getTime() - pickupD.getTime();
-            const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-            
-             // Quantity là số ngày chênh lệch giữa ngày trả và ngày pickup
-            const quantityDay = Math.max(1, Math.ceil(differenceInDays));
+            const quantityDay = differenceInTime / (1000 * 3600 * 24);
             
             const bikeDetails = [];
 
@@ -3899,10 +4201,18 @@
                 bikeDetails: bikeDetails,
                 accessories: accessoriesData,
                 total : total,
-                amount: dataReturn.amount,
-                paymenttime: dataReturn.time,
+                amount: dataReturn && dataReturn.amount ? dataReturn.amount : parseInt(document.getElementById("dataInput").textContent.replace(/[^0-9]/g, '').trim()) || 0,
+                paymentMethod: dataReturn && dataReturn.method ? dataReturn.method : 'SEPAY',
+                paymenttime: dataReturn && dataReturn.time ? dataReturn.time : formatDateVN(),
                 voucherId: document.getElementById('applied-voucher-id').value || '0'
             };
+            
+            if (dataReturn && dataReturn.action) {
+                formData.append("action", dataReturn.action);
+            }
+            if (dataReturn && dataReturn.bookingId) {
+                data.bookingId = dataReturn.bookingId;
+            }
             
              // Convert object to JSON and append to formData
             formData.append("jsonData", JSON.stringify(data));
@@ -3927,12 +4237,21 @@
                 contentType: false,
                 success: function(response) {
                     console.log("Data sent successfully:", response);
+                    if (response && (response.status === 'error' || response.status === 'ai_error')) {
+                        if (typeof onError === 'function') onError(response.message || "Lỗi khi xử lý", response);
+                        return;
+                    }
+                    if (typeof onSuccess === 'function') {
+                        onSuccess(response);
+                    } else if (!dataReturn || dataReturn.action !== 'create_only') {
+                        window.location.href = 'home';
+                    }
                 },
                 error: function(xhr, status, error) {
                     console.error("Error sending data:", error);
+                    if (typeof onError === 'function') onError("Lỗi kết nối máy chủ");
                 }
             });
-            window.location.href = 'home';
         }
 
         // Nếu dữ liệu đã có sẵn trong LocalStorage khi trang được tải lại
@@ -4007,7 +4326,7 @@
             const btn = document.getElementById('apply-voucher-btn');
             if (btn) {
                 btn.textContent = 'Áp dụng';
-                btn.style.background = 'linear-gradient(135deg, #02b8af, #046fd4)';
+                btn.style.background = '#b59349';
             }
         }
         </script>
@@ -4078,29 +4397,81 @@
         </script>
 
         <script>
-        // ===== GÓI TUẦN / THÁNG QUICK SELECT =====
+        // ===== GÓI TUẦN / THÁNG QUICK SELECT + REAL-TIME PRICING =====
         window.activePackage = null;
 
+        // ─── Hàm tính giá real-time khi ngày thay đổi ─────────────────────────────
+        window.updatePricingFromDates = function() {
+            var pickupInput = document.getElementById('pickupdate');
+            var returnInput = document.getElementById('returndate');
+            if (!pickupInput || !returnInput || !pickupInput.value || !returnInput.value) return;
+
+            var start = new Date(pickupInput.value);
+            var end   = new Date(returnInput.value);
+            if (isNaN(start) || isNaN(end) || end <= start) return;
+
+            var diffDays = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+
+            // 1. Cập nhật hiển thị giá ở bước 2 (price-day / price-week / price-month)
+            var priceDayEls   = document.querySelectorAll('.price-day');
+            var priceWeekEls  = document.querySelectorAll('.price-week');
+            var priceMonthEls = document.querySelectorAll('.price-month');
+
+            priceDayEls.forEach(function(el)   { el.style.display = 'none'; el.classList.remove('price-current'); });
+            priceWeekEls.forEach(function(el)  { el.style.display = 'none'; el.classList.remove('price-current'); });
+            priceMonthEls.forEach(function(el) { el.style.display = 'none'; el.classList.remove('price-current'); });
+
+            if (diffDays >= 30) {
+                priceMonthEls.forEach(function(el) { el.style.display = 'inline-block'; el.classList.add('price-current'); });
+            } else if (diffDays >= 7) {
+                priceWeekEls.forEach(function(el)  { el.style.display = 'inline-block'; el.classList.add('price-current'); });
+            } else {
+                priceDayEls.forEach(function(el)   { el.style.display = 'inline-block'; el.classList.add('price-current'); });
+            }
+
+            // 2. Cập nhật badge nút tuần/tháng
+            if (diffDays === 7)       { window.activePackage = 'week';  updateQuickButtonsStyle(7); }
+            else if (diffDays === 30) { window.activePackage = 'month'; updateQuickButtonsStyle(30); }
+            else                      { window.activePackage = null;    updateQuickButtonsStyle(0); }
+
+            // 3. Rebuild bảng tổng tiền bước 5 nếu đang hiển thị (real-time deposit recalc)
+            if (typeof window.buildStep5Table === 'function') {
+                var step5El = document.getElementById('form-box-total');
+                if (step5El && step5El.closest('.body') && step5El.closest('.body').style.display !== 'none') {
+                    window.buildStep5Table();
+                }
+            }
+        };
+
+        // ─── Quick select ngày ──────────────────────────────────────────────────────
         function setQuickReturnDate(days, autoEvent) {
             var pickupInput = document.getElementById('pickupdate');
             var returnInput = document.getElementById('returndate');
-            if (!pickupInput.value) {
+            if (!pickupInput || !pickupInput.value) {
                 alert('Vui lòng chọn Ngày nhận xe trước!');
                 return;
             }
-            
-            // Toggle tắt nếu click lại nút đang chọn
+
+            // Toggle tắt nếu click lại nút đang chọn → reset về ngày nhận + 1 (gói ngày)
             if (!autoEvent) {
                 var clickedPackage = days === 7 ? 'week' : (days === 30 ? 'month' : null);
                 if (window.activePackage === clickedPackage) {
                     window.activePackage = null;
                     updateQuickButtonsStyle(0);
-                    return; // Không đổi ngày trả nữa
+                    // Reset ngày trả về pickup + 1 ngày
+                    var resetDate = new Date(pickupInput.value);
+                    resetDate.setDate(resetDate.getDate() + 1);
+                    var ry = resetDate.getFullYear();
+                    var rm = String(resetDate.getMonth() + 1).padStart(2, '0');
+                    var rd = String(resetDate.getDate()).padStart(2, '0');
+                    returnInput.value = ry + '-' + rm + '-' + rd;
+                    returnInput.dispatchEvent(new Event('change'));
+                    return;
                 } else {
                     window.activePackage = clickedPackage;
                 }
             }
-            
+
             var date = new Date(pickupInput.value);
             date.setDate(date.getDate() + days);
             var yyyy = date.getFullYear();
@@ -4112,59 +4483,46 @@
         }
 
         function updateQuickButtonsStyle(days) {
-            var btnWeek = document.getElementById('btn-quick-week');
+            var btnWeek  = document.getElementById('btn-quick-week');
             var btnMonth = document.getElementById('btn-quick-month');
             if (btnWeek) {
-                if (days === 7) {
-                    btnWeek.style.background = '#b59349';
-                    btnWeek.style.color = '#fff';
-                } else {
-                    btnWeek.style.background = '#fff';
-                    btnWeek.style.color = '#b59349';
-                }
+                btnWeek.style.background = (days === 7)  ? '#b59349' : '#fff';
+                btnWeek.style.color      = (days === 7)  ? '#fff'    : '#b59349';
             }
             if (btnMonth) {
-                if (days === 30) {
-                    btnMonth.style.background = '#b59349';
-                    btnMonth.style.color = '#fff';
-                } else {
-                    btnMonth.style.background = '#fff';
-                    btnMonth.style.color = '#b59349';
-                }
+                btnMonth.style.background = (days === 30) ? '#b59349' : '#fff';
+                btnMonth.style.color      = (days === 30) ? '#fff'    : '#b59349';
             }
         }
 
+        // ─── Gắn listener real-time vào input ngày ─────────────────────────────────
         function bindPickupListener() {
             var pickupInput = document.getElementById('pickupdate');
             var returnInput = document.getElementById('returndate');
             if (!pickupInput || pickupInput._pkBound) return;
             pickupInput._pkBound = true;
 
-            // Khi đổi ngày nhận xe: nếu đang chọn gói tuần/tháng thì tự cập nhật ngày trả
+            // Đổi ngày nhận: nếu đang bật gói thì cập nhật ngày trả theo gói, sau đó tính lại giá
             pickupInput.addEventListener('change', function() {
                 if (window.activePackage === 'week') {
                     setQuickReturnDate(7, true);
                 } else if (window.activePackage === 'month') {
                     setQuickReturnDate(30, true);
+                } else {
+                    // Không có gói → chỉ recalc giá theo ngày hiện tại
+                    window.updatePricingFromDates();
                 }
             });
 
-            // Khi đổi ngày trả thủ công: detect xem có khớp gói nào không để highlight nút
+            // Đổi ngày trả: tính lại giá real-time
             if (returnInput) {
                 returnInput.addEventListener('change', function() {
-                    if (pickupInput.value && returnInput.value) {
-                        var start = new Date(pickupInput.value);
-                        var end = new Date(returnInput.value);
-                        var diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-                        if (diffDays === 7) { window.activePackage = 'week'; updateQuickButtonsStyle(7); }
-                        else if (diffDays === 30) { window.activePackage = 'month'; updateQuickButtonsStyle(30); }
-                        else { window.activePackage = null; updateQuickButtonsStyle(0); }
-                    }
+                    window.updatePricingFromDates();
                 });
             }
         }
 
-        // Gắn listener ngay khi DOM sẵn sàng (dù script chạy sớm hay muộn)
+        // Gắn listener ngay khi DOM sẵn sàng
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', bindPickupListener);
         } else {

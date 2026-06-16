@@ -64,7 +64,7 @@ public class ContactDAO implements Serializable {
         PreparedStatement stm;
         ResultSet rs;
         try {
-            String sql = "select * from contact";
+            String sql = "select * from \"Contact\"";
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
             while (rs.next()) {  

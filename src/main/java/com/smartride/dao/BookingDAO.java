@@ -467,4 +467,31 @@ public class BookingDAO {
 //        System.out.println(bookingDAO.getBookingsByUsername("minhtuns2311"));
         System.out.println(bookingDAO.searchBookingbyBookingId("BOOK000004"));
     }
+
+    /**
+     * Lấy BookingID gần nhất của khách đã thuê và đã trả xe đó
+     * Dùng để kiểm tra xem khách có quyền viết feedback không
+     */
+    public String getCompletedBookingIdForMotorcycle(int accountId, String motorcycleId) {
+        String sql = "SELECT b.\"BookingID\" FROM \"Booking\" b " +
+                     "JOIN \"Customer\" c ON b.\"CustomerID\" = c.\"CustomerID\" " +
+                     "JOIN \"Booking Detail\" bd ON b.\"BookingID\" = bd.\"BookingID\" " +
+                     "JOIN \"MotorcycleDetail\" md ON bd.\"MotorcycleDetailID\" = md.\"MotorcycleDetailID\" " +
+                     "LEFT JOIN \"Feedback\" f ON f.\"BookingID\" = b.\"BookingID\" " +
+                     "WHERE c.\"AccountID\" = ? AND md.\"MotorcycleID\" = ? " +
+                     "AND b.\"StatusBooking\" = N'Đã xác nhận' AND b.\"DeliveryStatus\" = N'Đã trả' " +
+                     "AND f.\"FeedbackID\" IS NULL " +
+                     "ORDER BY b.\"BookingDate\" DESC LIMIT 1";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, accountId);
+            ps.setString(2, motorcycleId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getString("BookingID");
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }
+

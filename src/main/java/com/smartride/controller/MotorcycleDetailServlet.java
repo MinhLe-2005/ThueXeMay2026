@@ -45,6 +45,10 @@ public class MotorcycleDetailServlet extends HttpServlet {
         request.getSession().setAttribute("listM", listM);
         request.getSession().setAttribute("listP", listP);
         
+        // Fetch feedbacks for this motorcycle
+        List<com.smartride.dto.Feedback> feedbacks = com.smartride.dao.FeedbackDAO.getInstance().getFeedbacksByMotorcycleId(motorcycleId);
+        request.setAttribute("feedbacks", feedbacks);
+        
         request.getRequestDispatcher("motorbikeDetails.jsp").forward(request, response);
     }
 

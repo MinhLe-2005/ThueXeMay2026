@@ -1,11 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.smartride.dao.AccountDAO" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="com.smartride.util.DBContext" %>
 <%@ page import="java.io.*" %>
 <!DOCTYPE html>
 <html>
-<head><title>Test Update</title></head>
+<head>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png"><title>Test Update</title></head>
 <body>
 <%
     out.println("<h2>Testing Update</h2>");

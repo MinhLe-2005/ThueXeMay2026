@@ -10,6 +10,7 @@
 <html lang="en">
 
     <head>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý thuê xe</title>
@@ -369,8 +370,10 @@
                                                         <th scope="col">ID</th>
                                                         <th scope="col">Ngày đặt</th>
                                                         <th scope="col">Thông tin xe</th>
+                                                        <th scope="col">Trạng thái đơn</th>
                                                         <th scope="col">Trạng thái giao</th>
                                                         <th scope="col">Giá</th>
+                                                        <th scope="col">Thanh toán</th>
                                                         <th scope="col">Thao tác</th>
 
                                                     </tr>
@@ -381,8 +384,10 @@
                                                         com.smartride.dto.Booking b = (com.smartride.dto.Booking) pageContext.getAttribute("listB");
                                                         com.smartride.dto.Account acc = com.smartride.dao.AccountDAO.getInstance().getAccountbyCustomerId(b.getCustomerID());
                                                         pageContext.setAttribute("acc", acc);
-                                                        com.smartride.dto.Customer cus = com.smartride.dao.CustomerDAO.getInstance().getCustomerById(b.getCustomerID());
+                                                        com.smartride.dto.Customer cus = com.smartride.dao.CustomerDAO.getInstance().getCustomerbyID(b.getCustomerID());
                                                         pageContext.setAttribute("cus", cus);
+                                                        com.smartride.dto.Payment pay = com.smartride.dao.PaymentDAO.getInstance().getPayMentbyBookingId(b.getBookingID());
+                                                        pageContext.setAttribute("pay", pay);
                                                     %>
                                                     <form action="manageBooking" method="post" id="form-update-${listB.bookingID}" class="row">
                                                         <input type="hidden" name="bookingID" value="${listB.bookingID}">
@@ -394,6 +399,18 @@
                                                                 <c:forEach var="plate" items="${plates}">
                                                                     <div style="font-size: 0.85rem; white-space: normal; text-align: left; line-height: 1.5; font-weight: 500;" class="badge bg-light text-dark border mb-1" title="${plate}">${plate}</div><br>
                                                                 </c:forEach>
+                                                            </td>
+                                                            <td class="text-center align-middle">
+                                                                    <c:when test="${listB.statusBooking == 'Đã xác nhận' || listB.statusBooking == 'Đã thanh toán'}">
+                                                                        <span class="badge bg-success border"><i class="fas fa-check-circle me-1"></i>${listB.statusBooking}</span>
+                                                                    </c:when>
+                                                                    <c:when test="${listB.statusBooking == 'Đã hủy'}">
+                                                                        <span class="badge bg-danger border"><i class="fas fa-times-circle me-1"></i>${listB.statusBooking}</span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span class="badge bg-warning text-dark border"><i class="fas fa-exclamation-circle me-1"></i>${listB.statusBooking}</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                             </td>
                                                             <td>
                                                                 <c:set var="statusClass" value="${listB.deliveryStatus == 'Đã trả' ? 'status-returned' : (listB.deliveryStatus == 'Đã giao' ? 'status-delivered' : (listB.deliveryStatus == 'Chưa giao' ? 'status-pending' : 'status-empty'))}" />
@@ -415,6 +432,14 @@
                                                                     <c:set var="total" value="${total + detail.totalPrice}"/>
                                                                 </c:forEach>
                                                                 <fmt:formatNumber value="${total}" type="number" pattern="#,##0" /> VNĐ
+                                                            </td>
+                                                            <td class="text-center align-middle">
+                                                                <c:if test="${empty pay}">
+                                                                    <span class="badge bg-warning text-dark border"><i class="fas fa-clock me-1"></i>Chờ TT</span>
+                                                                </c:if>
+                                                                <c:if test="${not empty pay}">
+                                                                    <span class="badge bg-success border"><i class="fas fa-check me-1"></i>Đã TT</span>
+                                                                </c:if>
                                                             </td>                                                        
                                                             <td class="text-center align-middle">
                                                                 <div class="d-flex align-items-center justify-content-center gap-2">
@@ -448,8 +473,15 @@
                                                                             data-cusPhone="${acc.phoneNumber}"
                                                                             data-cusEmail="${acc.email}"
                                                                             data-cusIdCard="${cus.identityCardImage}"
+                                                                            data-identityCard="${cus.identityCard}"
+                                                                            data-issuedOn="${cus.issuedOnDate}"
+                                                                            data-expDate="${cus.expDate}"
+                                                                            data-typeCard="${cus.typeCard}"
                                                                             data-customerId="searchCustomer?id=${listB.customerID}"
                                                                             data-cusId="${listB.customerID}"
+                                                                            data-paymentStatus="${pay != null ? pay.paymentStatus : ''}"
+                                                                            data-paymentMethod="${pay != null ? pay.paymentMethod : ''}"
+                                                                            data-paymentAmount="${pay != null ? pay.paymentAmount : '0'}"
                                                                             onclick="openUserModal(this)">
                                                                         <i class="fas ${buttonIcon} me-1"></i>${buttonText}
                                                                     </button>
@@ -622,9 +654,13 @@
                                                 <span style="color: #64748b; font-weight: 600; width: 160px; display: inline-block;"><i class="fas fa-info-circle text-slate-400 me-2" style="color:#94a3b8; width: 16px;"></i>Trạng thái đơn:</span>
                                                 <span id="modal-statusBooking"></span>
                                             </div>
-                                            <div style="margin-bottom: 0px; display: flex; align-items: baseline;">
+                                            <div style="margin-bottom: 16px; display: flex; align-items: baseline;">
                                                 <span style="color: #64748b; font-weight: 600; width: 160px; display: inline-block;"><i class="fas fa-truck text-slate-400 me-2" style="color:#94a3b8; width: 16px;"></i>Trạng thái giao xe:</span>
                                                 <span id="modal-deliveryStatus"></span>
+                                            </div>
+                                            <div style="margin-bottom: 0; display: flex; align-items: baseline;">
+                                                <span style="color: #64748b; font-weight: 600; width: 160px; display: inline-block;"><i class="fas fa-credit-card me-2" style="color:#94a3b8; width: 16px;"></i>Thanh toán:</span>
+                                                <span id="modal-paymentInfo" style="font-weight: 600;"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -677,10 +713,17 @@
 
                                     <!-- Xác nhận rồi -->
                                     <div id="confirmyes" style="display: none;">
-                                        <div class="text-center">
-                                            <button class="btn btn-success w-100 py-3" disabled style="font-weight: 700; border-radius: 8px; color: #065f46; background-color: #d1fae5; border: 1px solid #6ee7b7; cursor: not-allowed; opacity: 1; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1);">
-                                                <i class="fas fa-check-double me-2"></i> Đã xác nhận đơn hàng
-                                            </button>
+                                        <div class="row g-2">
+                                            <div class="col-12" id="approveInvoiceArea" style="display: none;">
+                                                <button type="button" class="btn btn-warning w-100 py-3" style="font-weight: 700; border-radius: 8px; color: #92400e; background-color: #fef3c7; border: 1px solid #fcd34d;" onclick="showApproveInvoiceModal()">
+                                                    <i class="fas fa-file-invoice-dollar me-2"></i> Duyệt hóa đơn
+                                                </button>
+                                            </div>
+                                            <div class="col-12" id="paidInvoiceArea" style="display: none;">
+                                                <button class="btn btn-success w-100 py-3" disabled style="font-weight: 700; border-radius: 8px; color: #065f46; background-color: #d1fae5; border: 1px solid #6ee7b7; cursor: not-allowed; opacity: 1; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1);">
+                                                    <i class="fas fa-check-circle me-2"></i> <span id="paidInvoiceLabel">Đã thanh toán</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -793,20 +836,106 @@
 
                 <!-- Modal thông tin khách hàng -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="customer-info-modal">
-                    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-                        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
-                            <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0;" class="modal-header d-flex align-items-center justify-content-between bg-white">
-                                <h5 class="modal-title" style="font-weight: 800; color: #1e293b; font-size: 16px; margin: 0;">Thông tin Khách hàng</h5>
-                                <button type="button" class="close" onclick="$('#customer-info-modal').modal('hide')" style="background: transparent; border: none; font-size: 20px; color: #94a3b8;">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                            <div style="padding: 20px 24px; border-bottom: 1px solid #e2e8f0; background: linear-gradient(135deg, #f8fafc, #fff); border-radius: 16px 16px 0 0;" class="modal-header d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-3">
+                                    <h5 class="modal-title" style="font-weight: 800; color: #1e293b; font-size: 18px; margin: 0;">
+                                        <i class="fas fa-id-card me-2" style="color: #3b82f6;"></i>Thông tin Khách hàng
+                                    </h5>
+                                    <span id="ai-badge-status" style="display:none;"></span>
+                                </div>
+                                <button type="button" class="close" onclick="$('#customer-info-modal').modal('hide')" style="background: transparent; border: none; font-size: 24px; color: #94a3b8;">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div style="padding: 24px;" class="modal-body bg-light">
-                                <div style="margin-bottom: 12px;"><strong style="color: #64748b; font-weight: 600;">Họ tên:</strong> <span id="cinfo-name" style="color: #0f172a; font-weight: 600;"></span></div>
-                                <div style="margin-bottom: 12px;"><strong style="color: #64748b; font-weight: 600;">Điện thoại:</strong> <span id="cinfo-phone" style="color: #0f172a; font-weight: 600;"></span></div>
-                                <div style="margin-bottom: 0px;"><strong style="color: #64748b; font-weight: 600;">Email:</strong> <span id="cinfo-email" style="color: #0f172a; font-weight: 600;"></span></div>
+                            <div style="padding: 24px;" class="modal-body">
+                                <!-- Thông tin cơ bản -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div style="background: #f8fafc; border-radius: 12px; padding: 16px; border: 1px solid #e2e8f0;">
+                                            <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;"><i class="fas fa-user me-1"></i>Thông tin liên hệ</div>
+                                            <div style="margin-bottom: 10px;"><span style="color:#64748b; font-size:13px;">Họ tên:</span><br><span id="cinfo-name" style="color:#0f172a; font-weight:700; font-size:15px;"></span></div>
+                                            <div style="margin-bottom: 10px;"><span style="color:#64748b; font-size:13px;">Điện thoại:</span><br><span id="cinfo-phone" style="color:#0f172a; font-weight:600;"></span></div>
+                                            <div><span style="color:#64748b; font-size:13px;">Email:</span><br><span id="cinfo-email" style="color:#0f172a; font-weight:600; word-break:break-all;"></span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div style="background: #f8fafc; border-radius: 12px; padding: 16px; border: 1px solid #e2e8f0;">
+                                            <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;"><i class="fas fa-id-card me-1"></i>Giấy tờ tùy thân</div>
+                                            <div style="margin-bottom: 10px;"><span style="color:#64748b; font-size:13px;">Loại giấy tờ:</span><br><span id="cinfo-typeCard" style="color:#0f172a; font-weight:700;"></span></div>
+                                            <div style="margin-bottom: 10px;"><span style="color:#64748b; font-size:13px;">Số CCCD/CMND:</span><br><span id="cinfo-idcardno" style="color:#0f172a; font-weight:700; font-size:15px; font-family:monospace; letter-spacing:1px;"></span></div>
+                                            <div class="row">
+                                                <div class="col-6"><span style="color:#64748b; font-size:13px;">Ngày cấp:</span><br><span id="cinfo-issuedon" style="color:#0f172a; font-weight:600;"></span></div>
+                                                <div class="col-6"><span style="color:#64748b; font-size:13px;">Ngày hết hạn:</span><br><span id="cinfo-expdate" style="color:#0f172a; font-weight:600;"></span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Ảnh CCCD -->
+                                <div class="mb-3">
+                                    <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display:flex; align-items:center; gap:8px;">
+                                        <i class="fas fa-images" style="color:#3b82f6;"></i>Ảnh giấy tờ (click để xem to)
+                                    </div>
+                                    <div id="cinfo-idcards" style="display: flex; gap: 12px; flex-wrap: wrap;"></div>
+                                </div>
+                                <!-- Kết quả AI xác thực -->
+                                <div id="ai-verify-section">
+                                    <div style="border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 4px;">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; display:flex; align-items:center; gap:6px;">
+                                                <i class="fas fa-robot" style="color:#8b5cf6;"></i> Xác thực bằng AI (FPT.AI OCR)
+                                            </div>
+                                            <button type="button" id="btn-verify-ai" onclick="verifyIdCardAI()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display:flex; align-items:center; gap:6px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                                <i class="fas fa-magic"></i> Quét CCCD bằng AI
+                                            </button>
+                                        </div>
+                                        <!-- Loading -->
+                                        <div id="ai-loading" style="display:none; text-align:center; padding: 20px 0;">
+                                            <div style="display:inline-flex; align-items:center; gap:10px; color:#8b5cf6; font-weight:600;">
+                                                <svg width="20" height="20" viewBox="0 0 50 50" style="animation: spin 1s linear infinite;"><circle cx="25" cy="25" r="20" fill="none" stroke="#8b5cf6" stroke-width="5" stroke-dasharray="31.4 62.8" stroke-linecap="round"/></svg>
+                                                <span>AI đang đọc và phân tích ảnh CCCD...</span>
+                                            </div>
+                                        </div>
+                                        <!-- Result box -->
+                                        <div id="ai-result-box" style="display:none; margin-top: 14px;"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Modal duyệt hóa đơn thủ công -->
+                <div class="modal fade" id="approveInvoiceModal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <form id="approveInvoiceForm" action="manageBooking" method="post">
+                            <input type="hidden" name="bookingID" id="approveInvoiceBookingID">
+                            <input type="hidden" name="manualPayment" value="true">
+                            <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                                <div class="modal-header" style="background: linear-gradient(135deg, #fef3c7, #fffbeb); border-radius: 16px 16px 0 0; border-bottom: 1px solid #fcd34d; padding: 20px 24px;">
+                                    <h5 class="modal-title" style="font-weight: 800; color: #92400e; margin: 0;">
+                                        <i class="fas fa-file-invoice-dollar me-2"></i>Duyệt hóa đơn thủ công
+                                    </h5>
+                                </div>
+                                <div class="modal-body" style="padding: 24px;">
+                                    <div style="background: #fffbeb; border: 1px solid #fcd34d; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                                        <div style="font-size: 13px; color: #92400e; margin-bottom: 8px;"><i class="fas fa-exclamation-triangle me-2"></i><strong>Lưu ý:</strong> Chỉ duyệt khi đã <strong>nhận được tiền chuyển khoản</strong> từ khách hàng!</div>
+                                        <div style="font-size: 13px; color: #78350f;">Thao tác này sẽ đánh dấu đơn <strong id="approveInvoiceBookingLabel"></strong> là đã thanh toán và không thể hoàn tác.</div>
+                                    </div>
+                                    <div style="background: #f8fafc; border-radius: 10px; padding: 14px;">
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#64748b;">Mã đơn hàng:</span><strong id="approveInvoiceBID" style="font-family:monospace;"></strong></div>
+                                        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Số tiền:</span><strong id="approveInvoiceAmt" style="color:#b45309;"></strong></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="border-top: 1px solid #e2e8f0; padding: 16px 24px;">
+                                    <button type="button" class="btn btn-secondary" onclick="$('#approveInvoiceModal').modal('hide'); $('#user-form-modal').modal('show');">Quay về</button>
+                                    <button type="submit" class="btn btn-warning" style="font-weight: 700; color: #92400e; background: #fbbf24; border: none; padding: 10px 24px; border-radius: 8px;">
+                                        <i class="fas fa-check me-2"></i>Xác nhận đã nhận tiền
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -845,15 +974,42 @@
             modal.find('#modal-customerId').attr('data-cusPhone', button.getAttribute('data-cusPhone'));
             modal.find('#modal-customerId').attr('data-cusEmail', button.getAttribute('data-cusEmail'));
             modal.find('#modal-customerId').attr('data-cusIdCard', button.getAttribute('data-cusIdCard'));
+            modal.find('#modal-customerId').attr('data-identityCard', button.getAttribute('data-identityCard'));
+            modal.find('#modal-customerId').attr('data-issuedOn', button.getAttribute('data-issuedOn'));
+            modal.find('#modal-customerId').attr('data-expDate', button.getAttribute('data-expDate'));
+            modal.find('#modal-customerId').attr('data-typeCard', button.getAttribute('data-typeCard'));
             modal.find('#modal-cusId').text(button.getAttribute('data-cusId'));
+
             var statusBooking = modal.find('#modal-statusBooking').text().trim();
+            var payStatus = button.getAttribute('data-paymentStatus') || '';
+            var payMethod = button.getAttribute('data-paymentMethod') || '';
+            var payAmt = button.getAttribute('data-paymentAmount') || '0';
+            var hasPaid = payStatus !== '' && !payStatus.includes('Chờ');
+
+            // Hiển thị thông tin thanh toán
+            if (payStatus === '') {
+                $('#modal-paymentInfo').html('<span style="color:#94a3b8; font-style:italic;">Chưa thanh toán</span>');
+            } else if (hasPaid) {
+                $('#modal-paymentInfo').html('<span style="color:#059669; background:#ecfdf5; padding:2px 10px; border-radius:6px; border:1px solid #10b981;"><i class="fas fa-check-circle me-1"></i>' + payMethod + '</span>');
+            } else {
+                $('#modal-paymentInfo').html('<span style="color:#d97706; background:#fffbeb; padding:2px 10px; border-radius:6px; border:1px solid #fbbf24;">' + payStatus + '</span>');
+            }
+
             if (statusBooking === 'Chờ xác nhận') {
                 $('#confirmwait').show();
                 $('#confirmyes').hide();
-
             } else {
                 $('#confirmwait').hide();
                 $('#confirmyes').show();
+                // Hiển thị nút duyệt hóa đơn nếu chưa thanh toán, ẩn nếu đã thanh toán
+                if (hasPaid) {
+                    $('#approveInvoiceArea').hide();
+                    $('#paidInvoiceArea').show();
+                    $('#paidInvoiceLabel').text('Đã thanh toán (' + payMethod + ')');
+                } else {
+                    $('#approveInvoiceArea').show();
+                    $('#paidInvoiceArea').hide();
+                }
             }
 
             modal.modal('show');
@@ -869,27 +1025,197 @@
             var cusPhone = $('#modal-customerId').attr('data-cusPhone');
             var cusEmail = $('#modal-customerId').attr('data-cusEmail');
             var cusIdCard = $('#modal-customerId').attr('data-cusIdCard');
+            var identityCard = $('#modal-customerId').attr('data-identityCard') || '';
+            var issuedOn = $('#modal-customerId').attr('data-issuedOn') || '';
+            var expDate = $('#modal-customerId').attr('data-expDate') || '';
+            var typeCard = $('#modal-customerId').attr('data-typeCard') || '';
+
             $('#cinfo-name').text(cusName);
             $('#cinfo-phone').text(cusPhone);
             $('#cinfo-email').text(cusEmail);
+            $('#cinfo-idcardno').text(identityCard || 'Chưa cập nhật');
+            $('#cinfo-issuedon').text(issuedOn || 'N/A');
+            $('#cinfo-expdate').text(expDate || 'N/A');
+            $('#cinfo-typeCard').text(typeCard || 'N/A');
+
+            // Reset AI area khi mở modal mới
+            $('#ai-badge-status').hide().html('');
+            $('#ai-result-box').hide().html('');
+            $('#ai-loading').hide();
+            $('#btn-verify-ai').prop('disabled', false).html('<i class="fas fa-magic"></i> Quét CCCD bằng AI');
+
+            // Kiểm tra hạn CCCD
+            if (expDate && expDate !== 'N/A') {
+                var parts = expDate.split('-');
+                if (parts.length === 3) {
+                    var expDateObj = new Date(parts[0], parts[1]-1, parts[2]);
+                    var today = new Date();
+                    if (expDateObj < today) {
+                        $('#ai-badge-status').html('<span style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700;"><i class="fas fa-exclamation-triangle me-1"></i>CCCD HẾT HẠN</span>').show();
+                    }
+                }
+            }
+
+            // Store cusIdCard globally for AI call
+            window._currentCusIdCard = cusIdCard;
+            window._currentIdentityCard = identityCard;
+            window._currentCusName = cusName;
             
             var idCardHtml = '';
             if (cusIdCard && cusIdCard.trim() !== '') {
                 var images = cusIdCard.split(',');
-                images.forEach(function(img) {
+                images.forEach(function(img, i) {
                     if(img.trim() !== '') {
-                        var imgSrc = "upload/" + img.trim();
-                        idCardHtml += `<div style="flex: 1; text-align: center; cursor: pointer; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; margin: 0 4px;" onclick="viewImageFull('${imgSrc}')">
-                                           <img src="${imgSrc}" style="width: 100%; height: 100px; object-fit: cover; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        var isUrl = img.trim().startsWith('http');
+                        var imgSrc = isUrl ? img.trim() : 'upload/' + img.trim();
+                        var label = i === 0 ? 'Mặt trước' : 'Mặt sau';
+                        idCardHtml += `<div style="flex: 1; min-width: 200px; text-align: center; cursor: pointer; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0; background:#f8fafc;" onclick="viewImageFull('${imgSrc}')">
+                                           <div style="font-size:11px; font-weight:700; color:#64748b; padding:8px; text-transform:uppercase; letter-spacing:1px;">${label}</div>
+                                           <img src="${imgSrc}" style="width: 100%; height: 130px; object-fit: cover; transition: transform 0.2s; display:block;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src=''; this.parentElement.innerHTML='<div style=\'padding:20px; color:#94a3b8; font-size:12px;\'>Không tải được ảnh</div>';">
                                        </div>`;
                     }
                 });
             } else {
-                idCardHtml = '<span style="color: #94a3b8; font-style: italic; font-size: 13px;">Chưa có ảnh xác thực</span>';
+                idCardHtml = '<div style="width:100%; text-align:center; padding:24px; color: #94a3b8; font-style: italic;"><i class="fas fa-image fa-2x mb-2 d-block"></i>Chưa có ảnh giấy tờ</div>';
             }
             $('#cinfo-idcards').html(idCardHtml);
             
             $('#customer-info-modal').modal('show');
+        }
+
+        function verifyIdCardAI() {
+            var cusIdCard = window._currentCusIdCard || '';
+            var storedId  = window._currentIdentityCard || '';
+            var storedName = window._currentCusName || '';
+
+            if (!cusIdCard || cusIdCard.trim() === '') {
+                $('#ai-result-box').html('<div style="background:#fff7ed; border:1px solid #fdba74; border-radius:10px; padding:14px; color:#9a3412; font-size:13px;"><i class="fas fa-exclamation-triangle me-2"></i>Không có ảnh CCCD để xác thực.</div>').show();
+                return;
+            }
+
+            // Lấy ảnh mặt trước
+            var firstImg = cusIdCard.split(',')[0].trim();
+
+            // Show loading
+            $('#btn-verify-ai').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Đang xử lý...');
+            $('#ai-loading').show();
+            $('#ai-result-box').hide().html('');
+            $('#ai-badge-status').hide();
+
+            fetch('verifyIdCard', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'imagePath=' + encodeURIComponent(firstImg)
+                    + '&storedId=' + encodeURIComponent(storedId)
+                    + '&storedName=' + encodeURIComponent(storedName)
+            })
+            .then(r => r.json())
+            .then(data => {
+                $('#ai-loading').hide();
+                $('#btn-verify-ai').prop('disabled', false).html('<i class="fas fa-magic"></i> Quét CCCD bằng AI');
+
+                if (!data.success) {
+                    var needKey = data.needKey;
+                    var title = needKey ? 'Chưa cài FPT.AI API Key' : 'Không thể xác thực';
+                    var msgHtml = '<div style="background:#fef3c7; border:1px solid #fcd34d; border-radius:10px; padding:16px;">'
+                        + '<div style="font-weight:700; color:#92400e; margin-bottom:8px;"><i class="fas ' + (needKey ? 'fa-key' : 'fa-exclamation-triangle') + ' me-2"></i>' + title + '</div>'
+                        + '<div style="font-size:13px; color:#78350f;">' + (data.message || 'Lỗi không xác định') + '</div>'
+                        + (needKey ? '<div style="margin-top:10px; font-size:12px; color:#92400e;">1. Đăng ký tại <a href="https://console.fpt.ai" target="_blank">console.fpt.ai</a> để lấy API key miễn phí<br>2. Mở file <code>VerifyIdCardServlet.java</code><br>3. Điền key vào biến <code>FPT_API_KEY</code></div>' : '')
+                        + '</div>';
+                    $('#ai-result-box').html(msgHtml).show();
+                    return;
+                }
+
+                // Build result UI
+                var color = data.statusColor;
+                var icon  = data.statusIcon;
+                var statusText = data.status;
+
+                // Badge in header — xét cả doeValid
+                var allOk = data.idMatch && data.nameMatch && (data.doeValid !== false);
+                var anyOk = data.idMatch || data.nameMatch;
+                var badgeColor  = allOk ? '#059669' : (anyOk ? '#d97706' : '#dc2626');
+                var badgeBg     = allOk ? '#ecfdf5' : (anyOk ? '#fffbeb' : '#fee2e2');
+                var badgeBorder = allOk ? '#10b981' : (anyOk ? '#fbbf24' : '#fca5a5');
+                var badgeIcon   = allOk ? 'fa-robot' : (data.doeValid === false ? 'fa-calendar-times' : (anyOk ? 'fa-exclamation-circle' : 'fa-times-circle'));
+                var badgeText   = allOk ? 'AI: HỢP LỆ' : (data.doeValid === false ? 'AI: CCCD HẾT HẠN' : (anyOk ? 'AI: CẦN KIỂM TRA' : 'AI: KHÔNG KHỚP'));
+                $('#ai-badge-status').html('<span style="background:' + badgeBg + '; color:' + badgeColor + '; border:1px solid ' + badgeBorder + '; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700;"><i class="fas ' + badgeIcon + ' me-1"></i>' + badgeText + '</span>').show();
+
+                // Result box
+                var rowStyle = 'display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f1f5f9;';
+                var matchBadge = function(match, dbVal, ocrVal, label) {
+                    var icon2 = match ? 'fa-check-circle' : 'fa-times-circle';
+                    var c = match ? '#059669' : '#dc2626';
+                    var bg = match ? '#f0fdf4' : '#fff5f5';
+                    return '<div style="' + rowStyle + ' background:' + bg + '; border-radius:8px; padding:10px; margin-bottom:6px;">'
+                        + '<div><span style="color:#64748b; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">' + label + '</span><br>'
+                        + '<span style="color:#0f172a; font-weight:700;">' + (dbVal||'-') + '</span></div>'
+                        + '<div style="text-align:right;"><span style="color:#64748b; font-size:11px;">AI đọc được:</span><br>'
+                        + '<span style="font-weight:700;">' + (ocrVal||'-') + '</span> <i class="fas ' + icon2 + '" style="color:' + c + '; margin-left:4px;"></i></div>'
+                        + '</div>';
+                };
+
+                // Hàng kiểm tra hạn CCCD
+                var doeOk = data.doeValid !== false;
+                var doeBg = doeOk ? '#f0fdf4' : '#fff5f5';
+                var doeIcon = doeOk ? 'fa-check-circle' : 'fa-calendar-times';
+                var doeColor = doeOk ? '#059669' : '#dc2626';
+                var doeLabel = doeOk ? 'Còn hiệu lực' : '⚠ HẾT HẠN';
+                var doeRow = '<div style="' + rowStyle + ' background:' + doeBg + '; border-radius:8px; padding:10px; margin-bottom:6px;">'
+                    + '<div><span style="color:#64748b; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Ngày hết hạn</span><br>'
+                    + '<span style="color:#0f172a; font-weight:700;">' + (data.ocrDoe||'N/A') + '</span></div>'
+                    + '<div style="text-align:right;"><i class="fas ' + doeIcon + '" style="color:' + doeColor + ';"></i> <span style="color:' + doeColor + '; font-weight:700;">' + doeLabel + '</span></div>'
+                    + '</div>';
+
+                // Danh sách lỗi chi tiết
+                var fieldErrHtml = '';
+                if (data.fieldErrors && data.fieldErrors.length > 0) {
+                    fieldErrHtml += '<div style="margin-top:12px;">';
+                    fieldErrHtml += '<div style="font-size:11px; font-weight:700; color:#dc2626; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;"><i class="fas fa-exclamation-triangle me-1"></i>Vấn đề phát hiện</div>';
+                    data.fieldErrors.forEach(function(fe) {
+                        fieldErrHtml += '<div style="background:#fee2e2; border:1px solid #fca5a5; border-radius:8px; padding:8px 12px; margin-bottom:6px; color:#991b1b; font-size:12px; font-weight:600;">' + fe + '</div>';
+                    });
+                    fieldErrHtml += '</div>';
+                }
+
+                var html = '<div style="border-radius:12px; overflow:hidden; border:2px solid ' + color + '; margin-top:4px;">'
+                    + '<div style="background:' + color + '; padding:12px 16px; color:#fff; font-weight:800; font-size:14px; display:flex; align-items:center; gap:8px;">'
+                    + '<i class="fas ' + icon + '"></i>' + statusText
+                    + '</div>'
+                    + '<div style="padding: 14px 16px; background:#fff;">'
+                    + '<div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">So sánh dữ liệu</div>'
+                    + matchBadge(data.idMatch, storedId, data.ocrId, 'Số CCCD/CMND')
+                    + matchBadge(data.nameMatch, storedName, data.ocrName, 'Họ và tên')
+                    + doeRow
+                    + fieldErrHtml
+                    + '<div style="margin-top:14px; padding:10px; background:#f8fafc; border-radius:8px; font-size:12px;">'
+                    + '<div style="font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;"><i class="fas fa-robot me-1" style="color:#8b5cf6;"></i>Thông tin AI đọc từ ảnh</div>'
+                    + '<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">'
+                    + '<div><span style="color:#94a3b8;">Ngày sinh:</span><br><strong>' + (data.ocrDob||'N/A') + '</strong></div>'
+                    + '<div><span style="color:#94a3b8;">Giới tính:</span><br><strong>' + (data.ocrSex||'N/A') + '</strong></div>'
+                    + '<div><span style="color:#94a3b8;">Ngày hết hạn:</span><br><strong>' + (data.ocrDoe||'N/A') + '</strong></div>'
+                    + '<div><span style="color:#94a3b8;">Loại CCCD:</span><br><strong>' + (data.type||'N/A') + '</strong></div>'
+                    + '</div></div>'
+                    + '</div></div>';
+
+                $('#ai-result-box').html(html).show();
+            })
+            .catch(function(err) {
+                $('#ai-loading').hide();
+                $('#btn-verify-ai').prop('disabled', false).html('<i class="fas fa-magic"></i> Quét CCCD bằng AI');
+                $('#ai-result-box').html('<div style="background:#fee2e2; border:1px solid #fca5a5; border-radius:10px; padding:14px; color:#dc2626; font-size:13px;"><i class="fas fa-times-circle me-2"></i>Lỗi kết nối: ' + err + '</div>').show();
+            });
+        }
+
+        function showApproveInvoiceModal() {
+            var bookingId = $('#modal-bookingId').text().trim();
+            var price = $('#modal-Price').text().trim();
+            $('#approveInvoiceBookingID').val(bookingId);
+            $('#approveInvoiceBookingLabel').text(bookingId);
+            $('#approveInvoiceBID').text(bookingId);
+            $('#approveInvoiceAmt').text(price);
+            $('#user-form-modal').modal('hide');
+            $('#approveInvoiceModal').modal('show');
         }
 
         function closeDetail()

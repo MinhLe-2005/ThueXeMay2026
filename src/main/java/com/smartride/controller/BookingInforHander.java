@@ -13,6 +13,7 @@ import com.smartride.dao.PaymentDAO;
 import com.smartride.dao.PriceListDAO;
 import com.smartride.dto.AccessoryDetail;
 import com.smartride.dto.Customer;
+import com.smartride.util.IdCardVerifier;
 import com.smartride.dto.Event;
 import com.smartride.dto.Motorcycle;
 import com.smartride.dto.PriceList;
@@ -246,14 +247,67 @@ public class BookingInforHander extends HttpServlet {
             }
         } catch (NumberFormatException ignored) {}
 
+        if (voucherId > 0) {
+            if (!com.smartride.dao.VoucherDAO.getInstance().isValidVoucher(voucherId)) {
+                voucherId = 0;
+            }
+        }
+
+        // ── AI Auto-verify CCCD (Hard Gatekeeper) ──────────
+        try {
+            Customer customer = daoC.getCustomerbyAccountID(accountId);
+            com.smartride.dto.Account account = AccountDAO.getInstance().getAccountbyID(accountId);
+            if (customer != null && account != null) {
+                String idCardImages = customer.getIdentityCardImage();
+                String firstImage = (idCardImages != null && !idCardImages.trim().isEmpty())
+                        ? idCardImages.split(",")[0].trim() : null;
+                String storedId   = customer.getIdentityCard();
+                String storedName = account.getLastName() + " " + account.getFirstName();
+                String webRoot = getServletContext().getRealPath("/");
+
+                IdCardVerifier.VerifyResult vr = IdCardVerifier.verify(
+                        firstImage, webRoot, storedId, storedName);
+
+                if (vr.configured && !vr.valid) {
+                    // Chặn đứng: Lỗi AI không hợp lệ — trả về chi tiết từng trường
+                    StringBuilder errJson = new StringBuilder();
+                    errJson.append("{\"status\":\"ai_error\",\"message\":\"Thông tin không khớp với ảnh CCCD/CMND. Vui lòng kiểm tra lại.\",\"fieldErrors\":[");
+                    for (int i = 0; i < vr.fieldErrors.size(); i++) {
+                        errJson.append("\"").append(vr.fieldErrors.get(i).replace("\"", "\\\"").replace("\\n", " ")).append("\"");
+                        if (i < vr.fieldErrors.size() - 1) errJson.append(",");
+                    }
+                    errJson.append("],");
+                    errJson.append("\"ocrId\":\"").append(vr.ocrId != null ? vr.ocrId : "").append("\",");
+                    errJson.append("\"ocrName\":\"").append(vr.ocrName != null ? vr.ocrName : "").append("\",");
+                    errJson.append("\"ocrDoe\":\"").append(vr.ocrDoe != null ? vr.ocrDoe : "").append("\",");
+                    errJson.append("\"idMatch\":").append(vr.idMatch).append(",");
+                    errJson.append("\"nameMatch\":").append(vr.nameMatch).append(",");
+                    errJson.append("\"doeValid\":").append(vr.doeValid);
+                    errJson.append("}");
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.getWriter().write(errJson.toString());
+                    return; // Dừng luồng, không lưu đơn
+                }
+            }
+        } catch (Exception aiEx) {
+            System.err.println("[IdCardVerifier] Lỗi khi gọi AI: " + aiEx.getMessage());
+        }
+        // ───────────────────────────────────────────────────
+
         // Save booking data to database
         BookingDAO dao = BookingDAO.getInstance();
         dao.addBooking(bookingid, formattedDateTime, pickupDate, returnDate, pickupLocation, returnLocation, voucherId == 0 ? 0 : voucherId, daoC.getCustomerbyAccountID(accountId).getCustomerId());
+        
+        // Vì AI đã vượt qua (hoặc chưa cấu hình), đơn hàng hợp lệ để được lưu.
+        // Trạng thái được set là "Chờ xác nhận" để Admin review và duyệt thủ công.
+        dao.updateBookingStatus(bookingid, "Chờ xác nhận");
 
         // Mark voucher as used
         if (voucherId > 0) {
             com.smartride.dao.VoucherDAO.getInstance().markVoucherUsed(voucherId);
         }
+
+
 
         // Process bike details
         Type bikeListType = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();
@@ -326,13 +380,13 @@ public class BookingInforHander extends HttpServlet {
         // Chuyá»ƒn Ä‘á»•i chuá»—i thÃ nh LocalDateTime
         LocalDateTime dateTime = LocalDateTime.parse(paymentDate, inputFormatter);
         
-        // Äá»‹nh dáº¡ng chuá»—i Ä‘áº§u ra
+        // Ä á»‹nh dáº¡ng chuá»—i Ä‘áº§u ra
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         
-        // Chuyá»ƒn Ä‘á»•i LocalDateTime thÃ nh chuá»—i Ä‘á»‹nh dáº¡ng má»›i
+        // Chuyển đổi LocalDateTime thành chuỗi định dạng mới
         String paymentDateText = dateTime.format(outputFormatter);
         PaymentDAO daoP = PaymentDAO.getInstance();
-        daoP.addPayment(bookingid, "NgÃ¢n hÃ ng", paymentDateText, amount/100000, "Giao dá»‹ch thÃ nh cÃ´ng");
+        daoP.addPayment(bookingid, "Ngân hàng", paymentDateText, amount, "Giao dịch thành công");
         
         // Send confirmation email
        StringBuilder emailContent = new StringBuilder();

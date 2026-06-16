@@ -40,7 +40,7 @@ public class AddFaqsServletStaff extends HttpServlet {
                 FAQ faq = new FAQ(0, question, answer);
                 faqdao.addNewFAQs(faq);
 
-                response.sendRedirect("faqs");
+                response.sendRedirect("faqsStaff");
             } else {
                 // Nếu dữ liệu không hợp lệ, chuyển hướng về form với thông báo lỗi
                 request.setAttribute("errorMessage", "Câu hỏi và câu trả lời không được để trống.");

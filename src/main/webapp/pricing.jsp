@@ -10,9 +10,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Bảng giá</title>
+        <title>Bảng Giá Thuê Xe - SmartRide</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         
         <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
 
@@ -454,7 +455,9 @@
                                         <c:set var="discountWeek" value="${100 - (p.dailyPriceForWeek / p.dailyPriceForDay * 100)}" />
                                         <c:set var="discountMonth" value="${100 - (p.dailyPriceForMonth / p.dailyPriceForDay * 100)}" />
                                         
-                                        <div class="motor-card" data-price="${p.dailyPriceForDay}" data-id="${m.motorcycleId}">
+                                        <div class="motor-card position-relative" data-price="${p.dailyPriceForDay}" data-id="${m.motorcycleId}">
+                                            <!-- Nút yêu thích (đã bỏ nút thêm giỏ) -->
+                                            
                                             <!-- LEFT IMAGE -->
                                             <div class="motor-img-wrapper">
                                                 <div class="category-badge-top">
@@ -574,7 +577,54 @@
         <script src="js/main.js"></script>
 
         <script>
-
-
+            function toggleFavQuick(motorcycleId, btnElement, event) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                var icon = btnElement.querySelector('i');
+                var isFav = btnElement.classList.contains('added');
+                var action = isFav ? 'remove' : 'add';
+                
+                fetch('favorite?action=' + action + '&motorcycleId=' + motorcycleId, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === 'success') {
+                        if(action === 'add') {
+                            btnElement.classList.add('added');
+                            btnElement.style.background = '#b59349';
+                            icon.style.color = 'white';
+                            window.postMessage('fav_updated', '*');
+                        } else {
+                            btnElement.classList.remove('added');
+                            btnElement.style.background = '';
+                            icon.style.color = '#b59349';
+                        }
+                        window.postMessage('fav_updated', '*');
+                    } else if(data.status === 'unauthorized') {
+                        window.location.href = 'login.jsp';
+                    }
+                });
+            }
+            
+            document.addEventListener("DOMContentLoaded", function() {
+                var buttons = document.querySelectorAll("button[onclick^='toggleFavQuick']");
+                buttons.forEach(function(btn) {
+                    var match = btn.getAttribute('onclick').match(/'([^']+)'/);
+                    if(match && match[1]) {
+                        var mId = match[1];
+                        fetch('favorite?action=check&motorcycleId=' + mId, { method: 'POST' })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.status === 'success' && data.isFavorite) {
+                                var icon = btn.querySelector('i');
+                                btn.classList.add('added');
+                                btn.style.background = '#b59349';
+                                icon.style.color = 'white';
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

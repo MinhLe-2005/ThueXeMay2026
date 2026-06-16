@@ -86,6 +86,29 @@ public class CancellationDAO {
         return false;
     }
 
+    public Cancellation getCancellationByBookingId(String bookingId) {
+        PreparedStatement stm;
+        ResultSet rs;
+        String sql = "Select CancellationID, TO_CHAR(CancellationDate, 'DD-MM-YYYY HH24:MI:SS') AS CancellationDate, Note, BookingID, StaffID from Cancellation where BookingID = ?";
+        try {
+            stm = conn.prepareStatement(sql);
+            stm.setString(1, bookingId);
+            rs = stm.executeQuery();
+            if (rs.next()) {
+                Cancellation c = new Cancellation();
+                c.setCancellationID(rs.getInt(1));
+                c.setCancellationDate(rs.getString(2));
+                c.setNote(rs.getString(3));
+                c.setBookingID(rs.getString(4));
+                c.setStaffID(rs.getString(5));
+                return c;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
 //        System.out.println(CancellationDAO.getInstance().insertCancellation("Hahahihihuhu", "BOOK00000")); 
 //        System.out.println(getInstance().getAllCancellation());

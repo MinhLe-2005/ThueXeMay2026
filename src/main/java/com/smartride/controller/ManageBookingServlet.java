@@ -115,6 +115,7 @@ public class ManageBookingServlet extends HttpServlet {
                 CancellationDAO.getInstance().insertCancellation(cancelReason, bookingID, StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId()).getStaffID());
                 BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã hủy");
             }
+
             String emailContent = ""
                     + "<h3><strong>ColorBike </strong>xin chào quý khách, </h3>"
                     + "<p>Mã đơn hàng: <strong>" + bookingID + "</strong> của đã xảy ra lỗi trong quá trình đặt đơn </p>"

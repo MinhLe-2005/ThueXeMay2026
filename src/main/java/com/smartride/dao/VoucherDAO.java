@@ -52,6 +52,25 @@ public class VoucherDAO implements Serializable {
     }
 
     /**
+     * Check if a voucher is currently valid (active) by its ID.
+     */
+    public boolean isValidVoucher(int voucherId) {
+        String sql = "SELECT \"VoucherID\" FROM \"Voucher\" WHERE \"VoucherID\" = ? AND \"Status\" = 'Đang hoạt động'";
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, voucherId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Mark a voucher as used after booking is confirmed.
      */
     public void markVoucherUsed(int voucherId) {

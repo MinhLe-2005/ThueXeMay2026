@@ -7,8 +7,7 @@
 <meta content name="keywords">
 
 <!-- Favicons -->
-<!-- <link href="assets/img/favicon.png" rel="icon"> -->
-<!-- <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
+<link href="${pageContext.request.contextPath}/images/newlogo_transparent.png" rel="icon" type="image/png">
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com" rel="preconnect">

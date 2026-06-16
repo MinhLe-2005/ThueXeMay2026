@@ -129,10 +129,18 @@ public class StaffFilter implements Filter {
             }
         }
         else if(uri.toLowerCase().contains("profilecustomer.jsp") || uri.toLowerCase().contains("transaction") 
-                || uri.toLowerCase().contains("bookinghistory") || uri.toLowerCase().contains("settingsprofile.jsp")
-                || uri.toLowerCase().contains("changepassword") || uri.toLowerCase().contains("uploadimage")
-                || uri.toLowerCase().contains("updateprofile")) {
+                || uri.toLowerCase().contains("bookinghistory") || uri.toLowerCase().contains("settingsprofile.jsp")) {
             if(account != null && account.getRoleID() == 1){
+                flag = false;
+            }
+            else {
+                res.sendRedirect("accessdenied.jsp");
+                return;
+            }
+        }
+        else if(uri.toLowerCase().contains("changepassword") || uri.toLowerCase().contains("uploadimage")
+                || uri.toLowerCase().contains("updateprofile")) {
+            if(account != null){
                 flag = false;
             }
             else {

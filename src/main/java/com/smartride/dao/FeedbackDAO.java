@@ -135,4 +135,40 @@ public class FeedbackDAO implements Serializable {
         }
         return false;
     }
+
+    public List<Feedback> getFeedbacksByMotorcycleId(String motorcycleId) {
+        List<Feedback> list = new ArrayList<>();
+        String sql = "SELECT f.*, a.\"FirstName\" || ' ' || a.\"LastName\" as \"CustomerName\", a.\"Image\" " +
+                     "FROM \"Feedback\" f " +
+                     "JOIN \"Booking\" b ON f.\"BookingID\" = b.\"BookingID\" " +
+                     "JOIN \"Booking Detail\" bd ON b.\"BookingID\" = bd.\"BookingID\" " +
+                     "JOIN \"MotorcycleDetail\" md ON bd.\"MotorcycleDetailID\" = md.\"MotorcycleDetailID\" " +
+                     "JOIN \"Customer\" c ON f.\"CustomerID\" = c.\"CustomerID\" " +
+                     "JOIN \"Account\" a ON c.\"AccountID\" = a.\"AccountID\" " +
+                     "WHERE md.\"MotorcycleID\" = ? " +
+                     "ORDER BY f.\"feedbackTime\" DESC";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, motorcycleId);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Feedback fb = new Feedback();
+                fb.setFeedbackID(rs.getInt("FeedbackID"));
+                fb.setContent(rs.getString("Content"));
+                fb.setProductRate(rs.getInt("ProductRate"));
+                fb.setServiceRate(rs.getInt("ServiceRate"));
+                fb.setDeliveryRate(rs.getInt("DeliveryRate"));
+                fb.setFeedbackTime(rs.getString("feedbackTime"));
+                fb.setCustomerId(rs.getInt("CustomerID"));
+                fb.setBookingID(rs.getString("BookingID"));
+                fb.setCustomerName(rs.getString("CustomerName"));
+                fb.setCustomerImage(rs.getString("Image"));
+                list.add(fb);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
 }

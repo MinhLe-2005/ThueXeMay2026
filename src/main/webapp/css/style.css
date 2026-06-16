@@ -11430,8 +11430,8 @@ textarea.form-control {
 }
 
 .ftco-animate {
-    opacity: 0;
-    visibility: hidden;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .bg-primary {
@@ -12366,6 +12366,7 @@ textarea.form-control {
 }
 
 #ftco-loader {
+    display: none !important;
     position: fixed;
     width: 96px;
     height: 96px;

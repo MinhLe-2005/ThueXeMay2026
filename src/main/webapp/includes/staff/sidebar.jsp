@@ -263,7 +263,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" style="cursor: pointer;" onclick="CallSideBar('logout', this)" style="color: #b59349;">
+            <a class="nav-link collapsed" style="cursor: pointer;" href="logout" style="color: #b59349;">
                <i class="bi bi-box-arrow-in-right" style="color: #b59349;"></i>
                 <span>Đăng xuất</span>
             </a>

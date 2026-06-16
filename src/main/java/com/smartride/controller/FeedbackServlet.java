@@ -42,6 +42,39 @@ public class FeedbackServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            String action = request.getParameter("action");
+            if ("getByMotorcycle".equals(action)) {
+                String mid = request.getParameter("motorcycleId");
+                List<Feedback> listFb = FeedbackDAO.getInstance().getFeedbacksByMotorcycleId(mid);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                com.google.gson.Gson gson = new com.google.gson.Gson();
+                PrintWriter out = response.getWriter();
+                out.print(gson.toJson(listFb));
+                out.flush();
+                return;
+            }
+            if ("checkEligible".equals(action)) {
+                String mid = request.getParameter("motorcycleId");
+                HttpSession session = request.getSession(false);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                PrintWriter out = response.getWriter();
+                if (session == null || session.getAttribute("account") == null) {
+                    out.print("{\"eligible\": false}");
+                } else {
+                    com.smartride.dto.Account acc = (com.smartride.dto.Account) session.getAttribute("account");
+                    String bookingId = BookingDAO.getInstance().getCompletedBookingIdForMotorcycle(acc.getAccountId(), mid);
+                    if (bookingId != null) {
+                        out.print("{\"eligible\": true, \"bookingId\": \"" + bookingId + "\"}");
+                    } else {
+                        out.print("{\"eligible\": false}");
+                    }
+                }
+                out.flush();
+                return;
+            }
+
             String bookingId = request.getParameter("bookingId");
             HttpSession session = request.getSession();
             if (bookingId != null) {
@@ -49,10 +82,27 @@ public class FeedbackServlet extends HttpServlet {
             } else {
                 bookingId = (String) session.getAttribute("bookingId");
             }
-            Feedback fb = FeedbackDAO.getInstance().getFeedbackByBookingId(bookingId);
-
+            
+            // SECURITY CHECK: Ensure user is logged in
+            Account acc = (Account) session.getAttribute("account");
+            if (acc == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+            
             Booking booking = BookingDAO.getInstance().getBookingById(bookingId);
+            Customer cus = CustomerDAO.getInstance().getCustomerbyAccountID(acc.getAccountId());
+            
+            // SECURITY CHECK: Ensure booking exists, belongs to the user, and is "Đã trả"
+            if (booking == null || cus == null || booking.getCustomerID() != cus.getCustomerId() || !"Đã trả".equals(booking.getDeliveryStatus())) {
+                session.setAttribute("errorMsg", "Bạn chỉ có thể đánh giá những xe đã hoàn tất quá trình thuê và đã trả xe.");
+                response.sendRedirect("bookingHistory");
+                return;
+            }
+
+            Feedback fb = FeedbackDAO.getInstance().getFeedbackByBookingId(bookingId);
             List<Map<String, Object>> motorcycleBook = BookingDAO.getInstance().getMotorcyclesByBookingID(bookingId);
+            
             request.setAttribute("booking", booking);
             request.setAttribute("motorcycleBook", motorcycleBook);
             request.setAttribute("fb", fb);
@@ -62,6 +112,7 @@ public class FeedbackServlet extends HttpServlet {
             System.out.println(e);
         }
     }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -74,7 +125,21 @@ public class FeedbackServlet extends HttpServlet {
             String content = request.getParameter("content");
 
             Account acc = (Account) session.getAttribute("account");
+            if (acc == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+            
             Customer cus = CustomerDAO.getInstance().getCustomerbyAccountID(acc.getAccountId());
+            Booking booking = BookingDAO.getInstance().getBookingById(bookingId);
+            
+            // SECURITY CHECK: Ensure booking belongs to the user and is "Đã trả"
+            if (booking == null || cus == null || booking.getCustomerID() != cus.getCustomerId() || !"Đã trả".equals(booking.getDeliveryStatus())) {
+                session.setAttribute("errorMsg", "Bạn không có quyền đánh giá đơn hàng này hoặc xe chưa được trả.");
+                response.sendRedirect("bookingHistory");
+                return;
+            }
+            
             Feedback fb = FeedbackDAO.getInstance().getFeedbackByBookingId(bookingId);
 
             int productRating = product != null && !product.isEmpty() ? Integer.parseInt(product) : 0;
@@ -93,11 +158,13 @@ public class FeedbackServlet extends HttpServlet {
                 session.setAttribute("feedbackFail", "Ghi nhận phản hồi thất bại. Vui lòng điền tất cả thông tin...");
             }
 
-            Booking booking = BookingDAO.getInstance().getBookingById(bookingId);
             List<Map<String, Object>> motorcycleBook = BookingDAO.getInstance().getMotorcyclesByBookingID(bookingId);
 
             session.setAttribute("booking", booking);
             request.setAttribute("motorcycleBook", motorcycleBook);
+            
+            // Refresh fb after update/insert
+            fb = FeedbackDAO.getInstance().getFeedbackByBookingId(bookingId);
             request.setAttribute("fb", fb);
 
             request.getRequestDispatcher("feedback.jsp").forward(request, response);

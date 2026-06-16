@@ -4,6 +4,7 @@
 <html lang="en">
 
     <head>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Contact Manager</title>
@@ -231,8 +232,8 @@
 
                                         </tr>
                                     </thead>
-                                    <c:forEach items="${listContact}" var="c">
-                                        <tbody id="table-body">
+                                    <tbody id="table-body">
+                                        <c:forEach items="${listContact}" var="c">
                                             <tr>
                                                 <th scope="row">${c.contactID}</th>                                                                                           
                                                 <td>${c.name}</td>
@@ -248,13 +249,11 @@
                                                     </c:if>
                                                 </c:forEach>
                                                 <c:if test="${accountFound == false}">
-                                                    <td>chưa có tài khoản</td>
+                                                    <td><span class="badge bg-secondary">Khách vãng lai</span></td>
                                                 </c:if>
-
                                             </tr>
-
-                                        </tbody>
-                                    </c:forEach>
+                                        </c:forEach>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>

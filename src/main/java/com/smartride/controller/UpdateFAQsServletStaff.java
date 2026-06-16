@@ -28,7 +28,7 @@ public class UpdateFAQsServletStaff extends HttpServlet {
         faq.setAnswer(answer);
         faqDAO.updateFAQs(faq);
 
-        response.sendRedirect("faqs");
+        response.sendRedirect("faqsStaff");
     }
 
 }

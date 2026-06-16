@@ -253,123 +253,101 @@
 
             <section class="section dashboard">
                 <div class="row">
-
-                    <!-- Left side columns -->
-                    <div class="col-lg-12">
-                        <div class="row">
-
-                            <!-- Sales Card -->
-                            <div class="col-md-4">
-                                <div class="card info-card sales-card h-100 mb-0">
-
-                                    <div class="card-body">
-                                        <h5 class="card-title">Đơn Hàng</h5>
-
-                                        <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                                <i class="bi bi-cart" style="font-size: 24px;"></i>
-                                            </div>
-                                            <div class="ps-2" id="orders-container">
-                                                <h6 id="stat-orders" style="white-space: nowrap; font-size: 24px; margin-bottom: 0;">...</h6>
-                                                <span id="trend-orders">
-                                                    <span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> <span class="text-muted small pt-2 ps-1">Đang tải...</span>
-                                                </span>
-                                            </div>
+                    <!-- KPI Cards Row -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card info-card revenue-card h-100 mb-0" style="border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                            <div class="card-body">
+                                <h5 class="card-title" style="font-size: 0.85rem; color: #8c98a4; padding: 15px 0 10px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Tổng Doanh Thu</h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: #e6f9ed; color: #2eca6a;">
+                                        <i class="bi bi-currency-dollar" style="font-size: 20px;"></i>
+                                    </div>
+                                    <div class="ps-3" id="revenue-container" style="transition: opacity 0.2s;">
+                                        <h6 id="stat-revenue" style="font-size: 22px; margin-bottom: 0; font-weight: 800; color: #1f2937;">...</h6>
+                                        <div id="trend-revenue" class="mt-1" style="font-size: 13px;">
+                                            <span class="spinner-border spinner-border-sm text-success" role="status"></span>
                                         </div>
                                     </div>
-
                                 </div>
-                            </div><!-- End Sales Card -->
-
-                            <!-- Revenue Card -->
-                            <div class="col-md-4">
-                                <div class="card info-card revenue-card h-100 mb-0">
-
-                                    <div class="card-body">
-                                        <h5 class="card-title">Doanh Thu</h5>
-
-                                        <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                                <i class="bi bi-currency-dollar" style="font-size: 24px;"></i>
-                                            </div>
-                                            <div class="ps-2" id="revenue-container">
-                                                <h6 id="stat-revenue" style="white-space: nowrap; font-size: 24px; margin-bottom: 0; font-weight: 700;">...</h6>
-                                                <span id="trend-revenue">
-                                                    <span class="spinner-border spinner-border-sm text-success" role="status" aria-hidden="true"></span> <span class="text-muted small pt-2 ps-1">Đang tải...</span>
-                                                </span>
-                                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="card info-card sales-card h-100 mb-0" style="border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                            <div class="card-body">
+                                <h5 class="card-title" style="font-size: 0.85rem; color: #8c98a4; padding: 15px 0 10px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Tổng Đơn Hàng</h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: #f0f3ff; color: #4154f1;">
+                                        <i class="bi bi-cart" style="font-size: 20px;"></i>
+                                    </div>
+                                    <div class="ps-3" id="orders-container" style="transition: opacity 0.2s;">
+                                        <h6 id="stat-orders" style="font-size: 22px; margin-bottom: 0; font-weight: 800; color: #1f2937;">...</h6>
+                                        <div id="trend-orders" class="mt-1" style="font-size: 13px;">
+                                            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
                                         </div>
                                     </div>
-
                                 </div>
-                            </div><!-- End Revenue Card -->
+                            </div>
+                        </div>
+                    </div>
 
-                            <!-- Customers Card -->
-                            <div class="col-md-4">
-
-                                <div class="card info-card customers-card h-100 mb-0">
-
-
-
-                                    <div class="card-body">
-                                        <h5 class="card-title">Khách Hàng</h5>
-
-                                        <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                                <i class="bi bi-people" style="font-size: 24px;"></i>
-                                            </div>
-                                            <div class="ps-2" id="customers-container">
-                                                <h6 id="stat-customers" style="white-space: nowrap; font-size: 24px; margin-bottom: 0;">...</h6>
-                                                <span id="trend-customers">
-                                                    <span class="spinner-border spinner-border-sm text-warning" role="status" aria-hidden="true"></span> <span class="text-muted small pt-2 ps-1">Đang tải...</span>
-                                                </span>
-                                            </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card info-card customers-card h-100 mb-0" style="border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                            <div class="card-body">
+                                <h5 class="card-title" style="font-size: 0.85rem; color: #8c98a4; padding: 15px 0 10px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Tổng Khách Hàng</h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: #fff0e6; color: #ff771d;">
+                                        <i class="bi bi-people" style="font-size: 20px;"></i>
+                                    </div>
+                                    <div class="ps-3" id="customers-container" style="transition: opacity 0.2s;">
+                                        <h6 id="stat-customers" style="font-size: 22px; margin-bottom: 0; font-weight: 800; color: #1f2937;">...</h6>
+                                        <div id="trend-customers" class="mt-1" style="font-size: 13px;">
+                                            <span class="spinner-border spinner-border-sm text-warning" role="status"></span>
                                         </div>
-
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                            </div><!-- End Customers Card -->
+                <div class="row">
+                    <!-- Line Chart -->
+                    <div class="col-12 mb-4">
+                        <div class="card mb-0" style="border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                            <div class="card-body">
+                                <h5 class="card-title text-dark fw-bold mb-0" style="font-family: 'Be Vietnam Pro', sans-serif;">Biểu Đồ Tổng Quan</h5>
+                                <div id="reportsChart" style="min-height: 280px; width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                            <!-- Reports -->
-                            <div class="col-lg-8 mt-4 d-flex flex-column">
-                                <div class="card flex-grow-1 mb-0 d-flex flex-column">
+                <div class="row">
+                    <!-- Right side charts (Moved next to Line Chart) -->
+                    <div class="col-lg-6 mb-4">
+                        <!-- Budget Report -->
+                        <div class="card h-100 mb-0" style="border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                            <div class="card-body pb-0">
+                                <h5 class="card-title text-dark fw-bold" style="font-family: 'Be Vietnam Pro', sans-serif;">Doanh Thu Theo Hãng</h5>
+                                <div id="budgetChart" style="min-height: 250px;" class="echart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6 mb-4">
+                        <!-- Website Traffic -->
+                        <div class="card h-100 mb-0" style="border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                            <div class="card-body pb-0">
+                                <h5 class="card-title text-dark fw-bold" style="font-family: 'Be Vietnam Pro', sans-serif;">Thống Kê Lượng Thuê</h5>
+                                <div id="trafficChart" style="min-height: 250px;" class="echart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                                    <div class="card-body d-flex flex-column flex-grow-1">
-                                        <h5 class="card-title">Báo Cáo Doanh Thu &amp; Hoạt Động</h5>
-
-                                        <!-- Line Chart -->
-                                        <div id="reportsChart" class="flex-grow-1" style="min-height: 350px;"></div>
-
-                                        <!-- End Line Chart -->
-
-                                    </div>
-
-                                </div>
-                            </div><!-- End Reports -->
-
-                            <!-- Right side charts (Moved next to Line Chart) -->
-                            <div class="col-lg-4 mt-4 d-flex flex-column gap-4">
-                                <!-- Budget Report -->
-                                <div class="card flex-grow-1 mb-0 d-flex flex-column">
-                                    <div class="card-body pb-0 d-flex flex-column flex-grow-1">
-                                        <h5 class="card-title">Thống Kê Doanh Thu Theo Hãng</h5>
-                                        <div id="budgetChart" style="min-height: 220px;" class="echart flex-grow-1"></div>
-                                    </div>
-                                </div><!-- End Budget Report -->
-
-                                <!-- Website Traffic -->
-                                <div class="card flex-grow-1 mb-0 d-flex flex-column">
-                                    <div class="card-body pb-0 d-flex flex-column flex-grow-1">
-                                        <h5 class="card-title">Thống Kê Số Lượng Xe Được Thuê</h5>
-                                        <div id="trafficChart" style="min-height: 220px;" class="echart flex-grow-1"></div>
-                                    </div>
-                                </div><!-- End Website Traffic -->
-                            </div><!-- End Right side charts -->
-
-
-
-                            <!-- Top Selling -->
+                <div class="row">                            <!-- Top Selling -->
                             <div class="col-12 mt-4">
                                 <div class="card border-0 shadow-sm custom-card">
                                     <div class="card-body p-4 pb-0">
@@ -394,11 +372,6 @@
 
                                 </div>
                             </div><!-- End Top Selling -->
-
-                        </div>
-                    </div><!-- End Left side columns -->
-
-                    <!-- Right side columns removed for cleaner layout -->
 
                 </div>
             </section>
@@ -540,6 +513,18 @@
                 });
 
                 function fetchDashboardData() {
+                    // Show real-time loading UI
+                    if(window.reportsChart) {
+                        try {
+                            window.budgetChart.showLoading({ color: '#C09D62' });
+                            window.trafficChart.showLoading({ color: '#C09D62' });
+                        } catch(e) {}
+                    }
+                    
+                    document.getElementById('revenue-container').style.opacity = '0.4';
+                    document.getElementById('orders-container').style.opacity = '0.4';
+                    document.getElementById('customers-container').style.opacity = '0.4';
+
                     let url = 'api_dashboard.jsp?period=' + currentPeriod + '&startDate=' + currentStartDate + '&endDate=' + currentEndDate;
                     fetch(url)
                         .then(res => res.json())
@@ -705,7 +690,18 @@
                                 });
                             }
                         })
-                        .catch(err => console.error("Error fetching dashboard data:", err));
+                        .catch(err => console.error("Error fetching dashboard data:", err))
+                        .finally(() => {
+                            // Hide real-time loading UI
+                            try {
+                                window.budgetChart.hideLoading();
+                                window.trafficChart.hideLoading();
+                            } catch(e) {}
+                            
+                            document.getElementById('revenue-container').style.opacity = '1';
+                            document.getElementById('orders-container').style.opacity = '1';
+                            document.getElementById('customers-container').style.opacity = '1';
+                        });
                 }
 
                 // Initial load

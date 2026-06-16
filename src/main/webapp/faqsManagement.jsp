@@ -5,6 +5,7 @@
 <html lang="en">
 
     <head>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta charset="utf-8">
 
         
@@ -246,27 +247,20 @@
         </style>
     </head>
 
-    <body>
-        <div class="row">
-            <jsp:include page="/includes/staff/header-staff.jsp" />
-            <div class="col-md-2">
-
-                <jsp:include page="/includes/staff/sidebar.jsp" /> 
-
-            <div style="margin-top: 5rem" class="col-md-12">
-                <div class="container col-md-8">
-                    <div class="pagetitle" style="margin-bottom: 20px;">
-                        <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ CÂU HỎI THƯỜNG GẶP</h1>
-                        <nav>
-                            <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
-                                <li class="breadcrumb-item"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
-                                <li class="breadcrumb-item active" style="font-weight: 500; color: #6c757d;">Quản lý câu hỏi thường gặp</li>
-                            </ol>
-                        </nav>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="wrapper wrapper-content animated fadeInRight">
+    <body style="background-color: transparent;">
+        <div class="container col-md-10 mt-4">
+            <div class="pagetitle" style="margin-bottom: 20px;">
+                <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ CÂU HỎI THƯỜNG GẶP</h1>
+                <nav>
+                    <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
+                        <li class="breadcrumb-item"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
+                        <li class="breadcrumb-item active" style="font-weight: 500; color: #6c757d;">Quản lý câu hỏi thường gặp</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="wrapper wrapper-content animated fadeInRight">
 
                                 <div class="ibox-content m-b-sm border-bottom">
                                     <div class="text-center p-lg">
@@ -285,7 +279,6 @@
                                             <div class="col-md-10">
                                                 <p data-toggle="collapse" class="faq-question">${faq.question}</p>
                                                 <p class="faq-answer">${faq.answer}</p>
-                                                <small>Added by <strong>Staff</strong> <i class="fa fa-clock-o"></i> Today 2:40 pm - 24.06.2014</small>
                                             </div>
 
                                             <div class="faq-actions col-md-2 text-right">

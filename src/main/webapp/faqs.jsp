@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/logo.png">
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Câu Hỏi Thường Gặp - SmartRide</title>
@@ -270,129 +270,12 @@
 <section class="faq-section">
     <div class="container">
 
-        <!-- Category: Giá thuê xe -->
-        <div class="faq-category" data-aos="fade-up">
-            <div class="faq-category-header">
-                <hr class="faq-dashed">
-                <h3>Giá thuê xe máy</h3>
-                <hr class="faq-dashed">
-            </div>
-            <div class="faq-grid" id="faqGridPrice">
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Giá thuê xe máy tại SmartRide là bao nhiêu?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Giá thuê xe dao động từ 150.000đ đến 350.000đ/ngày tùy loại xe. Bạn có thể xem bảng giá chi tiết trong mục Bảng Giá trên trang chủ.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Giá thuê xe có thay đổi theo ngày lễ không?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Giá thuê xe có thể thay đổi trong các dịp lễ, Tết. SmartRide sẽ thông báo trước ít nhất 7 ngày nếu có điều chỉnh giá.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Thuê xe theo tháng có được giảm giá không?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Có! Thuê xe theo tháng được giảm từ 20-30% so với giá ngày. Liên hệ trực tiếp với chúng tôi để được báo giá ưu đãi.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Giá thuê xe đã bao gồm xăng chưa?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Giá thuê chưa bao gồm xăng. Xe sẽ được giao với bình xăng đầy và bạn vui lòng đổ đầy bình khi trả xe.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Category: Thủ tục thuê xe -->
-        <div class="faq-category" data-aos="fade-up">
-            <div class="faq-category-header">
-                <hr class="faq-dashed">
-                <h3>Thủ tục thuê xe</h3>
-                <hr class="faq-dashed">
-            </div>
-            <div class="faq-grid">
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Cần giấy tờ gì để thuê xe?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Bạn cần có: CMND/CCCD còn hiệu lực, bằng lái xe phù hợp (A1/A2). Một số trường hợp có thể yêu cầu đặt cọc xe máy hoặc giấy tờ tùy thân.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Tôi có thể thuê xe nếu không phải công dân Việt Nam không?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Có, khách nước ngoài cần có hộ chiếu còn hiệu lực và bằng lái xe quốc tế hoặc bằng lái được công nhận tại Việt Nam.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Có cần đặt cọc không?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Tùy theo loại xe và thời gian thuê, SmartRide có thể yêu cầu đặt cọc từ 500.000đ đến 2.000.000đ. Tiền cọc sẽ được hoàn trả khi trả xe đúng hạn và nguyên vẹn.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Thời gian làm thủ tục mất bao lâu?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Thủ tục thuê xe chỉ mất khoảng 5-10 phút nếu bạn đã chuẩn bị đủ giấy tờ cần thiết. Đặt xe online trước giúp rút ngắn thời gian hơn nữa.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Category: Giao nhận xe -->
-        <div class="faq-category" data-aos="fade-up">
-            <div class="faq-category-header">
-                <hr class="faq-dashed">
-                <h3>Giao nhận xe</h3>
-                <hr class="faq-dashed">
-            </div>
-            <div class="faq-grid">
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>SmartRide có giao xe tận nơi không?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Có, SmartRide hỗ trợ giao xe tận nơi trong phạm vi nội thành Đà Nẵng với phí giao hàng từ 30.000đ – 80.000đ tùy khoảng cách.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Thời gian giao nhận xe hoạt động trong khung giờ nào?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">SmartRide hoạt động từ 7:00 – 21:00 mỗi ngày kể cả cuối tuần và ngày lễ. Giao xe ngoài giờ vui lòng liên hệ trước để được sắp xếp.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Có thể trả xe ở địa điểm khác với nơi nhận không?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Hiện tại SmartRide yêu cầu trả xe tại địa điểm ban đầu hoặc có thể thỏa thuận thêm phí trả xe một chiều. Vui lòng liên hệ để biết thêm chi tiết.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">
-                        <span>Cần đặt lịch trước để giao nhận xe không?</span>
-                        <i class="faq-chevron fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">Chúng tôi khuyến khích đặt trước ít nhất 2-4 giờ để đảm bảo có xe và nhân viên sẵn sàng phục vụ bạn đúng giờ.</div>
-                </div>
-            </div>
-        </div>
-
         <!-- Category: Dynamic FAQs from DB -->
         <c:if test="${not empty sessionScope.FAQ}">
         <div class="faq-category" data-aos="fade-up">
             <div class="faq-category-header">
                 <hr class="faq-dashed">
-                <h3>Chất lượng & An toàn</h3>
+                <h3>Danh sách câu hỏi thường gặp</h3>
                 <hr class="faq-dashed">
             </div>
             <div class="faq-grid" id="dynamicFaqGrid">

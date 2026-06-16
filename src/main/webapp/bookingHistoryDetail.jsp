@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta charset="utf-8">
         <title>Chi tiết lịch sử thuê xe</title>
         <!-- Tailwind CSS & Google Fonts -->
@@ -24,8 +25,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     
-    <jsp:include page="/includes/customer/header.jsp" />
-    <jsp:include page="/includes/customer/navbar.jsp" />
+    <c:if test="${param.layout != 'modal'}">
+        <jsp:include page="/includes/customer/header.jsp" />
+        <jsp:include page="/includes/customer/navbar.jsp" />
+    </c:if>
     
     <body class="font-body" data-framework="tailwind">
         <!-- CSS Links -->
@@ -35,15 +38,17 @@
         <link href="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/css/nucleo-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/css/soft-ui-dashboard-tailwind.css">
         
-        <div class="builder-container builder-container-preview font-body">
-            <jsp:include page="/includes/customer/sidebarProfile.jsp">
-                <jsp:param name="activePage" value="bookingHistoryDetail"/>
-            </jsp:include>
+        <div class="${param.layout == 'modal' ? '' : 'builder-container builder-container-preview'} font-body">
+            <c:if test="${param.layout != 'modal'}">
+                <jsp:include page="/includes/customer/sidebarProfile.jsp">
+                    <jsp:param name="activePage" value="bookingHistoryDetail"/>
+                </jsp:include>
+            </c:if>
 
             <!-- Main Panel Content -->
-            <div class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
-                <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-gray-500">
-                    <div class="relative flex flex-col flex-auto min-w-0 p-6 mx-6 mt-32 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border mb-4 animate-fadeIn">
+            <div class="${param.layout == 'modal' ? 'w-full' : 'ease-soft-in-out xl:ml-68.5'} relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
+                <div class="${param.layout == 'modal' ? 'p-0' : 'w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh'} text-gray-500">
+                    <div class="relative flex flex-col flex-auto min-w-0 ${param.layout == 'modal' ? 'p-0 shadow-none' : 'p-6 mx-6 mt-32 shadow-blur border-0 bg-white/80'} overflow-hidden break-words rounded-2xl bg-clip-border mb-4 animate-fadeIn">
                         
                         <!-- Header -->
                         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-5 mb-6">
@@ -162,6 +167,17 @@
                                                 <div>
                                                     <p class="text-xs text-gray-400 font-bold uppercase mb-1">Trạng thái giao xe</p>
                                                     <p class="text-base text-blue-700 font-black">${booking.deliveryStatus}</p>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                        <c:if test="${statusBooking == 'Đã hủy' && not empty cancellation}">
+                                            <div class="mt-6 pt-5 border-t border-gray-100 flex items-start gap-4">
+                                                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                                                    <i class="fas fa-times-circle text-red-500 text-lg"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Lý do hủy đơn</p>
+                                                    <p class="text-base text-red-700 font-medium">${cancellation.note}</p>
                                                 </div>
                                             </div>
                                         </c:if>

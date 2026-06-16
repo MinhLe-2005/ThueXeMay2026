@@ -48,6 +48,13 @@ public class AddNewEventStaff extends HttpServlet {
 
             // Add event to database
             eventDAO.addNewEvent(event);
+            
+            // Bắn thông báo realtime
+            com.smartride.dao.NotificationDAO.getInstance().insertBroadcastNotification(
+                "🎉 Sự kiện mới: " + eventTitle,
+                "Sự kiện " + eventTitle + " giảm giá lên đến " + (int)(discount * 100) + "%. Xem ngay!",
+                "event"
+            );
 
         } catch (Exception e) {
             // Handle exceptions

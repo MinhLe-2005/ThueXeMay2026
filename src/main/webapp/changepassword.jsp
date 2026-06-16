@@ -1,8 +1,9 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+﻿<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Thay đổi mật khẩu</title>
         <link rel="stylesheet" href="./fonts/themify-icons-font/themify-icons/themify-icons.css">

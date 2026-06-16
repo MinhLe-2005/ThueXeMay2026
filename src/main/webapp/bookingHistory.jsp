@@ -353,6 +353,17 @@
                 <div class="w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh text-slate-500">
                     <div class="relative flex flex-col flex-auto min-w-0 p-4 mx-6 mt-32 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border mb-4">
                                             
+                                            
+                                            <c:if test="${not empty sessionScope.errorMsg}">
+                                                <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-start">
+                                                    <i class="fas fa-exclamation-circle text-red-500 mt-0.5 mr-3"></i>
+                                                    <div class="flex-1 text-sm text-red-700 font-medium">
+                                                        ${sessionScope.errorMsg}
+                                                    </div>
+                                                </div>
+                                                <c:remove var="errorMsg" scope="session"/>
+                                            </c:if>
+
                                             <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
                                                 <i class="fas fa-history mr-2 text-amber-500"></i> Lịch sử thuê xe
                                             </h3>
@@ -475,14 +486,14 @@
                                                                     <c:set var="feedback" value="${feedbackMap[o.bookingID]}"/>
                                                                     <c:choose>
                                                                         <c:when test="${not empty feedback}">
-                                                                            <c:if test="${(status == 'all' && o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả') || ((status == 'confirmed') && (o.deliveryStatus == 'Đã trả'))}">
+                                                                            <c:if test="${o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả'}">
                                                                                 <a href="feedback?bookingId=${o.bookingID}" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm border border-emerald-100" title="Xem đánh giá">
                                                                                     <i class="fas fa-star text-[10px] mr-1"></i> Xem ĐG
                                                                                 </a>
                                                                             </c:if>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <c:if test="${(status == 'all' && o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả') || ((status == 'confirmed') && (o.deliveryStatus != 'Đã trả'))}">
+                                                                            <c:if test="${o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã trả'}">
                                                                                 <a href="feedback?bookingId=${o.bookingID}" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm border border-rose-100 animate-pulse" title="Viết đánh giá">
                                                                                     <i class="fas fa-pen text-[10px] mr-1"></i> Viết ĐG
                                                                                 </a>

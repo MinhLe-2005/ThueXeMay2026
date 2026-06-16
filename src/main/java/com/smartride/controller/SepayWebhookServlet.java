@@ -70,7 +70,8 @@ public class SepayWebhookServlet extends HttpServlet {
             com.smartride.dto.Booking existingBooking = daoB.getBookingById(bookingId);
             
             if (existingBooking != null) {
-                daoB.updateBookingStatus(bookingId, "Đã thanh toán");
+                // Giữ nguyên trạng thái hiện tại (thường là "Chờ xác nhận") để Admin duyệt thủ công.
+                // daoB.updateBookingStatus(bookingId, "Đã thanh toán");
 
                 PaymentDAO daoP = PaymentDAO.getInstance();
                 LocalDateTime currentDateTime = LocalDateTime.now();

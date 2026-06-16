@@ -427,7 +427,7 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
         List<Motorcycle> list = new ArrayList<>();
         PreparedStatement stm;
         ResultSet rs;
-        StringBuilder sql = new StringBuilder("SELECT DISTINCT m.* FROM \"Motorcycle\" m JOIN \"Demand_Detail\" d ON m.\"MotorcycleID\" = d.\"MotorcycleID\" WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT DISTINCT m.* FROM \"Motorcycle\" m LEFT JOIN \"Demand_Detail\" d ON m.\"MotorcycleID\" = d.\"MotorcycleID\" WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
         buildCriteriaSql(criteria, sql, params);
@@ -453,7 +453,7 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
     }
 
     public int getTotalMotorcyclesCountByCriteria(SearchCriteria criteria) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT m.\"MotorcycleID\") FROM \"Motorcycle\" m JOIN \"Demand_Detail\" d ON m.\"MotorcycleID\" = d.\"MotorcycleID\" WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT m.\"MotorcycleID\") FROM \"Motorcycle\" m LEFT JOIN \"Demand_Detail\" d ON m.\"MotorcycleID\" = d.\"MotorcycleID\" WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
         buildCriteriaSql(criteria, sql, params);
@@ -821,7 +821,7 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
         List<Motorcycle> list = new ArrayList<>();
         PreparedStatement stm;
         ResultSet rs;
-        StringBuilder sql = new StringBuilder("SELECT DISTINCT m.* FROM \"Motorcycle\" m JOIN \"Demand_Detail\" d ON m.\"MotorcycleID\" = d.\"MotorcycleID\" WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT DISTINCT m.* FROM \"Motorcycle\" m LEFT JOIN \"Demand_Detail\" d ON m.\"MotorcycleID\" = d.\"MotorcycleID\" WHERE 1=1");
 
         if (criteria.getPriceRanges() != null && !criteria.getPriceRanges().isEmpty()) {
             sql.append(" AND \"PriceListID\" IN (SELECT \"PriceListID\" FROM \"PriceList\" WHERE ");

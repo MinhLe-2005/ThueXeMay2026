@@ -31,8 +31,22 @@
         <!-- Modern Google Font & Icons -->
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
         
         <style>
+            @keyframes heartPop {
+                0%   { transform: scale(1); }
+                40%  { transform: scale(1.35); }
+                70%  { transform: scale(0.9); }
+                100% { transform: scale(1); }
+            }
+            .fav-btn-card.favorited i {
+                animation: heartPop 0.4s ease;
+            }
+            .fav-btn-card.favorited {
+                background: rgba(254,226,226,0.95) !important;
+                box-shadow: 0 2px 12px rgba(239,68,68,0.3) !important;
+            }
             body {
                 background: transparent !important;
                 margin: 0;
@@ -41,7 +55,7 @@
                 overflow: hidden;
             }
             .centered-slide-carousel {
-                padding: 30px 15px 60px 15px !important;
+                padding: 40px 15px 60px 15px !important;
             }
             
             .swiper-slide {
@@ -50,7 +64,7 @@
                 border: 1px solid rgba(181, 147, 73, 0.2) !important;
                 box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06) !important;
                 transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-                overflow: hidden;
+                overflow: visible;
                 box-sizing: border-box;
                 padding: 30px 25px;
                 display: flex;
@@ -79,8 +93,9 @@
 
             .best-badge {
                 position: absolute;
-                top: 15px;
-                right: 15px;
+                top: -18px;
+                left: 50%;
+                transform: translateX(-50%);
                 background: linear-gradient(135deg, #d4af37, #b59349);
                 color: #fff;
                 font-size: 10px;
@@ -94,6 +109,7 @@
                 gap: 6px;
                 box-shadow: 0 5px 15px rgba(181, 147, 73, 0.4);
                 z-index: 10;
+                white-space: nowrap;
             }
 
             .card-title {
@@ -345,7 +361,11 @@
                         <!-- Make the 2nd item (index 1) the Best Choice -->
                         <c:set var="isBest" value="${status.index == 1}" />
                         
-                        <div class="swiper-slide ${isBest ? 'best-choice' : ''}">
+                        <div class="swiper-slide ${isBest ? 'best-choice' : ''}" style="position: relative;">
+                            <!-- Favorite Button -->
+                            <button onclick="toggleFavQuick('${m.motorcycleId}', this, event)" class="fav-btn-card" style="position:absolute;top:12px;right:12px;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;z-index:10;border:none;padding:0;background:rgba(255,255,255,0.92);backdrop-filter:blur(4px);box-shadow:0 2px 10px rgba(0,0,0,0.12);cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.15)';this.style.boxShadow='0 4px 16px rgba(239,68,68,0.25)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 10px rgba(0,0,0,0.12)';">
+                                <i class="fa-regular fa-heart" style="color:#94a3b8;font-size:15px;line-height:1;"></i>
+                            </button>
                             <c:if test="${isBest}">
                                 <div class="best-badge">
                                     <i class="ri-star-fill"></i> Lựa chọn tốt nhất
@@ -462,6 +482,60 @@
                 event.preventDefault(); 
                 window.top.location.href = 'booking?motorcycleid=' + motorcycleId;
             }
+        </script>
+        <script>
+            function toggleFavQuick(motorcycleId, btnElement, event) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                var icon = btnElement.querySelector('i');
+                var isFav = btnElement.classList.contains('favorited');
+                var action = isFav ? 'remove' : 'add';
+                
+                fetch('favorite?action=' + action + '&motorcycleId=' + motorcycleId, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === 'success') {
+                        if(action === 'add') {
+                            btnElement.classList.add('favorited');
+                            icon.className = 'fa-solid fa-heart';
+                            icon.style.color = '#ef4444';
+                            icon.style.animation = 'none';
+                            icon.offsetHeight;
+                            icon.style.animation = 'heartPop 0.4s ease';
+                        } else {
+                            btnElement.classList.remove('favorited');
+                            icon.className = 'fa-regular fa-heart';
+                            icon.style.color = '#94a3b8';
+                            icon.style.animation = 'none';
+                        }
+                        window.parent.postMessage('fav_updated', '*');
+                        window.parent.postMessage('fav_updated', '*');
+                    } else if(data.status === 'unauthorized') {
+                        window.top.location.href = 'login.jsp';
+                    }
+                });
+            }
+            
+            document.addEventListener("DOMContentLoaded", function() {
+                var buttons = document.querySelectorAll("button[onclick^='toggleFavQuick']");
+                buttons.forEach(function(btn) {
+                    var match = btn.getAttribute('onclick').match(/'([^']+)'/);
+                    if(match && match[1]) {
+                        var mId = match[1];
+                        fetch('favorite?action=check&motorcycleId=' + mId, { method: 'POST' })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.status === 'success' && data.isFavorite) {
+                                var icon = btn.querySelector('i');
+                                btn.classList.add('favorited');
+                                icon.className = 'fa-solid fa-heart';
+                                icon.style.color = '#ef4444';
+                            }
+                        });
+                    }
+                });
+            });
         </script>
     </body>
 </html>

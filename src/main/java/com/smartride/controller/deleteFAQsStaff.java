@@ -18,7 +18,7 @@ public class deleteFAQsStaff extends HttpServlet {
         try {
             String id = request.getParameter("questionID");
             fAQDAO.deleteFAQs(id);
-            response.sendRedirect("faqs");
+            response.sendRedirect("faqsStaff");
         } catch (Exception e) {
             System.out.println(e);
         }

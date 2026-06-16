@@ -75,8 +75,14 @@ public class ChangePasswordServlet extends HttpServlet {
                 return;
             }
 
-            // Always forward back to the change password page so the user can see the success or error message.
-            request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+            // Always forward back to the correct page based on role so the user can see the success or error message.
+            if (ac.getRoleID() == 3) {
+                request.getRequestDispatcher("profileStaff.jsp").forward(request, response);
+            } else if (ac.getRoleID() == 1) {
+                request.getRequestDispatcher("profileAdmin.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+            }
         } catch (ServletException | IOException | NumberFormatException ex) {
             System.out.println(ex);
         }

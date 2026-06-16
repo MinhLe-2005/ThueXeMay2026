@@ -78,7 +78,7 @@
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="profileStaff.jsp">
+                        <a class="dropdown-item d-flex align-items-center" href="manageSmartRide.jsp?iframeSrc=profileStaff.jsp">
                             <i class="bi bi-person"></i>
                             <span>Thông tin cá nhân</span>
                         </a>

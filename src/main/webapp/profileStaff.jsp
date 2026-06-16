@@ -68,8 +68,17 @@
                                                     <div class="d-flex justify-content-center align-items-center rounded"
                                                          style="height: 140px; background-color: rgb(233, 236, 239);">
                                                         <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">
-                                                            <img style="object-fit: cover;" src="${account.image}" width="140px" height="140px" alt="alt"/>
+                                                            <img id="staff-profile-img" style="object-fit: cover;" src="${account.image}" width="140px" height="140px" alt="alt"/>
                                                         </span>
+                                                    </div>
+                                                    <div class="mt-2 text-center">
+                                                        <label class="btn btn-sm btn-outline-secondary" style="cursor: pointer;">
+                                                            Đổi ảnh
+                                                            <input type="file" id="staffAvatarUpload" accept="image/*" style="display: none;">
+                                                        </label>
+                                                        <div id="uploadSpinner" class="spinner-border spinner-border-sm text-primary d-none" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -254,7 +263,7 @@
             </div>
         </div>
 
-        <script>
+        <script type="text/javascript">
             function changeType(button) {
                 var inputElements = document.querySelectorAll(".form-control");
                 if (button.id === "update") {
@@ -263,7 +272,6 @@
                     inputElements.forEach(x => {
                         if (x.name !== "pass" && x.id !== "account-fullname" && x.id !== "account-username") {
                             x.readOnly = false;
-
                         }
                     });
                     document.getElementById('account-gender').disabled = false;
@@ -272,17 +280,6 @@
                     document.getElementById('account-fullname').style.display = 'none';
                 } else {
                     document.getElementById("form-update").submit();
-                    button.id = "update";
-                    button.textContent = "Cập nhật";
-                    inputElements.forEach(x => {
-                        if (x.name !== "pass") {
-                            x.readOnly = true;
-                        }
-                    });
-                    document.getElementById('account-gender').disabled = true;
-                    document.getElementById('account-firstname').style.display = 'none';
-                    document.getElementById('account-lastname').style.display = 'none';
-                    document.getElementById('account-fullname').style.display = 'block';
                 }
             }
             function showPassword(inputId) {
@@ -302,8 +299,7 @@
                 // lấy giá trị của 'activeTab' từ localStorage
                 const activeTab = localStorage.getItem('activeTab'); // có sẵn
                 if (activeTab) {
-                    const tabTrigger = new bootstrap.Tab(document.querySelector('#' + activeTab));
-                    tabTrigger.show();
+                    $('#' + activeTab).tab('show');
                 }
 
                 myTab.addEventListener('click', function (event) {
@@ -313,6 +309,42 @@
                         localStorage.setItem('activeTab', event.target.id);
                     }
                 });
+
+                // Xử lý upload ảnh đại diện
+                const avatarUpload = document.getElementById('staffAvatarUpload');
+                if (avatarUpload) {
+                    avatarUpload.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+
+                        const spinner = document.getElementById('uploadSpinner');
+                        spinner.classList.remove('d-none');
+                        
+                        const id = document.querySelector('input[name="accountID"]').value;
+                        const formData = new FormData();
+                        formData.append('file', file, file.name);
+                        formData.append('id', id);
+
+                        fetch('uploadimage', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Reload page to show new image
+                                window.location.reload();
+                            } else {
+                                alert("Có lỗi xảy ra khi cập nhật ảnh!");
+                                spinner.classList.add('d-none');
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert("Có lỗi xảy ra khi cập nhật ảnh!");
+                            spinner.classList.add('d-none');
+                        });
+                    });
+                }
             });
 
             const passwordInput = document.getElementById("newPassword");

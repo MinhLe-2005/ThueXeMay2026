@@ -34,6 +34,8 @@ public class BookingHistoryDetailServlet extends HttpServlet {
         request.setAttribute("booking", booking);
         request.setAttribute("motorcycleDetails", motorcycleDetails);
         request.setAttribute("statusBooking", booking.getStatusBooking());
+        com.smartride.dto.Cancellation cancellation = com.smartride.dao.CancellationDAO.getInstance().getCancellationByBookingId(bookingId);
+        request.setAttribute("cancellation", cancellation);
 
         request.getRequestDispatcher("bookingHistoryDetail.jsp").forward(request, response);
     }

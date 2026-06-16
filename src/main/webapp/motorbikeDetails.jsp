@@ -11,6 +11,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <title>Motorcycles Detail</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -805,7 +806,15 @@
                                         <span class="brand-badge">${brands.brandName}</span>
                                     </c:if>
                                 </c:forEach>
-                                <h1 class="model-title">${motorcycleDetail.model}</h1>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h1 class="model-title mb-0" style="margin-bottom: 0;">${motorcycleDetail.model}</h1>
+                                    <c:if test="${sessionScope.account != null}">
+                                        <button id="fav-btn" class="btn btn-light shadow-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; transition: all 0.3s; border: 1px solid #e2e8f0;" onclick="toggleFavorite('${motorcycleDetail.motorcycleId}')">
+                                            <i class="fa-regular fa-heart" id="fav-icon" style="font-size: 1.5rem; color: #94a3b8; transition: all 0.2s;"></i>
+                                        </button>
+                                    </c:if>
+                                </div>
+                                <div style="margin-bottom: 24px;"></div>
                                 
                                 <ul class="nav nav-pills modern-tabs" id="pills-tab" role="tablist">
                                     <li class="nav-item" style="width: 50%; text-align: center;">
@@ -945,6 +954,16 @@
                                                     </c:when>
                                                     <c:when test="${motorcycleDetail.model == 'Piaggio Medley'}">
                                                         <p><strong>Piaggio Medley 150cc</strong> là mẫu xe tay ga bánh lớn cao cấp tích hợp nhiều công nghệ tối tân từ Piaggio. Động cơ i-Get 150cc phun xăng điện tử làm mát bằng dung dịch mạnh mẽ, cốp xe siêu khủng chứa được 2 mũ bảo hiểm cả đầu và phanh ABS đôi bánh trước sau mang lại sự tiện nghi tối đa.</p>
+     ãng đường di chuyển lên tới hơn 200km mỗi lần sạc đầy, động cơ điện êm ái chống nước tuyệt đối tiêu chuẩn IP67, đem lại giải pháp di chuyển xanh đột phá và cực kỳ kinh tế.</p>
+                                                    </c:when>
+                                                    <c:when test="${motorcycleDetail.model == 'VinFast Klara S'}">
+                                                        <p><strong>VinFast Klara S</strong> là mẫu xe máy điện cao cấp đầy kiêu hãnh được ví như "viên ngọc" đô thị. Xe tích hợp động cơ Bosch 1200W mạnh mẽ, hệ thống 2 pin Lithium tiên tiến siêu bền bỉ, tính năng kết nối điện thoại thông minh định vị GPS mang lại hành trình di chuyển êm ái, sang trọng và hiện đại.</p>
+                                                    </c:when>
+                                                    <c:when test="${motorcycleDetail.model == 'Piaggio Liberty'}">
+                                                        <p><strong>Piaggio Liberty 150cc</strong> là mẫu xe tay ga cao cấp mang đậm phong cách thời trang Ý thanh lịch và thời thượng. Thiết kế bánh xe lớn vững chãi, hệ thống phanh ABS bánh trước an toàn tuyệt đối và động cơ i-Get thế hệ mới tiết kiệm nhiên liệu mang lại trải nghiệm di chuyển vô cùng đẳng cấp và cuốn hút.</p>
+                                                    </c:when>
+                                                    <c:when test="${motorcycleDetail.model == 'Piaggio Medley'}">
+                                                        <p><strong>Piaggio Medley 150cc</strong> là mẫu xe tay ga bánh lớn cao cấp tích hợp nhiều công nghệ tối tân từ Piaggio. Động cơ i-Get 150cc phun xăng điện tử làm mát bằng dung dịch mạnh mẽ, cốp xe siêu khủng chứa được 2 mũ bảo hiểm cả đầu và phanh ABS đôi bánh trước sau mang lại sự tiện nghi tối đa.</p>
                                                     </c:when>
                                                     <c:when test="${motorcycleDetail.model == 'Piaggio Fly'}">
                                                         <p><strong>Piaggio Fly 120cc (hoặc Fly 50cc)</strong> là mẫu xe tay ga thời trang châu Âu vô cùng thực dụng, đầm chắc. Sàn để chân rộng rãi, thiết kế cổ điển bền bỉ theo thời gian và động cơ êm ái đem lại cảm giác dạo phố nhẹ nhàng, đầm ấm và vô cùng an toàn cho cả gia đình.</p>
@@ -990,7 +1009,72 @@
                 </div>
             </div>
 
-            <section class="ftco-section ftco-no-pt">
+            <!-- REVIEWS SECTION -->
+            <section style="padding: 70px 0; background: #f4f5f8;">
+                <div class="container">
+                    <!-- Header -->
+                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-5" style="gap:16px;">
+                        <div>
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="width:40px;height:2px;background:linear-gradient(90deg,transparent,#b59349);display:block;"></span>
+                                <span style="color:#b59349;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:3px;">Nhận Xét Thực Tế</span>
+                                <span style="width:40px;height:2px;background:linear-gradient(270deg,transparent,#b59349);display:block;"></span>
+                            </div>
+                            <h2 style="font-family:'Times New Roman',serif;font-weight:800;color:#1a202c;font-size:34px;margin:0;">Đánh Giá Từ Khách Hàng</h2>
+                            <p style="color:#718096;font-size:14px;margin-top:6px;">Nhận xét thực tế về <strong>${motorcycleDetail.model}</strong></p>
+                        </div>
+                        <div id="write-review-area" style="text-align:right;">
+                            <!-- Blocked State -->
+                            <div id="review-blocked-msg" style="display:inline-block; text-align:right;">
+                                <span style="display:inline-flex; align-items:center; padding:10px 24px; border-radius:50px; background:#f8fafc; color:#94a3b8; font-weight:600; font-size:14px; cursor:not-allowed; border:1px dashed #cbd5e1;">
+                                    <i class="fas fa-lock mr-2"></i> Viết Đánh Giá
+                                </span>
+                                <p style="color:#718096; font-size:12px; margin-top:8px; margin-bottom:0; font-style:italic;">
+                                    Trải nghiệm chuyến đi cùng <strong>${motorcycleDetail.model}</strong> để mở khóa tính năng đánh giá.
+                                </p>
+                            </div>
+                            
+                            <!-- Enabled State -->
+                            <a id="write-review-btn" href="#"
+                               style="display:none; background:linear-gradient(135deg,#b59349,#d4af37);color:white;padding:13px 30px;border-radius:50px;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 4px 15px rgba(181,147,73,0.35);align-items:center;gap:9px;transition:all 0.3s;"
+                               onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+                                <i class="fas fa-pen"></i> Viết Đánh Giá Của Bạn
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- LEFT: Rating Summary Panel -->
+                        <div class="col-md-4 mb-4">
+                            <div id="rating-summary-panel" style="background:white;border-radius:20px;padding:32px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.07);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+                                <div id="avg-score" style="font-size:64px;font-weight:900;color:#b59349;line-height:1;font-family:'Times New Roman',serif;">—</div>
+                                <div id="avg-stars" style="font-size:26px;color:#b59349;letter-spacing:4px;margin:8px 0;">☆☆☆☆☆</div>
+                                <div id="total-reviews" style="color:#a0aec0;font-size:13px;margin-bottom:24px;">Chưa có đánh giá</div>
+                                <div id="star-bars" style="width:100%;">
+                                    <!-- Filled by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: Reviews List -->
+                        <div class="col-md-8">
+                            <div class="row" id="reviews-container">
+                                <div class="col-12 text-center" style="padding:60px 0;">
+                                    <div style="width:48px;height:48px;border:4px solid #f3e7c8;border-top-color:#b59349;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;"></div>
+                                    <p style="color:#a0aec0;margin-top:14px;">Đang tải đánh giá...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <style>
+                @keyframes spin{to{transform:rotate(360deg)}}
+                .bar-fill { transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+            </style>
+            <!-- END REVIEWS -->
+
+            <section class="ftco-section ftco-no-pt" style="margin-top: 50px;">
                 <div class="container-fluid">
                     <div class="row justify-content-center">
                         <div class="col-md-12 text-center mb-5" style="opacity: 1; transform: none;">
@@ -1081,5 +1165,189 @@
                 event.preventDefault(); // Prevent the default anchor behavior
                 window.top.location.href = 'booking?motorcycleid=' + motorcycleId;// Redirect to the booking page
             }
+        </script>
+        <script>
+            // AJAX for Favorites
+            function checkFavoriteStatus(motorcycleId) {
+                fetch('favorite?action=check&motorcycleId=' + motorcycleId, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === 'success') {
+                        var icon = document.getElementById('fav-icon');
+                        var btn = document.getElementById('fav-btn');
+                        if(data.isFavorite) {
+                            btn.style.background = '#fee2e2';
+                            btn.style.borderColor = '#fca5a5';
+                            icon.className = 'fa-solid fa-heart';
+                            icon.style.color = '#ef4444';
+                            icon.style.transform = 'scale(1.15)';
+                            btn.classList.add('added');
+                        } else {
+                            btn.style.background = '';
+                            btn.style.borderColor = '#e2e8f0';
+                            icon.className = 'fa-regular fa-heart';
+                            icon.style.color = '#94a3b8';
+                            icon.style.transform = 'scale(1)';
+                            btn.classList.remove('added');
+                        }
+                    }
+                });
+            }
+
+            function toggleFavorite(motorcycleId) {
+                var btn = document.getElementById('fav-btn');
+                var isFav = btn.classList.contains('added');
+                var action = isFav ? 'remove' : 'add';
+                
+                fetch('favorite?action=' + action + '&motorcycleId=' + motorcycleId, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === 'success') {
+                        checkFavoriteStatus(motorcycleId);
+                        window.postMessage('fav_updated', '*');
+                    } else if(data.status === 'unauthorized') {
+                        window.location.href = 'login.jsp';
+                    }
+                });
+            }
+
+            // Kiểm tra khách có đủ điều kiện viết feedback không
+            function checkReviewEligibility(motorcycleId) {
+                fetch('feedback?action=checkEligible&motorcycleId=' + motorcycleId)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.eligible && data.bookingId) {
+                        var btn = document.getElementById('write-review-btn');
+                        var blockedMsg = document.getElementById('review-blocked-msg');
+                        if (btn && blockedMsg) {
+                            btn.href = 'feedback?bookingId=' + data.bookingId;
+                            btn.style.display = 'inline-flex';
+                            blockedMsg.style.display = 'none';
+                        }
+                    }
+                }).catch(() => {});
+            }
+
+            function renderStars(score, size) {
+                size = size || 18;
+                var html = '';
+                for (var i = 1; i <= 5; i++) {
+                    if (i <= Math.floor(score)) {
+                        html += '<i class="fas fa-star" style="color:#f59e0b;font-size:' + size + 'px;"></i>';
+                    } else if (i - score < 1 && i - score > 0) {
+                        html += '<i class="fas fa-star-half-alt" style="color:#f59e0b;font-size:' + size + 'px;"></i>';
+                    } else {
+                        html += '<i class="far fa-star" style="color:#e2e8f0;font-size:' + size + 'px;"></i>';
+                    }
+                }
+                return html;
+            }
+
+            function fetchReviews(motorcycleId) {
+                fetch('feedback?action=getByMotorcycle&motorcycleId=' + motorcycleId)
+                .then(res => res.json())
+                .then(data => {
+                    var container = document.getElementById('reviews-container');
+
+                    if (!data || data.length === 0) {
+                        // Rating panel: no data
+                        document.getElementById('avg-score').textContent = '—';
+                        document.getElementById('avg-stars').innerHTML = renderStars(0, 20);
+                        document.getElementById('total-reviews').textContent = 'Chưa có đánh giá nào';
+                        document.getElementById('star-bars').innerHTML = '';
+
+                        container.innerHTML =
+                            '<div class="col-12 text-center" style="padding:60px 0;">' +
+                            '<div style="width:72px;height:72px;background:#f3e7c8;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">' +
+                            '<i class="fas fa-comment-dots" style="font-size:28px;color:#b59349;"></i></div>' +
+                            '<h5 style="color:#4a5568;font-weight:700;">Chưa có đánh giá nào</h5>' +
+                            '<p style="color:#a0aec0;font-size:14px;">Hãy là người đầu tiên chia sẻ trải nghiệm về xe này!</p>' +
+                            '</div>';
+                        return;
+                    }
+
+                    // === Compute Summary ===
+                    var total = data.length;
+                    var sumAvg = 0;
+                    var counts = {1:0, 2:0, 3:0, 4:0, 5:0};
+                    data.forEach(function(fb) {
+                        var avg = (fb.productRate + fb.serviceRate) / 2;
+                        sumAvg += avg;
+                        var rounded = Math.round(avg);
+                        if (rounded >= 1 && rounded <= 5) counts[rounded]++;
+                    });
+                    var overallAvg = (sumAvg / total).toFixed(1);
+
+                    // Rating panel
+                    document.getElementById('avg-score').textContent = overallAvg;
+                    document.getElementById('avg-stars').innerHTML = renderStars(parseFloat(overallAvg), 22);
+                    document.getElementById('total-reviews').textContent = total + ' lượt đánh giá';
+
+                    var barsHtml = '';
+                    for (var s = 5; s >= 1; s--) {
+                        var pct = total > 0 ? Math.round((counts[s] / total) * 100) : 0;
+                        barsHtml +=
+                            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">' +
+                            '<span style="font-size:12px;color:#4a5568;font-weight:700;min-width:14px;">' + s + '</span>' +
+                            '<i class="fas fa-star" style="color:#f59e0b;font-size:12px;"></i>' +
+                            '<div style="flex:1;height:8px;background:#f1f5f9;border-radius:99px;overflow:hidden;">' +
+                            '<div class="bar-fill" style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,#f59e0b,#b59349);border-radius:99px;"></div>' +
+                            '</div>' +
+                            '<span style="font-size:11px;color:#a0aec0;min-width:28px;text-align:right;">' + pct + '%</span>' +
+                            '</div>';
+                    }
+                    document.getElementById('star-bars').innerHTML = barsHtml;
+
+                    // === Render Review Cards (single column in right panel) ===
+                    var html = '';
+                    data.forEach(function(fb) {
+                        var img = fb.customerImage ? fb.customerImage : 'images/avarta.jpg';
+                        var name = fb.customerName ? fb.customerName : 'Khách hàng';
+                        var avgRate = (fb.productRate + fb.serviceRate) / 2;
+
+                        html += '<div class="col-12 mb-3">';
+                        html += '<div style="background:white;border-radius:16px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border-left:4px solid #b59349;transition:transform 0.2s,box-shadow 0.2s;" ' +
+                                'onmouseover="this.style.transform=\'translateY(-3px)\';this.style.boxShadow=\'0 8px 24px rgba(181,147,73,0.15)\'" ' +
+                                'onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'0 2px 12px rgba(0,0,0,0.06)\'">';
+
+                        // Top row: avatar + name + stars + date
+                        html += '<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">';
+                        html += '<img src="' + img + '" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:3px solid #f3e7c8;">';
+                        html += '<div style="flex:1;">';
+                        html += '<div style="display:flex;align-items:center;justify-content:space-between;">';
+                        html += '<span style="font-weight:700;color:#1a202c;font-size:15px;">' + name + '</span>';
+                        html += '<span style="font-size:11px;color:#a0aec0;"><i class="fas fa-clock" style="margin-right:4px;"></i>' + (fb.feedbackTime || '') + '</span>';
+                        html += '</div>';
+                        html += '<div style="margin-top:4px;">' + renderStars(avgRate, 14) + '</div>';
+                        html += '</div></div>';
+
+                        // Rating badges
+                        html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">';
+                        html += '<span style="background:#fef9ec;color:#b59349;border:1px solid #f3e7c8;border-radius:20px;padding:3px 12px;font-size:11px;font-weight:700;">' +
+                                '<i class="fas fa-motorcycle" style="margin-right:4px;"></i>Xe: ' + renderStars(fb.productRate, 11) + '</span>';
+                        html += '<span style="background:#ecfdf5;color:#059669;border:1px solid #d1fae5;border-radius:20px;padding:3px 12px;font-size:11px;font-weight:700;">' +
+                                '<i class="fas fa-headset" style="margin-right:4px;"></i>Dịch vụ: ' + renderStars(fb.serviceRate, 11) + '</span>';
+                        html += '</div>';
+
+                        // Comment
+                        html += '<p style="color:#4a5568;font-style:italic;font-size:14px;line-height:1.7;margin:0;padding:12px 16px;background:#fafafa;border-radius:10px;">' +
+                                '"' + fb.content + '"</p>';
+                        html += '</div></div>';
+                    });
+                    container.innerHTML = html;
+
+                }).catch(function() {
+                    document.getElementById('reviews-container').innerHTML =
+                        '<div class="col-12 text-center text-muted" style="padding:40px;">Không thể tải đánh giá.</div>';
+                });
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var mid = '${motorcycleDetail.motorcycleId}';
+                if (document.getElementById('fav-btn')) checkFavoriteStatus(mid);
+                checkReviewEligibility(mid);
+                fetchReviews(mid);
+                setInterval(function() { fetchReviews(mid); }, 15000);
+            });
         </script>
     </html>

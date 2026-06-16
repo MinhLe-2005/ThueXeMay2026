@@ -5,6 +5,7 @@
 <html lang="en">
 
     <head>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <jsp:include page="/includes/customer/header.jsp" />
@@ -520,7 +521,7 @@
                                 <c:choose>
                                     <c:when test="${not empty requestScope.book && statusBooking != 'Đã hủy'}">
                                         <p>Cảm ơn bạn đã sử dụng dịch vụ của <span><strong>SmartRide</strong></span>, hãy bấm vào đây để theo dõi nhanh đơn hàng của mình nhé!</p>
-                                        <a href="bookingHistoryDetail?bookingId=${requestScope.book.bookingID}">
+                                        <a href="bookingHistory?status=all">
                                             <button>Theo dõi đơn hàng</button>
                                         </a>
                                     </c:when>
