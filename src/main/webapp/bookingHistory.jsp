@@ -437,37 +437,38 @@
                                                                 </span>
                                                             </td>
                                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                                <c:choose>
-                                                                    <c:when test="${o.statusBooking == 'Chờ xác nhận'}">
-                                                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-100">
-                                                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                                                                            Chờ xác nhận
-                                                                        </span>
-                                                                    </c:when>
-                                                                    <c:when test="${o.statusBooking == 'Đã xác nhận'}">
-                                                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                                            Đã xác nhận
-                                                                        </span>
-                                                                        <c:if test="${not empty o.deliveryStatus}">
-                                                                            <div class="mt-1">
-                                                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold ${
-                                                                                    o.deliveryStatus == 'Đã trả' ? 'bg-blue-50 text-blue-700 border border-blue-100' :
-                                                                                    o.deliveryStatus == 'Đã giao' ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' :
-                                                                                    'bg-slate-50 text-slate-600 border border-slate-100'
-                                                                                }">
-                                                                                    ${o.deliveryStatus}
-                                                                                </span>
-                                                                            </div>
-                                                                        </c:if>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-100">
-                                                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                                                                            Đã hủy
-                                                                        </span>
-                                                                    </c:otherwise>
-                                                                </c:choose>
+                                                                    <c:choose>
+                                                                        <c:when test="${o.statusBooking == 'Đã hủy'}">
+                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-100">
+                                                                                <i class="fas fa-times-circle"></i> Đã hủy
+                                                                            </span>
+                                                                        </c:when>
+                                                                        <c:when test="${o.deliveryStatus == 'Đã trả'}">
+                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                                                                                <i class="fas fa-check-circle text-slate-500"></i> Hoàn tất
+                                                                            </span>
+                                                                        </c:when>
+                                                                        <c:when test="${o.deliveryStatus == 'Đã giao'}">
+                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                                                                                <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span> Đang thuê
+                                                                            </span>
+                                                                        </c:when>
+                                                                        <c:when test="${o.statusBooking == 'Đã xác nhận'}">
+                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                                                                <i class="fas fa-calendar-check text-emerald-500"></i> Sắp nhận xe
+                                                                            </span>
+                                                                        </c:when>
+                                                                        <c:when test="${o.statusBooking == 'Chờ xác nhận'}">
+                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-100">
+                                                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Chờ duyệt
+                                                                            </span>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-gray-50 text-gray-700 border border-gray-200">
+                                                                                ${o.statusBooking}
+                                                                            </span>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                             </td>
                                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
                                                                 <c:set var="total" value="0"/>
@@ -478,8 +479,8 @@
                                                             </td>
                                                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                                                 <div class="inline-flex items-center justify-center gap-2">
-                                                                    <a href="bookingHistoryDetail?bookingId=${o.bookingID}" class="w-8 h-8 rounded-full bg-slate-50 hover:bg-amber-500 hover:text-white text-slate-500 flex items-center justify-center transition-all duration-200 border border-slate-100 shadow-sm text-decoration-none" title="Xem chi tiết" data-toggle="tooltip">
-                                                                        <i class="fa fa-eye text-xs"></i>
+                                                                    <a href="bookingHistoryDetail?bookingId=${o.bookingID}" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm flex items-center h-[28px]" title="Chi tiết / Gia hạn">
+                                                                        <i class="fas fa-file-invoice mr-1.5"></i> Chi tiết / Gia hạn
                                                                     </a>
                                                                     
                                                                     <input type="hidden" name="bookingId" value="${o.bookingID}" />
