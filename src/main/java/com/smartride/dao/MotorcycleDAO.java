@@ -940,3 +940,5 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
     }
 
 }
+
+// Minor update 0
