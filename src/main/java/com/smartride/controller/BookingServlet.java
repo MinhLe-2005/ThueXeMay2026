@@ -102,3 +102,5 @@ public class BookingServlet extends HttpServlet {
 }
 
 // Minor update 4
+
+// Minor update 6
