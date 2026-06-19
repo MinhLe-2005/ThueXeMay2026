@@ -34,9 +34,10 @@ public class BookingServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
         if(account != null && account.getRoleID() == 1){           
-    //        session.setAttribute("account", AccountDAO.getInstance().checkLogin("thinhtvde170182@fpt.edu.vn", "Lb4_aa"));
-//            session.setAttribute("account", AccountDAO.getInstance().checkLogin("myphan123", "myphanpass"));
-            session.setAttribute("account", AccountDAO.getInstance().getAccountbyID(account.getAccountId()));
+            Account updatedAccount = AccountDAO.getInstance().getAccountbyID(account.getAccountId());
+            if (updatedAccount != null) {
+                session.setAttribute("account", updatedAccount);
+            }
             MotorcycleDAO daoM = MotorcycleDAO.getInstance();
         
             //Tu mototcycle vao
@@ -99,3 +100,5 @@ public class BookingServlet extends HttpServlet {
     }// </editor-fold>
 
 }
+
+// Minor update 4
