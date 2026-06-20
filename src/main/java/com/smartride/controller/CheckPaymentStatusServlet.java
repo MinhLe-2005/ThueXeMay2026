@@ -43,3 +43,5 @@ public class CheckPaymentStatusServlet extends HttpServlet {
         out.flush();
     }
 }
+
+// Minor update 11
