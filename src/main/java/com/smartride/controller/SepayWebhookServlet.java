@@ -43,7 +43,7 @@ public class SepayWebhookServlet extends HttpServlet {
             Matcher mContent = Pattern.compile("\"content\"\\s*:\\s*\"([^\"]+)\"").matcher(payload);
             if (mContent.find()) {
                 String fullContent = mContent.group(1);
-                Matcher mDH = Pattern.compile("DH\\d+").matcher(fullContent);
+                Matcher mDH = Pattern.compile("BK\\d+").matcher(fullContent);
                 if (mDH.find()) {
                     bookingId = mDH.group(0);
                 }
@@ -70,8 +70,8 @@ public class SepayWebhookServlet extends HttpServlet {
             com.smartride.dto.Booking existingBooking = daoB.getBookingById(bookingId);
             
             if (existingBooking != null) {
-                // Giữ nguyên trạng thái hiện tại (thường là "Chờ xác nhận") để Admin duyệt thủ công.
-                // daoB.updateBookingStatus(bookingId, "Đã thanh toán");
+                // Tự động chuyển trạng thái thành Chờ xác nhận để nhân viên vào duyệt thay vì Chờ thanh toán
+                daoB.updateBookingStatus(bookingId, "Chờ xác nhận");
 
                 PaymentDAO daoP = PaymentDAO.getInstance();
                 LocalDateTime currentDateTime = LocalDateTime.now();
@@ -100,3 +100,5 @@ public class SepayWebhookServlet extends HttpServlet {
         }
     }
 }
+
+// Minor update 10
