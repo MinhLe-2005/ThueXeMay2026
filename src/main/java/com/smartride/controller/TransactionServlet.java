@@ -40,6 +40,52 @@ public class TransactionServlet extends HttpServlet {
         Account acc = (Account) session.getAttribute("account");
         List<Payment> payment = PaymentDAO.getInstance().getAllPaymentsByCustomer(acc.getAccountId());
         
+        // Populate synthetic pending transactions for bookings without any payments
+        List<com.smartride.dto.Booking> bookings = com.smartride.dao.BookingDAO.getInstance().getBookingWithDetails("all", "all", acc.getAccountId());
+        if (bookings != null) {
+            for (com.smartride.dto.Booking b : bookings) {
+                if (!"Đã hủy".equals(b.getStatusBooking())) {
+                    boolean hasPayment = false;
+                    for (Payment p : payment) {
+                        if (p.getBookingId().equals(b.getBookingID())) {
+                            hasPayment = true;
+                            break;
+                        }
+                    }
+                    if (!hasPayment) {
+                        Payment pending = new Payment();
+                        pending.setBookingId(b.getBookingID());
+                        
+                        // Try converting YYYY-MM-DD HH:MM:SS to DD-MM-YYYY HH:MM:SS for display
+                        String bDate = b.getBookingDate();
+                        if (bDate != null && bDate.length() >= 10 && bDate.indexOf("-") == 4) {
+                            bDate = bDate.substring(8, 10) + "-" + bDate.substring(5, 7) + "-" + bDate.substring(0, 4) + (bDate.length() > 10 ? bDate.substring(10) : "");
+                        }
+                        pending.setPaymentDate(bDate);
+                        
+                        double total = 0;
+                        if (b.getListBookingDetails() != null) {
+                            for (com.smartride.dto.BookingDetail bd : b.getListBookingDetails()) {
+                                total += bd.getTotalPrice();
+                            }
+                        }
+                        pending.setPaymentAmount(total); 
+                        
+                        if ("Chờ thanh toán".equals(b.getStatusBooking())) {
+                            pending.setPaymentMethod("Mã QR (Chưa quét)");
+                            pending.setPaymentStatus("Đang chờ thanh toán");
+                        } else {
+                            pending.setPaymentMethod("Tiền mặt");
+                            pending.setPaymentStatus("Chưa thanh toán");
+                        }
+                        
+                        // Insert at the beginning so pending transactions show up at the top
+                        payment.add(0, pending);
+                    }
+                }
+            }
+        }
+        
         request.setAttribute("transaction", payment);
         request.getRequestDispatcher("transaction.jsp").forward(request, response);
     }
@@ -54,3 +100,5 @@ public class TransactionServlet extends HttpServlet {
     }// </editor-fold>
 
 }
+
+// Minor update 8
