@@ -103,7 +103,7 @@ public class PaymentDAO implements Serializable {
                 + "from \"Payment\" p\n"
                 + "JOIN \"Booking\" b on b.\"BookingID\" = p.\"BookingID\"\n"
                 + "WHERE \"CustomerID\" = (Select \"CustomerID\" from \"Customer\" where \"AccountID\" = ?)\n"
-                + "order by p.\"BookingID\" asc";
+                + "order by p.\"PaymentDate\" desc";
         try {
             stm = getConnection().prepareStatement(sql);
             stm.setInt(1, accountId); 
@@ -124,6 +124,28 @@ public class PaymentDAO implements Serializable {
         return list;
     }
 
+    /**
+     * Insert bản ghi phí phạt trễ hạn vào bảng Payment.
+     * PaymentMethod = "Phí trễ hạn" để phân biệt với cọc ban đầu.
+     */
+    public void addLateFeePayment(String bookingId, String method, String paymentDate, int amount) {
+        String sql = "INSERT INTO \"Payment\" "
+                + "(\"BookingID\", \"PaymentMethod\", \"PaymentDate\", \"PaymentAmount\", \"PaymentStatus\") "
+                + "VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setString(1, bookingId);
+            ps.setString(2, method);
+            ps.setString(3, paymentDate);
+            ps.setInt(4, amount);
+            ps.setString(5, "Phí trễ hạn - Chờ thu");
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception e) {
+            System.out.println("addLateFeePayment error: " + e);
+        }
+    }
+
     public static void main(String[] args) {
         PaymentDAO dao = getInstance();
 //        for (Payment x : dao.getListByBookingId("BOOK908040")) {
@@ -132,3 +154,5 @@ public class PaymentDAO implements Serializable {
         System.out.println(dao.getAllPaymentsByCustomer(1));
     }
 }
+
+// Minor update 9
