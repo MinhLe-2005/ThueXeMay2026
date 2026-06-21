@@ -1,4 +1,4 @@
-﻿<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.sql.Date" %>
@@ -558,25 +558,25 @@
                                                             ${trans.paymentDate}
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
-                                                            <fmt:formatNumber value="${trans.paymentAmount}" type="currency" currencySymbol="đ" />
+                                                            <fmt:formatNumber value="${trans.paymentAmount}" pattern="#,### ₫" />
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap">
                                                             <c:choose>
                                                                 <c:when test="${trans.paymentStatus == 'Giao dịch thành công'}">
-                                                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold" style="background-color: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0;">
+                                                                        <span class="w-1.5 h-1.5 rounded-full" style="background-color: #22c55e;"></span>
                                                                         Giao dịch thành công
                                                                     </span>
                                                                 </c:when>
                                                                 <c:when test="${trans.paymentStatus == 'Giao dịch thất bại'}">
-                                                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-100">
-                                                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold animate-pulse" style="background-color: #ffe4e6; color: #e11d48; border: 1px solid #fecdd3;">
+                                                                        <span class="w-1.5 h-1.5 rounded-full" style="background-color: #f43f5e;"></span>
                                                                         Giao dịch thất bại
                                                                     </span>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-100">
-                                                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold animate-pulse" style="background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a;">
+                                                                        <span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b;"></span>
                                                                         ${trans.paymentStatus}
                                                                     </span>
                                                                 </c:otherwise>
@@ -594,3 +594,5 @@
                 </div>
     </body>
 </html>
+
+<!-- Minor update 12 -->
