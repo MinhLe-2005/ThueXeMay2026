@@ -232,8 +232,7 @@
                    + "JOIN \"Motorcycle Detail\" md ON bd.\"MotorcycleDetailID\" = md.\"MotorcycleDetailID\" "
                    + "JOIN \"Motorcycle\" m ON md.\"MotorcycleID\" = m.\"MotorcycleID\" "
                    + "JOIN \"Category\" c ON m.\"CategoryID\" = c.\"CategoryID\" "
-                   + c1Alias + (c1Alias.isEmpty() ? " WHERE " : " AND ") + "b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') "
-                   + "GROUP BY c.\"CategoryName\"";
+                   + c1Alias + " GROUP BY c.\"CategoryName\"";
         ResultSet rs = stmt.executeQuery(sql);
         while(rs.next()) pie.put(rs.getString("CategoryName"), rs.getInt("rentCount"));
     } catch(Exception e) { e.printStackTrace(); }
@@ -247,8 +246,7 @@
                    + "JOIN \"Booking Detail\" bd ON md.\"MotorcycleDetailID\" = bd.\"MotorcycleDetailID\" "
                    + "JOIN \"Booking\" b ON bd.\"BookingID\" = b.\"BookingID\" "
                    + "LEFT JOIN \"PriceList\" p ON m.\"PriceListID\" = p.\"PriceListID\" "
-                   + c1Alias + (c1Alias.isEmpty() ? " WHERE " : " AND ") + "b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') "
-                   + "GROUP BY m.\"Image\", m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\" "
+                   + c1Alias + " GROUP BY m.\"Image\", m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\" "
                    + "ORDER BY rentCount DESC";
         ResultSet rs = stmt.executeQuery(sql);
         while(rs.next()) {
@@ -274,3 +272,5 @@
 
     out.print(gson.toJson(responseMap));
 %>
+
+<!-- Minor update 21 -->
