@@ -194,7 +194,7 @@
             fetch(ctxPath + '/check-payment-status?bookingId=' + bookingId)
                 .then(r => r.json())
                 .then(d => {
-                    if (d.paid === true) {
+                    if (d.status === 'paid') {
                         clearInterval(pollInterval);
                         document.getElementById('status-box').className = 'status-box status-success';
                         document.getElementById('status-box').innerHTML = '✅ Thanh toán thành công!';

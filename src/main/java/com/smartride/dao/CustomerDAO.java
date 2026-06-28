@@ -22,7 +22,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
 
     // Cấm new trực tiếp DAO
     //Chỉ new DAO qua hàm static getInstance() để quản lí được số object/instance đã new - SINGLETON DESIGN PATTERN
-    private CustomerDAO() {
+    public CustomerDAO() {
     }
 
     public static CustomerDAO getInstance() {
@@ -60,7 +60,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
                 + "    \"TypeCard\",\n"
                 + "    \"AccountID\"\n"
                 + ") VALUES (\n"
-                + "  ?,?,?,?,?,? );";
+                + "  ?,?,CAST(NULLIF(?, '') AS date),CAST(NULLIF(?, '') AS date),?,? );";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -73,13 +73,14 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
+            throw new RuntimeException("Lỗi tạo Customer: " + e.getMessage(), e);
         }
     }
 
     public void updateCustomer(String IdentityCard, String IdentityCardImage, String IssuedOnDate, String ExpDate, String TypeCard, int CustomerId) {
         String sql = "UPDATE \"Customer\" "
                 + "SET \"IdentityCard\" = ?, \"IdentityCardImage\" = ?, "
-                + "\"IssuedOnDate\" = ?, \"ExpDate\" = ?, \"TypeCard\" = ? "
+                + "\"IssuedOnDate\" = CAST(NULLIF(?, '') AS date), \"ExpDate\" = CAST(NULLIF(?, '') AS date), \"TypeCard\" = ? "
                 + "WHERE \"CustomerID\" = ?";
 
         try {
@@ -94,6 +95,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
 
         } catch (SQLException e) {
             System.out.println(e);
+            throw new RuntimeException("Lỗi update Customer: " + e.getMessage(), e);
         }
     }
 

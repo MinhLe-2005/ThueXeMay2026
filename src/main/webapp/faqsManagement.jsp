@@ -1,443 +1,531 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Câu Hỏi Thường Gặp</title>
 
-    <head>
-        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
-        <meta charset="utf-8">
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts: Be Vietnam Pro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        <title>FAQs Manage</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- modal -->
-        <!-- Bootstrap CSS -->
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-        <!-- MDB CSS -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css" rel="stylesheet">
-        <!-- end modal -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 28px 24px 48px;
+            color: #1a1a2e;
+        }
 
-        <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.min.css" rel="stylesheet">
+        /* ─── Page header ─────────────────────────────── */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .page-header-left h1 {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            letter-spacing: -.3px;
+            margin-bottom: 4px;
+        }
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: .8rem;
+        }
+        .breadcrumb-item a {
+            color: #b59349;
+            text-decoration: none;
+        }
+        .breadcrumb-item.active { color: #6c757d; }
+        .breadcrumb-item + .breadcrumb-item::before { color: #adb5bd; }
 
-        <style type="text/css">
-            body {
-                font-family: 'Tahoma', sans-serif;
-                overflow-x: hidden; /* Hide horizontal scrollbar */
-                background: #F5F5FF;
-            }
-            .faq-item {
-                padding: 20px; /* Khoảng cách giữa nội dung và viền */
-            }
+        /* ─── Add button ──────────────────────────────── */
+        .btn-add-faq {
+            background: linear-gradient(135deg, #b59349 0%, #d4af37 60%, #f1c40f 100%);
+            color: #fff;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 700;
+            font-size: .875rem;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 22px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(181,147,73,.35);
+            transition: transform .2s, box-shadow .2s;
+            text-shadow: 0 1px 2px rgba(0,0,0,.18);
+        }
+        .btn-add-faq:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(181,147,73,.45);
+            color: #fff;
+        }
+        .btn-add-faq:active { transform: translateY(0); }
 
-            .faq-question{
-                font-size: large;
-                font-weight: bold;
-                color: #1089FF;
-            }
+        /* ─── Stats strip ─────────────────────────────── */
+        .stats-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+            font-size: .82rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        .stats-badge {
+            background: linear-gradient(135deg, #b59349, #d4af37);
+            color: #fff;
+            font-size: .75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 50px;
+        }
 
-            .faq-answer{
-                display: block;
-            }
+        /* ─── Empty state ─────────────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,.06);
+        }
+        .empty-state .empty-icon {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #b59349, #f1c40f);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem; color: #fff;
+        }
+        .empty-state h5 { font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+        .empty-state p { color: #6c757d; font-size: .9rem; }
 
-            .tag-item {
-                background-color: #28a745; /* Màu nền cho các tag */
-                color: #fff; /* Màu chữ cho các tag */
-                padding: 5px 10px; /* Khoảng cách giữa nội dung và viền */
-                border-radius: 4px; /* Đường viền cong */
-                margin-right: 5px; /* Khoảng cách giữa các tag */
-            }
+        /* ─── FAQ Card ────────────────────────────────── */
+        .faq-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,.07);
+            padding: 20px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            border: 1.5px solid transparent;
+            transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s, border-color .22s;
+            animation: fadeSlideUp .4s ease both;
+        }
+        .faq-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 28px rgba(181,147,73,.18);
+            border-color: rgba(181,147,73,.35);
+        }
 
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
-            .faq-containers {
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                padding: 15px;
-                margin-bottom: 20px;
-                background-color: #f9f9f9;
-                overflow: hidden; /* Đảm bảo các phần tử con không tràn ra khỏi container */
-            }
+        /* stagger children */
+        .faq-list .faq-card:nth-child(1)  { animation-delay: .05s; }
+        .faq-list .faq-card:nth-child(2)  { animation-delay: .10s; }
+        .faq-list .faq-card:nth-child(3)  { animation-delay: .15s; }
+        .faq-list .faq-card:nth-child(4)  { animation-delay: .20s; }
+        .faq-list .faq-card:nth-child(5)  { animation-delay: .25s; }
+        .faq-list .faq-card:nth-child(6)  { animation-delay: .30s; }
+        .faq-list .faq-card:nth-child(7)  { animation-delay: .35s; }
+        .faq-list .faq-card:nth-child(8)  { animation-delay: .40s; }
+        .faq-list .faq-card:nth-child(n+9){ animation-delay: .45s; }
 
-            .faq-content {
-                width: calc(100% - 120px); /* Chiều rộng của phần content, trừ đi kích thước của phần actions */
-                float: left; /* Dịch chuyển phần content sang trái */
-            }
+        /* Question mark badge */
+        .faq-icon-badge {
+            flex-shrink: 0;
+            width: 46px; height: 46px;
+            background: linear-gradient(135deg, #b59349 0%, #d4af37 50%, #f1c40f 100%);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; color: #fff;
+            box-shadow: 0 4px 12px rgba(181,147,73,.3);
+            margin-top: 2px;
+        }
 
-            .faq-actions {
-                width: 120px; /* Kích thước của phần actions */
-                float: right; /* Dịch chuyển phần actions sang phải */
-                text-align: right; /* Căn chỉnh nút sang phải */
-            }
+        /* Text area */
+        .faq-body { flex: 1; min-width: 0; }
+        .faq-index {
+            font-size: .7rem;
+            font-weight: 700;
+            color: #b59349;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            margin-bottom: 4px;
+        }
+        .faq-question {
+            font-size: .97rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            line-height: 1.45;
+            margin-bottom: 7px;
+            word-break: break-word;
+        }
+        .faq-answer {
+            font-size: .855rem;
+            color: #6c757d;
+            line-height: 1.6;
+            word-break: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 
-            .faq-actions button {
-                margin-top: 10px;
-            }
+        /* Action buttons */
+        .faq-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .btn-icon {
+            width: 36px; height: 36px;
+            border-radius: 9px;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .85rem;
+            cursor: pointer;
+            transition: transform .18s, box-shadow .18s;
+        }
+        .btn-icon:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+        .btn-edit  { background: #e8f4fd; color: #0d6efd; }
+        .btn-edit:hover  { background: #0d6efd; color: #fff; }
+        .btn-delete{ background: #fde8e8; color: #dc3545; }
+        .btn-delete:hover{ background: #dc3545; color: #fff; }
 
+        /* ─── Modals ──────────────────────────────────── */
+        .modal-header-gold {
+            background: linear-gradient(135deg, #b59349 0%, #d4af37 60%, #f1c40f 100%);
+            border-radius: 12px 12px 0 0;
+            padding: 18px 24px;
+        }
+        .modal-header-gold .modal-title {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 800;
+            color: #fff;
+            font-size: 1rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,.2);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .modal-header-gold .btn-close {
+            filter: invert(1) brightness(2);
+            opacity: .85;
+        }
+        .modal-content {
+            border-radius: 14px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,.18);
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        .modal-body { padding: 24px; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid #f0f2f5; }
 
-            .faq-actions button {
-                margin-right: 5px;
-            }
-            /* Breadcrumb */
-            .breadcrumb {
-                background-color: #f8f9fa;
-                padding: 8px 15px;
-                border-radius: 4px;
-                animation: fadeInUp 0.5s ease;
-            }
+        .form-label {
+            font-weight: 600;
+            font-size: .82rem;
+            color: #3d3d5c;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+        .form-control, .form-select {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-size: .88rem;
+            border-radius: 9px;
+            border: 1.5px solid #e2e8f0;
+            padding: 10px 14px;
+            transition: border-color .2s, box-shadow .2s;
+            color: #1a1a2e;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212,175,55,.18);
+            outline: none;
+        }
+        textarea.form-control { resize: vertical; min-height: 110px; }
 
-            /* Button */
-            .btn-primary {
-                background-color: #007bff;
-                border-color: #007bff;
-                animation: pulse 1s infinite;
-            }
+        .btn-gold {
+            background: linear-gradient(135deg, #b59349, #d4af37);
+            color: #fff;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 700;
+            font-size: .875rem;
+            border: none;
+            border-radius: 9px;
+            padding: 10px 24px;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(181,147,73,.3);
+            transition: transform .18s, box-shadow .18s;
+        }
+        .btn-gold:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(181,147,73,.4);
+            color: #fff;
+        }
+        .btn-cancel {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 600;
+            font-size: .875rem;
+            border-radius: 9px;
+            padding: 10px 20px;
+        }
 
-            /* Modal */
-            .modal-content {
-                border-radius: 8px;
-                animation: zoomIn 0.5s ease;
-            }
+        /* ─── Divider between cards ───────────────────── */
+        .faq-list { display: flex; flex-direction: column; gap: 14px; }
 
-            /* Form */
-            .form-group {
-                margin-bottom: 20px;
-                animation: slideInUp 0.5s ease;
-            }
+        /* ─── Scrollbar polish ────────────────────────── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f0f2f5; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
+    </style>
+</head>
+<body>
 
-            /* FAQ Item */
-            .faq-item {
-                margin-top: 20px;
-                animation: fadeIn 1s ease;
-            }
+<!-- ══════════════════════════════════════════
+     PAGE HEADER
+═══════════════════════════════════════════ -->
+<div class="page-header">
+    <div class="page-header-left">
+        <h1><i class="fa-solid fa-circle-question me-2" style="color:#b59349;"></i>Quản Lý Câu Hỏi Thường Gặp</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#"><i class="fa-solid fa-house-chimney me-1"></i>Trang chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">FAQ</li>
+            </ol>
+        </nav>
+    </div>
+    <button class="btn-add-faq" data-bs-toggle="modal" data-bs-target="#addFaqModal">
+        <i class="fa-solid fa-plus"></i> Thêm FAQ
+    </button>
+</div>
 
-            /* Optional: Customize scrollbar */
-            ::-webkit-scrollbar {
-                width: 8px;
-            }
+<!-- Stats strip -->
+<div class="stats-strip">
+    <i class="fa-solid fa-layer-group" style="color:#b59349;"></i>
+    Tổng số câu hỏi:
+    <span class="stats-badge">${empty faqs ? 0 : faqs.size()}</span>
+</div>
 
-            ::-webkit-scrollbar-thumb {
-                background-color: #007bff;
-                border-radius: 4px;
-            }
-
-            ::-webkit-scrollbar-track {
-                background-color: #f8f9fa;
-            }
-
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(-20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            @keyframes slideInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-
-            /* Đảm bảo modal hiển thị giữa màn hình */
-            .modal-dialog {
-                margin-top: 10%; /* Điều chỉnh vị trí của modal so với top */
-            }
-
-            /* Tùy chỉnh màu nền và đường viền của modal */
-            .modal-content {
-                border: none;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Hiệu ứng bóng đổ */
-            }
-
-            /* Tùy chỉnh header của modal */
-            .modal-header {
-                background: linear-gradient(to right, #1089FF 0%, #1089FF 28%, #01D28E 91%, #01D28E 100%);
-                color: #fff; /* Màu chữ */
-                border-radius: 10px 10px 0 0; /* Đường viền cong */
-            }
-
-            /* Tùy chỉnh tiêu đề của modal */
-            .modal-title {
-                font-weight: bold;
-            }
-
-
-
-            /* Tùy chỉnh body của modal */
-            .modal-body {
-                padding: 20px;
-            }
-
-            /* Tùy chỉnh các input và textarea trong form */
-            .form-control {
-                border-radius: 5px;
-            }
-
-            /* Tùy chỉnh nút submit */
-            .btn-primary {
-                background: linear-gradient(to right, #1089FF 0%, #1089FF 28%, #01D28E 91%, #01D28E 100%);
-                border-color: white; /* Màu viền */
-                border-radius: 5px;
-
-            }
-
-            .btn-primary:hover {
-                background-color: #0056b3; /* Màu nền khi di chuột qua */
-                border-color: #0056b3; /* Màu viền khi di chuột qua */
-            }
-
-            /* Đổi màu cho nút Edit */
-            .edit-btn {
-                background-color: #1089FF; /* Màu xanh dương */
-                border-color: #007bff; /* Màu viền */
-                color: #fff; /* Màu chữ */
-            }
-
-            /* Đổi màu cho nút Delete */
-            .delete-btn {
-                background-color: #01D28E; /* Màu xanh lá */
-                border-color: #28a745; /* Màu viền */
-                color: #fff; /* Màu chữ */
-            }
-
-            #backtoTopBtn {
-                display: none; /* Ẩn nút ban đầu */
-                position: fixed; /* Nút ở vị trí cố định trên màn hình */
-                bottom: 20px; /* Khoảng cách từ dưới cùng */
-                right: 30px; /* Khoảng cách từ bên phải */
-                z-index: 99; /* Đảm bảo nút nằm trên các phần tử khác */
-                border: none; /* Không viền */
-                outline: none; /* Không viền khi nhấp */
-                background: linear-gradient(to right, #1089FF 0%, #1089FF 28%, #01D28E 91%, #01D28E 100%);
-                color: white; /* Màu chữ */
-                cursor: pointer; /* Con trỏ chuyển thành tay khi di chuột */
-                padding: 15px; /* Khoảng đệm bên trong nút */
-                border-radius: 10px; /* Bo góc nút */
-            }
-
-            #backtoTopBtn:hover {
-                background: linear-gradient(to right, #01D28E 0%, #01D28E 28%, #1089FF 91%, #1089FF 100%);
-            }
-
-        </style>
-    </head>
-
-    <body style="background-color: transparent;">
-        <div class="container col-md-10 mt-4">
-            <div class="pagetitle" style="margin-bottom: 20px;">
-                <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ CÂU HỎI THƯỜNG GẶP</h1>
-                <nav>
-                    <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
-                        <li class="breadcrumb-item"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
-                        <li class="breadcrumb-item active" style="font-weight: 500; color: #6c757d;">Quản lý câu hỏi thường gặp</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="wrapper wrapper-content animated fadeInRight">
-
-                                <div class="ibox-content m-b-sm border-bottom">
-                                    <div class="text-center p-lg">
-                                        <span>Nếu bạn muốn thêm một câu hỏi, bấm vào đây </span>
-
-                                        <button type="button" class="btn btn-primary" id="launchModalBtn" data-mdb-toggle="modal"
-                                                data-mdb-target="#staticBackdrop1">
-                                            <i class="fa fa-plus"></i>
-                                            <span class="bold">Thêm FAQs</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="faq-item">
-                                    <c:forEach var="faq" items="${faqs}">
-                                        <div class="row faq-containers">
-                                            <div class="col-md-10">
-                                                <p data-toggle="collapse" class="faq-question">${faq.question}</p>
-                                                <p class="faq-answer">${faq.answer}</p>
-                                            </div>
-
-                                            <div class="faq-actions col-md-2 text-right">
-                                                <button type="button" class="btn btn-info btn-sm edit-btn" title="Edit"
-                                                        data-toggle="modal" data-target="#editFAQModal"
-                                                        onclick="populateEditForm('${faq.questionID}', '${faq.question}', '${faq.answer}')">
-                                                    <i class="fa-solid fa-pen-to-square" style="color: white;"></i>
-                                                </button>
-
-
-                                                <!-- Nút Delete -->
-                                                <button type="button" class="btn btn-danger btn-sm delete-btn" title="Delete" 
-                                                        onclick="confirmDelete('${faq.questionID}')">
-                                                    <i class="fa-solid fa-trash-can" style="color: white;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </c:forEach>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal -->
-                <div class="modal fade" id="staticBackdrop1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
-                    <div class="modal-dialog d-flex justify-content-center">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Thêm Mới FAQs</h5>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Form để nhập câu hỏi mới -->
-                                <form id="addQuestionForm" action="faqs" method="post">
-                                    <div class="form-group">
-                                        <label for="question">Câu Hỏi:</label>
-                                        <input type="text" class="form-control" id="question" name="question" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="answer">Trả Lời:</label>
-                                        <textarea class="form-control" id="answer" name="answer" rows="3" required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Thêm</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Modal Form Cập Nhật FAQ -->
-                <div class="modal fade" id="editFAQModal" tabindex="-1" role="dialog" aria-labelledby="editFAQModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <form id="updateFAQForm" action="UpdateFAQsServletStaff" method="post">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editFAQModalLabel">Chỉnh sửa FAQs</h5>
-                                    <!--                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>-->
-                                </div>
-                                <div class="modal-body">
-                                    <input type="hidden" name="questionID" id="editQuestionID" />
-                                    <div class="form-group">
-                                        <label for="editQuestion">Câu Hỏi:</label>
-                                        <input type="text" class="form-control" id="editQuestion" name="question" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="editAnswer">Trả Lời:</label>
-                                        <textarea class="form-control" id="editAnswer" name="answer" rows="4" required></textarea>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-                                    <button type="submit" class="btn btn-primary">Cập Nhập Chỉnh Sửa</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-
-
-            </div>
+<!-- ══════════════════════════════════════════
+     FAQ LIST
+═══════════════════════════════════════════ -->
+<c:choose>
+    <c:when test="${empty faqs}">
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fa-solid fa-circle-question"></i></div>
+            <h5>Chưa có câu hỏi nào</h5>
+            <p>Nhấn "+ Thêm FAQ" để tạo câu hỏi thường gặp đầu tiên.</p>
         </div>
-        <button id="backtoTopBtn" onclick="topFunction()" title="Go to top">
-            <i class="fa fa-arrow-up"></i>
-        </button>
+    </c:when>
+    <c:otherwise>
+        <div class="faq-list">
+            <c:forEach var="faq" items="${faqs}" varStatus="status">
+                <div class="faq-card">
+                    <!-- Icon badge -->
+                    <div class="faq-icon-badge">
+                        <i class="fa-solid fa-question"></i>
+                    </div>
 
-        <script type="text/javascript">
-            // Populate the edit form with the existing data
-            function populateEditForm(questionID, question, answer) {
-                document.getElementById('editQuestionID').value = questionID;
-                document.getElementById('editQuestion').value = question;
-                document.getElementById('editAnswer').value = answer;
-                // Hiển thị modal khi dữ liệu được điền vào form
-                $('#editFAQModal').modal('show'); // Sử dụng jQuery để hiển thị modal
+                    <!-- Content -->
+                    <div class="faq-body">
+                        <div class="faq-index">Câu hỏi #${status.index + 1}</div>
+                        <div class="faq-question">${faq.question}</div>
+                        <div class="faq-answer">${faq.answer}</div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="faq-actions">
+                        <!-- Edit button -->
+                        <button class="btn-icon btn-edit"
+                                title="Chỉnh sửa"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editFaqModal"
+                                onclick="loadEditModal('${faq.questionID}', `${faq.question}`, `${faq.answer}`)">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <!-- Delete button -->
+                        <button class="btn-icon btn-delete"
+                                title="Xoá"
+                                onclick="confirmDelete(${faq.questionID})">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
+    </c:otherwise>
+</c:choose>
+
+
+<!-- ══════════════════════════════════════════
+     ADD FAQ MODAL
+═══════════════════════════════════════════ -->
+<div class="modal fade" id="addFaqModal" tabindex="-1" aria-labelledby="addFaqModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header-gold">
+                <div class="modal-title" id="addFaqModalLabel">
+                    <i class="fa-solid fa-plus-circle"></i> Thêm Câu Hỏi Thường Gặp
+                </div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <form action="faqs" method="post">
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <label for="addQuestion" class="form-label">
+                            <i class="fa-solid fa-circle-question me-1" style="color:#b59349;"></i>Câu hỏi
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="addQuestion"
+                               name="question"
+                               placeholder="Nhập câu hỏi thường gặp..."
+                               required />
+                    </div>
+                    <div class="mb-2">
+                        <label for="addAnswer" class="form-label">
+                            <i class="fa-solid fa-message me-1" style="color:#b59349;"></i>Câu trả lời
+                        </label>
+                        <textarea class="form-control"
+                                  id="addAnswer"
+                                  name="answer"
+                                  placeholder="Nhập câu trả lời chi tiết..."
+                                  required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light btn-cancel" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-xmark me-1"></i>Huỷ
+                    </button>
+                    <button type="submit" class="btn-gold">
+                        <i class="fa-solid fa-floppy-disk me-1"></i>Lưu FAQ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     EDIT FAQ MODAL
+═══════════════════════════════════════════ -->
+<div class="modal fade" id="editFaqModal" tabindex="-1" aria-labelledby="editFaqModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header-gold">
+                <div class="modal-title" id="editFaqModalLabel">
+                    <i class="fa-solid fa-pen-to-square"></i> Chỉnh Sửa Câu Hỏi
+                </div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <form action="UpdateFAQsServletStaff" method="post">
+                <div class="modal-body">
+                    <input type="hidden" id="editQuestionID" name="questionID" />
+
+                    <div class="mb-4">
+                        <label for="editQuestion" class="form-label">
+                            <i class="fa-solid fa-circle-question me-1" style="color:#b59349;"></i>Câu hỏi
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="editQuestion"
+                               name="question"
+                               placeholder="Nhập câu hỏi..."
+                               required />
+                    </div>
+                    <div class="mb-2">
+                        <label for="editAnswer" class="form-label">
+                            <i class="fa-solid fa-message me-1" style="color:#b59349;"></i>Câu trả lời
+                        </label>
+                        <textarea class="form-control"
+                                  id="editAnswer"
+                                  name="answer"
+                                  placeholder="Nhập câu trả lời..."
+                                  required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light btn-cancel" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-xmark me-1"></i>Huỷ
+                    </button>
+                    <button type="submit" class="btn-gold">
+                        <i class="fa-solid fa-floppy-disk me-1"></i>Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    /* ── Populate edit modal ─────────────────────── */
+    function loadEditModal(id, question, answer) {
+        document.getElementById('editQuestionID').value = id;
+        document.getElementById('editQuestion').value   = question;
+        document.getElementById('editAnswer').value     = answer;
+    }
+
+    /* ── Delete with SweetAlert2 ─────────────────── */
+    function confirmDelete(questionID) {
+        Swal.fire({
+            title: 'Xác nhận xoá?',
+            text: 'Câu hỏi này sẽ bị xoá vĩnh viễn và không thể khôi phục.',
+            icon: 'warning',
+            iconColor: '#b59349',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fa fa-trash me-1"></i> Xoá ngay',
+            cancelButtonText: 'Huỷ bỏ',
+            customClass: {
+                popup:          'swal-font',
+                title:          'swal-title',
+                confirmButton:  'swal-confirm',
+                cancelButton:   'swal-cancel'
+            },
+            didOpen: () => {
+                /* inject font into SweetAlert popup */
+                const popup = Swal.getPopup();
+                if (popup) popup.style.fontFamily = "'Be Vietnam Pro', sans-serif";
             }
-        </script>
-
-
-        <script>
-            let mybutton = document.getElementById("backtoTopBtn");
-            // Khi người dùng cuộn xuống 20px từ đầu tài liệu, hiển thị nút
-            window.onscroll = function () {
-                scrollFunction();
-            };
-            function scrollFunction() {
-                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                    mybutton.style.display = "block";
-                } else {
-                    mybutton.style.display = "none";
-                }
+        }).then(result => {
+            if (result.isConfirmed) {
+                window.location.href = 'deleteFAQs?questionID=' + questionID;
             }
-
-            // Khi người dùng nhấp vào nút, cuộn về đầu trang
-            function topFunction() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
-
-
-
-        </script>
-
-        <script type="text/javascript">
-            function confirmDelete(questionID) {
-                Swal.fire({
-                    title: 'Bạn có chắc chắn?',
-                    text: "Bạn sẽ không thể khôi phục hành động này!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#1089FF',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Vâng, xóa nó!',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'deleteFAQs?questionID=' + questionID;
-                    }
-                })
-            }
-        </script>
-
-
-        <!-- SweetAlert CSS -->
-        <!-- SweetAlert JS -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.all.min.js"></script>
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- Modal -->
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
-        <!--<script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>-->
-        <!-- MDB JS -->
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"></script>
-    </body>
-
+        });
+    }
+</script>
+</body>
 </html>

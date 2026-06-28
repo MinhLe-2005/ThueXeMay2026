@@ -5,6 +5,11 @@
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>SmartRide Events</title>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
         <style>
             /* breadcrumb */
 
@@ -432,12 +437,70 @@
                     </div>
                 </div>
 
+
+                <!-- CTA BANNER -->
+                <div class="cta-banner animate__animated animate__fadeInUp">
+                    <div class="cta-banner-inner">
+                        <div class="cta-banner-left">
+                            <span class="cta-badge"><i class="bi bi-lightning-charge-fill"></i> Sẵn sàng khám phá?</span>
+                            <h3>Thuê xe máy — tự do đi bất cứ đâu!</h3>
+                            <p>Hơn 50+ mẫu xe đa dạng, giá cả cạnh tranh. Đặt xe trong 2 phút, nhận xe ngay hôm nay.</p>
+                            <div class="cta-banner-btns">
+                                <a href="motorbikes" class="cta-btn-primary">
+                                    <i class="bi bi-motorcycle"></i> Xem danh sách xe
+                                </a>
+                            </div>
+                        </div>
+                        <div class="cta-banner-right">
+                            <div class="cta-icon-ring">
+                                <i class="bi bi-motorcycle"></i>
+                            </div>
+                            <div class="cta-stats">
+                                <div class="cta-stat">
+                                    <strong>50+</strong>
+                                    <span>Mẫu xe</span>
+                                </div>
+                                <div class="cta-stat">
+                                    <strong>24/7</strong>
+                                    <span>Hỗ trợ</span>
+                                </div>
+                                <div class="cta-stat">
+                                    <strong>★ 4.9</strong>
+                                    <span>Đánh giá</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
 
     </body>
 
     <style>
+
+        /* CTA BANNER */
+        .cta-banner { margin: 60px auto 40px; font-family: 'Plus Jakarta Sans', sans-serif; max-width: 1200px; padding: 0 15px; }
+        .cta-banner-inner { background: linear-gradient(135deg, #1a1816 0%, #2d2520 40%, #3d2f18 100%); border-radius: 28px; padding: 50px 60px; display: flex; align-items: center; justify-content: space-between; gap: 40px; position: relative; overflow: hidden; box-sizing: border-box; }
+        .cta-banner-inner::before { content: ''; position: absolute; top: -60px; right: -60px; width: 280px; height: 280px; background: radial-gradient(circle, rgba(181,147,73,.25) 0%, transparent 70%); border-radius: 50%; }
+        .cta-banner-inner::after { content: ''; position: absolute; bottom: -40px; left: 30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(181,147,73,.1) 0%, transparent 70%); border-radius: 50%; }
+        .cta-banner-left { flex: 1; position: relative; z-index: 1; text-align: left; }
+        .cta-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(181,147,73,.2); color: #f0c96a; font-size: .72rem; font-weight: 700; letter-spacing: 1px; padding: 5px 14px; border-radius: 20px; text-transform: uppercase; border: 1px solid rgba(181,147,73,.3); margin-bottom: 16px; }
+        .cta-banner-left h3 { font-size: 1.9rem; font-weight: 800; color: #fff; margin: 0 0 12px; line-height: 1.2; }
+        .cta-banner-left p { font-size: .95rem; color: rgba(255,255,255,.65); margin: 0 0 28px; line-height: 1.6; }
+        .cta-banner-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+        .cta-btn-primary { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #b59349, #8c6f32); color: #fff; font-weight: 700; font-size: .92rem; padding: 13px 28px; border-radius: 50px; text-decoration: none; transition: all .3s; box-shadow: 0 6px 24px rgba(181,147,73,.5); }
+        .cta-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(181,147,73,.7); color: #fff; }
+        .cta-banner-right { position: relative; z-index: 1; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+        .cta-icon-ring { width: 110px; height: 110px; border-radius: 50%; background: rgba(181,147,73,.15); border: 2px dashed rgba(181,147,73,.4); display: flex; align-items: center; justify-content: center; font-size: 2.8rem; color: #b59349; animation: ringPulse 3s ease-in-out infinite; }
+        @keyframes ringPulse { 0%,100%{box-shadow:0 0 0 0 rgba(181,147,73,.3);} 50%{box-shadow:0 0 0 16px rgba(181,147,73,0);} }
+        .cta-stats { display: flex; gap: 28px; }
+        .cta-stat { text-align: center; }
+        .cta-stat strong { display: block; font-size: 1.4rem; font-weight: 800; color: #f0c96a; line-height: 1; }
+        .cta-stat span { font-size: .72rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .5px; margin-top: 4px; display: block; }
+        @media(max-width:768px) { .cta-banner-inner { flex-direction: column; padding: 36px 28px; } .cta-banner-right { flex-direction: row; } .cta-banner-left h3 { font-size: 1.5rem; } }
+
         .event-container {
             max-width: 100%;
             margin: auto;

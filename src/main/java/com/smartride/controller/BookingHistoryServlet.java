@@ -38,15 +38,19 @@ public class BookingHistoryServlet extends HttpServlet {
         }
         List<Booking> listB = bookingDAO.getBookingWithDetails(statusBooking, deliveryStatus, acc.getAccountId());
         Map<String, Feedback> feedbackMap = new HashMap<>();
+        Map<String, com.smartride.dto.Payment> paymentMap = new HashMap<>();
         for (Booking booking : listB) {
             String bookingId = booking.getBookingID();
             Feedback fb = FeedbackDAO.getInstance().getFeedbackByBookingId(bookingId);
             feedbackMap.put(bookingId, fb);
+            com.smartride.dto.Payment payment = com.smartride.dao.PaymentDAO.getInstance().getPayMentbyBookingId(bookingId);
+            paymentMap.put(bookingId, payment);
         }
         request.setAttribute("deliveryStatus", deliveryStatus);
         request.setAttribute("listB", listB);
         request.setAttribute("status", statusBooking);
         request.setAttribute("feedbackMap", feedbackMap);
+        request.setAttribute("paymentMap", paymentMap);
 //        PrintWriter out = response.getWriter();
 //        out.print("Feedback: " + fb);
 

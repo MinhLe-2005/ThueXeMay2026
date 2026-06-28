@@ -69,7 +69,10 @@ public class UpdateProfileServlet extends HttpServlet {
                 } else {
                     boolean success = AccountDAO.getInstance().update(firstName, lastName, gender, dob, address, phoneNumber, email, userName, Integer.parseInt(accountID));
                     if (success) {
-                        session.setAttribute("account", AccountDAO.getInstance().getAccountbyID(Integer.parseInt(accountID)));
+                        Account updatedAccount = AccountDAO.getInstance().getAccountbyID(Integer.parseInt(accountID));
+                        if (updatedAccount != null) {
+                            session.setAttribute("account", updatedAccount);
+                        }
                         request.setAttribute("mess", "Cập nhật hồ sơ thành công!");
                     } else {
                         request.setAttribute("errorProfile", "Cập nhật hồ sơ thất bại!");

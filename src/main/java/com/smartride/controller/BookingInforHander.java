@@ -76,7 +76,7 @@ public class BookingInforHander extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        try {
         HashMap<String, Object> dataMap = new HashMap<>();
         Part fileFrontPart = null;
         Part fileBackPart = null;
@@ -142,9 +142,19 @@ public class BookingInforHander extends HttpServlet {
         
         if (fileFrontPart != null) {
             uploadedFrontPath = fileUploaded.handleFileUpload(fileFrontPart, filenameFront);
+            if (uploadedFrontPath == null) {
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"status\":\"error\",\"message\":\"Lỗi tải ảnh lên server.\"}");
+                return;
+            }
         }
         if (fileBackPart != null) {
             uploadedBackPath = fileUploaded.handleFileUpload(fileBackPart, filenameBack);
+            if (uploadedBackPath == null) {
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"status\":\"error\",\"message\":\"Lỗi tải ảnh lên server.\"}");
+                return;
+            }
         }
         
         if (uploadedFrontPath != null || uploadedBackPath != null) {
@@ -219,7 +229,15 @@ public class BookingInforHander extends HttpServlet {
         String gender = (String) dataMap.get("gender");
         String total = (String) dataMap.get("total");
         String paymentDate = dataMap.containsKey("paymenttime") ? (String) dataMap.get("paymenttime") : "";
-        int amount = dataMap.containsKey("amount") ? Integer.parseInt((String) dataMap.get("amount")) : 0;
+        int amount = 0;
+        if (dataMap.containsKey("amount")) {
+            Object amtObj = dataMap.get("amount");
+            if (amtObj instanceof Number) {
+                amount = ((Number) amtObj).intValue();
+            } else {
+                try { amount = (int) Double.parseDouble(String.valueOf(amtObj)); } catch (Exception e) {}
+            }
+        }
 
         // Get current date and time
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -253,45 +271,8 @@ public class BookingInforHander extends HttpServlet {
             }
         }
 
-        // ── AI Auto-verify CCCD (Hard Gatekeeper) ──────────
-        try {
-            Customer customer = daoC.getCustomerbyAccountID(accountId);
-            com.smartride.dto.Account account = AccountDAO.getInstance().getAccountbyID(accountId);
-            if (customer != null && account != null) {
-                String idCardImages = customer.getIdentityCardImage();
-                String firstImage = (idCardImages != null && !idCardImages.trim().isEmpty())
-                        ? idCardImages.split(",")[0].trim() : null;
-                String storedId   = customer.getIdentityCard();
-                String storedName = account.getLastName() + " " + account.getFirstName();
-                String webRoot = getServletContext().getRealPath("/");
-
-                IdCardVerifier.VerifyResult vr = IdCardVerifier.verify(
-                        firstImage, webRoot, storedId, storedName);
-
-                if (vr.configured && !vr.valid) {
-                    // Chặn đứng: Lỗi AI không hợp lệ — trả về chi tiết từng trường
-                    StringBuilder errJson = new StringBuilder();
-                    errJson.append("{\"status\":\"ai_error\",\"message\":\"Thông tin không khớp với ảnh CCCD/CMND. Vui lòng kiểm tra lại.\",\"fieldErrors\":[");
-                    for (int i = 0; i < vr.fieldErrors.size(); i++) {
-                        errJson.append("\"").append(vr.fieldErrors.get(i).replace("\"", "\\\"").replace("\\n", " ")).append("\"");
-                        if (i < vr.fieldErrors.size() - 1) errJson.append(",");
-                    }
-                    errJson.append("],");
-                    errJson.append("\"ocrId\":\"").append(vr.ocrId != null ? vr.ocrId : "").append("\",");
-                    errJson.append("\"ocrName\":\"").append(vr.ocrName != null ? vr.ocrName : "").append("\",");
-                    errJson.append("\"ocrDoe\":\"").append(vr.ocrDoe != null ? vr.ocrDoe : "").append("\",");
-                    errJson.append("\"idMatch\":").append(vr.idMatch).append(",");
-                    errJson.append("\"nameMatch\":").append(vr.nameMatch).append(",");
-                    errJson.append("\"doeValid\":").append(vr.doeValid);
-                    errJson.append("}");
-                    response.setContentType("application/json;charset=UTF-8");
-                    response.getWriter().write(errJson.toString());
-                    return; // Dừng luồng, không lưu đơn
-                }
-            }
-        } catch (Exception aiEx) {
-            System.err.println("[IdCardVerifier] Lỗi khi gọi AI: " + aiEx.getMessage());
-        }
+        // ── BỎ QUA AI Auto-verify CCCD (Hard Gatekeeper) theo yêu cầu ──────────
+        // Nhân viên sẽ tự động kiểm duyệt thủ công
         // ───────────────────────────────────────────────────
 
         // Process bike details first to PRE-CHECK availability
@@ -321,9 +302,15 @@ public class BookingInforHander extends HttpServlet {
         
         // Vì AI đã vượt qua (hoặc chưa cấu hình), đơn hàng hợp lệ để được lưu.
         // Trạng thái được set là "Chờ xác nhận" (cash) hoặc "Chờ thanh toán" (sepay soft lock)
-        String action = request.getParameter("action");
+        String action = (String) dataMap.get("action");
         if ("create_only".equals(action)) {
             dao.updateBookingStatus(bookingid, "Chờ thanh toán");
+            com.smartride.dao.NotificationDAO.getInstance().insertNotification(
+                accountId, 
+                "Thanh toán đơn hàng", 
+                "Bạn có đơn hàng #" + bookingid + " chưa thanh toán cọc. Vui lòng thanh toán sớm để hoàn tất đặt xe.", 
+                "bookingHistoryDetail?bookingId=" + bookingid + "&autoPay=true"
+            );
         } else {
             dao.updateBookingStatus(bookingid, "Chờ xác nhận");
         }
@@ -389,7 +376,7 @@ public class BookingInforHander extends HttpServlet {
         }
         
         // Check if this is just order creation
-        action = request.getParameter("action");
+        action = (String) dataMap.get("action");
         if ("create_only".equals(action)) {
             String jsonResponse = "{\"status\":\"success\", \"bookingId\":\"" + bookingid + "\"}";
             response.setContentType("application/json;charset=UTF-8");
@@ -407,18 +394,16 @@ public class BookingInforHander extends HttpServlet {
         // Ä á»‹nh dáº¡ng chuá»—i Ä‘áº§u ra
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         
-        // Chuyển đổi LocalDateTime thành chuỗi định dạng mới
         String paymentDateText = dateTime.format(outputFormatter);
         PaymentDAO daoP = PaymentDAO.getInstance();
         daoP.addPayment(bookingid, "Ngân hàng", paymentDateText, amount, "Giao dịch thành công");
         
-        // Send confirmation email
-       StringBuilder emailContent = new StringBuilder();
+        StringBuilder emailContent = new StringBuilder();
         emailContent.append("<!DOCTYPE html>\n");
         emailContent.append("<html lang=\"vi\">\n");
         emailContent.append("<head>\n");
         emailContent.append("    <meta charset=\"UTF-8\">\n");
-        emailContent.append("    <title>ThÃ´ng tin Ä‘áº·t xe</title>\n");
+        emailContent.append("    <title>Thông tin đặt xe</title>\n");
         emailContent.append("    <style>\n");
         emailContent.append("        body {\n");
         emailContent.append("            font-family: Arial, sans-serif;\n");
@@ -455,34 +440,34 @@ public class BookingInforHander extends HttpServlet {
         emailContent.append("</head>\n");
         emailContent.append("<body>\n");
         emailContent.append("<div class=\"container\">\n");
-        emailContent.append("    <div class=\"header\">ThÃ´ng tin Ä‘áº·t xe cá»§a báº¡n</div>\n");
+        emailContent.append("    <div class=\"header\">Thông tin đặt xe của bạn</div>\n");
         emailContent.append("    <div class=\"info\">\n");
-        emailContent.append("        <div><span>Há» tÃªn:</span> ").append(firstname).append(" ").append(lastname).append("</div>\n");
-        emailContent.append("        <div><span>Sá»‘ Ä‘iá»‡n thoáº¡i:</span> ").append(phone).append("</div>\n");
+        emailContent.append("        <div><span>Họ tên:</span> ").append(firstname).append(" ").append(lastname).append("</div>\n");
+        emailContent.append("        <div><span>Số điện thoại:</span> ").append(phone).append("</div>\n");
         emailContent.append("        <div><span>Email:</span> ").append(email).append("</div>\n");
-        emailContent.append("        <div><span>NgÃ y nháº­n xe:</span> ").append(pickupDate).append("</div>\n");
-        emailContent.append("        <div><span>NgÃ y tráº£ xe:</span> ").append(returnDate).append("</div>\n");
-        emailContent.append("        <div><span>Äá»‹a Ä‘iá»ƒm nháº­n xe:</span> ").append(pickupLocation).append("</div>\n");
-        emailContent.append("        <div><span>Äá»‹a Ä‘iá»ƒm tráº£ xe:</span> ").append(returnLocation).append("</div>\n");
+        emailContent.append("        <div><span>Ngày nhận xe:</span> ").append(pickupDate).append("</div>\n");
+        emailContent.append("        <div><span>Ngày trả xe:</span> ").append(returnDate).append("</div>\n");
+        emailContent.append("        <div><span>Địa điểm nhận xe:</span> ").append(pickupLocation).append("</div>\n");
+        emailContent.append("        <div><span>Địa điểm trả xe:</span> ").append(returnLocation).append("</div>\n");
         emailContent.append("    </div>\n");
         emailContent.append("    <div class=\"vehicle-info\">\n");
-        emailContent.append("        <div class=\"header\">ThÃ´ng tin xe:</div>\n");
+        emailContent.append("        <div class=\"header\">Thông tin xe:</div>\n");
 
-        // Láº·p qua danh sÃ¡ch xe vÃ  thÃªm thÃ´ng tin vÃ o email
+        // Lặp qua danh sách xe và thêm thông tin vào email
         for (Map.Entry<String, Integer> entry : bikeCounts.entrySet()) {
             String bikeName = entry.getKey();
             int quantity = entry.getValue();
-            emailContent.append("        <div><span>TÃªn xe:</span> ").append(bikeName).append("             x").append(quantity).append("</div>\n");
-//            emailContent.append("        <div><span>Sá»‘ lÆ°á»£ng:</span> x").append(quantity).append(" VND</div>\n");
+            emailContent.append("        <div><span>Tên xe:</span> ").append(bikeName).append("             x").append(quantity).append("</div>\n");
+//            emailContent.append("        <div><span>Số lượng:</span> x").append(quantity).append(" VND</div>\n");
         }
-        emailContent.append("<div><span>PhÃ­ thuÃª xe dá»± tÃ­nh:</span> ").append(total).append(" VND</div>");
+        emailContent.append("<div><span>Phí thuê xe dự tính:</span> ").append(total).append(" VND</div>");
         emailContent.append("    </div>\n");
         emailContent.append("    <div class=\"note\">\n");
-        emailContent.append("        <div class=\"header\">LÆ°u Ã½:</div>\n");
+        emailContent.append("        <div class=\"header\">Lưu ý:</div>\n");
         emailContent.append("        <ul>\n");
-        emailContent.append("            <li>Vui lÃ²ng mang theo giáº¥y tá» tÃ¹y thÃ¢n khi nháº­n xe.</li>\n");
-        emailContent.append("            <li>Kiá»ƒm tra ká»¹ thÃ´ng tin xe trÆ°á»›c khi nháº­n.</li>\n");
-        emailContent.append("            <li>LiÃªn há»‡ vá»›i chÃºng tÃ´i náº¿u cÃ³ báº¥t ká»³ tháº¯c máº¯c nÃ o.</li>\n");
+        emailContent.append("            <li>Vui lòng mang theo giấy tờ tùy thân khi nhận xe.</li>\n");
+        emailContent.append("            <li>Kiểm tra kỹ thông tin xe trước khi nhận.</li>\n");
+        emailContent.append("            <li>Liên hệ với chúng tôi nếu có bất kỳ thắc mắc nào.</li>\n");
         emailContent.append("        </ul>\n");
         emailContent.append("    </div>\n");
         emailContent.append("</div>\n");
@@ -494,6 +479,14 @@ public class BookingInforHander extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(gson.toJson(dataMap));
 //        response.sendRedirect("index.jsp");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setContentType("application/json;charset=UTF-8");
+            java.util.Map<String, String> errorResponse = new java.util.HashMap<>();
+            errorResponse.put("status", "error");
+            errorResponse.put("message", "Lỗi backend: " + e.getMessage());
+            response.getWriter().write(new com.google.gson.Gson().toJson(errorResponse));
+        }
     }
 
     private String generateBookingCode() {

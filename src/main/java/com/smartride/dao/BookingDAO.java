@@ -47,7 +47,7 @@ public class BookingDAO {
                 + "    \"VoucherID\", \n"
                 + "    \"CustomerID\"\n"
                 + ") VALUES"
-                + " (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + " (?, CAST(? AS timestamp), CAST(? AS timestamp), CAST(? AS timestamp), ?, ?, ?, ?, ?, ?)";
         String sqlNoVoucher = " INSERT INTO \"Booking\" (\n"
                 + "    \"BookingID\", \n"
                 + "    \"BookingDate\", \n"
@@ -59,7 +59,7 @@ public class BookingDAO {
                 + "    \"DeliveryStatus\", \n"
                 + "    \"CustomerID\"\n"
                 + ") VALUES"
-                + " (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + " (?, CAST(? AS timestamp), CAST(? AS timestamp), CAST(? AS timestamp), ?, ?, ?, ?, ?)";
         try {
             if (voucherID == 0) {
                 PreparedStatement ps = conn.prepareStatement(sqlNoVoucher);
@@ -90,6 +90,7 @@ public class BookingDAO {
             
         } catch (SQLException e) {
             System.out.println(e);
+            throw new RuntimeException("Lỗi lưu Booking: " + e.getMessage(), e);
         }
     }
     
@@ -184,6 +185,7 @@ public class BookingDAO {
                 sql.append(" \"StatusBooking\" = 'Đã hủy'");
             }
         }
+        sql.append(" ORDER BY \"BookingDate\" DESC");
         try {
             stm = conn.prepareStatement(sql.toString());
             stm.setInt(1, accountID);
@@ -386,7 +388,7 @@ public class BookingDAO {
                 + "    \"VoucherID\",\n"
                 + "    \"CustomerID\"\n"
                 + "    FROM \n"
-                + "    \"Booking\" where \"StatusBooking\" != 'Đã hủy'";
+                + "    \"Booking\" where \"StatusBooking\" != 'Đã hủy' ORDER BY \"Booking\".\"BookingDate\" DESC";
         try {
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
@@ -481,6 +483,137 @@ public class BookingDAO {
         return list;
     }
     
+    /**
+     * Tự động đổi DeliveryStatus → "Quá hạn" cho tất cả booking đã quá ngày trả
+     * mà khách vẫn đang giữ xe (DeliveryStatus = 'Đã giao').
+     * Trả về danh sách bookingID bị đổi trạng thái (để scheduler gửi email).
+     */
+    public List<String> markOverdueBookings() {
+        List<String> overdueIds = new ArrayList<>();
+        // Lấy các booking đang thuê nhưng đã qua EndDate (hoặc NewEndDate nếu đã gia hạn)
+        String sqlSelect = "SELECT b.\"BookingID\" FROM \"Booking\" b "
+                + "LEFT JOIN \"Extension\" e ON b.\"BookingID\" = e.\"BookingID\" "
+                + "WHERE b.\"DeliveryStatus\" = 'Đã giao' "
+                + "AND b.\"StatusBooking\" = 'Đã xác nhận' "
+                + "AND COALESCE(e.\"NewEndDate\", b.\"EndDate\") < NOW()";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sqlSelect);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                overdueIds.add(rs.getString("BookingID"));
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return overdueIds;
+        }
+
+        // Đổi DeliveryStatus thành "Quá hạn" cho từng booking
+        if (!overdueIds.isEmpty()) {
+            String sqlUpdate = "UPDATE \"Booking\" SET \"DeliveryStatus\" = 'Quá hạn' "
+                    + "WHERE \"BookingID\" = ?";
+            try {
+                PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
+                for (String bid : overdueIds) {
+                    psUpdate.setString(1, bid);
+                    psUpdate.addBatch();
+                }
+                psUpdate.executeBatch();
+                psUpdate.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return overdueIds;
+    }
+
+    /**
+     * Tính số ngày quá hạn và phí phạt cho một booking.
+     * Phí phạt = số ngày trễ × (tổng tiền / số ngày thuê) × 1.5
+     * Trả về mảng [overdueDays, lateFee].
+     */
+    public double[] getOverdueDaysAndLateFee(String bookingID) {
+        String sql = "SELECT "
+                + "CEIL(EXTRACT(EPOCH FROM (NOW() - COALESCE(e.\"NewEndDate\", b.\"EndDate\"))) / 86400) AS overdue_days, "
+                + "b.\"EndDate\", "
+                + "COALESCE(e.\"NewEndDate\", b.\"EndDate\") AS effective_end_date, "
+                + "b.\"StartDate\" "
+                + "FROM \"Booking\" b "
+                + "LEFT JOIN \"Extension\" e ON b.\"BookingID\" = e.\"BookingID\" "
+                + "WHERE b.\"BookingID\" = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int overdueDays = Math.max(0, rs.getInt("overdue_days"));
+
+                // Tính tổng tiền thuê từ BookingDetail
+                double totalRentalFee = 0;
+                String sqlTotal = "SELECT SUM(\"TotalPrice\") FROM \"Booking Detail\" WHERE \"BookingID\" = ?";
+                PreparedStatement psTotal = conn.prepareStatement(sqlTotal);
+                psTotal.setString(1, bookingID);
+                ResultSet rsTotal = psTotal.executeQuery();
+                if (rsTotal.next()) {
+                    totalRentalFee = rsTotal.getDouble(1);
+                }
+                rsTotal.close();
+                psTotal.close();
+
+                // Tính số ngày thuê gốc để ra giá ngày
+                java.sql.Timestamp startTs = rs.getTimestamp("StartDate");
+                java.sql.Timestamp endTs = rs.getTimestamp("effective_end_date");
+                int rentalDays = 1;
+                if (startTs != null && endTs != null) {
+                    long diffMs = endTs.getTime() - startTs.getTime();
+                    rentalDays = Math.max(1, (int) Math.ceil(diffMs / (1000.0 * 60 * 60 * 24)));
+                }
+
+                double dailyRate = totalRentalFee / rentalDays;
+                double lateFee = overdueDays * dailyRate * 1.5;
+
+                rs.close();
+                ps.close();
+                return new double[]{overdueDays, Math.round(lateFee)};
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new double[]{0, 0};
+    }
+
+    /**
+     * Staff xác nhận khách đã trả xe: set DeliveryStatus = 'Đã trả', ghi ActualReturnDate = NOW().
+     */
+    public boolean confirmReturn(String bookingID) {
+        // Tự tạo cột ActualReturnDate nếu chưa có (safe migration)
+        try {
+            conn.createStatement().execute(
+                "ALTER TABLE \"Booking\" ADD COLUMN IF NOT EXISTS \"ActualReturnDate\" TIMESTAMP"
+            );
+        } catch (Exception ignored) {}
+
+        String sql = "UPDATE \"Booking\" SET \"DeliveryStatus\" = 'Đã trả', "
+                + "\"ActualReturnDate\" = NOW() "
+                + "WHERE \"BookingID\" = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingID);
+            int rows = ps.executeUpdate();
+            ps.close();
+            if (rows > 0) {
+                makeMotorcyclesStatus(bookingID, "Có sẵn", "Đã trả xe - Xác nhận bởi Staff");
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         BookingDAO bookingDAO = BookingDAO.getInstance();
 //        System.out.println(bookingDAO.getMotorcycleDetailsByBookingID("BOOK000006"));

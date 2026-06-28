@@ -7,16 +7,24 @@
 <html lang="en">
 
     <head>
-        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
+      
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="colorlib.com">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Booking Form</title>
+        <title>Gia hạn xe</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
 
         <!-- Font Icon -->
         <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
         <link rel="stylesheet" href="vendor/nouislider/nouislider.min.css">
+        
+        <!-- Premium Google Fonts, FontAwesome 6 and Bootstrap Icons for stunning typography and elements -->
+        <link href="https://fonts.googleapis.com" rel="preconnect">
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <!--        
         <link href="assets/bootstrap.min.css" rel="stylesheet"/>
          Custom styles for this template 
@@ -24,7 +32,7 @@
         <script src="assets/jquery-1.11.3.min.js"></script>
         
         <!-- Main css -->
-       <style>
+        <style>
             /* @extend display-flex; */
             display-flex,
             .form-flex,
@@ -145,6 +153,88 @@
                 clear: both;
             }
 
+            .upload-card-wrapper {
+                flex: 1;
+                min-width: 0;
+                position: relative;
+            }
+            .upload-card {
+                padding: 20px 10px;
+                border: 2px dashed #d1d5db;
+                border-radius: 12px;
+                text-align: center;
+                background: #f9fafb;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 140px;
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .upload-card:hover {
+                border-color: #046fd4;
+                background: #f0f7ff;
+            }
+            .upload-card.uploaded {
+                border-color: #16a34a;
+                background: #f0fdf4;
+            }
+            .upload-card.uploaded i {
+                color: #16a34a !important;
+            }
+            .upload-card.uploaded .upload-title {
+                color: #15803d;
+            }
+            .upload-card.uploaded .upload-subtitle {
+                color: #16a34a;
+            }
+            .upload-card i {
+                font-size: 36px;
+                color: #9ca3af;
+                margin-bottom: 8px;
+                transition: color 0.3s ease;
+            }
+            .upload-card:hover i {
+                color: #046fd4;
+            }
+            .upload-card .upload-title {
+                font-weight: 600;
+                color: #374151;
+                font-size: 14px;
+            }
+            .upload-card .upload-subtitle {
+                font-size: 12px;
+                color: #6b7280;
+                margin-top: 4px;
+            }
+            .image-preview-container {
+                width: 100%;
+                margin-top: 15px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .img-preview {
+                max-width: 100%;
+                max-height: 200px;
+                object-fit: contain;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                border: 1px solid #e5e7eb;
+            }
+            .existing-image-label {
+                font-size: 0.85rem;
+                color: #6b7280;
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 500;
+            }
+
             h2 {
                 font-size: 30px;
                 margin: 0px;
@@ -157,19 +247,20 @@
                 font-weight: 400;
                 font-family: 'Roboto Slab';
                 margin: 0px;
-                background: #222;
+                background: #f9fafb;
                 position: relative;
                 padding: 0px;
             }
 
             .main {
-                padding: 50px 0;
+                padding: 0;
                 position: relative;
                 z-index: 99;
             }
 
             .container-booking {
-                width: 1400px;
+                width: 100%;
+                max-width: 1400px;
                 margin: 0 auto;
                 background: #fff;
             }
@@ -212,29 +303,40 @@
             select {
                 width: 100%;
                 display: block;
-                border: 1px solid #ebebeb;
-                height: 37px;
+                border: 1px solid #e3dec9;
+                border-radius: 8px;
+                height: 48px;
                 box-sizing: border-box;
-                padding: 0 20px;
-                color: #222;
-                font-weight: bold;
+                padding: 0 16px;
+                color: #5c554e;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-weight: 600;
                 font-size: 14px;
-                font-family: 'Roboto Slab';
+                transition: all 0.3s ease;
+                background-color: #ffffff;
+            }
+            
+            input:focus, select:focus {
+                border-color: #b59349;
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(181, 147, 73, 0.1);
             }
 
             #steps-uid-0-p-0 .form-row,
             #steps-uid-0-p-0 .form-group,
             #steps-uid-0-p-0 .form-date {
-                width: 1000px;
+                width: 100%;
             }
 
             .form-flex {
-                margin: 0 -10px;
+                display: flex;
+                gap: 20px;
+                margin: 0;
             }
 
             .form-flex .form-group {
-                width: 50%;
-                padding: 0 10px;
+                flex: 1;
+                padding: 0;
             }
 
             .form-group,
@@ -292,17 +394,17 @@
 
             .vertical .steps {
                 float: left;
-                width: 310px;
+                width: 25%;
             }
 
             .vertical .content,
             .vertical .actions {
                 float: right;
-                width: 1090px;
+                width: 75%;
             }
 
             .content {
-                height: 800px;
+                min-height: 400px;
                 background-color: white;
             }
 
@@ -501,19 +603,21 @@
 
             label.error {
                 display: block;
-                position: absolute;
-                top: 0px;
-                right: 0;
+                position: relative;
+                color: #e53e3e;
+                font-size: 12px;
+                margin-top: 4px;
             }
 
             label.error:after {
                 font-family: 'Material-Design-Iconic-Font';
                 position: absolute;
                 content: '\f135';
-                right: 20px;
-                top: 50px;
+                right: 5px;
+                top: 0;
                 font-size: 13px;
                 color: #f63726;
+                display: none; /* Hide the icon to keep the UI clean with just the red text */
             }
 
             input.error {
@@ -986,13 +1090,6 @@
 /*                display: inline-block;*/
                 display: none;
             }
-            .main-price small {
-                display: block;
-                margin-top: 3px;
-                color: #777;
-                font-size: 11px;
-                font-weight: 600;
-            }
 
             .price-note {
                 font-size: 0.9em;
@@ -1088,12 +1185,651 @@
             }
             
             label.error{
+                color: #dc3545;
+                font-size: 11px;
+                font-weight: 600;
+                margin-top: 4px;
+            }
+             .note-star{
+                color: red;
+             }
+
+            /* --- LUXURY OVERRIDES FOR PREMIUM BOOKING EXPERIENCE --- */
+            /* Override disabled input fading */
+            input:disabled, select:disabled {
+                opacity: 1 !important;
+                background-color: #f1f3f5 !important;
+                color: #212529 !important;
+                border-color: #ced4da !important;
+                -webkit-text-fill-color: #212529 !important;
+            }
+            .form-label {
+                color: #212529 !important;
+                font-weight: 800 !important;
+            }
+            input[type="date"], input[type="time"], select, input[type="text"], input[type="email"], input[type="tel"] {
+                border: 1px solid #adb5bd !important;
+                color: #1a1816 !important;
+                font-weight: 700 !important;
+            }
+            .title .step-text {
+                color: #495057 !important;
+                font-weight: 800 !important;
+            }
+            body {
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                background-color: transparent !important;
+                color: #2b2824 !important;
+                font-weight: 500 !important;
+            }
+            .main {
+                padding: 60px 0 !important;
+                background: transparent !important;
+                
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            .container-booking {
+                width: 100% !important; max-width: 100% !important;
+                max-width: 95% !important;
+                background: #ffffff !important;
+                border-radius: 20px !important;
+                box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45) !important;
+                overflow: hidden !important;
+                position: relative !important;
+                border: 1px solid rgba(181, 147, 73, 0.15) !important;
+            }
+            
+            /* Sleek Close/Exit Button */
+            .btn-exit-booking { display: none !important;
+                position: absolute !important;
+                top: 25px !important;
+                right: 35px !important;
+                background: rgba(26, 24, 22, 0.05) !important;
+                border: 1px solid rgba(26, 24, 22, 0.12) !important;
+                color: #1a1816 !important;
+                padding: 10px 22px !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 13px !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+                border-radius: 30px !important;
+                text-decoration: none !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                z-index: 1000 !important;
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            }
+            .btn-exit-booking i {
+                font-size: 14px !important;
+                font-weight: 800 !important;
+            }
+            .btn-exit-booking:hover {
+                background: #b59349 !important;
+                color: #ffffff !important;
+                border-color: #b59349 !important;
+                box-shadow: 0 4px 15px rgba(181, 147, 73, 0.3) !important;
+                transform: translateY(-2px) !important;
+            }
+            .btn-exit-booking:active {
+                transform: translateY(0) scale(0.96) !important;
+            }
+
+            /* Step Sidebar Overhaul */
+            .vertical {
+                background-color: #ffffff !important;
+                display: flex !important;
+                flex-direction: row !important;
+                width: 100% !important;
+                min-height: 850px !important;
+            }
+            .vertical .steps {
+                width: 320px !important;
+                background-color: #fbfaf8 !important;
+                border-right: 1px solid rgba(181, 147, 73, 0.12) !important;
+                padding: 50px 30px !important;
+                float: none !important;
+            }
+            .vertical .content {
+                flex: 1 !important;
+                float: none !important;
+                width: auto !important;
+                background-color: #ffffff !important;
+                padding: 50px 60px 140px 60px !important;
+                height: auto !important;
+                min-height: 700px !important;
+            }
+            .vertical .actions {
+                position: absolute !important;
+                bottom: 0 !important;
+                right: 0 !important;
+                width: calc(100% - 320px) !important;
+                background-color: #ffffff !important;
+                border-top: 1px solid rgba(26, 24, 22, 0.05) !important;
+                padding: 25px 60px 40px 60px !important;
+                float: none !important;
+            }
+            
+            /* Sidebar step text & timeline */
+            .steps ul {
+                padding-left: 0 !important;
+                padding-top: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 24px !important;
+            }
+            .steps ul li {
+                padding-bottom: 0 !important;
+                margin-bottom: 0 !important;
+            }
+            .steps ul:after {
+                display: none !important; /* Hide outdated static timeline line */
+            }
+            .title {
+                display: flex !important;
+                align-items: center !important;
+            }
+            .title .step-number {
+                width: 44px !important;
+                height: 44px !important;
+                border: 2px solid rgba(181, 147, 73, 0.2) !important;
+                background: #ffffff !important;
+                color: #b59349 !important;
+                font-family: 'Poppins', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 15px !important;
+                margin-right: 18px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                transition: all 0.3s ease !important;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+            }
+            .title .step-text {
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 14px !important;
+                color: #7c766f !important;
+                letter-spacing: 0.5px !important;
+                text-transform: uppercase !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            /* Active step indicators */
+            .current .title .step-number {
+                background: #b59349 !important;
+                color: #ffffff !important;
+                border-color: #b59349 !important;
+                box-shadow: 0 4px 15px rgba(181, 147, 73, 0.3) !important;
+            }
+            .current .title .step-text {
+                color: #1a1816 !important;
+            }
+            
+            /* Fieldset Header Styling */
+            fieldset {
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+            }
+            fieldset h2 {
+                font-family: 'Poppins', sans-serif !important;
+                font-weight: 800 !important;
+                font-size: 28px !important;
+                letter-spacing: 0.5px !important;
+                color: #1a1816 !important;
+                margin-bottom: 8px !important;
+            }
+            fieldset p.desc {
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-size: 14px !important;
+                color: #7c766f !important;
+                margin-bottom: 35px !important;
+            }
+
+            /* Luxury Form Inputs */
+            .form-label {
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 12px !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+                color: #5c554e !important;
+                margin-bottom: 8px !important;
+            }
+            input[type="date"], input[type="time"], select, input[type="text"], input[type="email"], input[type="tel"] {
+                width: 100% !important;
+                height: 48px !important;
+                border: 1px solid #e3dec9 !important;
+                border-radius: 8px !important;
+                padding: 0 16px !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-size: 14px !important;
+                color: #1a1816 !important;
+                font-weight: 600 !important;
+                background-color: #fbfaf8 !important;
+                box-sizing: border-box !important;
+                transition: all 0.3s ease !important;
+            }
+            input:focus, select:focus {
+                border-color: #b59349 !important;
+                background-color: #ffffff !important;
+                box-shadow: 0 0 0 4px rgba(181, 147, 73, 0.12) !important;
+                outline: none !important;
+            }
+            
+            /* Grid Spacing fixes */
+            .form-flex {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 20px 30px !important;
+                margin: 0 !important;
+            }
+            .form-flex .form-group {
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .form-row {
+                margin-bottom: 25px !important;
+            }
+            .form-row.location {
+                margin-top: 0 !important;
+            }
+
+            /* Step Actions Buttons (Prev, Next, Finish) */
+            .actions ul {
+                display: flex !important;
+                justify-content: flex-end !important;
+                gap: 15px !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                list-style: none !important;
+                width: 100% !important;
+            }
+            .actions ul li {
+                float: none !important;
+            }
+            .actions ul li.disabled, .actions ul .disabled {
                 display: none !important;
             }
-            .note-star{
-                color: red;
+            .actions ul li:first-child {
+                margin-right: auto !important;
+            }
+            .actions ul li a {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 160px !important;
+                height: 48px !important;
+                border-radius: 8px !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+                font-size: 13px !important;
+                box-shadow: 0 4px 12px rgba(181, 147, 73, 0.12) !important;
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                text-decoration: none !important;
+            }
+            /* Next/Finish button */
+            .actions ul li:not(:first-child) a, .actions ul li a[href="#next"], .actions ul li a[href="#finish"] {
+                background: #b59349 !important;
+                color: #ffffff !important;
+                border: 1px solid #b59349 !important;
+            }
+            .actions ul li:not(:first-child) a:hover, .actions ul li a[href="#next"]:hover, .actions ul li a[href="#finish"]:hover {
+                background: #1a1816 !important;
+                color: #b59349 !important;
+                border-color: #b59349 !important;
+                box-shadow: 0 6px 20px rgba(181, 147, 73, 0.35) !important;
+                transform: translateY(-2px) !important;
+            }
+            .actions ul li:not(:first-child) a:active, .actions ul li a[href="#next"]:active, .actions ul li a[href="#finish"]:active {
+                transform: translateY(0) scale(0.97) !important;
+            }
+            /* Prev button */
+            .actions ul li:first-child a, .actions ul li a[href="#previous"] {
+                background: #f1ede4 !important;
+                color: #5c554e !important;
+                border: 1px solid #e3dec9 !important;
+            }
+            .actions ul li:first-child a:hover, .actions ul li a[href="#previous"]:hover {
+                background: #e3dec9 !important;
+                color: #1a1816 !important;
+                border-color: #c9c2ac !important;
+                transform: translateY(-2px) !important;
+            }
+            .actions ul li:first-child a:active, .actions ul li a[href="#previous"]:active {
+                transform: translateY(0) scale(0.97) !important;
+            }
+
+            /* Responsive Adjustments */
+            @media (max-width: 991px) {
+                .vertical {
+                    flex-direction: column !important;
+                }
+                .vertical .steps {
+                    width: 100% !important;
+                    border-right: none !important;
+                    border-bottom: 1px solid rgba(181, 147, 73, 0.12) !important;
+                    padding: 30px !important;
+                }
+                .vertical .content {
+                    padding: 30px !important;
+                }
+                .vertical .actions {
+                    position: static !important;
+                    width: 100% !important;
+                    padding: 20px 30px 30px 30px !important;
+                }
+                .btn-exit-booking { display: none !important;
+                    top: 15px !important;
+                    right: 15px !important;
+                    padding: 6px 14px !important;
+                    font-size: 11px !important;
+                }
+            }
+
+            /* --- WIZARD FORM CONTENT & CARD POLISHING --- */
+            
+            /* Hide the clunky raw text headers rendered by jquery-steps */
+            #signup-form h3 {
+                display: none !important;
+            }
+
+            /* Product Listing Card Modernization */
+            .form-box, .form-box-total {
+                background: #ffffff !important;
+                border: 1px solid rgba(181, 147, 73, 0.15) !important;
+                border-radius: 16px !important;
+                box-shadow: 0 8px 30px rgba(26, 24, 22, 0.03) !important;
+                margin-bottom: 25px !important;
+                padding: 24px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                gap: 24px !important;
+            }
+            .form-box:hover {
+                border-color: #b59349 !important;
+                box-shadow: 0 12px 35px rgba(181, 147, 73, 0.1) !important;
+                transform: translateY(-3px) !important;
+            }
+            .form-img-bike, .form-img {
+                width: 200px !important;
+                height: 135px !important;
+                flex-shrink: 0 !important;
+                border-radius: 12px !important;
+                overflow: hidden !important;
+                background: #fbfaf8 !important;
+                border: 1px solid rgba(181, 147, 73, 0.08) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            .form-img-bike img, .form-img img {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain !important;
+                transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            }
+            .form-box:hover .form-img-bike img, .form-box:hover .form-img img {
+                transform: scale(1.06) !important;
+            }
+            .form-text {
+                flex: 1 !important;
+                padding: 0 !important;
+                width: auto !important;
+            }
+            .motor-name {
+                font-family: 'Poppins', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 20px !important;
+                color: #1a1816 !important;
+                margin-top: 0 !important;
+                margin-bottom: 8px !important;
+            }
+            .form-doc {
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-size: 13px !important;
+                color: #6c665f !important;
+                line-height: 1.6 !important;
+            }
+            .form-doc p {
+                margin: 0 0 6px 0 !important;
+            }
+            .form-doc ul {
+                margin: 0 !important;
+                padding-left: 18px !important;
+            }
+            .form-doc ul li {
+                font-size: 13px !important;
+                color: #6c665f !important;
+                margin-bottom: 4px !important;
+            }
+
+            /* Checkout Dynamic Price Displays */
+            .form-check {
+                width: 250px !important;
+                flex-shrink: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: flex-end !important;
+                justify-content: center !important;
+                gap: 12px !important;
+                padding: 0 !important;
+            }
+            .main-price {
+                font-family: 'Poppins', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 22px !important;
+                color: #b59349 !important;
+                margin: 0 !important;
+                letter-spacing: 0.5px !important;
+                text-align: right !important;
+                /* Let JS dynamic controls handle the display property naturally */
+            }
+            .price-note {
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-size: 11px !important;
+                color: #9c968f !important;
+                margin: 0 !important;
+                text-align: right !important;
+            }
+
+            /* Sleek Quantity Selector (Replaced clunky blue-cyan buttons) */
+            .rent-button {
+                background: #1a1816 !important;
+                border: 1px solid #b59349 !important;
+                border-radius: 8px !important;
+                padding: 8px 14px !important;
+                color: #ffffff !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 12px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+                justify-content: space-between !important;
+                width: auto !important;
+                min-width: 200px !important;
+                box-sizing: border-box !important;
+            }
+            .rent-button a {
+                color: #ffffff !important;
+                text-decoration: none !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.5px !important;
+            }
+            .form-check-select {
+                background-color: #ffffff !important;
+                border: 1px solid #e3dec9 !important;
+                border-radius: 6px !important;
+                color: #1a1816 !important;
+                font-weight: 700 !important;
+                height: 30px !important;
+                padding: 0 6px !important;
+                width: 65px !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-size: 13px !important;
+                cursor: pointer !important;
+            }
+
+            /* Accessory Checkbox Containers (Step 3) */
+            .checkbox-container {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+                background: #fbfaf8 !important;
+                border: 1px solid #e3dec9 !important;
+                border-radius: 8px !important;
+                padding: 8px 16px !important;
+                height: 48px !important;
+                width: auto !important;
+                box-shadow: none !important;
+                box-sizing: border-box !important;
+            }
+            .checkbox-container label {
+                font-family: 'Poppins', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 14px !important;
+                color: #b59349 !important;
+                margin: 0 !important;
+            }
+            .checkbox-container .items-free {
+                color: #2e7d32 !important;
+            }
+
+            /* Custom Modern Segmented Radios for Gender (Step 4) */
+            .form-radio-group {
+                display: flex !important;
+                gap: 10px !important;
+                width: 100% !important;
+                height: 48px !important;
+                align-items: center !important;
+            }
+            .form-radio-group label {
+                flex: 1 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 8px !important;
+                background: #fbfaf8 !important;
+                border: 1px solid #e3dec9 !important;
+                border-radius: 8px !important;
+                height: 100% !important;
+                cursor: pointer !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 13px !important;
+                color: #5c554e !important;
+                transition: all 0.3s ease !important;
+                margin: 0 !important;
+                width: auto !important;
+                box-sizing: border-box !important;
+            }
+            .form-radio-group label:hover {
+                border-color: #b59349 !important;
+                background: #ffffff !important;
+            }
+            .form-radio-group label input[type="radio"] {
+                width: 16px !important;
+                height: 16px !important;
+                margin: 0 !important;
+                accent-color: #b59349 !important;
+                cursor: pointer !important;
+            }
+            .form-radio-group label:has(input:checked) {
+                border-color: #b59349 !important;
+                background: #fdfaf2 !important;
+                color: #b59349 !important;
+                box-shadow: 0 0 0 3px rgba(181, 147, 73, 0.1) !important;
+            }
+
+            /* CCCD Document Upload Container Overhaul */
+            .form-enter {
+                background-color: #fcfbfa !important;
+                border: 1px solid rgba(181, 147, 73, 0.22) !important;
+                border-radius: 14px !important;
+                box-shadow: 0 8px 24px rgba(181, 147, 73, 0.03) !important;
+                margin: 25px 0 !important;
+                padding: 24px !important;
+                box-sizing: border-box !important;
+            }
+            .form-enter .form-flex {
+                display: grid !important;
+                grid-template-columns: 2fr 1fr 1fr 2fr !important;
+                gap: 20px !important;
+                align-items: end !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            .form-enter .form-flex > div {
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .form-enter .form-flex .form-group {
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            /* Restructure the inner flexbox for Issued date and Expiry date into columns */
+            .form-enter .form-flex > div[style*="display: flex"] {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 15px !important;
+            }
+            .form-enter input[type="file"] {
+                padding: 10px 14px !important;
+                font-size: 13px !important;
+                height: 48px !important;
+                box-sizing: border-box !important;
+                background: #ffffff !important;
+                border: 1px solid #e3dec9 !important;
+                border-radius: 8px !important;
+                font-family: 'Plus Jakarta Sans', sans-serif !important;
+                color: #5c554e !important;
+                cursor: pointer !important;
+            }
+
+            /* Responsive Adjustments for Cards & Steps */
+            @media (max-width: 768px) {
+                .form-box {
+                    flex-direction: column !important;
+                    align-items: stretch !important;
+                }
+                .form-img-bike, .form-img {
+                    width: 100% !important;
+                    height: 180px !important;
+                }
+                .form-check {
+                    width: 100% !important;
+                    align-items: stretch !important;
+                }
+                .main-price, .price-note {
+                    text-align: left !important;
+                }
+                .form-enter .form-flex {
+                    grid-template-columns: 1fr !important;
+                    gap: 16px !important;
+                }
+                .form-enter .form-flex > div[style*="display: flex"] {
+                    grid-template-columns: 1fr 1fr !important;
+                }
             }
         </style>
+        
+        <!-- SweetAlert2 for popups and image zoom -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
 
     <body>
@@ -1121,6 +1857,10 @@
                                         <label for="pickuptime" class="form-label">Giờ nhận xe <span class="note-star"> *</span></label>
                                         <input type="time" name="pickuptime" id="pickuptime" value="${startTime}" disabled/>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-flex">
                                     <div class="form-group">
                                         <label for="returndate" class="form-label">Ngày trả xe <span class="note-star"> *</span></label>
                                         <input type="date" name="returndate" id="returndate"  />
@@ -1167,41 +1907,20 @@
                             <p class="desc">Hãy xác nhận thông tin và đồng ý với các điều khoản dịch vụ </p>
                             <div class="fieldset-content">
                                 <div class="scrollable-vertical">
-                                    <h4>NGÀY & GIỜ</h4>
-                                    <div class="form-box">
-                                        <div class="form-comf-20">
+                                    <div style="background:#fff; border:1px solid #eaeaea; border-radius:12px; padding:20px; margin-bottom:16px;">
+                                        <h4 style="margin:0 0 14px; color:#b59349; font-size:13px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
+                                            <i class="bi bi-clock-history"></i> Thời Gian Thuê
+                                        </h4>
+                                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                                             <div>
-                                                <label for="pickupdatetext" class="form-label">Ngày nhận xe</label>
-                                                <p id="pickupdatetext" ></p>
+                                                <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Nhận xe</div>
+                                                <div style="font-weight:600; color:#222; font-size:15px;"><span id="pickupdatetext"></span> <span id="pickuptimetext"></span></div>
+                                                <div id="pickuploctext" style="font-size:13px; color:#666; margin-top:3px;"></div>
                                             </div>
                                             <div>
-                                                <label for="pickuploctext" class="form-label">Địa điểm nhận xe</label>
-                                                <p id="pickuploctext"></p>
-                                            </div>
-
-                                        </div>
-                                        <div class="form-comf-20">
-                                            <div>
-                                                <label for="pickuptimetext" class="form-label">Giờ nhận xe</label>
-                                                <p id="pickuptimetext"></p>
-                                            </div>
-                                            <div>
-                                                <label for="returnloctext" class="form-label">Địa điểm trả xe</label>
-                                                <p id="returnloctext"></p>
-                                            </div>
-
-                                        </div>
-                                        <div class="form-comf-20">
-                                            <div>
-                                                <label for="returndatetext" class="form-label">Ngày trả xe</label>
-                                                <p id="returndatetext"></p>
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="form-comf-20">
-                                            <div>
-                                                <label for="returntimetext" class="form-label">Giờ trả xe</label>
-                                                <p id="returntimetext"></p>
+                                                <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Trả xe</div>
+                                                <div style="font-weight:600; color:#222; font-size:15px;"><span id="returndatetext"></span> <span id="returntimetext"></span></div>
+                                                <div id="returnloctext" style="font-size:13px; color:#666; margin-top:3px;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -1214,8 +1933,11 @@
                                                 </div>
                                                 <div class="form-text">
                                                     <h4 class="motor-name">${m.key.model} ${m.key.displacement} </h4>
-                                                    <div class="form-doc" style="box-sizing: border-box;">
-                                                        ${m.key.description}
+                                                    <div class="form-doc description-container" style="box-sizing: border-box;">
+                                                        <div class="description-text collapsed" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; transition: all 0.3s;">
+                                                            ${m.key.description}
+                                                        </div>
+                                                        <a href="javascript:void(0)" onclick="const dt = this.previousElementSibling; if(dt.style.display === '-webkit-box'){dt.style.display='block'; this.textContent='Thu gọn';}else{dt.style.display='-webkit-box'; this.textContent='Xem chi tiết';}" style="color:#b59349; font-size:12px; font-weight:600; text-decoration:underline;">Xem chi tiết</a>
                                                     </div>
                                                 </div>
                                                 <div class="form-check"> 
@@ -1272,10 +1994,10 @@
                                     <div class="form-box-total" id="form-box-total">
 
                                     </div>
-                                    <div class="form-check">
+                                    <div class="form-check" style="width: 100% !important; align-items: flex-start !important; margin-top: 15px;">
                                         <div class="checkbox-container">
                                             <input type="checkbox" id="daily-checkbox-term">
-                                            <label>Đồng ý<a href="policies.jsp" target="_blank"> điều khoản dịch vụ</a></label>
+                                            <label style="white-space: nowrap;">Đồng ý<a href="policies.jsp" target="_blank"> điều khoản dịch vụ</a></label>
                                         </div>
                                     </div>
                                 </div>
@@ -1313,14 +2035,51 @@
 
 
 
+                $.validator.addMethod("businessHours", function(value, element) {
+                    if (!value) return true;
+                    const time = value;
+                    const hours = parseInt(time.split(':')[0], 10);
+                    return hours >= 7 && hours < 23;
+                }, "Chỉ nhận/trả xe trong giờ hoạt động (07:00 - 23:00)");
+
+                $.validator.addMethod("minExtensionDate", function(value, element) {
+                    if (!value) return true; 
+                    const originalReturnDateText = document.getElementById('returndatepre').value;
+                    if (!originalReturnDateText) return true;
+
+                    let datePart = originalReturnDateText.split(' ')[0];
+                    let returnDatePre = new Date(datePart);
+                    returnDatePre.setDate(returnDatePre.getDate() + 1);
+                    
+                    let minDateObj = new Date(returnDatePre.getFullYear(), returnDatePre.getMonth(), returnDatePre.getDate());
+                    let today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    if (today > minDateObj) {
+                        minDateObj = today;
+                    }
+                    
+                    let selectedDateObj = new Date(value);
+                    selectedDateObj = new Date(selectedDateObj.getFullYear(), selectedDateObj.getMonth(), selectedDateObj.getDate());
+                    
+                    return selectedDateObj >= minDateObj;
+                }, "Ngày gia hạn phải lớn hơn ngày cũ và không được nhỏ hơn ngày hiện tại!");
+
                 var form = $("#signup-form");
                 form.validate({
                     errorPlacement: function errorPlacement(error, element) {
-                        element.before(error);
+                        element.after(error);
                     },
                     rules: {
                         email: {
                             email: true
+                        },
+                        returndate: {
+                            required: true,
+                            minExtensionDate: true
+                        },
+                        returntime: {
+                            required: true,
+                            businessHours: true
                         }
                     },
                     onfocusout: function (element) {
@@ -1404,11 +2163,12 @@
                         const pickupDateText = storedFormData.pickupdate;
                         const returnDateText = storedFormData.returndate;
 
-                        // Chuyển các chuỗi ngày thành đối tượng Date
-                        const pickupDate = new Date(pickupDateText);
+                        // Chuyển các chuỗi ngày thành đối tượng Date (với gia hạn thì tính từ ngày trả xe cũ)
+                        const originalReturnDateText = document.getElementById('returndatepre').value;
+                        const pickupDate = new Date(originalReturnDateText); // Lấy ngày trả cũ làm mốc bắt đầu tính tiền
                         const returnDate = new Date(returnDateText);
 
-                        // Tính số ngày chênh lệch
+                        // Tính số ngày chênh lệch (số ngày gia hạn)
                         const differenceInTime = returnDate.getTime() - pickupDate.getTime();
                         const differenceInDays = differenceInTime / (1000 * 3600 * 24);
                             
@@ -1438,7 +2198,7 @@
                                 // Tạo một đối tượng chứa dữ liệu từ cả hai thẻ h2
                                 const data = {
                                     dataTotal: dataTotal,
-                                    dataPayment: dataPayment,
+                                    dataPayment: [0],
                                     bookingId: '${booking.bookingID}'
                                 };
             
@@ -1535,10 +2295,27 @@
                             
                             // Thêm tiêu đề h4 và dữ liệu số lượng với giá tiền vào div cụ thể trong item-container
                             const formBoxTotal = document.getElementById('form-box-total');
+                            if (!formBoxTotal) return;
                             formBoxTotal.innerHTML = '';
                             let totalAmount = 0;
+                            
+                            let tableHtml = `
+                                <div style="background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 0;">
+                                        <thead>
+                                            <tr style="border-bottom: 2px solid #e0c87a; text-align: left; color: #b59349; font-size: 14px;">
+                                                <th style="padding: 12px 10px; font-weight: bold;">Dịch vụ</th>
+                                                <th style="padding: 12px 10px; text-align: center; font-weight: bold; width: 12%;">Thời gian</th>
+                                                <th style="padding: 12px 10px; text-align: center; font-weight: bold; width: 12%;">Số lượng</th>
+                                                <th style="padding: 12px 10px; text-align: right; font-weight: bold; width: 18%;">Đơn giá</th>
+                                                <th style="padding: 12px 10px; text-align: right; font-weight: bold; width: 22%;">Thành tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                            `;
+
                             //calculator motorcycles
-                            const  savedBikeCal = document.querySelectorAll('#savedBikeContainer .form-box');
+                            const savedBikeCal = document.querySelectorAll('#savedBikeContainer .form-box');
                             savedBikeCal.forEach(formBox => { 
                                 const selects = formBox.querySelector('.form-check-select');
                                 const title = formBox.querySelector('h4').textContent;
@@ -1556,37 +2333,29 @@
                                 // Tính tổng giá
                                 const totalPrice = quantityDay * price * quantity;
                                 totalAmount += totalPrice;
+                                
+                                let priceLabelDesc = "Ngày";
+                                if (quantityDay >= 30) priceLabelDesc = "Tháng (Ưu đãi)";
+                                else if (quantityDay >= 7) priceLabelDesc = "Tuần (Ưu đãi)";
 
-                                // Create new div elements similar to formBoxTotal structure
-                                const itemContainer = document.createElement('div');
-                                itemContainer.classList.add('item-container');
-
-                                const formComf70 = document.createElement('div');
-                                formComf70.classList.add('form-comf-70');
-                                formComf70.innerHTML = `<h4 style="width: 65%;">` + title + `</h4>
-                                                        <h4>x` + quantityDay +  ` Ngày<h4>`;
-
-                                const formComf30 = document.createElement('div');
-                                formComf30.classList.add('form-comf-30');
-                                formComf30.innerHTML = `
-                                    <div style="width= 30%">
-                                        <p>x`+ quantity +`</p>
-                                        </div>
-                                        <div style="width= 30%">
-                                        <p>₫` + price.toLocaleString() + `</p>
-                                        </div>
-                                        <div style="width= 30%">
-                                        <h4>₫` + totalPrice.toLocaleString() + `</h4>
-                                    </div>
-                                    `;
-
-                                itemContainer.appendChild(formComf70);
-                                itemContainer.appendChild(formComf30);
-                                formBoxTotal.appendChild(itemContainer);                                  
+                                tableHtml += `
+                                    <tr style="border-bottom: 1px dashed #eee;">
+                                        <td style="padding: 16px 10px;">
+                                            <h4 style="margin: 0 0 6px 0; font-size: 15px; color: #333; font-weight: bold;">` + title + `</h4>
+                                            <div style="font-size: 11px; color: #888; display: inline-block; padding: 2px 8px; border-radius: 4px; border: 1px solid #e0c87a; background: #fffdf5;">
+                                                Gói áp dụng: <strong style="color: #b59349;">` + priceLabelDesc + `</strong>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 16px 10px; text-align: center; color: #555; font-size: 14px; font-weight: 500;">` + quantityDay + ` Ngày</td>
+                                        <td style="padding: 16px 10px; text-align: center; color: #555; font-size: 14px; font-weight: 500;">` + quantity + ` Xe</td>
+                                        <td style="padding: 16px 10px; text-align: right; color: #555; font-size: 14px; font-weight: 500;">₫` + price.toLocaleString() + `/Ngày</td>
+                                        <td style="padding: 16px 10px; text-align: right; color: #b59349; font-size: 16px; font-weight: bold;">₫` + totalPrice.toLocaleString() + `</td>
+                                    </tr>
+                                 `;                                 
                             });
                             
                             // Calculator items
-                            const  savedAsseccCal = document.querySelectorAll('#savedItemsContainer .form-box');
+                            const savedAsseccCal = document.querySelectorAll('#savedItemsContainer .form-box');
                             savedAsseccCal.forEach(formBox => {                              
                                 // Lấy nội dung từ thẻ h4 và label
                                 const selects = formBox.querySelector('.form-check-select');
@@ -1603,41 +2372,33 @@
                                 const totalPrice = quantity * price;
                                 totalAmount += totalPrice;
 
-                                // Tạo các thẻ div mới
-                                const itemContainer = document.createElement('div');
-                                itemContainer.classList.add('item-container');
-
-                                const formComf70 = document.createElement('div');
-                                formComf70.classList.add('form-comf-70');
-                                formComf70.innerHTML = `<h4>` + title +`</h4>`;
-
-                                const formComf30 = document.createElement('div');
-                                formComf30.classList.add('form-comf-30');
-                                formComf30.innerHTML = `
-                                    <div style="width= 30%">
-                                    <p>x`+ quantity +`</p>
-                                    </div>
-                                    <div style="width= 30%">
-                                    <p>` + priceLabel + `</p>
-                                    </div>
-                                    <div style="width= 30%">
-                                    <h4>₫` + totalPrice.toLocaleString() + `</h4>
-                                    </div>
-                                    `;
-
-                                itemContainer.appendChild(formComf70);
-                                itemContainer.appendChild(formComf30);
-                                formBoxTotal.appendChild(itemContainer);
-                                
+                                tableHtml += `
+                                    <tr style="border-bottom: 1px dashed #eee;">
+                                        <td style="padding: 16px 10px;">
+                                            <h4 style="margin: 0; font-size: 15px; color: #444; font-weight: bold;">` + title + `</h4>
+                                        </td>
+                                        <td style="padding: 16px 10px; text-align: center; color: #aaa; font-size: 14px;">-</td>
+                                        <td style="padding: 16px 10px; text-align: center; color: #555; font-size: 14px; font-weight: 500;">` + quantity + ` Cái</td>
+                                        <td style="padding: 16px 10px; text-align: right; color: #555; font-size: 14px; font-weight: 500;">` + priceLabel + `</td>
+                                        <td style="padding: 16px 10px; text-align: right; color: #555; font-size: 15px; font-weight: bold;">₫` + totalPrice.toLocaleString() + `</td>
+                                    </tr>
+                                 `;
                             });
-                            // Tạo thẻ div item-total và thêm vào cuối savedItemsContainer
-                            const itemTotalContainer = document.createElement('div');
-                            itemTotalContainer.classList.add('item-total');
-                            itemTotalContainer.innerHTML = `
-                                <h4>Tổng :</h4>
-                                <h2 id="dataInput">₫`+ totalAmount.toLocaleString() +`</h2>
-                                `;
-                            formBoxTotal.appendChild(itemTotalContainer);
+
+                            tableHtml += `
+                                        </tbody>
+                                    </table>
+                            `;
+
+                            tableHtml += `
+                                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:20px; padding-top:15px; border-top:2px solid #e0c87a;">
+                                        <h4 style="margin:0; font-size:18px; color:#444; font-weight:bold;">Tổng cộng:</h4>
+                                        <h2 id="dataInput" style="margin:0; font-size:24px; color:#b59349; font-weight:800;">₫` + totalAmount.toLocaleString() + `</h2>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            formBoxTotal.innerHTML = tableHtml;
 
                            
                             
@@ -1743,22 +2504,24 @@
                 const returnTimeInput = document.getElementById("returndate");
 
                 if (returnDatePreInput && returnTimeInput) {
-                    // Lấy giá trị của returndatepre
-                    let returnDatePre = new Date(returnDatePreInput.value);
-
-                    // Thêm 1 ngày
+                    let datePart = returnDatePreInput.value.split(' ')[0];
+                    let returnDatePre = new Date(datePart);
                     returnDatePre.setDate(returnDatePre.getDate() + 1);
 
-                    // Lấy giá trị ngày tháng năm
-                    let year = returnDatePre.getFullYear();
-                    let month = (returnDatePre.getMonth() + 1).toString().padStart(2, '0');
-                    let day = returnDatePre.getDate().toString().padStart(2, '0');
+                    let minDateObj = new Date(returnDatePre.getFullYear(), returnDatePre.getMonth(), returnDatePre.getDate());
+                    let today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    if (today > minDateObj) {
+                        minDateObj = today;
+                    }
 
-                    // Chuyển đổi giá trị thành định dạng yyyy-MM-dd
-                    let minDate = year + "-" + month + "-" + day;
+                    let year = minDateObj.getFullYear();
+                    let month = (minDateObj.getMonth() + 1).toString().padStart(2, '0');
+                    let day = minDateObj.getDate().toString().padStart(2, '0');
 
-                    // Đặt giá trị min cho trường returntime
-                    returnTimeInput.min = minDate;
+                    let minDateStr = year + "-" + month + "-" + day;
+
+                    returnTimeInput.min = minDateStr;
                 }   
 
                 
@@ -1808,14 +2571,15 @@
                 const returnDateText = storedFormData.returndate;
                 
                 
-                // Chuyển các chuỗi ngày thành đối tượng Date
-                const pickupDate = new Date(pickupDateText);
+                // Chuyển các chuỗi ngày thành đối tượng Date (tính từ ngày trả cũ)
+                const originalReturnDateText = document.getElementById('returndatepre').value;
+                const pickupDate = new Date(originalReturnDateText);
                 const returnDate = new Date(returnDateText);
                 
-                console.log(pickupDate);
-                console.log(returnDateText);
+                console.log("Original Return (New Pickup): ", pickupDate);
+                console.log("New Return: ", returnDateText);
                 
-                // Tính số ngày chênh lệch
+                // Tính số ngày chênh lệch (số ngày gia hạn thêm)
                 const differenceInTime = returnDate.getTime() - pickupDate.getTime();
                 const differenceInDays = differenceInTime / (1000 * 3600 * 24);
                 
@@ -1966,12 +2730,17 @@
                 contentType: false,
                 success: function(response) {
                     console.log("Data sent successfully:", response);
+                    if (window.parent) {
+                        window.parent.location.reload();
+                    } else {
+                        window.location.href = 'bookingHistory?status=all';
+                    }
                 },
                 error: function(xhr, status, error) {
                     console.error("Error sending data:", error);
+                    alert("Có lỗi xảy ra khi gia hạn!");
                 }
             });
-//            window.location.href = 'index.jsp';
 
         
         }

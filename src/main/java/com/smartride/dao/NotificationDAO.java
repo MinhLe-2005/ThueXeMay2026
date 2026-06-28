@@ -94,4 +94,19 @@ public class NotificationDAO implements Serializable {
         }
         return false;
     }
+
+    public boolean insertNotification(int accountId, String title, String message, String link) {
+        String sql = "INSERT INTO \"Notification\" (account_id, title, message, link, is_read) VALUES (?, ?, ?, ?, FALSE)";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1, accountId);
+            stm.setString(2, title);
+            stm.setString(3, message);
+            stm.setString(4, link);
+            return stm.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(NotificationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }

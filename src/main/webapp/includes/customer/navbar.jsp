@@ -574,31 +574,7 @@
 </style>
 
 <script>
-    function runAutoTaskOnce() {
-        const taskKey = 'smartRideAutoTaskTriggered';
-        if (sessionStorage.getItem(taskKey)) {
-            return;
-        }
 
-        sessionStorage.setItem(taskKey, 'true');
-        fetch('auto', {
-            method: 'POST',
-            credentials: 'same-origin',
-            keepalive: true
-        }).catch(function() {
-            sessionStorage.removeItem(taskKey);
-        });
-    }
-
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            if ('requestIdleCallback' in window) {
-                requestIdleCallback(runAutoTaskOnce, { timeout: 5000 });
-            } else {
-                runAutoTaskOnce();
-            }
-        }, 15000);
-    });
     
     // Auto-detect current page and apply .active class with gold underline transition
     document.addEventListener("DOMContentLoaded", function() {

@@ -117,12 +117,12 @@ public class ManageBookingServlet extends HttpServlet {
             }
 
             String emailContent = ""
-                    + "<h3><strong>ColorBike </strong>xin chào quý khách, </h3>"
-                    + "<p>Mã đơn hàng: <strong>" + bookingID + "</strong> của đã xảy ra lỗi trong quá trình đặt đơn </p>"
+                    + "<h3><strong>SmartRide </strong>xin chào quý khách, </h3>"
+                    + "<p>Mã đơn hàng: <strong>" + bookingID + "</strong> của quý khách đã bị hủy trong quá trình xử lý </p>"
                     + "<p>Thời gian đặt: " + timeBook + " </p>"
-                    + "<p>Lý do: " + cancelReason + "</p>"
-                    + "<p>Vui lòng đặt lại đơn thuê xe để hoàn thành việc đặt đơn</p>"
-                    + "<p>ColorBike xin cảm ơn, chúc quý khách một ngày vui vẻ! </p>";
+                    + "<p>Lý do hủy: <strong>" + cancelReason + "</strong></p>"
+                    + "<p>Vui lòng cập nhật lại thông tin chính xác và đặt lại đơn thuê xe nhé!</p>"
+                    + "<p>SmartRide xin cảm ơn, chúc quý khách một ngày vui vẻ! </p>";
             SendEmail.sendVerificationEmail(accountCus.getEmail(), emailContent);
         }
         //--------------------------------------------------------------------------------

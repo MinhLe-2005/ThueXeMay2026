@@ -8,7 +8,7 @@
     <head>
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta charset="utf-8">
-        <title>Chi tiáº¿t lá»‹ch sá»­ thuÃª xe</title>
+        <title>Chi tiết lịch sử thuê xe</title>
         <!-- Tailwind CSS & Google Fonts -->
         <link href="https://www.loopple.com/css/vendor/tailwind.min.css" rel="stylesheet">
         <link href="https://www.loopple.com/css/tailwind/app.css?v=1.0.0" rel="stylesheet">
@@ -38,7 +38,7 @@
         <link href="https://demos.creative-tim.com/soft-ui-dashboard-tailwind/assets/css/nucleo-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/soft-ui-dashboard-tailwind/css/soft-ui-dashboard-tailwind.css">
         
-        <div class="${param.layout == 'modal' ? '' : 'builder-container builder-container-preview'} font-body">
+        <div class="${param.layout == 'modal' ? '' : 'font-body'} font-body">
             <c:if test="${param.layout != 'modal'}">
                 <jsp:include page="/includes/customer/sidebarProfile.jsp">
                     <jsp:param name="activePage" value="bookingHistoryDetail"/>
@@ -46,22 +46,31 @@
             </c:if>
 
             <!-- Main Panel Content -->
-            <div class="${param.layout == 'modal' ? 'w-full' : 'ease-soft-in-out xl:ml-68.5'} relative h-full max-h-screen rounded-xl transition-all duration-200" id="panel">
-                <div class="${param.layout == 'modal' ? 'p-0' : 'w-full px-6 py-6 mx-auto drop-zone loopple-min-height-78vh'} text-gray-500">
-                    <div class="relative flex flex-col flex-auto min-w-0 ${param.layout == 'modal' ? 'p-0 shadow-none' : 'p-6 mx-6 mt-32 shadow-blur border-0 bg-white/80'} overflow-hidden break-words rounded-2xl bg-clip-border mb-4 animate-fadeIn">
+            <div class="${param.layout == 'modal' ? 'w-full' : 'ease-soft-in-out xl:ml-68.5'} relative h-full rounded-xl transition-all duration-200" id="panel">
+                <div class="${param.layout == 'modal' ? 'p-0' : 'w-full max-w-6xl px-6 py-6 mx-auto min-h-[78vh]'} text-gray-500">
+                    <div class="relative flex flex-col flex-auto min-w-0 ${param.layout == 'modal' ? 'p-0 shadow-none' : 'p-6 mx-auto mt-28 shadow-blur border-0 bg-white/80'} w-full overflow-hidden break-words rounded-2xl bg-clip-border mb-4 animate-fadeIn">
                         
                         <!-- Header -->
                         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-5 mb-6">
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-800 flex items-center">
-                                    <i class="fas fa-file-invoice mr-2.5 text-yellow-500"></i> Chi tiáº¿t Booking
+                                    <i class="fas fa-file-invoice mr-2.5 text-yellow-500"></i> Chi tiết Booking
                                 </h3>
-                                <p class="text-gray-400 text-sm font-medium mt-1">Xem thÃ´ng tin Ä‘áº·t xe, háº¡n tráº£ vÃ  thá»±c hiá»‡n thao tÃ¡c gia háº¡n hoáº·c há»§y Ä‘Æ¡n.</p>
+                                <p class="text-gray-400 text-sm font-medium mt-1">Xem thông tin đặt xe, hạn trả và thực hiện thao tác gia hạn hoặc hủy đơn.</p>
                             </div>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${statusBooking == 'Chá» xÃ¡c nháº­n' ? 'bg-yellow-50 text-yellow-600' : (statusBooking == 'ÄÃ£ xÃ¡c nháº­n' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600')}">
-                                <span class="w-1.5 h-1.5 rounded-full ${statusBooking == 'Chá» xÃ¡c nháº­n' ? 'bg-yellow-500' : (statusBooking == 'ÄÃ£ xÃ¡c nháº­n' ? 'bg-green-500' : 'bg-red-500')}"></span>
-                                ${booking.statusBooking}
-                            </span>
+                            <c:choose>
+                                <c:when test="${statusBooking == 'Chờ xác nhận' && not empty payment}">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-200">
+                                        <i class="fas fa-check-circle"></i> Đã cọc: <fmt:formatNumber value="${payment.paymentAmount}" pattern="#,##0" />đ
+                                    </span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${statusBooking == 'Chờ xác nhận' ? 'bg-yellow-50 text-yellow-600' : (statusBooking == 'Đã xác nhận' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600')}">
+                                        <span class="w-1.5 h-1.5 rounded-full ${statusBooking == 'Chờ xác nhận' ? 'bg-yellow-500' : (statusBooking == 'Đã xác nhận' ? 'bg-green-500' : 'bg-red-500')}"></span>
+                                        ${booking.statusBooking}
+                                    </span>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
 
                         <!-- Success / Fail Messages -->
@@ -103,24 +112,24 @@
                         <c:set var="endMinute" value="${fn:substring(endDate, 14, 16)}" />
 
                         <!-- Content Grid: Premium Layout -->
-                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                             
-                            <!-- Left Column: Lá»‹ch trÃ¬nh & Giao nháº­n (7 cols) -->
-                            <div class="lg:col-span-7 space-y-6">
-                                <!-- Card: Lá»‹ch trÃ¬nh -->
-                                <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-7 relative overflow-hidden">
+                            <!-- Column 1: Lịch trình -->
+                            <div class="flex flex-col h-full">
+                                <!-- Card: Lịch trình -->
+                                <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 relative overflow-hidden flex-1">
                                     <div class="absolute top-0 right-0 w-48 h-48 bg-yellow-50 rounded-bl-full -z-0 opacity-50"></div>
-                                    <h4 class="text-xl font-extrabold text-gray-800 mb-6 flex items-center relative z-10">
-                                        <i class="fas fa-route text-yellow-500 mr-3 text-2xl"></i> Lá»‹ch trÃ¬nh thuÃª xe
+                                    <h4 class="text-lg font-extrabold text-gray-800 mb-5 flex items-center relative z-10">
+                                        <i class="fas fa-route text-yellow-500 mr-3 text-xl"></i> Lịch trình thuê xe
                                     </h4>
                                     
-                                    <div class="flex items-center justify-between relative z-10 mb-8 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
+                                    <div class="flex items-center justify-between relative z-10 mb-6 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
                                         <!-- Start Date -->
                                         <div class="text-center w-5/12">
-                                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Nháº­n xe</p>
-                                            <div class="bg-white border border-gray-200 shadow-sm rounded-xl py-4 px-2">
-                                                <p class="text-yellow-600 font-black text-2xl mb-1">${startHour}:${startMinute}</p>
-                                                <p class="text-gray-600 text-sm font-bold">${startDay}-${startMonth}-${startYear}</p>
+                                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Nhận xe</p>
+                                            <div class="bg-white border border-gray-200 shadow-sm rounded-xl py-3 px-2">
+                                                <p class="text-yellow-600 font-black text-xl mb-1">${startHour}:${startMinute}</p>
+                                                <p class="text-gray-600 text-xs font-bold">${startDay}-${startMonth}-${startYear}</p>
                                             </div>
                                         </div>
                                         
@@ -132,10 +141,10 @@
                                         
                                         <!-- End Date -->
                                         <div class="text-center w-5/12">
-                                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Tráº£ xe</p>
-                                            <div class="bg-white border border-gray-200 shadow-sm rounded-xl py-4 px-2">
-                                                <p class="text-green-600 font-black text-2xl mb-1">${endHour}:${endMinute}</p>
-                                                <p class="text-gray-600 text-sm font-bold">${endDay}-${endMonth}-${endYear}</p>
+                                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Trả xe</p>
+                                            <div class="bg-white border border-gray-200 shadow-sm rounded-xl py-3 px-2">
+                                                <p class="text-green-600 font-black text-xl mb-1">${endHour}:${endMinute}</p>
+                                                <p class="text-gray-600 text-xs font-bold">${endDay}-${endMonth}-${endYear}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -146,8 +155,9 @@
                                                 <i class="fas fa-map-marker-alt text-yellow-500 text-lg"></i>
                                             </div>
                                             <div>
-                                                <p class="text-xs text-gray-400 font-bold uppercase mb-1">NÆ¡i nháº­n xe</p>
-                                                <p class="text-base text-gray-800 font-bold leading-relaxed">${booking.deliveryLocation}</p>
+                                                <p class="text-xs text-gray-400 font-bold uppercase mb-1">Nhận xe</p>
+                                                <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5">${booking.deliveryLocation}</p>
+                                                <p class="text-sm text-yellow-600 font-semibold"><i class="far fa-clock mr-1"></i> ${booking.startDate}</p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4">
@@ -155,28 +165,29 @@
                                                 <i class="fas fa-flag-checkered text-green-500 text-lg"></i>
                                             </div>
                                             <div>
-                                                <p class="text-xs text-gray-400 font-bold uppercase mb-1">NÆ¡i tráº£ xe</p>
-                                                <p class="text-base text-gray-800 font-bold leading-relaxed">${booking.returnedLocation}</p>
+                                                <p class="text-xs text-gray-400 font-bold uppercase mb-1">Trả xe</p>
+                                                <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5">${booking.returnedLocation}</p>
+                                                <p class="text-sm text-green-600 font-semibold"><i class="far fa-clock mr-1"></i> ${booking.endDate}</p>
                                             </div>
                                         </div>
-                                        <c:if test="${statusBooking == 'ÄÃ£ xÃ¡c nháº­n'}">
+                                        <c:if test="${statusBooking == 'Đã xác nhận'}">
                                             <div class="mt-6 pt-5 border-t border-gray-100 flex items-center gap-4">
                                                 <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
                                                     <i class="fas fa-truck text-blue-500 text-lg"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Tráº¡ng thÃ¡i giao xe</p>
+                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Trạng thái giao xe</p>
                                                     <p class="text-base text-blue-700 font-black">${booking.deliveryStatus}</p>
                                                 </div>
                                             </div>
                                         </c:if>
-                                        <c:if test="${statusBooking == 'ÄÃ£ há»§y' && not empty cancellation}">
+                                        <c:if test="${statusBooking == 'Đã hủy' && not empty cancellation}">
                                             <div class="mt-6 pt-5 border-t border-gray-100 flex items-start gap-4">
                                                 <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
                                                     <i class="fas fa-times-circle text-red-500 text-lg"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">LÃ½ do há»§y Ä‘Æ¡n</p>
+                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Lý do hủy đơn</p>
                                                     <p class="text-base text-red-700 font-medium">${cancellation.note}</p>
                                                 </div>
                                             </div>
@@ -185,32 +196,32 @@
                                 </div>
                             </div>
                             
-                            <!-- Right Column: Chi tiáº¿t xe & Thanh toÃ¡n (5 cols) -->
-                            <div class="lg:col-span-5 space-y-6">
+                            <!-- Column 2: Chi tiết xe -->
+                            <div class="flex flex-col h-full">
                                 
-                                <!-- Card: Chi tiáº¿t Xe -->
-                                <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-7 relative overflow-hidden">
-                                    <h4 class="text-xl font-extrabold text-gray-800 mb-6 flex items-center">
-                                        <i class="fas fa-motorcycle text-yellow-500 mr-3 text-2xl"></i> Chi tiáº¿t phÆ°Æ¡ng tiá»‡n
+                                <!-- Card: Chi tiết Xe -->
+                                <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 relative overflow-hidden flex-1">
+                                    <h4 class="text-lg font-extrabold text-gray-800 mb-5 flex items-center">
+                                        <i class="fas fa-motorcycle text-yellow-500 mr-3 text-xl"></i> Chi tiết phương tiện
                                     </h4>
                                     
-                                    <div class="space-y-4 mb-6">
+                                    <div class="space-y-3 mb-5">
                                         <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-500 font-medium">MÃ£ Ä‘Æ¡n hÃ ng:</span>
+                                            <span class="text-gray-500 font-medium">Mã đơn hàng:</span>
                                             <span class="font-bold text-gray-800 bg-gray-100 px-2 py-1 rounded">#${booking.bookingID}</span>
                                         </div>
                                         <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-500 font-medium">Thá»i gian táº¡o:</span>
+                                            <span class="text-gray-500 font-medium">Thời gian tạo:</span>
                                             <span class="font-semibold text-gray-700">${bookingDay}-${bookingMonth}-${bookingYear} ${bookingHour}:${bookingMinute}</span>
                                         </div>
                                         <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-500 font-medium">Tá»•ng sá»‘ lÆ°á»£ng xe:</span>
+                                            <span class="text-gray-500 font-medium">Tổng số lượng xe:</span>
                                             <span class="font-bold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-md border border-yellow-100">${fn:length(booking.listBookingDetails)} xe</span>
                                         </div>
                                     </div>
                                     
                                     <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
-                                        <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-3">CÃ¡c phÆ°Æ¡ng tiá»‡n Ä‘Ã£ thuÃª</p>
+                                        <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-3">Các phương tiện đã thuê</p>
                                         <div class="flex flex-wrap gap-2.5">
                                             <c:forEach var="entry" items="${motorcycleDetails}" varStatus="loop">
                                                 <div class="bg-white border border-gray-200 shadow-sm text-gray-800 px-3 py-1.5 rounded-lg text-sm font-bold flex items-center gap-2">
@@ -221,39 +232,50 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <!-- Card: Tá»•ng káº¿t thanh toÃ¡n -->
-                                <div class="bg-gray-900 rounded-2xl p-7 relative overflow-hidden text-white shadow-xl shadow-gray-900/10">
+                            </div>
+                            
+                            <!-- Column 3: Tổng kết thanh toán -->
+                            <div class="flex flex-col h-full">
+                                <!-- Card: Tổng kết thanh toán -->
+                                <div class="bg-gray-900 rounded-2xl p-6 relative overflow-hidden text-white shadow-xl shadow-gray-900/10 flex-1">
                                     <div class="absolute -right-6 -top-6 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
                                     <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-yellow-500/20 rounded-full blur-2xl"></div>
                                     
-                                    <h4 class="text-xl font-extrabold text-white mb-6 flex items-center relative z-10">
-                                        <i class="fas fa-file-invoice-dollar text-yellow-400 mr-3 text-2xl"></i> Tá»•ng káº¿t thanh toÃ¡n
+                                    <h4 class="text-lg font-extrabold text-white mb-5 flex items-center relative z-10">
+                                        <i class="fas fa-file-invoice-dollar text-yellow-400 mr-3 text-xl"></i> Tổng kết thanh toán
                                     </h4>
                                     
-                                    <div class="space-y-5 relative z-10">
+                                    <div class="space-y-4 relative z-10">
                                         <div class="flex justify-between items-end border-b border-white/10 pb-5">
                                             <div>
-                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Tá»•ng tiá»n thuÃª xe</p>
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Tổng tiền thuê xe</p>
                                                 <p class="text-3xl font-black text-white tracking-tight" id="total-price">
                                                     <c:set var="total" value="0"/>
                                                     <c:forEach items="${booking.listBookingDetails}" var="detail">
                                                         <c:set var="total" value="${total + detail.totalPrice}"/>
                                                     </c:forEach>
-                                                    <fmt:formatNumber value="${total}" type="currency" currencySymbol="VNÄ" />
+                                                    <fmt:formatNumber value="${total}" pattern="#,##0" /> VNĐ
                                                 </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-between items-center pt-1 border-b border-white/10 pb-4">
+                                            <div>
+                                                <c:set var="paidAmount" value="${empty payment ? 0 : payment.paymentAmount}" />
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiền cọc (${paidAmount > 0 ? 'Đã thanh toán' : 'Chưa thanh toán'})</p>
+                                                <p class="text-2xl font-bold ${paidAmount > 0 ? 'text-green-400' : 'text-yellow-400'}" id="amount-paid">
+                                                    <fmt:formatNumber value="${paidAmount}" pattern="#,##0" /> VNĐ
+                                                </p>
+                                            </div>
+                                            <div class="w-12 h-12 rounded-full ${paidAmount > 0 ? 'bg-green-500/20 border-green-500/30 text-green-400' : 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400'} flex items-center justify-center border">
+                                                <i class="fas ${paidAmount > 0 ? 'fa-check' : 'fa-clock'} text-lg"></i>
                                             </div>
                                         </div>
                                         <div class="flex justify-between items-center pt-1">
                                             <div>
-                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">ÄÃ£ thanh toÃ¡n thá»±c táº¿</p>
-                                                <p class="text-2xl font-bold text-green-400" id="amount-paid">
-                                                    <c:set var="paidAmount" value="${empty payment ? 0 : payment.paymentAmount}" />
-                                                    <fmt:formatNumber value="${paidAmount}" type="currency" currencySymbol="VNÄ" />
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Số tiền cần thanh toán thêm</p>
+                                                <p class="text-xl font-bold text-rose-400">
+                                                    <fmt:formatNumber value="${total - paidAmount}" pattern="#,##0" /> VNĐ
                                                 </p>
-                                            </div>
-                                            <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center border border-green-500/30">
-                                                <i class="fas fa-check text-green-400 text-lg"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -263,36 +285,36 @@
                         </div>
 
                         <!-- Mini Extension Info Link -->
-                        <div class="mb-8 text-right">
+                        <div class="mb-8 text-right relative z-50">
                             <button type="button" class="inline-flex items-center gap-1.5 text-sm font-bold text-yellow-600 hover:text-yellow-700 transition-colors border-b border-dashed border-yellow-600/50 pb-0.5 cursor-pointer bg-transparent border-0 outline-none" onclick="openExtension()">
-                                <i class="fas fa-info-circle"></i> Xem thÃ´ng tin gia háº¡n lá»‹ch trÃ¬nh
+                                <i class="fas fa-info-circle"></i> Xem thông tin gia hạn lịch trình
                             </button>
                         </div>
 
                         <!-- Detail Actions Buttons -->
-                        <div class="flex flex-wrap items-center justify-end gap-3.5 pt-6 border-t border-gray-100">
-                            <c:if test="${statusBooking == 'Chá» xÃ¡c nháº­n'}">
-                                <button type="button" class="px-5 py-2.5 text-white rounded-xl font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #ef4444" onclick="openCancellation()">
-                                    <i class="fas fa-times-circle"></i> Há»§y Ä‘Æ¡n hÃ ng
+                        <div class="flex flex-wrap items-center justify-end gap-3 pt-5 border-t border-gray-100 relative z-50">
+                            <c:if test="${statusBooking == 'Chờ xác nhận'}">
+                                <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #ef4444" onclick="openCancellation()">
+                                    <i class="fas fa-times-circle"></i> Hủy đơn hàng
                                 </button>
                             </c:if>
-                            <c:if test="${statusBooking != 'ÄÃ£ há»§y'}">
-                                <button type="button" id="pay-btn" class="px-5 py-2.5 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #10b981">
-                                    <i class="fas fa-wallet"></i> Thanh toÃ¡n ngay
+                            <c:if test="${statusBooking != 'Đã hủy'}">
+                                <button type="button" id="pay-btn" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #10b981">
+                                    <i class="fas fa-wallet"></i> Thanh toán ngay
                                 </button>
                             </c:if>
-                            <c:if test="${statusBooking != 'ÄÃ£ há»§y' && booking.deliveryStatus != 'ÄÃ£ tráº£'}">
-                                <button type="button" id="extension" class="px-5 py-2.5 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #3b82f6" onclick="openExtensionForm()">
-                                    <i class="fas fa-calendar-plus"></i> Gia háº¡n thá»i gian
+                            <c:if test="${statusBooking != 'Đã hủy' && booking.deliveryStatus != 'Đã trả'}">
+                                <button type="button" id="extension" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #3b82f6" onclick="openExtensionForm()">
+                                    <i class="fas fa-calendar-plus"></i> Gia hạn thời gian
                                 </button>
                             </c:if>
-                            <c:if test="${statusBooking == 'ÄÃ£ há»§y' || booking.deliveryStatus == 'ÄÃ£ tráº£'}">
-                                <button type="button" id="rebook-btn" class="px-5 py-2.5 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #f59e0b" onclick="openBooking()">
-                                    <i class="fas fa-redo"></i> Äáº·t thuÃª xe láº¡i
+                            <c:if test="${statusBooking == 'Đã hủy' || booking.deliveryStatus == 'Đã trả'}">
+                                <button type="button" id="rebook-btn" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #f59e0b" onclick="openBooking()">
+                                    <i class="fas fa-redo"></i> Đặt thuê xe lại
                                 </button>
                             </c:if>
-                            <button type="button" class="px-5 py-2.5 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #1e293b" onclick="closeDetail()">
-                                <i class="fas fa-chevron-left"></i> Quay vá» danh sÃ¡ch
+                            <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #1e293b" onclick="closeDetail()">
+                                <i class="fas fa-chevron-left"></i> Quay về danh sách
                             </button>
                         </div>
 
@@ -309,14 +331,14 @@
                     <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center text-green-500">
                         <i class="fas fa-wallet text-base"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800">Thanh toÃ¡n Ä‘Æ¡n hÃ ng #${booking.bookingID}</h3>
+                    <h3 class="text-xl font-bold text-gray-800">Thanh toán đơn hàng #${booking.bookingID}</h3>
                 </div>
                 <div class="w-full relative" style="height: 580px;">
                     <iframe id="paymentIframe" src="sepay_pay.jsp" style="width: 100%; height: 100%; border: none; border-radius: 12px;"></iframe>
                     <!-- Overlay for iframe communications -->
                     <div id="payment-loading" style="display: none; z-index: 10000;" class="absolute inset-0 bg-white/85 flex flex-col items-center justify-center gap-3">
                         <div class="w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-                        <p class="text-gray-600 text-sm font-semibold">Äang káº¿t ná»‘i cá»•ng thanh toÃ¡n SePay VietQR...</p>
+                        <p class="text-gray-600 text-sm font-semibold">Đang kết nối cổng thanh toán SePay VietQR...</p>
                     </div>
                 </div>
             </div>
@@ -330,17 +352,17 @@
                     <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-exclamation-triangle text-red-500 text-lg"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">XÃ¡c Nháº­n Há»§y ÄÆ¡n</h3>
-                    <p class="text-gray-500 text-sm mb-4">Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n há»§y Ä‘Æ¡n nÃ y hay khÃ´ng? <br><span class="font-semibold text-gray-700">SMARTRIDE</span> muá»‘n biáº¿t lÃ½ do há»§y Ä‘Æ¡n cá»§a báº¡n.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Xác Nhận Hủy Đơn</h3>
+                    <p class="text-gray-500 text-sm mb-4">Bạn có chắc chắn muốn hủy đơn này hay không? <br><span class="font-semibold text-gray-700">SMARTRIDE</span> muốn biết lý do hủy đơn của bạn.</p>
                 </div>
                 <form id="cancel-form" action="cancelbooking" method="get" class="space-y-4">
                     <input type="hidden" id="bookingId" name="bookingId" value="${booking.bookingID}">
                     <div>
-                        <textarea required name="cancelreason" id="cancelReason" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50" placeholder="Nháº­p lÃ½ do há»§y Ä‘Æ¡n cá»§a báº¡n..."></textarea>
+                        <textarea required name="cancelreason" id="cancelReason" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50" placeholder="Nhập lý do hủy đơn của bạn..."></textarea>
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-                        <button type="button" class="px-5 py-2 border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 font-bold text-sm transition-colors cursor-pointer" onclick="closeCancellation()">ÄÃ³ng</button>
-                        <button type="submit" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold text-sm shadow-md shadow-red-500/10 transition-colors cursor-pointer">Gá»­i yÃªu cáº§u há»§y</button>
+                        <button type="button" class="px-5 py-2 border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 font-bold text-sm transition-colors cursor-pointer" onclick="closeCancellation()">Đóng</button>
+                        <button type="submit" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold text-sm shadow-md shadow-red-500/10 transition-colors cursor-pointer">Gửi yêu cầu hủy</button>
                     </div>
                 </form>
             </div>
@@ -354,23 +376,23 @@
                     <div class="w-10 h-10 bg-yellow-50 rounded-lg flex items-center justify-center text-yellow-500">
                         <i class="fas fa-calendar-plus text-base"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800">ThÃ´ng tin gia háº¡n</h3>
+                    <h3 class="text-xl font-bold text-gray-800">Thông tin gia hạn</h3>
                 </div>
                 <c:choose>
                     <c:when test="${extension == null}">
                         <div class="text-center py-8">
-                            <p class="text-gray-400 italic">KhÃ´ng cÃ³ thÃ´ng tin gia háº¡n nÃ o cho booking nÃ y.</p>
+                            <p class="text-gray-400 italic">Không có thông tin gia hạn nào cho booking này.</p>
                         </div>
                     </c:when>
                     <c:otherwise>
                         <div class="space-y-4">
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
-                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">MÃ£ Ä‘áº·t xe</span>
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Mã đặt xe</span>
                                     <span class="text-sm font-bold text-gray-700">#${extension.bookingID}</span>
                                 </div>
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
-                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">NgÃ y gia háº¡n</span>
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Ngày gia hạn</span>
                                     <span class="text-sm font-semibold text-gray-700">
                                         <c:set var="extensionDate" value="${extension.extensionDate}" />
                                         <c:set var="extYear" value="${fn:substring(extensionDate, 0, 4)}" />
@@ -385,7 +407,7 @@
                             
                             <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100 space-y-2">
                                 <div class="flex justify-between items-center text-sm border-b border-gray-200/50 pb-2">
-                                    <span class="text-gray-500 font-medium">Háº¡n tráº£ trÆ°á»›c Ä‘Ã³:</span>
+                                    <span class="text-gray-500 font-medium">Hạn trả trước đó:</span>
                                     <span class="font-semibold text-gray-700">
                                         <c:set var="previousEndDate" value="${extension.previousEndDate}" />
                                         <c:set var="prevYear" value="${fn:substring(previousEndDate, 0, 4)}" />
@@ -397,7 +419,7 @@
                                     </span>
                                 </div>
                                 <div class="flex justify-between items-center text-sm pt-1">
-                                    <span class="text-gray-500 font-medium">Háº¡n tráº£ má»›i:</span>
+                                    <span class="text-gray-500 font-medium">Hạn trả mới:</span>
                                     <span class="font-bold text-yellow-600">
                                         <c:set var="newEndDate" value="${extension.newEndDate}" />
                                         <c:set var="newYear" value="${fn:substring(newEndDate, 0, 4)}" />
@@ -412,16 +434,16 @@
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
-                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">PhÃ­ gia háº¡n</span>
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Phí gia hạn</span>
                                     <span class="text-sm font-bold text-green-600">
-                                        <fmt:formatNumber value="${extension.extensionFee}" type="currency" currencySymbol="VNÄ" />
+                                        <fmt:formatNumber value="${extension.extensionFee}" pattern="#,##0" /> VNĐ
                                     </span>
                                 </div>
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
-                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Tá»•ng tiá»n má»›i</span>
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Tổng tiền mới</span>
                                     <span class="text-sm font-bold text-yellow-600">
                                         <c:set var="total" value="${total + extension.extensionFee}" />
-                                        <fmt:formatNumber value="${total}" type="currency" currencySymbol="VNÄ" />
+                                        <fmt:formatNumber value="${total}" pattern="#,##0" /> VNĐ
                                     </span>
                                 </div>
                             </div>
@@ -429,7 +451,7 @@
                     </c:otherwise>
                 </c:choose>
                 <div class="flex justify-end pt-6 mt-6 border-t border-gray-100">
-                    <button type="button" class="px-5 py-2 hover:bg-gray-900 text-white rounded-xl font-bold text-sm shadow-md transition-colors cursor-pointer border-0" style="background-color: #1f2937;" onclick="closeExtension()">Äá»“ng Ã½</button>
+                    <button type="button" class="px-5 py-2 hover:bg-gray-900 text-white rounded-xl font-bold text-sm shadow-md transition-colors cursor-pointer border-0" style="background-color: #1f2937;" onclick="closeExtension()">Đồng ý</button>
                 </div>
             </div>
         </div>
@@ -456,8 +478,13 @@
                         }
                     }
                 });
+
+                // Auto open payment modal if requested
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('autoPay') === 'true' && document.getElementById("pay-btn")) {
+                    setTimeout(openPaymentModal, 300);
+                }
             });
-            
             function togglePayButton() {
                 const payButton = document.getElementById("pay-btn");
                 if (!payButton) return;
@@ -477,7 +504,6 @@
                 if (modal) {
                     modal.style.display = 'flex';
                     
-                    // Set up iframe message passing when iframe is loaded
                     const iframe = document.getElementById('paymentIframe');
                     iframe.onload = function() {
                         const amountPaid = parseFloat("${paidAmount}") || 0;
@@ -491,6 +517,15 @@
                         };
                         iframe.contentWindow.postMessage(data, '*');
                     };
+                    // Force set src to trigger onload
+                    if (!iframe.src.includes('sepay_pay.jsp')) {
+                        iframe.src = "sepay_pay.jsp";
+                    } else {
+                        // If already loaded, trigger onload manually by resetting src
+                        const currentSrc = iframe.src;
+                        iframe.src = '';
+                        iframe.src = currentSrc;
+                    }
                 }
             }
 
@@ -531,15 +566,15 @@
                         closePaymentModal();
                         
                         // Show success alert and reload
-                        alert("Thanh toÃ¡n thÃ nh cÃ´ng! Há»‡ thá»‘ng sáº½ cáº­p nháº­t tráº¡ng thÃ¡i Ä‘Æ¡n hÃ ng cá»§a báº¡n.");
+                        alert("Thanh toán thành công! Hệ thống sẽ cập nhật trạng thái đơn hàng của bạn.");
                         window.location.reload();
                     } else {
-                        alert("Lá»—i khi cáº­p nháº­t thanh toÃ¡n: " + data.message);
+                        alert("Lỗi khi cập nhật thanh toán: " + data.message);
                     }
                 })
                 .catch(err => {
-                    console.error("Lá»—i:", err);
-                    alert("ÄÃ£ xáº£y ra lá»—i trong quÃ¡ trÃ¬nh cáº­p nháº­t thanh toÃ¡n.");
+                    console.error("Lỗi:", err);
+                    alert("Đã xảy ra lỗi trong quá trình cập nhật thanh toán.");
                 });
             }
 
@@ -555,19 +590,23 @@
                 }
             });
 
-            function openExtensionForm(){
-                const bookingIdEl = document.getElementById("bookingId");
-                if (bookingIdEl) {
-                    const url = "extend?bookingid=" + bookingIdEl.value;
-                    const newWindow = window.open(url, '_blank');
-                    if (newWindow) {
-                        newWindow.focus();
-                    } else {
-                        alert('TrÃ¬nh duyá»‡t cá»§a báº¡n Ä‘Ã£ cháº·n pop-up. Vui lÃ²ng táº¯t trÃ¬nh cháº·n pop-up vÃ  thá»­ láº¡i.');
+            function openExtensionForm() {
+                const modal = document.getElementById("extend-form-modal");
+                if (modal) {
+                    modal.style.display = 'flex';
+                    const iframe = document.getElementById('extend-iframe');
+                    if (iframe && !iframe.src.includes('extend?bookingid=')) {
+                        iframe.src = "extend?bookingid=${booking.bookingID}&_t=" + new Date().getTime();
                     }
                 }
             }
-            
+
+            function closeExtensionFormModal() {
+                const modal = document.getElementById("extend-form-modal");
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
             function openExtension() {
                 const extInfo = document.getElementById('extension-info');
                 if (extInfo) extInfo.style.display = 'flex';
@@ -601,9 +640,13 @@
                 const extension = document.getElementById("extension-info");
                 const cancellation = document.getElementById("cancellation-info");
                 const payment = document.getElementById("payment-modal");
+                const extendFormModal = document.getElementById("extend-form-modal");
 
                 if (event.target === extension) {
                     extension.style.display = "none";
+                }
+                if (event.target === extendFormModal) {
+                    closeExtensionFormModal();
                 }
                 if (event.target === cancellation) {
                     cancellation.style.display = "none";
@@ -622,9 +665,35 @@
                     if (extension) extension.style.display = "none";
                     if (cancellation) cancellation.style.display = "none";
                     if (payment) closePaymentModal();
+                    closeExtensionFormModal();
                 }
             });
         </script>
+
+        <!-- Modal for Extend Booking Form -->
+        <div id="extend-form-modal" class="hidden items-center justify-center p-4" style="position: fixed; inset: 0; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 999999;">
+            <div class="bg-white rounded-2xl w-full max-w-6xl max-h-[90vh] shadow-2xl relative flex flex-col overflow-hidden animate-fade-in-up">
+                <!-- Header -->
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/80">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                            <i class="fas fa-calendar-plus text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Gia hạn thời gian thuê xe</h3>
+                            <p class="text-sm text-gray-500 font-medium">Hoàn tất gia hạn nhanh chóng qua SmartRide</p>
+                        </div>
+                    </div>
+                    <button onclick="closeExtensionFormModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+                <!-- Body (iframe) -->
+                <div class="flex-1 w-full bg-gray-50 overflow-hidden relative" style="min-height: 75vh;">
+                    <iframe id="extend-iframe" src="" class="w-full h-full border-none absolute inset-0" title="Gia Hạn Xe"></iframe>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
 

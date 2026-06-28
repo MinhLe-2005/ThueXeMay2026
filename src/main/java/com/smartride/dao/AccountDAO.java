@@ -23,7 +23,7 @@ public class AccountDAO implements Serializable {
 
     // Cấm new trực tiếp DAO
     //Chỉ new DAO qua hàm static getInstance() để quản lí được số object/instance đã new - SINGLETON DESIGN PATTERN
-    private AccountDAO() {
+    public AccountDAO() {
     }
 
     public static AccountDAO getInstance() {
