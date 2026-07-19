@@ -1850,11 +1850,11 @@
                             <div class="form-row">
                                 <div class="form-flex">
                                     <div class="form-group">
-                                        <label for="pickupdate" class="form-label">Ngày nhận xe <span class="note-star"> *</span></label>
+                                        <label for="pickupdate" class="form-label">Bắt đầu gia hạn từ ngày <span class="note-star"> *</span></label>
                                         <input type="date" name="pickupdate" id="pickupdate" value="${startDate}" disabled/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="pickuptime" class="form-label">Giờ nhận xe <span class="note-star"> *</span></label>
+                                        <label for="pickuptime" class="form-label">Giờ bắt đầu <span class="note-star"> *</span></label>
                                         <input type="time" name="pickuptime" id="pickuptime" value="${startTime}" disabled/>
                                     </div>
                                 </div>
@@ -1862,11 +1862,11 @@
                             <div class="form-row">
                                 <div class="form-flex">
                                     <div class="form-group">
-                                        <label for="returndate" class="form-label">Ngày trả xe <span class="note-star"> *</span></label>
+                                        <label for="returndate" class="form-label">Gia hạn đến ngày <span class="note-star"> *</span></label>
                                         <input type="date" name="returndate" id="returndate"  />
                                     </div>
                                     <div class="form-group">
-                                        <label for="returntime" class="form-label">Giờ trả xe <span class="note-star"> *</span></label>
+                                        <label for="returntime" class="form-label">Giờ kết thúc <span class="note-star"> *</span></label>
                                         <input type="time" name="returntime" id="returntime"  />
                                     </div>
                                 </div>
@@ -1876,7 +1876,7 @@
                                     <input type="datetime" id="returndatepre" style="display: none" value="${booking.endDate}">
                                     <input id="bookingid" style="display: none" value="${booking.bookingID}">
                                     <div class="form-flex">
-                                    <div class="form-group">
+                                    <div class="form-group" style="display: none;">
                                         <label for="pickuplocation" class="form-label">Địa điểm nhận xe <span class="note-star"> *</span></label>
                                         <select name="pickuplocation" id="pickuplocation" class="form-label"  disabled>
                                             <option value="Ga Đà Nẵng-Số 202 đường Hải Phòng" ${booking.deliveryLocation == "Ga Đà Nẵng-202 Đường Hải Phòng" ? 'selected' : ''}>Ga Đà Nẵng-202 Đường Hải Phòng
@@ -1885,9 +1885,9 @@
                                             <option value="Địa chỉ của bạn" ${booking.deliveryLocation == "Địa chỉ của bạn" ? 'selected' : ''}>Địa chỉ của bạn</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="returnlocation" class="form-label">Địa điểm trả xe <span class="note-star"> *</span></label>
-                                        <select name="returnlocation" id="returnlocation" class="form-label" disabled>
+                                    <div class="form-group" style="width: 100%;">
+                                        <label for="returnlocation" class="form-label">Địa điểm trả xe dự kiến <span class="note-star"> *</span></label>
+                                        <select name="returnlocation" id="returnlocation" class="form-label" disabled style="width: 100%;">
                                              <option value="Ga Đà Nẵng-Số 202 đường Hải Phòng" ${booking.deliveryLocation == "Ga Đà Nẵng-202 Đường Hải Phòng" ? 'selected' : ''}>Ga Đà Nẵng-202 Đường Hải Phòng
                                             </option>
                                             <option value="Sân bay quốc tế Đà Nẵng" ${booking.deliveryLocation == "Sân bay quốc tế Đà Nẵng" ? 'selected' : ''}>Sân bay quốc tế Đà Nẵng</option>
@@ -1912,13 +1912,13 @@
                                             <i class="bi bi-clock-history"></i> Thời Gian Thuê
                                         </h4>
                                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                                            <div>
-                                                <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Nhận xe</div>
+                                            <div style="display: none;">
+                                                <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Bắt đầu gia hạn từ</div>
                                                 <div style="font-weight:600; color:#222; font-size:15px;"><span id="pickupdatetext"></span> <span id="pickuptimetext"></span></div>
                                                 <div id="pickuploctext" style="font-size:13px; color:#666; margin-top:3px;"></div>
                                             </div>
-                                            <div>
-                                                <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Trả xe</div>
+                                            <div style="grid-column: span 2;">
+                                                <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:700; margin-bottom:4px;">Gia hạn đến (Trả xe)</div>
                                                 <div style="font-weight:600; color:#222; font-size:15px;"><span id="returndatetext"></span> <span id="returntimetext"></span></div>
                                                 <div id="returnloctext" style="font-size:13px; color:#666; margin-top:3px;"></div>
                                             </div>
