@@ -527,7 +527,14 @@
                                                                                     <c:forEach items="${listB.listBookingDetails}" var="detail">
                                                                                         <c:set var="total" value="${total + detail.totalPrice}"/>
                                                                                     </c:forEach>
-                                                                                    <fmt:formatNumber value="${total}" type="number" pattern="#,##0" /> VNĐ"
+                                                                                    <c:set var="total" value="${total + (listB.deliveryFee != null ? listB.deliveryFee : 0)}"/>
+                                                                                    <c:set var="paid" value="0"/>
+                                                                                    <c:if test="${not empty paymentsMap[listB.bookingID]}">
+                                                                                        <c:set var="paid" value="${paymentsMap[listB.bookingID].paymentAmount}"/>
+                                                                                    </c:if>
+                                                                                    <c:set var="remaining" value="${total - paid}"/>
+                                                                                    <c:if test="${remaining < 0}"><c:set var="remaining" value="0"/></c:if>
+                                                                                    <fmt:formatNumber value="${remaining}" type="number" pattern="#,##0" /> VNĐ"
                                                                                     data-cusName="${acc.lastName} ${acc.firstName}"
                                                                                     data-cusPhone="${acc.phoneNumber}"
                                                                                     data-cusEmail="${acc.email}"
@@ -779,7 +786,7 @@
                                                         <i class="fas fa-wallet"></i>
                                                     </div>
                                                     <div>
-                                                        <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Tổng thanh toán</div>
+                                                        <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Cần thu (Còn lại)</div>
                                                         <h4 style="color: #b45309; font-weight: 800; margin: 0; font-size: 24px;" id="modal-Price"></h4>
                                                     </div>
                                                 </div>
