@@ -765,6 +765,15 @@
         items.forEach(function(item) {
             var bgClass = item.isRead ? 'bg-white' : 'bg-light';
             var link = item.link ? item.link : '#';
+            
+            // Auto-correct old links that point to the list page but have a booking ID in the title
+            if (link === 'history' || link === 'bookingHistory' || link.includes('status=')) {
+                var match = item.title.match(/BK\d{8}/);
+                if (match) {
+                    link = 'bookingHistoryDetail?bookingId=' + match[0];
+                }
+            }
+
             html += '<a href="' + link + '" class="d-block p-3 border-bottom text-decoration-none ' + bgClass + '" onclick="markNotifAsRead(' + item.notificationId + ')">';
             html += '<div class="fw-bold text-dark" style="font-size:0.9rem;">' + item.title + '</div>';
             html += '<div class="text-muted mt-1" style="font-size:0.8rem; line-height:1.4;">' + item.message + '</div>';
