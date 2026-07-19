@@ -1421,34 +1421,77 @@
                                     <div class="d-flex gap-2">
                                         <div class="flex-grow-1 position-relative">
                                             <i class="bi bi-geo-alt position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%); color: #b59349; font-size: 1.2rem; pointer-events: none;"></i>
-                                            <select name="locations" class="form-select form-select-lg" style="border-radius: 12px; border: none; background: #ffffff; color: #1a1816; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; padding-left: 45px; height: 56px;" required>
-                                                <option value="" selected disabled>-- Chọn địa điểm du lịch --</option>
-                                                <c:forEach items="${listLocations}" var="loc">
-                                                    <option value="${loc.locationId}">${loc.locationName}</option>
-                                                </c:forEach>
-                                            </select>
+                                            <input type="text" name="travelPlan" id="smartTravelPlan" placeholder="VD: Mình định đi đèo Hải Vân và Hội An..." class="form-control form-control-lg" style="border-radius: 12px; border: none; background: #ffffff; color: #1a1816; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.1); padding-left: 45px; height: 56px;" required autocomplete="off">
                                         </div>
                                         <button type="submit" class="btn" style="background: #b59349; color: white; border-radius: 12px; font-weight: 700; padding: 0 30px; height: 56px; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 5px 15px rgba(181,147,73,0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-                                            Gợi ý ngay <i class="bi bi-magic ms-1"></i>
+                                            Tìm xe <i class="bi bi-magic ms-1"></i>
                                         </button>
                                     </div>
                                 </form>
+                                
+                                <!-- AI Assistant Response Box -->
+                                <div id="ai-assistant-box" style="display:none; margin-top:20px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(181, 147, 73, 0.3); border-radius: 15px; padding: 15px 20px; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; transform: translateY(-10px); opacity: 0; transition: all 0.4s ease;">
+                                    <div style="display:flex; align-items:center; gap:10px; margin-bottom: 8px;">
+                                        <div style="width:30px; height:30px; border-radius:50%; background:#b59349; display:flex; align-items:center; justify-content:center;">
+                                            <i class="bi bi-robot" style="color:#fff; font-size:14px;"></i>
+                                        </div>
+                                        <span style="font-weight:700; color:#b59349; letter-spacing:0.5px;">AI Trợ Lý Phân Tích:</span>
+                                    </div>
+                                    <div id="ai-assistant-text" style="font-size: 14.5px; line-height: 1.5; color: #e5e7eb; font-weight: 400; min-height: 22px;">
+                                        <!-- Text typed out here -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <script>
-                function handleSmartSearch(e, form) {
+                async function handleSmartSearch(e, form) {
                     e.preventDefault();
+                    
+                    const planText = document.getElementById('smartTravelPlan').value.trim();
+                    if (!planText) return;
                     
                     const btn = form.querySelector('button');
                     btn.disabled = true;
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang phân tích...';
                     
+                    const box = document.getElementById('ai-assistant-box');
+                    const textContainer = document.getElementById('ai-assistant-text');
+                    
+                    // Reset and show box
+                    box.style.display = 'block';
                     setTimeout(() => {
-                        form.submit();
-                    }, 1000);
+                        box.style.transform = 'translateY(0)';
+                        box.style.opacity = '1';
+                    }, 10);
+                    textContainer.innerHTML = '<i>Trợ lý đang phân tích lịch trình của bạn...</i>';
+
+                    try {
+                        const response = await fetch('aiAssistant?text=' + encodeURIComponent(planText));
+                        const data = await response.json();
+                        
+                        textContainer.innerHTML = '';
+                        let i = 0;
+                        function typeWriter() {
+                            if (i < data.message.length) {
+                                textContainer.innerHTML += data.message.charAt(i);
+                                i++;
+                                setTimeout(typeWriter, 15);
+                            } else {
+                                // After typing, redirect to searchCriteria with the recommended category
+                                textContainer.innerHTML += '<div style="margin-top:10px;"><button onclick="window.location.href=\'searchCriteria' + (data.categoryId ? '?categories=' + data.categoryId : '') + '\'" style="background:none; border:none; padding:0; color:#b59349; text-decoration:underline; font-size:13px; font-weight:bold; cursor:pointer;">Tiến hành tìm xe phù hợp <i class="fas fa-arrow-right"></i></button></div>';
+                                btn.disabled = false;
+                                btn.innerHTML = 'Tìm xe <i class="bi bi-magic ms-1"></i>';
+                            }
+                        }
+                        typeWriter();
+                    } catch (error) {
+                        textContainer.innerHTML = 'Xin lỗi, trợ lý AI đang bận. Vui lòng thử lại sau!';
+                        btn.disabled = false;
+                        btn.innerHTML = 'Tìm xe <i class="bi bi-magic ms-1"></i>';
+                    }
                 }
                 </script>
 
