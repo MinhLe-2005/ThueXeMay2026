@@ -1894,12 +1894,11 @@
                                         </select>
                                         <div id="pickup_custom_wrapper" style="display:none; margin-top:8px;">
                                             <div style="display: flex; gap: 10px;">
-                                                <input type="text" id="custom_pickup_input" placeholder="Nhập địa chỉ nhận xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('pickup')" />
+                                                <input type="text" id="custom_pickup_input" placeholder="Nhập địa chỉ nhận xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('pickup')" oninput="updateCustomLocation('pickup')" />
                                                 <button type="button" onclick="autoGeolocate('pickup')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
                                             </div>
                                             <div id="pickup_distance_info" style="font-size: 12px; color: #64748b; margin-top: 5px;"></div>
                                         </div>
-                                        <input type="text" id="custom_pickup_input" placeholder="Nhập địa chỉ nhận xe của bạn..." style="display:none; margin-top:8px; border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; width:100%; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" oninput="updateCustomLocation('pickup')" />
                                     </div>
                                     <div class="form-group">
                                         <label for="returnlocation" class="form-label">Địa điểm trả xe <span class="note-star"> *</span></label>
@@ -1919,23 +1918,23 @@
                                         </select>
                                         <div id="return_custom_wrapper" style="display:none; margin-top:8px;">
                                             <div style="display: flex; gap: 10px;">
-                                                <input type="text" id="custom_return_input" placeholder="Nhập địa chỉ trả xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('return')" />
+                                                <input type="text" id="custom_return_input" placeholder="Nhập địa chỉ trả xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('return')" oninput="updateCustomLocation('return')" />
                                                 <button type="button" onclick="autoGeolocate('return')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
                                             </div>
                                             <div id="return_distance_info" style="font-size: 12px; color: #64748b; margin-top: 5px;"></div>
                                         </div>
-                                        <input type="text" id="custom_return_input" placeholder="Nhập địa chỉ trả xe của bạn..." style="display:none; margin-top:8px; border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; width:100%; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" oninput="updateCustomLocation('return')" />
                                     </div>
                                     <script>
                                         function toggleCustomLocation(type) {
                                             var select = document.getElementById(type + 'location');
+                                            var wrapper = document.getElementById(type + '_custom_wrapper');
                                             var input = document.getElementById('custom_' + type + '_input');
                                             var selectedOption = select.options[select.selectedIndex];
                                             if (selectedOption.text.includes('(tự nhập)')) {
-                                                input.style.display = 'block';
+                                                wrapper.style.display = 'block';
                                                 input.required = true;
                                             } else {
-                                                input.style.display = 'none';
+                                                wrapper.style.display = 'none';
                                                 input.required = false;
                                             }
                                         }
