@@ -315,12 +315,14 @@
                                                           document.getElementById('gpsCoords').innerText = 'Lat: ' + lat + '\nLon: ' + lon;
                                                           
                                                           let fd = new FormData();
-                                                          fd.append('bookingId', '');
+                                                          fd.append('bookingId', '${booking.bookingID}');
                                                           fd.append('lat', lat);
                                                           fd.append('lon', lon);
-                                                          fd.append('customerName', '');
+                                                          fd.append('customerName', '${account.lastName} ${account.firstName}');
+                                                          fd.append('vehicleName', '${not empty booking.listBookingDetails ? booking.listBookingDetails[0].motorcycleName : "Xe may"}');
+                                                          fd.append('phone', '${account.phoneNumber}');
                                                           
-                                                          fetch('/api/update-location', {
+                                                          fetch('${pageContext.request.contextPath}/api/update-location', {
                                                               method: 'POST',
                                                               body: fd
                                                           }).catch(e => console.error(e));

@@ -16,6 +16,8 @@
         <title>Quản lý thuê xe</title>
         <!-- Bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Leaflet CSS for GPS Map -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
         <!-- Font Awesome 6 -->
@@ -818,6 +820,30 @@
                                                     <div><i class="fas fa-motorcycle me-2"></i> Bàn Giao Xe & Thu Tiền Mặt</div>
                                                     <div style="font-size: 11px; font-weight: 500; opacity: 0.85; margin-top: 4px;">Thu tiền, chụp ảnh tình trạng và giao xe cho khách</div>
                                                 </button>
+                                            </div>
+                                            <!-- GPS Tracking Button -->
+                                            <div class="col-12 mt-2" id="gpsTrackArea">
+                                                <button type="button" class="btn w-100 py-2" id="btnToggleGpsMap"
+                                                    style="font-weight: 700; border-radius: 8px; background: linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; border:none; display:flex; align-items:center; justify-content:center; gap:8px;"
+                                                    onclick="toggleGpsMap()">
+                                                    <i class="fas fa-map-marked-alt"></i>
+                                                    <span>Theo dõi vị trí GPS khách hàng</span>
+                                                    <span id="gpsLiveDot" class="position-relative" style="display:none;">
+                                                        <span style="width:10px;height:10px;background:#4ade80;border-radius:50%;display:inline-block;animation:ping 1s infinite;"></span>
+                                                    </span>
+                                                </button>
+                                                <!-- GPS Map Panel -->
+                                                <div id="gpsMapPanel" style="display:none; margin-top:10px; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0;">
+                                                    <div style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:between;">
+                                                        <span style="font-size:13px; font-weight:600; color:#4f46e5;"><i class="fas fa-satellite-dish me-1"></i> Vị trí thời gian thực</span>
+                                                        <span id="gpsStatusText" style="font-size:12px; color:#94a3b8; margin-left:10px;">Chờ tín hiệu...</span>
+                                                    </div>
+                                                    <div id="leaflet-map" style="height:280px; width:100%;"></div>
+                                                    <div style="padding:8px 12px; background:#f8fafc; font-size:12px; color:#64748b;">
+                                                        <i class="fas fa-info-circle me-1"></i>
+                                                        Bản đồ tự cập nhật mỗi 5 giây. Khách cần bật "Phát vị trí GPS" trong trang chi tiết đơn hàng.
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2042,9 +2068,139 @@ $(document).ready(function() {
     
     modalEl.addEventListener('hidden.bs.modal', function () {
         if (chatInterval) clearInterval(chatInterval);
+        stopGpsPolling();
     });
 });
 
+</script>
+
+<!-- Leaflet JS for GPS Map -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ===== GPS LIVE TRACKING - manageBooking ===== */
+var gpsMap = null;
+var gpsMarker = null;
+var gpsInterval = null;
+var gpsMapVisible = false;
+var currentTrackingBookingId = null;
+
+// Ping animation for live dot
+var styleEl = document.createElement('style');
+styleEl.textContent = '@keyframes ping { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.6)} }';
+document.head.appendChild(styleEl);
+
+function toggleGpsMap() {
+    var panel = document.getElementById('gpsMapPanel');
+    var btn   = document.getElementById('btnToggleGpsMap');
+    var dot   = document.getElementById('gpsLiveDot');
+
+    gpsMapVisible = !gpsMapVisible;
+
+    if (gpsMapVisible) {
+        panel.style.display = 'block';
+        dot.style.display   = 'inline-block';
+        btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
+
+        // Get current bookingId from the modal
+        currentTrackingBookingId = document.getElementById('modal-bookingId').textContent.trim();
+
+        // Init map only once
+        if (!gpsMap) {
+            gpsMap = L.map('leaflet-map').setView([16.0600, 108.2096], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 19
+            }).addTo(gpsMap);
+        }
+        setTimeout(function(){ gpsMap.invalidateSize(); }, 200);
+
+        startGpsPolling();
+    } else {
+        panel.style.display = 'none';
+        dot.style.display   = 'none';
+        btn.style.background = 'linear-gradient(135deg,#4f46e5,#7c3aed)';
+        stopGpsPolling();
+    }
+}
+
+function startGpsPolling() {
+    pollGps(); // call immediately
+    gpsInterval = setInterval(pollGps, 5000);
+}
+
+function stopGpsPolling() {
+    if (gpsInterval) { clearInterval(gpsInterval); gpsInterval = null; }
+}
+
+function pollGps() {
+    if (!currentTrackingBookingId) return;
+
+    fetch('api/get-locations')
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+            var statusEl = document.getElementById('gpsStatusText');
+            var found = false;
+
+            (data.locations || []).forEach(function(loc) {
+                if (loc.bookingId === currentTrackingBookingId) {
+                    found = true;
+                    var lat = loc.lat, lon = loc.lon;
+                    var ageMin = Math.floor(loc.age / 60);
+                    var ageSec = loc.age % 60;
+                    var ageStr = ageMin > 0 ? ageMin + ' phút ' + ageSec + ' giây trước' : ageSec + ' giây trước';
+
+                    // Update marker
+                    if (!gpsMarker) {
+                        var icon = L.divIcon({
+                            className: '',
+                            html: '<div style="width:36px;height:36px;background:#4f46e5;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(79,70,229,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;"><i class=\"fas fa-motorcycle\"></i></div>',
+                            iconSize: [36, 36],
+                            iconAnchor: [18, 18]
+                        });
+                        gpsMarker = L.marker([lat, lon], {icon: icon}).addTo(gpsMap);
+                    } else {
+                        gpsMarker.setLatLng([lat, lon]);
+                    }
+
+                    // Popup with booking details
+                    var popupHtml =
+                        '<div style="font-family:Inter,sans-serif;min-width:200px;">' +
+                        '<div style="font-weight:800;color:#4f46e5;margin-bottom:6px;font-size:14px;"><i class="fas fa-motorcycle"></i> ' + (loc.vehicleName||'Xe máy') + '</div>' +
+                        '<div style="font-size:12px;color:#374151;margin-bottom:2px;"><i class="fas fa-hashtag" style="color:#94a3b8;"></i> Mã đơn: <strong>' + currentTrackingBookingId + '</strong></div>' +
+                        '<div style="font-size:12px;color:#374151;margin-bottom:2px;"><i class="fas fa-user" style="color:#94a3b8;"></i> Khách: <strong>' + (loc.name||'') + '</strong></div>' +
+                        '<div style="font-size:12px;color:#374151;margin-bottom:2px;"><i class="fas fa-phone" style="color:#94a3b8;"></i> ' + (loc.phone||'') + '</div>' +
+                        '<div style="font-size:11px;color:#94a3b8;margin-top:6px;border-top:1px solid #e5e7eb;padding-top:4px;"><i class="fas fa-clock"></i> Cập nhật: ' + ageStr + '</div>' +
+                        '<div style="font-size:11px;color:#94a3b8;font-family:monospace;">Lat: ' + lat.toFixed(5) + ' / Lon: ' + lon.toFixed(5) + '</div>' +
+                        '</div>';
+
+                    gpsMarker.bindPopup(popupHtml, {maxWidth: 260});
+
+                    // Pan map to marker
+                    gpsMap.panTo([lat, lon]);
+
+                    // Status text
+                    var dotColor = loc.age < 30 ? '#4ade80' : loc.age < 120 ? '#facc15' : '#f87171';
+                    statusEl.innerHTML = '<span style="display:inline-block;width:8px;height:8px;background:' + dotColor + ';border-radius:50%;margin-right:4px;"></span> Cập nhật ' + ageStr;
+                }
+            });
+
+            if (!found) {
+                document.getElementById('gpsStatusText').textContent = 'Chưa nhận được vị trí từ khách...';
+            }
+        })
+        .catch(function(){ document.getElementById('gpsStatusText').textContent = 'Lỗi kết nối GPS...'; });
+}
+
+// Stop GPS when modal closes
+document.getElementById('user-form-modal').addEventListener('hidden.bs.modal', function() {
+    if (gpsMapVisible) {
+        gpsMapVisible = false;
+        document.getElementById('gpsMapPanel').style.display = 'none';
+        document.getElementById('gpsLiveDot').style.display  = 'none';
+        stopGpsPolling();
+        if (gpsMarker) { gpsMarker.remove(); gpsMarker = null; }
+    }
+});
 </script>
 
 </html>
