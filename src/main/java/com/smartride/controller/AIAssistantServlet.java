@@ -102,7 +102,9 @@ public class AIAssistantServlet extends HttpServlet {
                 out.print(gson.toJson(result));
                 
             } else {
-                out.print("{\"message\": \"Xin lỗi, kết nối tới Server AI đang gặp sự cố. Vui lòng thử lại sau.\", \"categoryId\": null}");
+                System.err.println("Gemini API Error: " + httpResponse.statusCode() + " - " + httpResponse.body());
+                String errorMsg = httpResponse.body().replaceAll("\"", "'").replaceAll("\n", " ").replaceAll("\r", " ");
+                out.print("{\"message\": \"[LỖI API " + httpResponse.statusCode() + "]: " + errorMsg + "\", \"categoryId\": null}");
             }
 
         } catch (Exception e) {

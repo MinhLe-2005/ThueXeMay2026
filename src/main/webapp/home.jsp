@@ -430,7 +430,7 @@
                     </div>
 
                     <!-- Booking Widget Card -->
-                    <div data-aos="fade-up" data-aos-delay="150">
+                    <div data-aos="fade-up" data-aos-delay="150" style="position: relative; z-index: 100;">
                         <form id="heroBookingForm"
                               style="background:#fff; border-radius:16px; padding:24px 28px 20px; box-shadow:0 20px 60px rgba(0,0,0,0.25); max-width:960px;"
                               onsubmit="return heroFormSubmit(event)">

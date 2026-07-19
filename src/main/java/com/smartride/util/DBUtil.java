@@ -133,7 +133,7 @@ public class DBUtil {
     }
 
     /** Lấy kết nối raw từ pool, hoặc tạo mới nếu pool rỗng */
-    static Connection getRawConnection() {
+    static synchronized Connection getRawConnection() {
         // Thử pool trước – nhanh vì không cần kết nối mới
         Connection conn = pool.poll();
         while (conn != null) {
@@ -178,7 +178,7 @@ public class DBUtil {
         }
 
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        public synchronized Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             // Khi DAO gọi close(): trả kết nối về pool
             if ("close".equals(method.getName())) {
                 // Xóa khỏi danh sách activeHandlers để keepalive thread không cố khôi phục lại kết nối đã đóng
