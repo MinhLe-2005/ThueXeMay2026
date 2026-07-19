@@ -313,7 +313,7 @@
                                                           fd.append('lat', lat);
                                                           fd.append('lon', lon);
                                                           fd.append('customerName', '${account.lastName} ${account.firstName}');
-                                                          fd.append('vehicleName', '${not empty booking.listBookingDetails ? booking.listBookingDetails[0].motorcycleName : "Xe may"}');
+                                                          fd.append('vehicleName', 'Motorcycle #${not empty booking.listBookingDetails ? booking.listBookingDetails[0].motorcycleDetailID : "Unknown"}');
                                                           fd.append('phone', '${account.phoneNumber}');
                                                           
                                                           fetch('${pageContext.request.contextPath}/api/update-location', {
