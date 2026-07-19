@@ -220,10 +220,15 @@
                                                         estBox.style.borderColor = '#fed7aa';
                                                         estBox.style.color = '#9a3412';
                                                     } else {
-                                                        estBox.innerHTML = '<i class="fas fa-gift text-red-600 mr-1 text-lg"></i> <strong>Rất xin lỗi vì sự cố giao xe trễ quá 45 phút!</strong><br><p class="mt-2 text-gray-700">Để đền bù trải nghiệm không tốt này, hệ thống đang tự động gửi mã giảm giá 50,000đ đền bù vào <strong>Hộp thư Thông báo</strong> của bạn. Vui lòng kiểm tra chuông thông báo nhé!</p>';
+                                                        estBox.innerHTML = '<i class="fas fa-exclamation-triangle text-red-600 mr-1 text-lg"></i> <strong>Giao xe trễ quá 45 phút!</strong><br><p class="mt-2 text-gray-700">Hệ thống đã tự động gửi mã đền bù vào <strong>Hộp thư Thông báo</strong> của bạn. Vui lòng kiểm tra chuông thông báo nhé!</p>';
                                                         estBox.style.background = '#fef2f2';
                                                         estBox.style.borderColor = '#fecaca';
                                                         estBox.style.color = '#991b1b';
+                                                        if (!window.lateVoucherTriggered) {
+                                                            window.lateVoucherTriggered = true;
+                                                            fetch('notification?action=triggerLateVoucher&bookingId=' + encodeURIComponent('${booking.bookingID}'), { method: 'POST' })
+                                                            .then(() => { if(typeof fetchNotifications === 'function') fetchNotifications(); });
+                                                        }
                                                     }
                                                 }
                                             })();

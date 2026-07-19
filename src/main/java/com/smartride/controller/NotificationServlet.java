@@ -76,6 +76,15 @@ public class NotificationServlet extends HttpServlet {
         } else if ("markAllRead".equals(action)) {
             dao.markAllAsRead(account.getAccountId());
             out.print("{\"status\":\"success\"}");
+        } else if ("triggerLateVoucher".equals(action)) {
+            String bookingId = request.getParameter("bookingId");
+            String title = "Đền bù mã giảm giá do sự cố giao xe trễ hẹn - " + bookingId;
+            boolean exist = dao.checkNotificationExists(account.getAccountId(), title);
+            if (!exist) {
+                String message = "Rất xin lỗi vì sự cố giao xe trễ hẹn quá 45 phút! Hệ thống gửi tặng bạn mã giảm giá 50,000đ: LATE50K. Mong bạn thông cảm.";
+                dao.insertNotification(account.getAccountId(), title, message, "bookingHistoryDetail?bookingId=" + bookingId);
+            }
+            out.print("{\"status\":\"success\"}");
         }
         out.flush();
     }

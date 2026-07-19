@@ -147,6 +147,22 @@ public class NotificationDAO implements Serializable {
         return false;
     }
 
+    public boolean checkNotificationExists(int accountId, String title) {
+        String sql = "SELECT 1 FROM \"Notification\" WHERE account_id = ? AND title = ? LIMIT 1";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1, accountId);
+            stm.setString(2, title);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(NotificationDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
     public boolean insertNotification(int accountId, String title, String message, String link) {
         String sql = "INSERT INTO \"Notification\" (account_id, title, message, link, is_read) VALUES (?, ?, ?, ?, FALSE)";
         try {
