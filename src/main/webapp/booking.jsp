@@ -5129,6 +5129,7 @@
                     .then(data => {
                         var address = data.display_name.replace(/ Ward/g, '').replace(/ District/g, '');
                         document.getElementById('custom_' + type + '_input').value = address;
+                        updateCustomLocation(type);
                         processDistance(lat, lon, type);
                         btn.innerHTML = oldHtml;
                     })
