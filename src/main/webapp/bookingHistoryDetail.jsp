@@ -158,7 +158,7 @@
                         </c:if>
 
                         <!-- Content Grid: Premium Layout -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                             <!-- Column 1: Lịch trình -->
                             <div class="flex flex-col h-full">
                                 <!-- Card: Lịch trình -->
@@ -419,14 +419,17 @@
                                                     <c:forEach items="${booking.listBookingDetails}" var="detail">
                                                         <c:set var="total" value="${total + detail.totalPrice}"/>
                                                     </c:forEach>
-                                                    <c:set var="total" value="${total + (booking.deliveryFee != null ? booking.deliveryFee : 0)}" />
+                                                    <c:set var="total" value="${total + booking.deliveryFee}" />
                                                     <fmt:formatNumber value="${total}" pattern="#,##0" /> VNĐ
                                                 </p>
                                             </div>
                                         </div>
                                         <div class="flex justify-between items-center pt-1 border-b border-white/10 pb-4">
                                             <div>
-                                                <c:set var="paidAmount" value="${empty payment ? 0 : payment.paymentAmount}" />
+                                                <c:set var="paidAmount" value="0" />
+                                                <c:if test="${not empty payment}">
+                                                    <c:set var="paidAmount" value="${payment.paymentAmount}" />
+                                                </c:if>
                                                 <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiền cọc (${paidAmount > 0 ? 'Đã thanh toán' : 'Chưa thanh toán'})</p>
                                                 <p class="text-2xl font-bold ${paidAmount > 0 ? 'text-green-400' : 'text-yellow-400'}" id="amount-paid">
                                                     <fmt:formatNumber value="${paidAmount}" pattern="#,##0" /> VNĐ
