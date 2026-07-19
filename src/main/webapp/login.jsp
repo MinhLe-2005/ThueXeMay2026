@@ -498,7 +498,14 @@
                 <div class="divider-or">Hoặc</div>
 
                 <!-- Google -->
-                <a class="btn-google-login" href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/MotorcyleHiringProject/login-google&response_type=code&client_id=427529527508-oc10hcpl7tv41q12bhjkk1lpvnupe80k.apps.googleusercontent.com&approval_prompt=force">
+                <%
+                    String scheme = request.getScheme();
+                    String serverName = request.getServerName();
+                    int serverPort = request.getServerPort();
+                    String contextPath = request.getContextPath();
+                    String redirectUri = scheme + "://" + serverName + (serverPort == 80 || serverPort == 443 ? "" : ":" + serverPort) + contextPath + "/login-google";
+                %>
+                <a class="btn-google-login" href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=<%= redirectUri %>&response_type=code&client_id=427529527508-oc10hcpl7tv41q12bhjkk1lpvnupe80k.apps.googleusercontent.com&approval_prompt=force">
                     <img src="images/search.png" alt="Google" />
                     <span>Đăng nhập với Google</span>
                 </a>

@@ -11,7 +11,7 @@ import org.apache.http.client.fluent.Request;
 import org.json.JSONObject;
 
 public class GoogleLogin {
-    public static String getToken(String code) throws ClientProtocolException, IOException {
+    public static String getToken(String code, String redirectUri) throws ClientProtocolException, IOException {
 
         String response = Request.Post(IConstant.GOOGLE_LINK_GET_TOKEN)
 
@@ -20,7 +20,7 @@ public class GoogleLogin {
 
                         .add("client_secret", IConstant.GOOGLE_CLIENT_SECRET)
 
-                        .add("redirect_uri", IConstant.GOOGLE_REDIRECT_URI)
+                        .add("redirect_uri", redirectUri)
 
                         .add("code", code)
 

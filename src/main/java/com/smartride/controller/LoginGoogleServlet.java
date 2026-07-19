@@ -21,7 +21,14 @@ public class LoginGoogleServlet extends HttpServlet {
     throws ServletException, IOException {
         HttpSession session = request.getSession();
         String code = request.getParameter("code");
-        String accessToken = GoogleLogin.getToken(code);
+        
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        String contextPath = request.getContextPath();
+        String redirectUri = scheme + "://" + serverName + (serverPort == 80 || serverPort == 443 ? "" : ":" + serverPort) + contextPath + "/login-google";
+        
+        String accessToken = GoogleLogin.getToken(code, redirectUri);
         //String jsonAcc = GoogleLogin.getUserInfo(accessToken);
         String email = GoogleLogin.getEmail(accessToken);
         Account acc = AccountDAO.getInstance().getAccountByEmail(email);
