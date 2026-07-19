@@ -178,7 +178,7 @@
         document.getElementById('transfer-note').textContent = note;
         document.getElementById('amount-text').textContent = amount.toLocaleString('vi-VN') + ' ₫';
         
-        const qrUrl = 'https://qr.sepay.vn/img?bank=MBB&acc=0943515000&template=compact&amount=' + amount + '&des=' + encodeURIComponent(note);
+        const qrUrl = 'https://qr.sepay.vn/img?bank=MB&acc=0943515000&template=compact&amount=' + amount + '&des=' + encodeURIComponent(note);
         document.getElementById('qr-img').src = qrUrl;
 
         startPolling(note);
