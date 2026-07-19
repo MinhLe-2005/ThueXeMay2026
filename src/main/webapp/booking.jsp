@@ -5170,13 +5170,82 @@
             var info = document.getElementById(type + '_distance_info');
             info.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tính khoảng cách...';
             
-            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address + ', Da Nang') + '&accept-language=vi')
-            .then(response => response.json())
-            .then(data => {
+            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address + ', Đà Nẵng, Việt Nam') + '&accept-language=vi&limit=1')
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
                 if (data && data.length > 0) {
                     processDistance(parseFloat(data[0].lat), parseFloat(data[0].lon), type);
                 } else {
-                    i    <!-- CONTRACT SAMPLE MODAL -->
+                    info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Không tìm thấy địa chỉ này, vui lòng thử lại.</span>';
+                }
+            })
+            .catch(function() {
+                info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Lỗi tính khoảng cách.</span>';
+            });
+        }
+
+        // Tọa độ cửa hàng SmartRide
+        var SHOP_LAT = 16.0600, SHOP_LON = 108.2096;
+
+        function haversineKm(lat1, lon1, lat2, lon2) {
+            var R = 6371;
+            var dLat = (lat2 - lat1) * Math.PI / 180;
+            var dLon = (lon2 - lon1) * Math.PI / 180;
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
+        // Lưu phí giao từng loại
+        window._pickupFee  = 0;
+        window._returnFee  = 0;
+
+        function processDistance(lat, lon, type) {
+            var km  = haversineKm(SHOP_LAT, SHOP_LON, lat, lon);
+            var fee = 0;
+            if (km > 20) {
+                // Không nhận đơn
+                var info = document.getElementById(type + '_distance_info');
+                info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-ban"></i> Khoảng cách <strong>' + km.toFixed(1) + ' km</strong> – vượt quá 20km, hệ thống không nhận đơn.</span>';
+                if (type === 'pickup') window._pickupFee = 0;
+                else window._returnFee = 0;
+                recalculateDeliveryFee();
+                return;
+            }
+            if (km > 3) {
+                fee = Math.ceil(km - 3) * 5000;
+            }
+            var feeStr = fee > 0 ? fee.toLocaleString('vi-VN') + 'đ' : 'Miễn phí';
+            var color  = fee > 0 ? '#d97706' : '#16a34a';
+            var icon   = fee > 0 ? 'fa-motorcycle' : 'fa-check-circle';
+
+            var info = document.getElementById(type + '_distance_info');
+            info.innerHTML =
+                '<span style="color:' + color + '; font-weight:600;">'+
+                '<i class="fas ' + icon + '"></i> '+
+                'Khoảng cách: <strong>' + km.toFixed(1) + ' km</strong>. '+
+                'Phụ phí giao: <strong>' + feeStr + '</strong></span>';
+
+            if (type === 'pickup') window._pickupFee = fee;
+            else window._returnFee = fee;
+            recalculateDeliveryFee();
+        }
+
+        function recalculateDeliveryFee() {
+            window.deliveryFee = (window._pickupFee || 0) + (window._returnFee || 0);
+            // Cập nhật hiển thị tổng phụ phí nếu có element
+            var el = document.getElementById('delivery-fee-display');
+            if (el) {
+                el.textContent = window.deliveryFee > 0
+                    ? window.deliveryFee.toLocaleString('vi-VN') + 'đ'
+                    : 'Miễn phí';
+            }
+        }
+
+
+        </script>
+    <!-- CONTRACT SAMPLE MODAL -->
     <div id="contract-sample-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
         <div style="background:#f1f5f9; width:95%; max-width:850px; height:90vh; border-radius:8px; display:flex; flex-direction:column; box-shadow:0 10px 40px rgba(0,0,0,0.5); overflow:hidden;">
             
