@@ -83,8 +83,8 @@ public class NotificationSchedulerListener implements ServletContextListener {
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
             
-            CustomerDAO customerDAO = new CustomerDAO();
-            AccountDAO accountDAO = new AccountDAO();
+            CustomerDAO customerDAO = CustomerDAO.getInstance();
+            AccountDAO accountDAO = AccountDAO.getInstance();
             
             while (rs.next()) {
                 String bookingId = rs.getString("BookingID");
@@ -223,6 +223,7 @@ public class NotificationSchedulerListener implements ServletContextListener {
      * Chạy mỗi 5 phút: tự động đổi DeliveryStatus → "Quá hạn" và gửi email cảnh báo 1 lần.
      */
     private void checkAndMarkOverdue() {
+        Connection conn = null;
         try {
             // 1. Đổi trạng thái các booking đã quá hạn
             List<String> overdueIds = BookingDAO.getInstance().markOverdueBookings();
@@ -230,11 +231,11 @@ public class NotificationSchedulerListener implements ServletContextListener {
             if (overdueIds.isEmpty()) return;
 
             // 2. Với từng bookingID mới bị overdue → gửi email 1 lần (check flag)
-            Connection conn = DBUtil.makeConnection();
+            conn = DBUtil.makeConnection();
             if (conn == null) return;
 
-            CustomerDAO customerDAO = new CustomerDAO();
-            AccountDAO accountDAO = new AccountDAO();
+            CustomerDAO customerDAO = CustomerDAO.getInstance();
+            AccountDAO accountDAO = AccountDAO.getInstance();
 
             for (String bookingId : overdueIds) {
                 try {
@@ -298,10 +299,11 @@ public class NotificationSchedulerListener implements ServletContextListener {
                     System.err.println("Overdue email error for " + bookingId + ": " + ex.getMessage());
                 }
             }
-            DBUtil.closeConnection(conn);
             System.out.println("[Overdue Check] Marked " + overdueIds.size() + " bookings as overdue.");
         } catch (Exception e) {
             System.err.println("[Overdue Check] Error: " + e.getMessage());
+        } finally {
+            DBUtil.closeConnection(conn);
         }
     }
 
