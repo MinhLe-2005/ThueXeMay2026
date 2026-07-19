@@ -413,7 +413,7 @@
         <main class="main">
 
             <!-- Hero Section -->
-            <section id="hero" class="hero section" style="position: relative; z-index: 99;">
+            <section id="hero" class="hero section" style="position: relative; z-index: 99; overflow: visible !important;">
                 <div class="hero-overlay"></div>
                 <div class="container" style="position:relative; z-index:3;">
                     <!-- Left-aligned hero text -->
