@@ -20,7 +20,7 @@ public class AIAssistantServlet extends HttpServlet {
 
     // Lấy API Key từ biến môi trường (Environment Variable)
     private static final String GEMINI_API_KEY = System.getenv("GEMINI_API_KEY");
-    private static final String GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=";
+    private static final String GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
