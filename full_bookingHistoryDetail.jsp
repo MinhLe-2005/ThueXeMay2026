@@ -1,4 +1,4 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+﻿<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -8,7 +8,7 @@
     <head>
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
         <meta charset="utf-8">
-        <title>Chi tiết lịch sử thuê xe</title>
+        <title>Chi tiß║┐t lß╗ïch sß╗¡ thu├¬ xe</title>
         <!-- Tailwind CSS & Google Fonts -->
         <link href="https://www.loopple.com/css/vendor/tailwind.min.css" rel="stylesheet">
         <link href="https://www.loopple.com/css/tailwind/app.css?v=1.0.0" rel="stylesheet">
@@ -54,19 +54,19 @@
                         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-5 mb-6">
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-800 flex items-center">
-                                    <i class="fas fa-file-invoice mr-2.5 text-yellow-500"></i> Chi tiết Booking
+                                    <i class="fas fa-file-invoice mr-2.5 text-yellow-500"></i> Chi tiß║┐t Booking
                                 </h3>
-                                <p class="text-gray-400 text-sm font-medium mt-1">Xem thông tin đặt xe, hạn trả và thực hiện thao tác gia hạn hoặc hủy đơn.</p>
+                                <p class="text-gray-400 text-sm font-medium mt-1">Xem th├┤ng tin ─æß║╖t xe, hß║ín trß║ú v├á thß╗▒c hiß╗çn thao t├íc gia hß║ín hoß║╖c hß╗ºy ─æ╞ín.</p>
                             </div>
                             <c:choose>
-                                <c:when test="${statusBooking == 'Chờ xác nhận' && not empty payment}">
+                                <c:when test="${statusBooking == 'Chß╗¥ x├íc nhß║¡n' && not empty payment}">
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-200">
-                                        <i class="fas fa-check-circle"></i> Đã cọc: <fmt:formatNumber value="${payment.paymentAmount}" pattern="#,##0" />đ
+                                        <i class="fas fa-check-circle"></i> ─É├ú cß╗ìc: <fmt:formatNumber value="${payment.paymentAmount}" pattern="#,##0" />─æ
                                     </span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${statusBooking == 'Chờ xác nhận' ? 'bg-yellow-50 text-yellow-600' : (statusBooking == 'Đã xác nhận' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600')}">
-                                        <span class="w-1.5 h-1.5 rounded-full ${statusBooking == 'Chờ xác nhận' ? 'bg-yellow-500' : (statusBooking == 'Đã xác nhận' ? 'bg-green-500' : 'bg-red-500')}"></span>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${statusBooking == 'Chß╗¥ x├íc nhß║¡n' ? 'bg-yellow-50 text-yellow-600' : (statusBooking == '─É├ú x├íc nhß║¡n' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600')}">
+                                        <span class="w-1.5 h-1.5 rounded-full ${statusBooking == 'Chß╗¥ x├íc nhß║¡n' ? 'bg-yellow-500' : (statusBooking == '─É├ú x├íc nhß║¡n' ? 'bg-green-500' : 'bg-red-500')}"></span>
                                         ${booking.statusBooking}
                                     </span>
                                 </c:otherwise>
@@ -112,20 +112,21 @@
                         <c:set var="endMinute" value="${fn:substring(endDate, 14, 16)}" />
 
                         <!-- Content Grid: Premium Layout -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                            <!-- Column 1: Lịch trình -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                            
+                            <!-- Column 1: Lß╗ïch tr├¼nh -->
                             <div class="flex flex-col h-full">
-                                <!-- Card: Lịch trình -->
+                                <!-- Card: Lß╗ïch tr├¼nh -->
                                 <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 relative overflow-hidden flex-1">
                                     <div class="absolute top-0 right-0 w-48 h-48 bg-yellow-50 rounded-bl-full -z-0 opacity-50"></div>
                                     <h4 class="text-lg font-extrabold text-gray-800 mb-5 flex items-center relative z-10">
-                                        <i class="fas fa-route text-yellow-500 mr-3 text-xl"></i> Lịch trình thuê xe
+                                        <i class="fas fa-route text-yellow-500 mr-3 text-xl"></i> Lß╗ïch tr├¼nh thu├¬ xe
                                     </h4>
                                     
                                     <div class="flex items-center justify-between relative z-10 mb-6 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
                                         <!-- Start Date -->
                                         <div class="text-center w-5/12">
-                                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Nhận xe</p>
+                                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Nhß║¡n xe</p>
                                             <div class="bg-white border border-gray-200 shadow-sm rounded-xl py-3 px-2">
                                                 <p class="text-yellow-600 font-black text-xl mb-1">${startHour}:${startMinute}</p>
                                                 <p class="text-gray-600 text-xs font-bold">${startDay}-${startMonth}-${startYear}</p>
@@ -140,7 +141,7 @@
                                         
                                         <!-- End Date -->
                                         <div class="text-center w-5/12">
-                                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Trả xe</p>
+                                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Trß║ú xe</p>
                                             <div class="bg-white border border-gray-200 shadow-sm rounded-xl py-3 px-2">
                                                 <p class="text-green-600 font-black text-xl mb-1">${endHour}:${endMinute}</p>
                                                 <p class="text-gray-600 text-xs font-bold">${endDay}-${endMonth}-${endYear}</p>
@@ -154,7 +155,7 @@
                                                 <i class="fas fa-map-marker-alt text-yellow-500 text-lg"></i>
                                             </div>
                                             <div>
-                                                <p class="text-xs text-gray-400 font-bold uppercase mb-1">Nhận xe</p>
+                                                <p class="text-xs text-gray-400 font-bold uppercase mb-1">Nhß║¡n xe</p>
                                                 <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5">${booking.deliveryLocation}</p>
                                                 <p class="text-sm text-yellow-600 font-semibold"><i class="far fa-clock mr-1"></i> ${booking.startDate}</p>
                                             </div>
@@ -164,32 +165,32 @@
                                                 <i class="fas fa-flag-checkered text-green-500 text-lg"></i>
                                             </div>
                                             <div>
-                                                <p class="text-xs text-gray-400 font-bold uppercase mb-1">Trả xe</p>
+                                                <p class="text-xs text-gray-400 font-bold uppercase mb-1">Trß║ú xe</p>
                                                 <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5">${booking.returnedLocation}</p>
                                                 <p class="text-sm text-green-600 font-semibold"><i class="far fa-clock mr-1"></i> ${booking.endDate}</p>
                                             </div>
                                         </div>
-                                        <c:if test="${statusBooking == 'Đã xác nhận'}">
+                                        <c:if test="${statusBooking == '─É├ú x├íc nhß║¡n'}">
                                             <div class="mt-6 pt-5 border-t border-gray-100 flex items-center gap-4">
                                                 <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
                                                     <i class="fas fa-truck text-blue-500 text-lg"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Trạng thái giao xe</p>
+                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Trß║íng th├íi giao xe</p>
                                                     <p class="text-base text-blue-700 font-black">${booking.deliveryStatus}</p>
                                                 </div>
                                             </div>
                                         </c:if>
 
-                                        <c:if test="${(statusBooking eq 'Đã xác nhận' or booking.deliveryStatus eq 'Đang giao') and not fn:containsIgnoreCase(booking.deliveryLocation, 'Tại cửa hàng')}">
+                                        <c:if test="${(statusBooking eq '─É├ú x├íc nhß║¡n' or booking.deliveryStatus eq '─Éang giao') and not fn:containsIgnoreCase(booking.deliveryLocation, 'Tß║íi cß╗¡a h├áng')}">
                                             <div class="mt-6 pt-5 border-t border-gray-100 flex items-center gap-4">
                                                 <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
                                                     <i class="fas fa-motorcycle text-blue-500 text-lg"></i>
                                                 </div>
                                                 <div class="w-full">
-                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Dự kiến giao xe</p>
+                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Dß╗▒ kiß║┐n giao xe</p>
                                                     <div id="delivery-estimate-history" style="display:none; margin-top:8px; padding:10px 14px; border-radius:8px; background:#f0faf0; border:1px solid #b2dfb2; font-size:13px; color:#2e7d32;">
-                                                        <i class="fas fa-spinner fa-spin mr-1"></i> Đang tính toán thời gian...
+                                                        <i class="fas fa-spinner fa-spin mr-1"></i> ─Éang t├¡nh to├ín thß╗¥i gian...
                                                     </div>
                                                 </div>
                                             </div>
@@ -208,19 +209,19 @@
                                                 estBox.style.display = 'block';
                                                 
                                                 if (diffMins > 0) {
-                                                    estBox.innerHTML = '<i class="fas fa-clock text-blue-500 mr-1"></i> <strong>Thời gian giao xe dự kiến còn:</strong> <span class="text-lg font-bold text-blue-700 ml-1">' + diffMins + ' phút</span><br><span class="text-xs text-gray-500 mt-1 block">Tài xế đang chuẩn bị xe và sẽ đến đúng giờ.</span>';
+                                                    estBox.innerHTML = '<i class="fas fa-clock text-blue-500 mr-1"></i> <strong>Thß╗¥i gian giao xe dß╗▒ kiß║┐n c├▓n:</strong> <span class="text-lg font-bold text-blue-700 ml-1">' + diffMins + ' ph├║t</span><br><span class="text-xs text-gray-500 mt-1 block">T├ái xß║┐ ─æang chuß║⌐n bß╗ï xe v├á sß║╜ ─æß║┐n ─æ├║ng giß╗¥.</span>';
                                                     estBox.style.background = '#eff6ff';
                                                     estBox.style.borderColor = '#bfdbfe';
                                                     estBox.style.color = '#1e3a8a';
                                                 } else {
                                                     var lateMins = Math.abs(diffMins);
                                                     if (lateMins <= 45) {
-                                                        estBox.innerHTML = '<i class="fas fa-exclamation-triangle text-orange-500 mr-1"></i> <strong>Tài xế đang đến trễ:</strong> ' + lateMins + ' phút.<br><span class="text-xs text-gray-600 mt-1 block">Mong quý khách thông cảm chờ trong giây lát. Nếu quá 45 phút, SmartRide sẽ gửi tặng mã giảm giá đền bù!</span>';
+                                                        estBox.innerHTML = '<i class="fas fa-exclamation-triangle text-orange-500 mr-1"></i> <strong>T├ái xß║┐ ─æang ─æß║┐n trß╗à:</strong> ' + lateMins + ' ph├║t.<br><span class="text-xs text-gray-600 mt-1 block">Mong qu├╜ kh├ích th├┤ng cß║úm chß╗¥ trong gi├óy l├ít. Nß║┐u qu├í 45 ph├║t, SmartRide sß║╜ gß╗¡i tß║╖ng m├ú giß║úm gi├í ─æß╗ün b├╣!</span>';
                                                         estBox.style.background = '#fff7ed';
                                                         estBox.style.borderColor = '#fed7aa';
                                                         estBox.style.color = '#9a3412';
                                                     } else {
-                                                        estBox.innerHTML = '<i class="fas fa-gift text-red-600 mr-1 text-lg"></i> <strong>Rất xin lỗi vì sự cố giao xe trễ quá 45 phút!</strong><br><p class="mt-2 text-gray-700">Để đền bù trải nghiệm không tốt này, hệ thống đang tự động gửi mã giảm giá 50,000đ đền bù vào <strong>Hộp thư Thông báo</strong> của bạn. Vui lòng kiểm tra chuông thông báo nhé!</p>';
+                                                        estBox.innerHTML = '<i class="fas fa-gift text-red-600 mr-1 text-lg"></i> <strong>Rß║Ñt xin lß╗ùi v├¼ sß╗▒ cß╗æ giao xe trß╗à qu├í 45 ph├║t!</strong><br><p class="mt-2 text-gray-700">─Éß╗â ─æß╗ün b├╣ trß║úi nghiß╗çm kh├┤ng tß╗æt n├áy, hß╗ç thß╗æng ─æang tß╗▒ ─æß╗Öng gß╗¡i m├ú giß║úm gi├í 50,000─æ ─æß╗ün b├╣ v├áo <strong>Hß╗Öp th╞░ Th├┤ng b├ío</strong> cß╗ºa bß║ín. Vui l├▓ng kiß╗âm tra chu├┤ng th├┤ng b├ío nh├⌐!</p>';
                                                         estBox.style.background = '#fef2f2';
                                                         estBox.style.borderColor = '#fecaca';
                                                         estBox.style.color = '#991b1b';
@@ -229,13 +230,13 @@
                                             })();
                                             </script>
                                         </c:if>
-                                        <c:if test="${statusBooking == 'Đã hủy' && not empty cancellation}">
+                                        <c:if test="${statusBooking == '─É├ú hß╗ºy' && not empty cancellation}">
                                             <div class="mt-6 pt-5 border-t border-gray-100 flex items-start gap-4">
                                                 <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
                                                     <i class="fas fa-times-circle text-red-500 text-lg"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Lý do hủy đơn</p>
+                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">L├╜ do hß╗ºy ─æ╞ín</p>
                                                     <p class="text-base text-red-700 font-medium">${cancellation.note}</p>
                                                 </div>
                                             </div>
@@ -243,130 +244,33 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Column 4: Định vị GPS -->
-                            <div class="flex flex-col h-full">
-                                <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 relative overflow-hidden flex-1">
-<!-- GPS DEMO BLOCK -->
-                                              <div class="mt-4 pt-4 border-t border-gray-100">
-                                                  <div class="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl relative overflow-hidden">
-                                                      <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100 rounded-bl-full -z-0 opacity-50"></div>
-                                                      <h4 class="text-blue-800 font-bold mb-2 flex items-center relative z-10"><i class="fas fa-location-arrow mr-2"></i> Trình theo dõi GPS</h4>
-                                                      <p class="text-xs text-blue-600 mb-4 relative z-10">Vui lòng bấm nút dưới đây để bật chia sẻ vị trí liên tục lên màn hình Staff.</p>
-                                                      
-                                                      <button id="btnStartGps" onclick="toggleDemoGps()" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md transition-all flex items-center justify-center gap-2 relative z-10">
-                                                          <i class="fas fa-play"></i> BẮT ĐẦU PHÁT VỊ TRÍ
-                                                      </button>
-                                                      <div id="gpsStatusBox" class="hidden mt-3 p-3 bg-white rounded-xl border border-blue-100 text-sm relative z-10">
-                                                          <div class="flex items-center gap-2 text-green-600 font-bold mb-1">
-                                                              <span class="relative flex h-3 w-3">
-                                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                                                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                                                              </span>
-                                                              Đang phát tín hiệu GPS...
-                                                          </div>
-                                                          <div class="text-xs text-gray-500 font-mono mt-1" id="gpsCoords">Lat: --, Lon: --</div>
-                                                      </div>
-                                                  </div>
-                                              </div>
-
-                                              <script>
-                                              let gpsWatchId = null;
-                                              let wakeLock = null;
-
-                                              async function requestWakeLock() {
-                                                  try {
-                                                      if ('wakeLock' in navigator) {
-                                                          wakeLock = await navigator.wakeLock.request('screen');
-                                                      }
-                                                  } catch (err) {
-                                                      console.error("Wake Lock error:", err.message);
-                                                  }
-                                              }
-
-                                              function toggleDemoGps() {
-                                                  const btn = document.getElementById('btnStartGps');
-                                                  const statusBox = document.getElementById('gpsStatusBox');
-                                                  
-                                                  if (gpsWatchId !== null) {
-                                                      navigator.geolocation.clearWatch(gpsWatchId);
-                                                      gpsWatchId = null;
-                                                      if (wakeLock !== null) wakeLock.release().then(() => wakeLock = null);
-                                                      
-                                                      btn.innerHTML = '<i class="fas fa-play"></i> BẮT ĐẦU PHÁT VỊ TRÍ';
-                                                      btn.className = "w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md transition-all flex items-center justify-center gap-2 relative z-10";
-                                                      statusBox.classList.add('hidden');
-                                                      return;
-                                                  }
-                                                  
-                                                  if (navigator.geolocation) {
-                                                      requestWakeLock();
-                                                      btn.innerHTML = '<i class="fas fa-stop"></i> DỪNG PHÁT VỊ TRÍ';
-                                                      btn.className = "w-full py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold shadow-md transition-all flex items-center justify-center gap-2 relative z-10";
-                                                      statusBox.classList.remove('hidden');
-                                                      
-                                                      gpsWatchId = navigator.geolocation.watchPosition(function(position) {
-                                                          const lat = position.coords.latitude.toFixed(6);
-                                                          const lon = position.coords.longitude.toFixed(6);
-                                                          document.getElementById('gpsCoords').innerText = 'Lat: ' + lat + '\nLon: ' + lon;
-                                                          
-                                                          let fd = new FormData();
-                                                          fd.append('bookingId', '');
-                                                          fd.append('lat', lat);
-                                                          fd.append('lon', lon);
-                                                          fd.append('customerName', '');
-                                                          
-                                                          fetch('/api/update-location', {
-                                                              method: 'POST',
-                                                              body: fd
-                                                          }).catch(e => console.error(e));
-                                                          
-                                                      }, function(error) {
-                                                          Swal.fire({icon: 'error', title: 'Lỗi GPS', text: 'Vui lòng bật vị trí (Location) trên điện thoại và tải lại trang!'});
-                                                          toggleDemoGps();
-                                                      }, {
-                                                          enableHighAccuracy: true,
-                                                          maximumAge: 0,
-                                                          timeout: 5000
-                                                      });
-                                                  } else {
-                                                      Swal.fire({icon: 'error', title: 'Không hỗ trợ', text: 'Trình duyệt không hỗ trợ định vị GPS.'});
-                                                  }
-                                              }
-
-                                              document.addEventListener("visibilitychange", function() {
-                                                  if (document.visibilityState === 'visible' && gpsWatchId !== null && wakeLock === null) {
-                                                      requestWakeLock();
-                                                  }
-                                              });
-                                              </script>
-                                </div>
-                            </div>
-                            <!-- Column 2: Chi tiết xe -->
+                            
+                            <!-- Column 2: Chi tiß║┐t xe -->
                             <div class="flex flex-col h-full">
                                 
-                                <!-- Card: Chi tiết Xe -->
+                                <!-- Card: Chi tiß║┐t Xe -->
                                 <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 relative overflow-hidden flex-1">
                                     <h4 class="text-lg font-extrabold text-gray-800 mb-5 flex items-center">
-                                        <i class="fas fa-motorcycle text-yellow-500 mr-3 text-xl"></i> Chi tiết phương tiện
+                                        <i class="fas fa-motorcycle text-yellow-500 mr-3 text-xl"></i> Chi tiß║┐t ph╞░╞íng tiß╗çn
                                     </h4>
                                     
                                     <div class="space-y-3 mb-5">
                                         <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-500 font-medium">Mã đơn hàng:</span>
+                                            <span class="text-gray-500 font-medium">M├ú ─æ╞ín h├áng:</span>
                                             <span class="font-bold text-gray-800 bg-gray-100 px-2 py-1 rounded">#${booking.bookingID}</span>
                                         </div>
                                         <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-500 font-medium">Thời gian tạo:</span>
+                                            <span class="text-gray-500 font-medium">Thß╗¥i gian tß║ío:</span>
                                             <span class="font-semibold text-gray-700">${bookingDay}-${bookingMonth}-${bookingYear} ${bookingHour}:${bookingMinute}</span>
                                         </div>
                                         <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-500 font-medium">Tổng số lượng xe:</span>
+                                            <span class="text-gray-500 font-medium">Tß╗òng sß╗æ l╞░ß╗úng xe:</span>
                                             <span class="font-bold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-md border border-yellow-100">${fn:length(booking.listBookingDetails)} xe</span>
                                         </div>
                                     </div>
                                     
                                     <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
-                                        <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-3">Các phương tiện đã thuê</p>
+                                        <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-3">C├íc ph╞░╞íng tiß╗çn ─æ├ú thu├¬</p>
                                         <div class="flex flex-wrap gap-2.5">
                                             <c:forEach var="entry" items="${motorcycleDetails}" varStatus="loop">
                                                 <div class="bg-white border border-gray-200 shadow-sm text-gray-800 px-3 py-1.5 rounded-lg text-sm font-bold flex items-center gap-2">
@@ -378,37 +282,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Column 3: Tổng kết thanh toán -->
+                            
+                            <!-- Column 3: Tß╗òng kß║┐t thanh to├ín -->
                             <div class="flex flex-col h-full">
-                                <!-- Card: Tổng kết thanh toán -->
+                                <!-- Card: Tß╗òng kß║┐t thanh to├ín -->
                                 <div class="bg-gray-900 rounded-2xl p-6 relative overflow-hidden text-white shadow-xl shadow-gray-900/10 flex-1">
                                     <div class="absolute -right-6 -top-6 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
                                     <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-yellow-500/20 rounded-full blur-2xl"></div>
                                     
                                     <h4 class="text-lg font-extrabold text-white mb-5 flex items-center relative z-10">
-                                        <i class="fas fa-file-invoice-dollar text-yellow-400 mr-3 text-xl"></i> Tổng kết thanh toán
+                                        <i class="fas fa-file-invoice-dollar text-yellow-400 mr-3 text-xl"></i> Tß╗òng kß║┐t thanh to├ín
                                     </h4>
                                     
                                     <div class="space-y-4 relative z-10">
                                         <div class="flex justify-between items-end border-b border-white/10 pb-5">
                                             <div>
-                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Tổng tiền thuê xe</p>
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Tß╗òng tiß╗ün thu├¬ xe</p>
                                                 <p class="text-3xl font-black text-white tracking-tight" id="total-price">
                                                     <c:set var="total" value="0"/>
                                                     <c:forEach items="${booking.listBookingDetails}" var="detail">
                                                         <c:set var="total" value="${total + detail.totalPrice}"/>
                                                     </c:forEach>
                                                     <c:set var="total" value="${total + (booking.deliveryFee != null ? booking.deliveryFee : 0)}" />
-                                                    <fmt:formatNumber value="${total}" pattern="#,##0" /> VNĐ
+                                                    <fmt:formatNumber value="${total}" pattern="#,##0" /> VN─É
                                                 </p>
                                             </div>
                                         </div>
                                         <div class="flex justify-between items-center pt-1 border-b border-white/10 pb-4">
                                             <div>
                                                 <c:set var="paidAmount" value="${empty payment ? 0 : payment.paymentAmount}" />
-                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiền cọc (${paidAmount > 0 ? 'Đã thanh toán' : 'Chưa thanh toán'})</p>
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiß╗ün cß╗ìc (${paidAmount > 0 ? '─É├ú thanh to├ín' : 'Ch╞░a thanh to├ín'})</p>
                                                 <p class="text-2xl font-bold ${paidAmount > 0 ? 'text-green-400' : 'text-yellow-400'}" id="amount-paid">
-                                                    <fmt:formatNumber value="${paidAmount}" pattern="#,##0" /> VNĐ
+                                                    <fmt:formatNumber value="${paidAmount}" pattern="#,##0" /> VN─É
                                                 </p>
                                             </div>
                                             <div class="w-12 h-12 rounded-full ${paidAmount > 0 ? 'bg-green-500/20 border-green-500/30 text-green-400' : 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400'} flex items-center justify-center border">
@@ -417,9 +322,9 @@
                                         </div>
                                         <div class="flex justify-between items-center pt-1">
                                             <div>
-                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Số tiền cần thanh toán thêm</p>
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Sß╗æ tiß╗ün cß║ºn thanh to├ín th├¬m</p>
                                                 <p class="text-xl font-bold text-rose-400">
-                                                    <fmt:formatNumber value="${total - paidAmount}" pattern="#,##0" /> VNĐ
+                                                    <fmt:formatNumber value="${total - paidAmount}" pattern="#,##0" /> VN─É
                                                 </p>
                                             </div>
                                         </div>
@@ -432,34 +337,34 @@
                         <!-- Mini Extension Info Link -->
                         <div class="mb-8 text-right relative z-50">
                             <button type="button" class="inline-flex items-center gap-1.5 text-sm font-bold text-yellow-600 hover:text-yellow-700 transition-colors border-b border-dashed border-yellow-600/50 pb-0.5 cursor-pointer bg-transparent border-0 outline-none" onclick="openExtension()">
-                                <i class="fas fa-info-circle"></i> Xem thông tin gia hạn lịch trình
+                                <i class="fas fa-info-circle"></i> Xem th├┤ng tin gia hß║ín lß╗ïch tr├¼nh
                             </button>
                         </div>
 
                         <!-- Detail Actions Buttons -->
                         <div class="flex flex-wrap items-center justify-end gap-3 pt-5 border-t border-gray-100 relative z-50">
-                            <c:if test="${statusBooking == 'Chờ xác nhận'}">
+                            <c:if test="${statusBooking == 'Chß╗¥ x├íc nhß║¡n'}">
                                 <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #ef4444" onclick="openCancellation()">
-                                    <i class="fas fa-times-circle"></i> Hủy đơn hàng
+                                    <i class="fas fa-times-circle"></i> Hß╗ºy ─æ╞ín h├áng
                                 </button>
                             </c:if>
-                            <c:if test="${statusBooking != 'Đã hủy'}">
+                            <c:if test="${statusBooking != '─É├ú hß╗ºy'}">
                                 <button type="button" id="pay-btn" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #10b981">
-                                    <i class="fas fa-wallet"></i> Thanh toán ngay
+                                    <i class="fas fa-wallet"></i> Thanh to├ín ngay
                                 </button>
                             </c:if>
-                            <c:if test="${statusBooking != 'Đã hủy' && booking.deliveryStatus != 'Đã trả'}">
+                            <c:if test="${statusBooking != '─É├ú hß╗ºy' && booking.deliveryStatus != '─É├ú trß║ú'}">
                                 <button type="button" id="extension" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #3b82f6" onclick="openExtensionForm()">
-                                    <i class="fas fa-calendar-plus"></i> Gia hạn thời gian
+                                    <i class="fas fa-calendar-plus"></i> Gia hß║ín thß╗¥i gian
                                 </button>
                             </c:if>
-                            <c:if test="${statusBooking == 'Đã hủy' || booking.deliveryStatus == 'Đã trả'}">
+                            <c:if test="${statusBooking == '─É├ú hß╗ºy' || booking.deliveryStatus == '─É├ú trß║ú'}">
                                 <button type="button" id="rebook-btn" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #f59e0b" onclick="openBooking()">
-                                    <i class="fas fa-redo"></i> Đặt thuê xe lại
+                                    <i class="fas fa-redo"></i> ─Éß║╖t thu├¬ xe lß║íi
                                 </button>
                             </c:if>
                             <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #1e293b" onclick="closeDetail()">
-                                <i class="fas fa-chevron-left"></i> Quay về danh sách
+                                <i class="fas fa-chevron-left"></i> Quay vß╗ü danh s├ích
                             </button>
                         </div>
 
@@ -476,14 +381,14 @@
                     <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center text-green-500">
                         <i class="fas fa-wallet text-base"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800">Thanh toán đơn hàng #${booking.bookingID}</h3>
+                    <h3 class="text-xl font-bold text-gray-800">Thanh to├ín ─æ╞ín h├áng #${booking.bookingID}</h3>
                 </div>
                 <div class="w-full relative" style="height: 580px;">
                     <iframe id="paymentIframe" src="sepay_pay.jsp" style="width: 100%; height: 100%; border: none; border-radius: 12px;"></iframe>
                     <!-- Overlay for iframe communications -->
                     <div id="payment-loading" style="display: none; z-index: 10000;" class="absolute inset-0 bg-white/85 flex flex-col items-center justify-center gap-3">
                         <div class="w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-                        <p class="text-gray-600 text-sm font-semibold">Đang kết nối cổng thanh toán SePay VietQR...</p>
+                        <p class="text-gray-600 text-sm font-semibold">─Éang kß║┐t nß╗æi cß╗òng thanh to├ín SePay VietQR...</p>
                     </div>
                 </div>
             </div>
@@ -497,17 +402,17 @@
                     <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-exclamation-triangle text-red-500 text-lg"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Xác Nhận Hủy Đơn</h3>
-                    <p class="text-gray-500 text-sm mb-4">Bạn có chắc chắn muốn hủy đơn này hay không? <br><span class="font-semibold text-gray-700">SMARTRIDE</span> muốn biết lý do hủy đơn của bạn.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">X├íc Nhß║¡n Hß╗ºy ─É╞ín</h3>
+                    <p class="text-gray-500 text-sm mb-4">Bß║ín c├│ chß║»c chß║»n muß╗æn hß╗ºy ─æ╞ín n├áy hay kh├┤ng? <br><span class="font-semibold text-gray-700">SMARTRIDE</span> muß╗æn biß║┐t l├╜ do hß╗ºy ─æ╞ín cß╗ºa bß║ín.</p>
                 </div>
                 <form id="cancel-form" action="cancelbooking" method="get" class="space-y-4">
                     <input type="hidden" id="bookingId" name="bookingId" value="${booking.bookingID}">
                     <div>
-                        <textarea required name="cancelreason" id="cancelReason" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50" placeholder="Nhập lý do hủy đơn của bạn..."></textarea>
+                        <textarea required name="cancelreason" id="cancelReason" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50" placeholder="Nhß║¡p l├╜ do hß╗ºy ─æ╞ín cß╗ºa bß║ín..."></textarea>
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-                        <button type="button" class="px-5 py-2 border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 font-bold text-sm transition-colors cursor-pointer" onclick="closeCancellation()">Đóng</button>
-                        <button type="submit" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold text-sm shadow-md shadow-red-500/10 transition-colors cursor-pointer">Gửi yêu cầu hủy</button>
+                        <button type="button" class="px-5 py-2 border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 font-bold text-sm transition-colors cursor-pointer" onclick="closeCancellation()">─É├│ng</button>
+                        <button type="submit" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold text-sm shadow-md shadow-red-500/10 transition-colors cursor-pointer">Gß╗¡i y├¬u cß║ºu hß╗ºy</button>
                     </div>
                 </form>
             </div>
@@ -521,23 +426,23 @@
                     <div class="w-10 h-10 bg-yellow-50 rounded-lg flex items-center justify-center text-yellow-500">
                         <i class="fas fa-calendar-plus text-base"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800">Thông tin gia hạn</h3>
+                    <h3 class="text-xl font-bold text-gray-800">Th├┤ng tin gia hß║ín</h3>
                 </div>
                 <c:choose>
                     <c:when test="${extension == null}">
                         <div class="text-center py-8">
-                            <p class="text-gray-400 italic">Không có thông tin gia hạn nào cho booking này.</p>
+                            <p class="text-gray-400 italic">Kh├┤ng c├│ th├┤ng tin gia hß║ín n├áo cho booking n├áy.</p>
                         </div>
                     </c:when>
                     <c:otherwise>
                         <div class="space-y-4">
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
-                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Mã đặt xe</span>
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">M├ú ─æß║╖t xe</span>
                                     <span class="text-sm font-bold text-gray-700">#${extension.bookingID}</span>
                                 </div>
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
-                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Ngày gia hạn</span>
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Ng├áy gia hß║ín</span>
                                     <span class="text-sm font-semibold text-gray-700">
                                         <c:set var="extensionDate" value="${extension.extensionDate}" />
                                         <c:set var="extYear" value="${fn:substring(extensionDate, 0, 4)}" />
@@ -552,7 +457,7 @@
                             
                             <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100 space-y-2">
                                 <div class="flex justify-between items-center text-sm border-b border-gray-200/50 pb-2">
-                                    <span class="text-gray-500 font-medium">Hạn trả trước đó:</span>
+                                    <span class="text-gray-500 font-medium">Hß║ín trß║ú tr╞░ß╗¢c ─æ├│:</span>
                                     <span class="font-semibold text-gray-700">
                                         <c:set var="previousEndDate" value="${extension.previousEndDate}" />
                                         <c:set var="prevYear" value="${fn:substring(previousEndDate, 0, 4)}" />
@@ -564,7 +469,7 @@
                                     </span>
                                 </div>
                                 <div class="flex justify-between items-center text-sm pt-1">
-                                    <span class="text-gray-500 font-medium">Hạn trả mới:</span>
+                                    <span class="text-gray-500 font-medium">Hß║ín trß║ú mß╗¢i:</span>
                                     <span class="font-bold text-yellow-600">
                                         <c:set var="newEndDate" value="${extension.newEndDate}" />
                                         <c:set var="newYear" value="${fn:substring(newEndDate, 0, 4)}" />
@@ -579,16 +484,16 @@
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
-                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Phí gia hạn</span>
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Ph├¡ gia hß║ín</span>
                                     <span class="text-sm font-bold text-green-600">
-                                        <fmt:formatNumber value="${extension.extensionFee}" pattern="#,##0" /> VNĐ
+                                        <fmt:formatNumber value="${extension.extensionFee}" pattern="#,##0" /> VN─É
                                     </span>
                                 </div>
                                 <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100">
-                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Tổng tiền mới</span>
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Tß╗òng tiß╗ün mß╗¢i</span>
                                     <span class="text-sm font-bold text-yellow-600">
                                         <c:set var="total" value="${total + extension.extensionFee}" />
-                                        <fmt:formatNumber value="${total}" pattern="#,##0" /> VNĐ
+                                        <fmt:formatNumber value="${total}" pattern="#,##0" /> VN─É
                                     </span>
                                 </div>
                             </div>
@@ -596,7 +501,7 @@
                     </c:otherwise>
                 </c:choose>
                 <div class="flex justify-end pt-6 mt-6 border-t border-gray-100">
-                    <button type="button" class="px-5 py-2 hover:bg-gray-900 text-white rounded-xl font-bold text-sm shadow-md transition-colors cursor-pointer border-0" style="background-color: #1f2937;" onclick="closeExtension()">Đồng ý</button>
+                    <button type="button" class="px-5 py-2 hover:bg-gray-900 text-white rounded-xl font-bold text-sm shadow-md transition-colors cursor-pointer border-0" style="background-color: #1f2937;" onclick="closeExtension()">─Éß╗ông ├╜</button>
                 </div>
             </div>
         </div>
@@ -711,15 +616,15 @@
                         closePaymentModal();
                         
                         // Show success alert and reload
-                        alert("Thanh toán thành công! Hệ thống sẽ cập nhật trạng thái đơn hàng của bạn.");
+                        alert("Thanh to├ín th├ánh c├┤ng! Hß╗ç thß╗æng sß║╜ cß║¡p nhß║¡t trß║íng th├íi ─æ╞ín h├áng cß╗ºa bß║ín.");
                         window.location.reload();
                     } else {
-                        alert("Lỗi khi cập nhật thanh toán: " + data.message);
+                        alert("Lß╗ùi khi cß║¡p nhß║¡t thanh to├ín: " + data.message);
                     }
                 })
                 .catch(err => {
-                    console.error("Lỗi:", err);
-                    alert("Đã xảy ra lỗi trong quá trình cập nhật thanh toán.");
+                    console.error("Lß╗ùi:", err);
+                    alert("─É├ú xß║úy ra lß╗ùi trong qu├í tr├¼nh cß║¡p nhß║¡t thanh to├ín.");
                 });
             }
 
@@ -825,8 +730,8 @@
                             <i class="fas fa-calendar-plus text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-800">Gia hạn thời gian thuê xe</h3>
-                            <p class="text-sm text-gray-500 font-medium">Hoàn tất gia hạn nhanh chóng qua SmartRide</p>
+                            <h3 class="text-xl font-bold text-gray-800">Gia hß║ín thß╗¥i gian thu├¬ xe</h3>
+                            <p class="text-sm text-gray-500 font-medium">Ho├án tß║Ñt gia hß║ín nhanh ch├│ng qua SmartRide</p>
                         </div>
                     </div>
                     <button onclick="closeExtensionFormModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-400 hover:text-gray-600 transition-colors">
@@ -835,13 +740,13 @@
                 </div>
                 <!-- Body (iframe) -->
                 <div class="flex-1 w-full bg-gray-50 overflow-hidden relative" style="min-height: 75vh;">
-                    <iframe id="extend-iframe" src="" class="w-full h-full border-none absolute inset-0" title="Gia Hạn Xe"></iframe>
+                    <iframe id="extend-iframe" src="" class="w-full h-full border-none absolute inset-0" title="Gia Hß║ín Xe"></iframe>
                 </div>
             </div>
         </div>
 
-        <%-- ========== REAL-TIME GPS TRACKING (chạy khi xe đang được giao cho khách) ========== --%>
-        <c:if test="${statusBooking == 'Đã xác nhận' && booking.deliveryStatus == 'Đã giao'}">
+        <%-- ========== REAL-TIME GPS TRACKING (chß║íy khi xe ─æang ─æ╞░ß╗úc giao cho kh├ích) ========== --%>
+        <c:if test="${statusBooking == '─É├ú x├íc nhß║¡n' && booking.deliveryStatus == '─É├ú giao'}">
         <script>
         (function() {
             var BOOKING_ID    = '${booking.bookingID}';
@@ -852,11 +757,11 @@
             var watchId       = null;
             var indicator     = null;
 
-            // Tạo indicator nhỏ ở góc màn hình
+            // Tß║ío indicator nhß╗Å ß╗ƒ g├│c m├án h├¼nh
             function createIndicator() {
                 indicator = document.createElement('div');
                 indicator.id = 'gps-track-indicator';
-                indicator.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:6px;animation:gpsPulse 1.5s infinite;"></span>Đang chia sẻ vị trí';
+                indicator.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:6px;animation:gpsPulse 1.5s infinite;"></span>─Éang chia sß║╗ vß╗ï tr├¡';
                 indicator.style.cssText = 'position:fixed;bottom:18px;right:18px;z-index:99999;background:rgba(0,0,0,0.75);color:#fff;font-size:12px;padding:7px 14px;border-radius:20px;display:flex;align-items:center;font-family:sans-serif;';
                 var style = document.createElement('style');
                 style.textContent = '@keyframes gpsPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}';
@@ -869,7 +774,7 @@
                 indicator.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + color + ';margin-right:6px;"></span>' + text;
             }
 
-            // Gửi tọa độ lên server
+            // Gß╗¡i tß╗ìa ─æß╗Ö l├¬n server
             function sendLocation(lat, lon) {
                 var fd = new URLSearchParams();
                 fd.append('bookingId',    BOOKING_ID);
@@ -885,20 +790,20 @@
                 })
                 .then(function(r){ return r.json(); })
                 .then(function(d){
-                    if (d.ok) setIndicator('Đang chia sẻ vị trí', '#22c55e');
-                    else      setIndicator('Lỗi gửi vị trí', '#ef4444');
+                    if (d.ok) setIndicator('─Éang chia sß║╗ vß╗ï tr├¡', '#22c55e');
+                    else      setIndicator('Lß╗ùi gß╗¡i vß╗ï tr├¡', '#ef4444');
                 })
-                .catch(function(){ setIndicator('Mất kết nối', '#f59e0b'); });
+                .catch(function(){ setIndicator('Mß║Ñt kß║┐t nß╗æi', '#f59e0b'); });
             }
 
-            // Bắt đầu watch
+            // Bß║»t ─æß║ºu watch
             function startTracking() {
                 if (!navigator.geolocation) {
-                    alert("Điện thoại của bạn không hỗ trợ GPS.");
+                    alert("─Éiß╗çn thoß║íi cß╗ºa bß║ín kh├┤ng hß╗ù trß╗ú GPS.");
                     return;
                 }
                 createIndicator();
-                setIndicator('Đang kết nối GPS...', '#f59e0b');
+                setIndicator('─Éang kß║┐t nß╗æi GPS...', '#f59e0b');
                 watchId = navigator.geolocation.watchPosition(
                     function(pos) {
                         var alertBox = document.getElementById('gps-warning-banner');
@@ -906,12 +811,12 @@
                         sendLocation(pos.coords.latitude, pos.coords.longitude);
                     },
                     function(err) {
-                        setIndicator('Chưa cấp quyền GPS', '#ef4444');
+                        setIndicator('Ch╞░a cß║Ñp quyß╗ün GPS', '#ef4444');
                         if (!document.getElementById('gps-warning-banner')) {
                             var banner = document.createElement('div');
                             banner.id = 'gps-warning-banner';
                             banner.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#ef4444;color:white;text-align:center;padding:15px;z-index:999999;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1);';
-                            banner.innerHTML = '<i class="fas fa-exclamation-triangle"></i> BẮT BUỘC: Bạn đang trong thời gian thuê xe. Vui lòng bật Vị trí (GPS) trên trình duyệt để tiếp tục!';
+                            banner.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Bß║«T BUß╗ÿC: Bß║ín ─æang trong thß╗¥i gian thu├¬ xe. Vui l├▓ng bß║¡t Vß╗ï tr├¡ (GPS) tr├¬n tr├¼nh duyß╗çt ─æß╗â tiß║┐p tß╗Ñc!';
                             document.body.prepend(banner);
                         }
                     },

@@ -29,8 +29,11 @@ public class BookingHistoryServlet extends HttpServlet {
 
         Account acc = (Account) session.getAttribute("account");
         String statusBooking = request.getParameter("status");
+        if (statusBooking == null) {
+            statusBooking = "all";
+        }
         String deliveryStatus = null;
-        if (statusBooking.equals("confirmed")) {
+        if ("confirmed".equals(statusBooking)) {
             deliveryStatus = request.getParameter("deliveryStatus");
         }
         if (deliveryStatus == null) {
