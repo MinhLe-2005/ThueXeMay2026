@@ -2565,7 +2565,7 @@
                                         </div>
                                         <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; font-weight:600; color:#333;">
                                             <input type="checkbox" id="daily-checkbox-term" style="width:18px; height:18px; accent-color:#b59349; cursor:pointer;" />
-                                            Tôi đã đọc và đồng ý với <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('terms-modal').style.display='flex'">Điều khoản</span> &amp; <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="openContractModal()">Hợp đồng thuê xe điện tử</span>
+                                            Tôi đã đọc và đồng ý với <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('terms-modal').style.display='flex'">Điều khoản dịch vụ</span>
                                         </label>
                                     </div>
 

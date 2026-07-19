@@ -11,7 +11,7 @@ public class FileUploaded {
     }
 
     public String handleFileUpload(Part part, String fileName) throws IOException {
-        return handleFileUpload(part, fileName, "images");
+        return handleFileUpload(part, fileName, "motor-images");
     }
 
     public String handleFileUpload(Part part, String fileName, String bucketName) throws IOException {
