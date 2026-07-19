@@ -303,6 +303,7 @@
                                                     <c:forEach items="${booking.listBookingDetails}" var="detail">
                                                         <c:set var="total" value="${total + detail.totalPrice}"/>
                                                     </c:forEach>
+                                                    <c:set var="total" value="${total + (booking.deliveryFee != null ? booking.deliveryFee : 0)}" />
                                                     <fmt:formatNumber value="${total}" pattern="#,##0" /> VNĐ
                                                 </p>
                                             </div>
