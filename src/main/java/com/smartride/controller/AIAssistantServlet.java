@@ -18,8 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "AIAssistantServlet", urlPatterns = {"/aiAssistant"})
 public class AIAssistantServlet extends HttpServlet {
 
-    // THAY THẾ CHUỖI NÀY BẰNG API KEY CỦA BẠN (LẤY TỪ GOOGLE AI STUDIO)
-    private static final String GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
+    // Lấy API Key từ biến môi trường (Environment Variable)
+    private static final String GEMINI_API_KEY = System.getenv("GEMINI_API_KEY");
     private static final String GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
 
     @Override
@@ -40,8 +40,8 @@ public class AIAssistantServlet extends HttpServlet {
             return;
         }
 
-        if ("YOUR_GEMINI_API_KEY_HERE".equals(GEMINI_API_KEY)) {
-            out.print("{\"message\": \"[LỖI]: Tính năng AI đang bị thiếu API Key. Vui lòng mở file AIAssistantServlet.java và thêm Google Gemini API Key vào dòng 22 để kích hoạt AI nhé!\", \"categoryId\": null}");
+        if (GEMINI_API_KEY == null || GEMINI_API_KEY.trim().isEmpty()) {
+            out.print("{\"message\": \"[LỖI]: Hệ thống chưa được cấu hình biến môi trường GEMINI_API_KEY trên máy chủ. Vui lòng thiết lập để AI hoạt động!\", \"categoryId\": null}");
             out.flush();
             return;
         }
