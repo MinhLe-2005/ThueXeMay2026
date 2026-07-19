@@ -703,7 +703,7 @@
                                         <div class="container-fluid" id="order-details">
                                     <input type="hidden" id="modal-cusId">
                                     <div class="row" style="background: #ffffff; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 24px;">
-                                        <div class="col-md-6 border-end">
+                                        <div class="col-md-6 border-end pe-4">
                                             <div style="margin-bottom: 16px; display: flex; align-items: baseline;">
                                                 <span style="color: #64748b; font-weight: 600; width: 160px; display: inline-block;"><i class="fas fa-hashtag text-slate-400 me-2" style="color:#94a3b8; width: 16px;"></i>Mã đơn:</span>
                                                 <span style="color: #0f172a; font-weight: 700; background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-family: monospace; letter-spacing: 0.5px;" id="modal-bookingId"></span>
@@ -725,7 +725,7 @@
                                                 <span style="color: #0f172a; font-weight: 500;" id="modal-endDate"></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 ps-4">
+                                        <div class="col-md-6 ps-md-4 ps-0 mt-3 mt-md-0">
                                             <div style="margin-bottom: 16px; display: flex; align-items: baseline;">
                                                 <span style="color: #64748b; font-weight: 600; width: 160px; display: inline-block;"><i class="fas fa-cubes text-slate-400 me-2" style="color:#94a3b8; width: 16px;"></i>Số lượng xe:</span>
                                                 <span style="color: #0f172a; font-weight: 600; background: #eff6ff; color: #2563eb; padding: 2px 10px; border-radius: 12px;" id="modal-countMotorcycle"></span>
@@ -1150,8 +1150,22 @@
             }
             
             modal.find('#modal-statusBooking').html(sBHtml);
-            modal.find('#modal-deliveryLocation').text(button.getAttribute('data-deliveryLocation'));
-            modal.find('#modal-returnedLocation').text(button.getAttribute('data-returnedLocation'));
+            function cleanLocation(loc) {
+                if (!loc) return '';
+                if (loc.includes('Your own address')) {
+                    // Trích xuất phần địa chỉ thực từ chuỗi
+                    // Ví dụ: "Your own address (Phí giao xe: 25000đ)" → "Địa chỉ tự nhập"
+                    // Ví dụ: "Đường XYZ (Your own address - Phí giao xe: 25000đ)" → "Đường XYZ"
+                    var cleaned = loc.replace(/Your own address/gi, 'Địa chỉ tự nhập')
+                                     .replace(/\(Phí giao xe:.*?\)/gi, '')
+                                     .replace(/\(Phi giao xe:.*?\)/gi, '')
+                                     .trim();
+                    return cleaned;
+                }
+                return loc;
+            }
+            modal.find('#modal-deliveryLocation').text(cleanLocation(button.getAttribute('data-deliveryLocation')));
+            modal.find('#modal-returnedLocation').text(cleanLocation(button.getAttribute('data-returnedLocation')));
             modal.find('#modal-deliveryStatus').html(dSHtml);
             modal.find('#modal-countMotorcycle').text(button.getAttribute('data-countMotorcycle'));
             modal.find('#modal-nameMotorcycle').html(button.getAttribute('data-nameMotorcycle'));
