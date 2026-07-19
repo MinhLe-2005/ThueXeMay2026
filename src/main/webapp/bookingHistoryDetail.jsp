@@ -228,8 +228,115 @@
                                               </script>
                                           </c:if>
 
+                                          
+
                                           <c:if test="${false}">
-                                              <!-- GPS DEMO BLOCK -->
+                                              <div class="mt-4 pt-4 border-t border-gray-100 flex items-start gap-4">
+                                                  <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                                                      <i class="fas fa-times-circle text-red-500 text-lg"></i>
+                                                  </div>
+                                                  <div>
+                                                      <p class="text-xs text-gray-400 font-bold uppercase mb-1">Lý do hủy đơn</p>
+                                                      <p class="text-base text-red-700 font-medium"></p>
+                                                  </div>
+                                              </div>
+                                          </c:if>
+                                      </div>
+                                  </div>
+                              </div>
+                              </div>
+                          
+                            <!-- Column 2: Chi tiß║┐t xe -->
+                            <div class="flex flex-col h-full">
+                                
+                                <!-- Card: Chi tiß║┐t Xe -->
+                                <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 relative overflow-hidden flex-1">
+                                    <h4 class="text-lg font-extrabold text-gray-800 mb-5 flex items-center">
+                                        <i class="fas fa-motorcycle text-yellow-500 mr-3 text-xl"></i> Chi tiß║┐t ph╞░╞íng tiß╗çn
+                                    </h4>
+                                    
+                                    <div class="space-y-3 mb-5">
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-gray-500 font-medium">M├ú ─æ╞ín h├áng:</span>
+                                            <span class="font-bold text-gray-800 bg-gray-100 px-2 py-1 rounded">#${booking.bookingID}</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-gray-500 font-medium">Thß╗¥i gian tß║ío:</span>
+                                            <span class="font-semibold text-gray-700">${bookingDay}-${bookingMonth}-${bookingYear} ${bookingHour}:${bookingMinute}</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="text-gray-500 font-medium">Tß╗òng sß╗æ l╞░ß╗úng xe:</span>
+                                            <span class="font-bold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-md border border-yellow-100">${fn:length(booking.listBookingDetails)} xe</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                                        <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-3">C├íc ph╞░╞íng tiß╗çn ─æ├ú thu├¬</p>
+                                        <div class="flex flex-wrap gap-2.5">
+                                            <c:forEach var="entry" items="${motorcycleDetails}" varStatus="loop">
+                                                <div class="bg-white border border-gray-200 shadow-sm text-gray-800 px-3 py-1.5 rounded-lg text-sm font-bold flex items-center gap-2">
+                                                    <span>${entry.key}</span>
+                                                    <span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-xs">x${entry.value}</span>
+                                                </div>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Column 3: Tß╗òng kß║┐t thanh to├ín -->
+                            <div class="flex flex-col h-full">
+                                <!-- Card: Tß╗òng kß║┐t thanh to├ín -->
+                                <div class="bg-gray-900 rounded-2xl p-6 relative overflow-hidden text-white shadow-xl shadow-gray-900/10 flex-1">
+                                    <div class="absolute -right-6 -top-6 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+                                    <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-yellow-500/20 rounded-full blur-2xl"></div>
+                                    
+                                    <h4 class="text-lg font-extrabold text-white mb-5 flex items-center relative z-10">
+                                        <i class="fas fa-file-invoice-dollar text-yellow-400 mr-3 text-xl"></i> Tß╗òng kß║┐t thanh to├ín
+                                    </h4>
+                                    
+                                    <div class="space-y-4 relative z-10">
+                                        <div class="flex justify-between items-end border-b border-white/10 pb-5">
+                                            <div>
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Tß╗òng tiß╗ün thu├¬ xe</p>
+                                                <p class="text-3xl font-black text-white tracking-tight" id="total-price">
+                                                    <c:set var="total" value="0"/>
+                                                    <c:forEach items="${booking.listBookingDetails}" var="detail">
+                                                        <c:set var="total" value="${total + detail.totalPrice}"/>
+                                                    </c:forEach>
+                                                    <c:set var="total" value="${total + (booking.deliveryFee != null ? booking.deliveryFee : 0)}" />
+                                                    <fmt:formatNumber value="${total}" pattern="#,##0" /> VN─É
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-between items-center pt-1 border-b border-white/10 pb-4">
+                                            <div>
+                                                <c:set var="paidAmount" value="${empty payment ? 0 : payment.paymentAmount}" />
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiß╗ün cß╗ìc (${paidAmount > 0 ? '─É├ú thanh to├ín' : 'Ch╞░a thanh to├ín'})</p>
+                                                <p class="text-2xl font-bold ${paidAmount > 0 ? 'text-green-400' : 'text-yellow-400'}" id="amount-paid">
+                                                    <fmt:formatNumber value="${paidAmount}" pattern="#,##0" /> VN─É
+                                                </p>
+                                            </div>
+                                            <div class="w-12 h-12 rounded-full ${paidAmount > 0 ? 'bg-green-500/20 border-green-500/30 text-green-400' : 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400'} flex items-center justify-center border">
+                                                <i class="fas ${paidAmount > 0 ? 'fa-check' : 'fa-clock'} text-lg"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-between items-center pt-1">
+                                            <div>
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Sß╗æ tiß╗ün cß║ºn thanh to├ín th├¬m</p>
+                                                <p class="text-xl font-bold text-rose-400">
+                                                    <fmt:formatNumber value="${total - paidAmount}" pattern="#,##0" /> VN─É
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <!-- Column 4: Định vị GPS -->
+                            <div class="flex flex-col h-full">
+                                <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 relative overflow-hidden flex-1">
+<!-- GPS DEMO BLOCK -->
                                               <div class="mt-4 pt-4 border-t border-gray-100">
                                                   <div class="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl relative overflow-hidden">
                                                       <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100 rounded-bl-full -z-0 opacity-50"></div>
@@ -322,24 +429,9 @@
                                                   }
                                               });
                                               </script>
-                                          </c:if>
-
-                                          <c:if test="${false}">
-                                              <div class="mt-4 pt-4 border-t border-gray-100 flex items-start gap-4">
-                                                  <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
-                                                      <i class="fas fa-times-circle text-red-500 text-lg"></i>
-                                                  </div>
-                                                  <div>
-                                                      <p class="text-xs text-gray-400 font-bold uppercase mb-1">Lý do hủy đơn</p>
-                                                      <p class="text-base text-red-700 font-medium"></p>
-                                                  </div>
-                                              </div>
-                                          </c:if>
-                                      </div>
-                                  </div>
-                              </div>
-                              </div>
-                          </div>
+                                </div>
+                            </div>
+                            </div>
 
                           <!-- Mini Extension Info Link --><!-- Mini Extension Info Link -->
                         <div class="mb-8 text-right relative z-50">
@@ -987,6 +1079,9 @@
                 });
                 
                 let container = $('#chat-messages-container');
+                if (window.lastChatHtml !== html) {
+                    window.lastChatHtml = html;
+                    
                 let shouldScroll = container[0].scrollHeight - container.scrollTop() <= container.outerHeight() + 50;
                 
                 container.html(html);
@@ -995,6 +1090,7 @@
                     container.scrollTop(container[0].scrollHeight);
                 }
             })
+                }
             .catch(console.error);
         }
 
