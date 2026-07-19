@@ -228,6 +228,10 @@
             <i class="bi bi-geo-alt-fill" id="iconGps"></i>
             <span id="textGps">BẮT ĐẦU<br>TRUYỀN PHÁT</span>
         </div>
+        
+        <button id="btnTestFar" style="margin-top: 20px; padding: 12px 25px; border-radius: 50px; border: none; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-weight: 700; cursor: pointer; display: none; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); font-size: 14px; letter-spacing: 0.5px;">
+            <i class="bi bi-rocket-takeoff me-2"></i> THỬ NGHIỆM > 50KM (ĐI HUẾ)
+        </button>
 
         <!-- Status Panel -->
         <div class="status-box">
@@ -343,6 +347,7 @@
             textGps.innerHTML = "ĐANG PHÁT<br>CHẠM ĐỂ DỪNG";
             inputBookingId.disabled = true;
             inputCustomerName.disabled = true;
+            document.getElementById('btnTestFar').style.display = 'block';
             pingCount = 0;
             valPing.textContent = '0';
         }
@@ -363,6 +368,7 @@
             textGps.innerHTML = "BẮT ĐẦU<br>TRUYỀN PHÁT";
             inputBookingId.disabled = false;
             inputCustomerName.disabled = false;
+            document.getElementById('btnTestFar').style.display = 'none';
             
             valLat.textContent = "--.------";
             valLng.textContent = "--.------";
@@ -402,6 +408,19 @@
             })
             .catch(err => console.error("Error sending GPS to server:", err));
         }
+
+        document.getElementById('btnTestFar').addEventListener('click', () => {
+            if(isTracking) {
+                // Hue coordinates (> 50km from Da Nang)
+                let fakeCoords = {
+                    latitude: 16.463713,
+                    longitude: 107.590530,
+                    accuracy: 5
+                };
+                sendLocationToServer(fakeCoords);
+                alert("Đã gửi tọa độ ảo giả lập khách đi tới Huế (Cách ĐN >90km)!\n\nHãy mở bản đồ Admin để xem cảnh báo Đỏ nhé!");
+            }
+        });
     </script>
 </body>
 </html>
