@@ -3588,7 +3588,7 @@
                                     </div>
                                     <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:1px dashed #e0c87a;">
                                         <h4 style="margin:0; font-size:16px; color:#333; font-weight:600;">Tổng thanh toán:</h4>
-                                        <h4 style="margin:0; font-size:16px; color:#333; font-weight:600;">₫` + finalAmount.toLocaleString() + `</h4>
+                                        <h4 id="true-total-amount" style="margin:0; font-size:16px; color:#333; font-weight:600;">₫` + finalAmount.toLocaleString('vi-VN') + `</h4>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:2px solid #b59349;">
                                         <div style="margin:0;">
@@ -3607,7 +3607,7 @@
                                     ` + deliveryHtml + `
                                     <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:1px dashed #e0c87a;">
                                         <h4 style="margin:0; font-size:16px; color:#333; font-weight:600;">Tổng thanh toán:</h4>
-                                        <h4 style="margin:0; font-size:16px; color:#333; font-weight:600;">₫` + finalAmount.toLocaleString() + `</h4>
+                                        <h4 id="true-total-amount" style="margin:0; font-size:16px; color:#333; font-weight:600;">₫` + finalAmount.toLocaleString('vi-VN') + `</h4>
                                     </div>
                                     <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-top:10px; padding-top:10px; border-top:2px solid #b59349;">
                                         <div style="margin:0;">
@@ -4495,7 +4495,8 @@
             var identityCard = document.getElementById("identityCard").value;
             var issuedon = document.getElementById("issuedon").value;
             var expdate = document.getElementById("expdate").value;
-            var total = document.getElementById("dataInput").textContent.trim();
+            var totalEl = document.getElementById("true-total-amount");
+            var total = totalEl ? totalEl.textContent.trim() : document.getElementById("dataInput").textContent.trim();
             
             
             // Chuyển các chuỗi ngày thành đối tượng Date
@@ -4536,25 +4537,7 @@
             console.log(bikeDetails);
             console.log(accessoriesData);
             console.log(fistname);
-            const distanceMap = {
-                "Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng": 0,
-                "Ga Đà Nẵng - Số 202 đường Hải Phòng": 0,
-                "Bệnh viện Đà Nẵng - 124 Hải Phòng": 1,
-                "Chợ Hàn - 119 Trần Phú": 2,
-                "Phố đi bộ Bạch Đằng - Bạch Đằng": 2,
-                "Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng": 3,
-                "Cầu Rồng - Trần Hưng Đạo": 3,
-                "Vincom Plaza - 910A Ngô Quyền": 4,
-                "Lotte Mart - 6 Nại Nam": 5,
-                "Bến xe Trung tâm - 33 Tôn Đức Thắng": 6,
-                "Ngũ Hành Sơn - Huyền Trân Công Chúa": 12,
-                "Your own address": 8 // Mặc định 8km cho địa chỉ tự nhập
-            };
-            let distP = distanceMap[pickupLocation] !== undefined ? distanceMap[pickupLocation] : 0;
-            let distR = distanceMap[returnLocation] !== undefined ? distanceMap[returnLocation] : 0;
-            let totalDist = distP + distR;
-            let deliveryFee = 0;
-            if (totalDist > 3) deliveryFee = (totalDist - 3) * 5000;
+            let deliveryFee = window.deliveryFee || 0;
             
             if (deliveryFee > 0) {
                 pickupLocation += " (Phí giao xe: " + deliveryFee + "đ)";
