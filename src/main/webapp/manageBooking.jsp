@@ -1837,7 +1837,7 @@ function showHandoverModal() {
         $('#handover-qr-note').text(note);
         
         // VCB 0943515000 as configured in sepay_pay.jsp
-        var qrUrl = 'https://qr.sepay.vn/img?bank=MBB&acc=0943515000&template=compact&amount=' + totalAmount + '&des=' + encodeURIComponent(note);
+        var qrUrl = 'https://qr.sepay.vn/img?bank=MB&acc=0943515000&template=compact&amount=' + totalAmount + '&des=' + encodeURIComponent(note);
         $('#handover-qr-img').attr('src', qrUrl);
         
         // Start polling

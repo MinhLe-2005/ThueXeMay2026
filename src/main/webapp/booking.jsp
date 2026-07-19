@@ -3506,19 +3506,19 @@
                             let returnLoc = document.getElementById('returnlocation') ? document.getElementById('returnlocation').value : '';
                             
                             let distPickup = 0;
-                            if (pickupLoc === 'Your own address') {
+                            if (distanceMap[pickupLoc] === undefined) {
                                 let datasetDist = document.getElementById('custom_pickup_input').dataset.dist;
-                                distPickup = datasetDist ? parseFloat(datasetDist) : 8;
+                                distPickup = datasetDist ? parseFloat(datasetDist) : (pickupLoc ? 8 : 0);
                             } else {
-                                distPickup = distanceMap[pickupLoc] !== undefined ? distanceMap[pickupLoc] : 0;
+                                distPickup = distanceMap[pickupLoc];
                             }
                             
                             let distReturn = 0;
-                            if (returnLoc === 'Your own address') {
+                            if (distanceMap[returnLoc] === undefined) {
                                 let datasetDist = document.getElementById('custom_return_input').dataset.dist;
-                                distReturn = datasetDist ? parseFloat(datasetDist) : 8;
+                                distReturn = datasetDist ? parseFloat(datasetDist) : (returnLoc ? 8 : 0);
                             } else {
-                                distReturn = distanceMap[returnLoc] !== undefined ? distanceMap[returnLoc] : 0;
+                                distReturn = distanceMap[returnLoc];
                             }
                             
                             // Tổng khoảng cách cần giao + nhận (chỉ tính 1 chiều đi từ cửa hàng)
@@ -4228,7 +4228,7 @@
                     document.getElementById('sepay-transfer-note').textContent = bookingId;
                     document.getElementById('sepay-amount-text').textContent = amount.toLocaleString('vi-VN') + ' ₫';
                     
-                    var qrUrl = 'https://qr.sepay.vn/img?bank=MBB&acc=0943515000&template=compact&amount=' + amount + '&des=' + encodeURIComponent(bookingId);
+                    var qrUrl = 'https://qr.sepay.vn/img?bank=MB&acc=0943515000&template=compact&amount=' + amount + '&des=' + encodeURIComponent(bookingId);
                     document.getElementById('sepay-qr-img').src = qrUrl;
                     
                     if (window.sepayInterval) clearInterval(window.sepayInterval);
