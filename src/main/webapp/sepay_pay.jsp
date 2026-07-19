@@ -1,9 +1,9 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Thanh Toán SePay VietQR</title>
+    <title>Thanh ToÃ¡n SePay VietQR</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
@@ -118,26 +118,26 @@
             </svg>
             SePay VietQR
         </div>
-        <div class="sepay-subtitle">Quét mã QR bằng ứng dụng ngân hàng</div>
+        <div class="sepay-subtitle">QuÃ©t mÃ£ QR báº±ng á»©ng dá»¥ng ngÃ¢n hÃ ng</div>
     </div>
 
     <div class="qr-box">
         <img id="qr-img" class="qr-img" src="" alt="QR Code">
         <div class="bank-info">
-            <div>Ngân hàng: <strong>Vietcombank (VCB)</strong></div>
-            <div>Số tài khoản: <strong>1037077133</strong></div>
-            <div>Số tiền: <strong class="amount-text" id="amount-text">0 ₫</strong></div>
+            <div>NgÃ¢n hÃ ng: <strong>MBBank (MBB)</strong></div>
+            <div>Sá»‘ tÃ i khoáº£n: <strong>0943515000</strong></div>
+            <div>Sá»‘ tiá»n: <strong class="amount-text" id="amount-text">0 â‚«</strong></div>
         </div>
     </div>
 
     <div class="note-box">
-        <div class="note-title">NỘI DUNG CHUYỂN KHOẢN (BẮT BUỘC):</div>
+        <div class="note-title">Ná»˜I DUNG CHUYá»‚N KHOáº¢N (Báº®T BUá»˜C):</div>
         <div class="note-content" id="transfer-note">BK...</div>
-        <div style="font-size: 11px; color: #16a34a; margin-top: 4px;">Hệ thống sẽ tự động xác nhận sau 5s</div>
+        <div style="font-size: 11px; color: #16a34a; margin-top: 4px;">Há»‡ thá»‘ng sáº½ tá»± Ä‘á»™ng xÃ¡c nháº­n sau 5s</div>
     </div>
 
     <div class="status-box" id="status-box">
-        ⏳ Đang chờ thanh toán...
+        â³ Äang chá» thanh toÃ¡n...
     </div>
 </div>
 
@@ -164,7 +164,7 @@
                 initPayment(amountToPay, currentBookingId);
             } else {
                 document.getElementById('status-box').className = 'status-box status-success';
-                document.getElementById('status-box').innerHTML = '✅ Đã thanh toán đủ.';
+                document.getElementById('status-box').innerHTML = 'âœ… ÄÃ£ thanh toÃ¡n Ä‘á»§.';
                 document.getElementById('payment-content').style.display = 'block';
                 setTimeout(() => {
                     window.parent.postMessage({ status: 'success' }, '*');
@@ -176,9 +176,9 @@
     function initPayment(amount, note) {
         document.getElementById('payment-content').style.display = 'block';
         document.getElementById('transfer-note').textContent = note;
-        document.getElementById('amount-text').textContent = amount.toLocaleString('vi-VN') + ' ₫';
+        document.getElementById('amount-text').textContent = amount.toLocaleString('vi-VN') + ' â‚«';
         
-        const qrUrl = 'https://qr.sepay.vn/img?bank=VCB&acc=1037077133&template=compact&amount=' + amount + '&des=' + encodeURIComponent(note);
+        const qrUrl = 'https://qr.sepay.vn/img?bank=MBB&acc=0943515000&template=compact&amount=' + amount + '&des=' + encodeURIComponent(note);
         document.getElementById('qr-img').src = qrUrl;
 
         startPolling(note);
@@ -197,7 +197,7 @@
                     if (d.status === 'paid') {
                         clearInterval(pollInterval);
                         document.getElementById('status-box').className = 'status-box status-success';
-                        document.getElementById('status-box').innerHTML = '✅ Thanh toán thành công!';
+                        document.getElementById('status-box').innerHTML = 'âœ… Thanh toÃ¡n thÃ nh cÃ´ng!';
                         
                         setTimeout(() => {
                             window.parent.postMessage({ status: 'success' }, '*');
