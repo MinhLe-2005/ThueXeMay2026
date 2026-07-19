@@ -485,9 +485,6 @@
                                     <i class="fas fa-redo"></i> Đặt thuê xe lại
                                 </button>
                             </c:if>
-                            <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #7c3aed" onclick="openContractModal()">
-                                <i class="fas fa-file-contract"></i> Xem hợp đồng
-                            </button>
                             <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #1e293b" onclick="closeDetail()">
                                 <i class="fas fa-chevron-left"></i> Quay về danh sách
                             </button>
@@ -497,125 +494,6 @@
                 </div>
             </div>
         </div>
-
-
-        <!-- ===================== HỢP ĐỒNG MODAL ===================== -->
-        <div id="contract-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.72); z-index:10000; align-items:center; justify-content:center; backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
-            <div style="background:#f1f5f9; width:95%; max-width:860px; height:92vh; border-radius:10px; display:flex; flex-direction:column; box-shadow:0 12px 48px rgba(0,0,0,0.5); overflow:hidden;">
-                <!-- Toolbar -->
-                <div style="background:#2d3035; padding:13px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1a1c20;">
-                    <div style="display:flex; align-items:center; gap:12px; color:#fff;">
-                        <i class="fas fa-file-pdf" style="color:#ef4444; font-size:20px;"></i>
-                        <span style="font-family:sans-serif; font-size:13px; letter-spacing:0.5px;">Hop_dong_thue_xe_SmartRide_#${booking.bookingID}.pdf</span>
-                    </div>
-                    <button onclick="document.getElementById('contract-modal').style.display='none'" style="background:transparent; border:none; color:#a1a1aa; cursor:pointer; font-size:22px; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#a1a1aa'"><i class="fas fa-times"></i></button>
-                </div>
-                <!-- PDF Body -->
-                <div style="flex-grow:1; overflow-y:auto; padding:30px; display:flex; justify-content:center; background:#525659; scrollbar-width:thin;">
-                    <div style="background:#fff; width:100%; max-width:710px; padding:52px 64px; box-shadow:0 5px 20px rgba(0,0,0,0.25); font-family:'Times New Roman',Times,serif; color:#000; line-height:1.65; font-size:15px;">
-                        <div style="text-align:center; margin-bottom:28px;">
-                            <div style="font-weight:bold; font-size:16px;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
-                            <div style="font-weight:bold; font-size:15px; text-decoration:underline;">Độc lập – Tự do – Hạnh phúc</div>
-                            <div style="margin-top:6px; font-style:italic; font-size:13px; color:#555;">Đà Nẵng, ngày <span id="cm-date">...</span></div>
-                        </div>
-                        <div style="text-align:center; margin-bottom:28px;">
-                            <h2 style="font-size:22px; font-weight:bold; margin:0;">HỢP ĐỒNG THUÊ XE MÁY</h2>
-                            <div style="font-style:italic; font-size:13px; color:#555;">Số: SR-${booking.bookingID} / Bản điện tử</div>
-                        </div>
-                        <p>Căn cứ theo nhu cầu thực tế và sự thỏa thuận của hai bên, hôm nay tại Đà Nẵng, chúng tôi gồm:</p>
-                        <p style="font-weight:bold; margin-top:18px; font-size:16px;">BÊN A – BÊN CHO THUÊ: CỬA HÀNG XE MÁY SMARTRIDE</p>
-                        <ul style="list-style:none; padding-left:0; margin:8px 0 18px;">
-                            <li>– <b>Địa chỉ:</b> 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng</li>
-                            <li>– <b>Điện thoại:</b> 0987.654.321</li>
-                            <li>– <b>Đại diện:</b> Ông Nguyễn Văn A (Quản lý)</li>
-                        </ul>
-                        <p style="font-weight:bold; font-size:16px;">BÊN B – BÊN THUÊ XE: <span style="text-transform:uppercase;">${booking.customer.firstName} ${booking.customer.lastName}</span></p>
-                        <ul style="list-style:none; padding-left:0; margin:8px 0 18px;">
-                            <li>– <b>CCCD/CMND:</b> ${booking.customer.identityCard}</li>
-                            <li>– <b>Điện thoại:</b> ${booking.customer.phoneNumber}</li>
-                        </ul>
-                        <p>Hai bên thống nhất ký kết hợp đồng thuê xe với các điều khoản sau:</p>
-                        <p style="font-weight:bold; margin-top:18px;">ĐIỀU 1: ĐỐI TƯỢNG HỢP ĐỒNG</p>
-                        <p>Bên A cho Bên B thuê các phương tiện sau:</p>
-                        <table style="width:100%; border-collapse:collapse; margin:10px 0 6px; font-size:14px;">
-                            <thead><tr style="background:#f3f4f6;">
-                                <th style="border:1px solid #d1d5db; padding:7px 10px; text-align:left;">Phương tiện</th>
-                                <th style="border:1px solid #d1d5db; padding:7px 10px; text-align:center;">SL</th>
-                                <th style="border:1px solid #d1d5db; padding:7px 10px; text-align:right;">Đơn giá/ngày</th>
-                                <th style="border:1px solid #d1d5db; padding:7px 10px; text-align:right;">Thành tiền</th>
-                            </tr></thead>
-                            <tbody>
-                                <c:forEach var="detail" items="${booking.listBookingDetails}">
-                                <tr>
-                                    <td style="border:1px solid #d1d5db; padding:7px 10px;">${detail.motorcycle.motorcycleName}</td>
-                                    <td style="border:1px solid #d1d5db; padding:7px 10px; text-align:center;">1</td>
-                                    <td style="border:1px solid #d1d5db; padding:7px 10px; text-align:right;"><fmt:formatNumber value="${detail.motorcycle.rentPrice}" pattern="#,##0"/>đ</td>
-                                    <td style="border:1px solid #d1d5db; padding:7px 10px; text-align:right;"><fmt:formatNumber value="${detail.totalPrice}" pattern="#,##0"/>đ</td>
-                                </tr>
-                                </c:forEach>
-                                <c:if test="${booking.deliveryFee != null && booking.deliveryFee > 0}">
-                                <tr>
-                                    <td colspan="3" style="border:1px solid #d1d5db; padding:7px 10px; font-style:italic; color:#555;">Phụ phí giao xe tận nơi</td>
-                                    <td style="border:1px solid #d1d5db; padding:7px 10px; text-align:right;"><fmt:formatNumber value="${booking.deliveryFee}" pattern="#,##0"/>đ</td>
-                                </tr>
-                                </c:if>
-                            </tbody>
-                        </table>
-                        <c:set var="ctTotal" value="0"/>
-                        <c:forEach var="d" items="${booking.listBookingDetails}"><c:set var="ctTotal" value="${ctTotal + d.totalPrice}"/></c:forEach>
-                        <c:set var="ctTotal" value="${ctTotal + (booking.deliveryFee != null ? booking.deliveryFee : 0)}"/>
-                        <p style="text-align:right; font-weight:bold; margin-top:4px;">Tổng cộng: <fmt:formatNumber value="${ctTotal}" pattern="#,##0"/> VNĐ</p>
-                        <p style="font-weight:bold; margin-top:18px;">ĐIỀU 2: THỜI GIAN THUÊ</p>
-                        <p>– <b>Nhận xe:</b> ${booking.startDate} tại <span id="cm-pickup">${booking.deliveryLocation}</span><br>
-                           – <b>Trả xe:</b> ${booking.endDate} tại <span id="cm-return">${booking.returnedLocation}</span></p>
-                        <p style="font-weight:bold; margin-top:18px;">ĐIỀU 3: TRÁCH NHIỆM BÊN A</p>
-                        <p>1. Giao xe đúng loại, đúng thời gian và địa điểm thỏa thuận.<br>
-                           2. Cung cấp đầy đủ giấy tờ xe (bản sao công chứng) và 02 mũ bảo hiểm.<br>
-                           3. Hỗ trợ cứu hộ 24/7 nếu xe gặp sự cố kỹ thuật không do lỗi Bên B.</p>
-                        <p style="font-weight:bold; margin-top:18px;">ĐIỀU 4: TRÁCH NHIỆM BÊN B</p>
-                        <p>1. Sử dụng xe đúng mục đích, chấp hành nghiêm luật giao thông đường bộ.<br>
-                           2. Không tự ý đưa xe ra ngoài bán kính 50km khi chưa được Bên A đồng ý.<br>
-                           3. Không cầm cố, thế chấp hoặc giao xe cho bên thứ ba.<br>
-                           4. Bồi thường 100% chi phí sửa chữa nếu xảy ra hư hỏng do lỗi Bên B.</p>
-                        <p style="font-weight:bold; margin-top:18px;">ĐIỀU 5: ĐIỀU KHOẢN CHUNG</p>
-                        <p>Hợp đồng điện tử này có giá trị pháp lý tương đương bản giấy. Việc Bên B xác nhận thanh toán đặt cọc qua website SmartRide đồng nghĩa với việc Bên B đã đọc, hiểu rõ và đồng ý toàn bộ điều khoản.</p>
-                        <div style="display:flex; justify-content:space-between; margin-top:48px; text-align:center;">
-                            <div style="width:45%;">
-                                <div style="font-weight:bold;">ĐẠI DIỆN BÊN B</div>
-                                <div style="font-style:italic; font-size:12px; color:#666;">(Xác nhận điện tử qua hệ thống)</div>
-                                <div style="margin-top:56px; font-weight:bold; text-transform:uppercase;">${booking.customer.firstName} ${booking.customer.lastName}</div>
-                            </div>
-                            <div style="width:45%;">
-                                <div style="font-weight:bold;">ĐẠI DIỆN BÊN A</div>
-                                <div style="font-style:italic; font-size:12px; color:#666;">(Đã ký đóng dấu)</div>
-                                <div style="margin-top:56px; font-weight:bold;">SMARTRIDE</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Footer -->
-                <div style="background:#fffbeb; padding:12px 22px; border-top:1px solid #fde68a; display:flex; justify-content:space-between; align-items:center;">
-                    <div style="font-size:13px; color:#92400e; display:flex; align-items:center; gap:8px;">
-                        <i class="fas fa-info-circle"></i> Hợp đồng chính thức sẽ được gửi vào Email sau khi hoàn tất thanh toán.
-                    </div>
-                    <button onclick="document.getElementById('contract-modal').style.display='none'" style="background:#7c3aed; color:#fff; border:none; padding:8px 26px; border-radius:7px; font-weight:bold; cursor:pointer; font-size:13px;">Đóng</button>
-                </div>
-            </div>
-        </div>
-        <script>
-        function openContractModal() {
-            // Dịch "Your own address" → tiếng Việt
-            ['cm-pickup','cm-return'].forEach(function(id) {
-                var el = document.getElementById(id);
-                if (el) el.textContent = el.textContent.replace(/Your own address/gi, 'Địa chỉ tự nhập');
-            });
-            // Ngày hôm nay
-            var t = new Date();
-            var el = document.getElementById('cm-date');
-            if (el) el.textContent = t.getDate() + ' tháng ' + (t.getMonth()+1) + ' năm ' + t.getFullYear();
-            document.getElementById('contract-modal').style.display = 'flex';
-        }
-        </script>
 
         <!-- Payment Modal -->
         <div id="payment-modal" style="display: none; z-index: 9999;" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-65 p-4 transition-all duration-300">
