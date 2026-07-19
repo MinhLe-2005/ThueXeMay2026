@@ -112,7 +112,7 @@
                         <c:set var="endMinute" value="${fn:substring(endDate, 14, 16)}" />
 
                         <!-- Content Grid: Premium Layout -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
                             <!-- Column 1: Lịch trình -->
                             <div class="flex flex-col h-full">
                                 <!-- Card: Lịch trình -->
@@ -155,7 +155,7 @@
                                             </div>
                                             <div>
                                                 <p class="text-xs text-gray-400 font-bold uppercase mb-1">Nhận xe</p>
-                                                <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5">${booking.deliveryLocation}</p>
+                                                <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5" id="delivery-location-text">${booking.deliveryLocation}</p>
                                                 <p class="text-sm text-yellow-600 font-semibold"><i class="far fa-clock mr-1"></i> ${booking.startDate}</p>
                                             </div>
                                         </div>
@@ -165,7 +165,7 @@
                                             </div>
                                             <div>
                                                 <p class="text-xs text-gray-400 font-bold uppercase mb-1">Trả xe</p>
-                                                <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5">${booking.returnedLocation}</p>
+                                                <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5" id="return-location-text">${booking.returnedLocation}</p>
                                                 <p class="text-sm text-green-600 font-semibold"><i class="far fa-clock mr-1"></i> ${booking.endDate}</p>
                                             </div>
                                         </div>
@@ -346,6 +346,26 @@
                                                   }
                                               });
                                               </script>
+                                <script>
+                                // Dịch "Your own address" → tiếng Việt và định dạng phí giao xe
+                                (function() {
+                                    function cleanLoc(el) {
+                                        if (!el) return;
+                                        var t = el.textContent || el.innerText;
+                                        // Thay "Your own address" → "Địa chỉ tự nhập"
+                                        t = t.replace(/Your own address/gi, 'Địa chỉ tự nhập');
+                                        // Thay "(Phí giao xe: 25000d)" → "(Phí giao: 25.000đ)"
+                                        t = t.replace(/\(Phí giao xe:\s*([\d]+)d?\)/gi, function(_, n) {
+                                            return '(Phí giao: ' + parseInt(n).toLocaleString('vi-VN') + 'đ)';
+                                        });
+                                        el.textContent = t;
+                                    }
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        cleanLoc(document.getElementById('delivery-location-text'));
+                                        cleanLoc(document.getElementById('return-location-text'));
+                                    });
+                                })();
+                                </script>
                                 </div>
                             </div>
                             <!-- Column 2: Chi tiết xe -->
