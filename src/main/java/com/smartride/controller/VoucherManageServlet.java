@@ -1,6 +1,7 @@
 package com.smartride.controller;
 
 import com.smartride.dao.VoucherDAO;
+import com.smartride.dao.NotificationDAO;
 import com.smartride.dao.CustomerDAO;
 import com.smartride.dto.Voucher;
 import com.smartride.dto.Customer;
@@ -18,6 +19,10 @@ public class VoucherManageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         VoucherDAO dao = VoucherDAO.getInstance();
         List<Voucher> vouchers = dao.getAllVouchers();
+        
+        for (Voucher v : vouchers) {
+            v.setPublished(NotificationDAO.getInstance().isVoucherPublished(v.getCode()));
+        }
         
         request.setAttribute("vouchers", vouchers);
         request.getRequestDispatcher("manageVoucher.jsp").forward(request, response);

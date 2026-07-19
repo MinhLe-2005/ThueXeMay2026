@@ -51,6 +51,32 @@ public class VoucherDAO implements Serializable {
         return null;
     }
 
+    public Voucher getVoucherById(int voucherId) {
+        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\", \"UsageLimit\", \"UsedCount\", \"MaxUsagePerCustomer\" "
+                   + "FROM \"Voucher\" "
+                   + "WHERE \"VoucherID\" = ?";
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, voucherId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Voucher v = new Voucher();
+                    v.setVoucherId(rs.getInt("VoucherID"));
+                    v.setCode(rs.getString("Code"));
+                    v.setDiscountAmount(rs.getDouble("DiscountAmount"));
+                    v.setDescription(rs.getString("Description"));
+                    v.setCreatedTime(rs.getString("CreatedTime"));
+                    v.setStatus(rs.getString("Status"));
+                    // Using default 0 for optional fields if not fetched
+                    return v;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Check if a voucher is currently valid (active) by its ID.
      */
@@ -183,6 +209,37 @@ public class VoucherDAO implements Serializable {
             ps.setInt(1, voucherId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Create a personal voucher for a specific customer (late delivery compensation)
+    public boolean createPersonalVoucher(String code, int accountId, double discountAmount, String description) {
+        String sql = "INSERT INTO \"Voucher\" (\"Code\", \"DiscountAmount\", \"Description\", \"Status\", \"account_id\", \"max_uses\", \"used_count\") VALUES (?, ?, ?, 'Đang hoạt động', ?, 1, 0)";
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ps.setDouble(2, discountAmount);
+            ps.setString(3, description);
+            ps.setInt(4, accountId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Check if a voucher code belongs to a specific account (for personal vouchers)
+    public boolean isVoucherOwnedByAccount(String code, int accountId) {
+        String sql = "SELECT 1 FROM \"Voucher\" WHERE \"Code\" = ? AND (\"account_id\" = ? OR \"account_id\" IS NULL) AND \"Status\" = 'Đang hoạt động'";
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ps.setInt(2, accountId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;

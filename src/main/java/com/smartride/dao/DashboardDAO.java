@@ -8,8 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -155,41 +158,77 @@ public class DashboardDAO {
         LocalDate[] range = getRange(conn, period, startDate, endDate);
         LocalDate start = range[0];
         LocalDate end = range[1];
+        long diffDays = ChronoUnit.DAYS.between(start, end);
 
         Map<String, Integer> orderMap = new LinkedHashMap<>();
         Map<String, Double> revenueMap = new LinkedHashMap<>();
         Map<String, Integer> customerMap = new LinkedHashMap<>();
 
-        LocalDate curr = start;
-        while (!curr.isAfter(end)) {
-            String dateStr = curr.toString();
-            orderMap.put(dateStr, 0);
-            revenueMap.put(dateStr, 0.0);
-            customerMap.put(dateStr, 0);
-            curr = curr.plusDays(1);
+        if (diffDays == 0) {
+            LocalDateTime currDt = start.atStartOfDay();
+            LocalDateTime endDt = end.atTime(23, 59, 59);
+            while (!currDt.isAfter(endDt)) {
+                String key = currDt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:00:00"));
+                orderMap.put(key, 0); revenueMap.put(key, 0.0); customerMap.put(key, 0);
+                currDt = currDt.plusHours(4);
+            }
+        } else if (diffDays > 31) {
+            LocalDate curr = start.withDayOfMonth(1);
+            while (!curr.isAfter(end)) {
+                orderMap.put(curr.toString(), 0); revenueMap.put(curr.toString(), 0.0); customerMap.put(curr.toString(), 0);
+                curr = curr.plusMonths(1);
+            }
+        } else if (diffDays > 7) {
+            LocalDate curr = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            while (!curr.isAfter(end)) {
+                orderMap.put(curr.toString(), 0); revenueMap.put(curr.toString(), 0.0); customerMap.put(curr.toString(), 0);
+                curr = curr.plusWeeks(1);
+            }
+        } else {
+            LocalDate curr = start;
+            while (!curr.isAfter(end)) {
+                orderMap.put(curr.toString(), 0); revenueMap.put(curr.toString(), 0.0); customerMap.put(curr.toString(), 0);
+                curr = curr.plusDays(1);
+            }
         }
 
         String dateCondition = getDateCondition(period, startDate, endDate, false);
         String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
 
-        String sql = "SELECT DATE(b.\"BookingDate\") as dt, COUNT(b.\"BookingID\") as orders, "
+        String dtSelect = "DATE(b.\"BookingDate\")";
+        if (diffDays == 0) dtSelect = "TO_CHAR(b.\"BookingDate\", 'YYYY-MM-DD\"T\"HH24:00:00')";
+        else if (diffDays > 31) dtSelect = "DATE(DATE_TRUNC('month', b.\"BookingDate\"))";
+        else if (diffDays > 7) dtSelect = "DATE(DATE_TRUNC('week', b.\"BookingDate\"))";
+
+        String sql = "SELECT " + dtSelect + " as dt, COUNT(b.\"BookingID\") as orders, "
                    + "COALESCE(SUM(p.\"PaymentAmount\"), 0) as revenue, "
                    + "COUNT(DISTINCT b.\"CustomerID\") as customers "
                    + "FROM \"Booking\" b LEFT JOIN \"Payment\" p ON b.\"BookingID\" = p.\"BookingID\" "
                    + conditionWithAlias
-                   + " GROUP BY DATE(b.\"BookingDate\") ORDER BY dt ASC";
+                   + " GROUP BY " + dtSelect;
 
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                java.sql.Date dt = rs.getDate("dt");
-                if (dt != null) {
-                    String dateStr = dt.toString();
-                    if (orderMap.containsKey(dateStr)) {
-                        orderMap.put(dateStr, rs.getInt("orders"));
-                        revenueMap.put(dateStr, rs.getDouble("revenue"));
-                        customerMap.put(dateStr, rs.getInt("customers"));
-                    }
+                String key;
+                if (diffDays == 0) {
+                    String rawDt = rs.getString("dt");
+                    if (rawDt == null) continue;
+                    LocalDateTime dt = LocalDateTime.parse(rawDt);
+                    int bucketHour = (dt.getHour() / 4) * 4;
+                    key = dt.withHour(bucketHour).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:00:00"));
+                } else {
+                    java.sql.Date dt = rs.getDate("dt");
+                    if (dt == null) continue;
+                    if (diffDays > 31) key = dt.toLocalDate().withDayOfMonth(1).toString();
+                    else if (diffDays > 7) key = dt.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toString();
+                    else key = dt.toString();
+                }
+
+                if (orderMap.containsKey(key)) {
+                    orderMap.put(key, orderMap.get(key) + rs.getInt("orders"));
+                    revenueMap.put(key, revenueMap.get(key) + rs.getDouble("revenue"));
+                    customerMap.put(key, customerMap.get(key) + rs.getInt("customers"));
                 }
             }
         } catch (SQLException e) {
@@ -201,11 +240,13 @@ public class DashboardDAO {
         List<Double> revenue = new ArrayList<>();
         List<Integer> customers = new ArrayList<>();
 
-        for (String dateStr : orderMap.keySet()) {
-            categories.add(dateStr + "T00:00:00.000Z");
-            orders.add(orderMap.get(dateStr));
-            revenue.add(revenueMap.get(dateStr));
-            customers.add(customerMap.get(dateStr));
+        for (String key : orderMap.keySet()) {
+            String dateStr = key.contains("T") ? key : key + "T00:00:00.000Z";
+            if(dateStr.endsWith("00:00")) dateStr += ".000Z"; // Fallback for diffDays == 0
+            categories.add(dateStr);
+            orders.add(orderMap.get(key));
+            revenue.add(revenueMap.get(key));
+            customers.add(customerMap.get(key));
         }
 
         return new DashboardStatsData.LineChart(categories, orders, revenue, customers);
@@ -252,7 +293,6 @@ public class DashboardDAO {
     private Map<String, Integer> getPieChart(Connection conn, String period, String startDate, String endDate) {
         Map<String, Integer> data = new LinkedHashMap<>();
         
-        // Initialize all categories in CSDL with 0 to make it look professional
         String sqlAllCats = "SELECT \"CategoryName\" FROM \"Category\" ORDER BY \"CategoryName\" ASC";
         try (PreparedStatement ps = conn.prepareStatement(sqlAllCats);
              ResultSet rs = ps.executeQuery()) {
@@ -265,7 +305,6 @@ public class DashboardDAO {
 
         String dateCondition = getDateCondition(period, startDate, endDate, false);
         String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
-        String conditionWithDelivery = conditionWithAlias.isEmpty() ? " WHERE b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') " : conditionWithAlias + " AND b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') ";
         
         String sql = "SELECT c.\"CategoryName\", COUNT(md.\"MotorcycleID\") as rentCount "
                    + "FROM \"Booking Detail\" bd "
@@ -273,7 +312,7 @@ public class DashboardDAO {
                    + "JOIN \"Motorcycle Detail\" md ON bd.\"MotorcycleDetailID\" = md.\"MotorcycleDetailID\" "
                    + "JOIN \"Motorcycle\" m ON md.\"MotorcycleID\" = m.\"MotorcycleID\" "
                    + "JOIN \"Category\" c ON m.\"CategoryID\" = c.\"CategoryID\" "
-                   + conditionWithDelivery
+                   + conditionWithAlias
                    + " GROUP BY c.\"CategoryName\"";
                    
         try (PreparedStatement ps = conn.prepareStatement(sql);
@@ -291,7 +330,6 @@ public class DashboardDAO {
         List<DashboardStatsData.TopMotorcycle> list = new ArrayList<>();
         String dateCondition = getDateCondition(period, startDate, endDate, false);
         String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
-        String conditionWithDelivery = conditionWithAlias.isEmpty() ? " WHERE b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') " : conditionWithAlias + " AND b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả') ";
         
         String sql = "SELECT m.\"Image\", m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\", COUNT(md.\"MotorcycleID\") as rentCount "
                    + "FROM \"Motorcycle\" m "
@@ -299,7 +337,7 @@ public class DashboardDAO {
                    + "JOIN \"Booking Detail\" bd ON md.\"MotorcycleDetailID\" = bd.\"MotorcycleDetailID\" "
                    + "JOIN \"Booking\" b ON bd.\"BookingID\" = b.\"BookingID\" "
                    + "JOIN \"PriceList\" p ON m.\"PriceListID\" = p.\"PriceListID\" "
-                   + conditionWithDelivery
+                   + conditionWithAlias
                    + " GROUP BY m.\"Image\", m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\" "
                    + " ORDER BY rentCount DESC";
                    

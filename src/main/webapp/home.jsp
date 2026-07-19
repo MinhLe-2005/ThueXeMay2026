@@ -435,33 +435,26 @@
                               style="background:#fff; border-radius:16px; padding:24px 28px 20px; box-shadow:0 20px 60px rgba(0,0,0,0.25); max-width:960px;"
                               onsubmit="return heroFormSubmit(event)">
 
-                            <!-- Datalist: Đà Nẵng addresses -->
-                            <datalist id="dnLocations">
-                                <option value="Ga Đà Nẵng – 791 Hải Phòng, Tam Thuận, Thanh Khê">
-                                <option value="Sân bay Quốc tế Đà Nẵng – 132 Phan Đình Phùng, Chính Gián">
-                                <option value="Bến xe Trung tâm – 33 Tôn Đức Thắng, Hải Châu">
-                                <option value="Chợ Hàn – 119 Trần Phú, Hải Châu">
-                                <option value="Vincom Plaza – 910A Ngô Quyền, Sơn Trà">
-                                <option value="Cầu Rồng – Trần Hưng Đạo, Hải Châu">
-                                <option value="Ngũ Hành Sơn – Huyền Trân Công Chúa, Ngũ Hành Sơn">
-                                <option value="Bán đảo Sơn Trà – Hoàng Sa, Sơn Trà">
-                                <option value="Đại học Bách Khoa – 54 Nguyễn Lương Bằng, Liên Chiểu">
-                                <option value="Bệnh viện Đà Nẵng – 124 Hải Phòng, Hải Châu">
-                                <option value="TTTM Lotte Mart – 6 Nại Nam, Hải Châu">
-                                <option value="Phố đi bộ Bạch Đằng – Bạch Đằng, Hải Châu">
-                            </datalist>
-
                             <div class="booking-grid" style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto; gap:12px; align-items:end;">
                                 <!-- Pickup Location -->
-                                <div>
+                                <div style="position:relative;">
                                     <label style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#888; margin-bottom:6px; display:block;">
                                         <i class="fas fa-map-marker-alt" style="color:#b59349;"></i> Địa điểm nhận xe
                                     </label>
                                     <input type="text" name="location" id="heroPickupLoc"
-                                           list="dnLocations"
                                            placeholder="Tìm hoặc nhập địa chỉ..."
                                            class="booking-input"
-                                           autocomplete="off" />
+                                           autocomplete="off"
+                                           onfocus="showLocDropdown('pickup')" />
+                                    <div id="dropdown-pickup" style="display:none; position:absolute; top:100%; left:0; min-width:320px; white-space:nowrap; background:#fff; border-radius:8px; box-shadow:0 10px 25px rgba(0,0,0,0.1); z-index:999; margin-top:4px; border:1px solid #eee; overflow:hidden;">
+                                        <div onclick="heroUseCurrentLocation('pickup')" style="padding:12px 16px; cursor:pointer; border-bottom:1px solid #f0f0f0; color:#b59349; font-weight:600; display:flex; align-items:center; gap:8px;">
+                                            <i class="fas fa-location-arrow"></i> <span id="hero-geo-text-pickup">Sử dụng vị trí hiện tại</span>
+                                        </div>
+                                        <div onclick="selectHeroLoc('pickup', 'Tại cửa hàng SmartRide - 202 Hải Phòng, Đà Nẵng')" style="padding:10px 16px; cursor:pointer; border-bottom:1px solid #f9f9f9; font-size:13px; color:#b59349; font-weight:bold;"><i class="fas fa-store" style="width:20px; text-align:center; color:#b59349;"></i> Tại cửa hàng SmartRide - 202 Hải Phòng</div>
+                                        <div onclick="selectHeroLoc('pickup', 'Ga Đà Nẵng - Số 202 đường Hải Phòng')" style="padding:10px 16px; cursor:pointer; border-bottom:1px solid #f9f9f9; font-size:13px; color:#444;"><i class="fas fa-map-marker-alt" style="width:20px; text-align:center; color:#94a3b8;"></i> Ga Đà Nẵng - 202 Hải Phòng</div>
+                                        <div onclick="selectHeroLoc('pickup', 'Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng')" style="padding:10px 16px; cursor:pointer; border-bottom:1px solid #f9f9f9; font-size:13px; color:#444;"><i class="fas fa-map-marker-alt" style="width:20px; text-align:center; color:#94a3b8;"></i> Sân bay Quốc tế Đà Nẵng</div>
+                                        <div onclick="selectHeroLoc('pickup', 'Bến xe Trung tâm - 33 Tôn Đức Thắng')" style="padding:10px 16px; cursor:pointer; border-bottom:1px solid #f9f9f9; font-size:13px; color:#444;"><i class="fas fa-map-marker-alt" style="width:20px; text-align:center; color:#94a3b8;"></i> Bến xe Trung tâm Đà Nẵng</div>
+                                    </div>
                                 </div>
                                 <!-- Pickup Date -->
                                 <div>
@@ -471,15 +464,24 @@
                                     <input type="datetime-local" name="startDate" id="heroStartDate" class="booking-input" />
                                 </div>
                                 <!-- Return Location -->
-                                <div>
+                                <div style="position:relative;">
                                     <label style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#888; margin-bottom:6px; display:block;">
                                         <i class="fas fa-map-marker-alt" style="color:#b59349;"></i> Địa điểm trả xe
                                     </label>
                                     <input type="text" name="returnLocation" id="heroReturnLoc"
-                                           list="dnLocations"
                                            placeholder="Tìm hoặc nhập địa chỉ..."
                                            class="booking-input"
-                                           autocomplete="off" />
+                                           autocomplete="off"
+                                           onfocus="showLocDropdown('return')" />
+                                    <div id="dropdown-return" style="display:none; position:absolute; top:100%; left:0; min-width:320px; white-space:nowrap; background:#fff; border-radius:8px; box-shadow:0 10px 25px rgba(0,0,0,0.1); z-index:999; margin-top:4px; border:1px solid #eee; overflow:hidden;">
+                                        <div onclick="heroUseCurrentLocation('return')" style="padding:12px 16px; cursor:pointer; border-bottom:1px solid #f0f0f0; color:#b59349; font-weight:600; display:flex; align-items:center; gap:8px;">
+                                            <i class="fas fa-location-arrow"></i> <span id="hero-geo-text-return">Sử dụng vị trí hiện tại</span>
+                                        </div>
+                                        <div onclick="selectHeroLoc('return', 'Tại cửa hàng SmartRide - 202 Hải Phòng, Đà Nẵng')" style="padding:10px 16px; cursor:pointer; border-bottom:1px solid #f9f9f9; font-size:13px; color:#b59349; font-weight:bold;"><i class="fas fa-store" style="width:20px; text-align:center; color:#b59349;"></i> Tại cửa hàng SmartRide - 202 Hải Phòng</div>
+                                        <div onclick="selectHeroLoc('return', 'Ga Đà Nẵng - Số 202 đường Hải Phòng')" style="padding:10px 16px; cursor:pointer; border-bottom:1px solid #f9f9f9; font-size:13px; color:#444;"><i class="fas fa-map-marker-alt" style="width:20px; text-align:center; color:#94a3b8;"></i> Ga Đà Nẵng - 202 Hải Phòng</div>
+                                        <div onclick="selectHeroLoc('return', 'Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng')" style="padding:10px 16px; cursor:pointer; border-bottom:1px solid #f9f9f9; font-size:13px; color:#444;"><i class="fas fa-map-marker-alt" style="width:20px; text-align:center; color:#94a3b8;"></i> Sân bay Quốc tế Đà Nẵng</div>
+                                        <div onclick="selectHeroLoc('return', 'Bến xe Trung tâm - 33 Tôn Đức Thắng')" style="padding:10px 16px; cursor:pointer; border-bottom:1px solid #f9f9f9; font-size:13px; color:#444;"><i class="fas fa-map-marker-alt" style="width:20px; text-align:center; color:#94a3b8;"></i> Bến xe Trung tâm Đà Nẵng</div>
+                                    </div>
                                 </div>
                                 <!-- Return Date -->
                                 <div>
@@ -512,6 +514,75 @@
                         </form>
                     </div>
 
+                    <script>
+                        // JS cho custom dropdown chon dia diem
+                        function showLocDropdown(type) {
+                            document.getElementById('dropdown-' + type).style.display = 'block';
+                        }
+                        function selectHeroLoc(type, value) {
+                            var inputId = type === 'pickup' ? 'heroPickupLoc' : 'heroReturnLoc';
+                            document.getElementById(inputId).value = value;
+                            document.getElementById('dropdown-' + type).style.display = 'none';
+                        }
+                        
+                        // Click ra ngoai de an dropdown
+                        document.addEventListener('click', function(e) {
+                            if (!e.target.closest('#heroPickupLoc') && !e.target.closest('#dropdown-pickup')) {
+                                var dp = document.getElementById('dropdown-pickup');
+                                if(dp) dp.style.display = 'none';
+                            }
+                            if (!e.target.closest('#heroReturnLoc') && !e.target.closest('#dropdown-return')) {
+                                var dr = document.getElementById('dropdown-return');
+                                if(dr) dr.style.display = 'none';
+                            }
+                        });
+
+                        function heroUseCurrentLocation(type) {
+                            if (!navigator.geolocation) {
+                                alert('Trình duyệt không hỗ trợ GPS');
+                                return;
+                            }
+                            var textEl = document.getElementById('hero-geo-text-' + type);
+                            textEl.textContent = 'Đang lấy vị trí...';
+                            
+                            navigator.geolocation.getCurrentPosition(
+                                function(pos) {
+                                    textEl.textContent = 'Đang dịch địa chỉ...';
+                                    var lat = pos.coords.latitude;
+                                    var lon = pos.coords.longitude;
+                                    var url = 'https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json&accept-language=vi';
+                                    
+                                    fetch(url)
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            var addr = '';
+                                            if (data && data.address) {
+                                                var a = data.address;
+                                                var parts = [];
+                                                if (a.house_number) parts.push(a.house_number);
+                                                if (a.road)         parts.push(a.road);
+                                                if (a.suburb || a.neighbourhood) parts.push(a.suburb || a.neighbourhood);
+                                                if (a.city || a.town || a.county) parts.push(a.city || a.town || a.county);
+                                                addr = parts.join(', ');
+                                            }
+                                            if (!addr) addr = data.display_name || 'Vị trí hiện tại của tôi';
+                                            selectHeroLoc(type, addr);
+                                            textEl.textContent = 'Sử dụng vị trí hiện tại';
+                                        })
+                                        .catch(() => {
+                                            alert('Không dịch được địa chỉ. Vui lòng tự nhập.');
+                                            textEl.textContent = 'Sử dụng vị trí hiện tại';
+                                            document.getElementById('dropdown-' + type).style.display = 'none';
+                                        });
+                                },
+                                function(err) {
+                                    alert('Vui lòng cấp quyền truy cập vị trí (GPS) trên trình duyệt.');
+                                    textEl.textContent = 'Sử dụng vị trí hiện tại';
+                                },
+                                { timeout: 10000, maximumAge: 60000 }
+                            );
+                        }
+                    </script>
                 </div>
 
                 <c:if test="${not empty sessionScope.account}">
@@ -561,7 +632,7 @@
                                     <div class="d-flex gap-2">
                                         <div class="flex-grow-1 position-relative">
                                             <i class="bi bi-geo-alt position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%); color: #b59349; font-size: 1.2rem; pointer-events: none;"></i>
-                                            <select name="locations" class="form-select form-select-lg" style="border-radius: 12px; border: none; background: #ffffff; color: #1a1816; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; padding-left: 45px; height: 56px;" required>
+                                            <select name="locations" id="smartLocationSelect" onchange="triggerAIAssistant(this)" class="form-select form-select-lg" style="border-radius: 12px; border: none; background: #ffffff; color: #1a1816; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; padding-left: 45px; height: 56px;" required>
                                                 <option value="" selected disabled>-- Chọn điểm đến của bạn --</option>
                                                 <c:forEach items="${listLocations}" var="loc">
                                                     <option value="${loc.locationId}">${loc.locationName}</option>
@@ -573,6 +644,20 @@
                                         </button>
                                     </div>
                                 </form>
+                                
+                                <!-- AI Assistant Response Box -->
+                                <div id="ai-assistant-box" style="display:none; margin-top:20px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(181, 147, 73, 0.3); border-radius: 15px; padding: 15px 20px; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; transform: translateY(-10px); opacity: 0; transition: all 0.4s ease;">
+                                    <div style="display:flex; align-items:center; gap:10px; margin-bottom: 8px;">
+                                        <div style="width:30px; height:30px; border-radius:50%; background:#b59349; display:flex; align-items:center; justify-content:center;">
+                                            <i class="bi bi-robot" style="color:#fff; font-size:14px;"></i>
+                                        </div>
+                                        <span style="font-weight:700; color:#b59349; letter-spacing:0.5px;">AI Trợ Lý Phân Tích:</span>
+                                    </div>
+                                    <div id="ai-assistant-text" style="font-size: 14.5px; line-height: 1.5; color: #e5e7eb; font-weight: 400; min-height: 22px;">
+                                        <!-- Text typed out here -->
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -580,6 +665,85 @@
             </section>
 
             <script>
+            const aiRules = {
+                mountain: {
+                    keywords: ['đèo', 'hải vân', 'sơn trà', 'bà nà', 'đỉnh', 'núi'],
+                    text: 'Khu vực này có địa hình dốc cao và đèo dốc. Trợ lý AI khuyên bạn nên chọn các dòng <b>Xe Số (Wave, Sirius)</b> hoặc <b>Xe Tay Côn (Winner, Exciter)</b> để có lực kéo tốt và đảm bảo an toàn tuyệt đối khi đổ đèo nhé!'
+                },
+                flat_long: {
+                    keywords: ['hội an', 'bãi biển', 'ngũ hành sơn', 'nam ô'],
+                    text: 'Tuyến đường này chủ yếu là đường bằng phẳng và di chuyển khá xa. Các dòng <b>Xe Tay Ga (Air Blade, Vision)</b> sẽ mang lại trải nghiệm êm ái, thoải mái nhất cho chuyến đi của bạn!'
+                },
+                city: {
+                    keywords: [],
+                    text: 'Địa hình nội thành rất đẹp và dễ đi! Bạn có thể thoải mái chọn bất kỳ dòng xe nào theo sở thích. Một chiếc <b>Xe Tay Ga (Vespa, Lead, Vision)</b> sẽ rất tiện lợi để lượn lờ phố xá và check-in cà phê đấy!'
+                }
+            };
+
+            function triggerAIAssistant(selectElement) {
+                const selectedText = selectElement.options[selectElement.selectedIndex].text.toLowerCase();
+                const aiBox = document.getElementById('ai-assistant-box');
+                const aiText = document.getElementById('ai-assistant-text');
+                
+                // Show box with animation
+                aiBox.style.display = 'block';
+                setTimeout(() => {
+                    aiBox.style.opacity = '1';
+                    aiBox.style.transform = 'translateY(0)';
+                }, 50);
+
+                // Start typing animation
+                aiText.innerHTML = '<span style="color:#a8b2d1;"><i class="fas fa-circle-notch fa-spin"></i> Đang phân tích địa hình tự động...</span>';
+                
+                // Determine rule
+                let ruleToApply = aiRules.city; // default
+                for (let keyword of aiRules.mountain.keywords) {
+                    if (selectedText.includes(keyword)) {
+                        ruleToApply = aiRules.mountain;
+                        break;
+                    }
+                }
+                if (ruleToApply === aiRules.city) {
+                    for (let keyword of aiRules.flat_long.keywords) {
+                        if (selectedText.includes(keyword)) {
+                            ruleToApply = aiRules.flat_long;
+                            break;
+                        }
+                    }
+                }
+
+                // Simulate AI thinking delay
+                setTimeout(() => {
+                    typeWriter(ruleToApply.text, aiText, 0);
+                }, 1200);
+            }
+
+            function typeWriter(text, element, index) {
+                if (index === 0) { element.innerHTML = ''; }
+                
+                // Parse HTML tags properly so they appear instantly instead of letter-by-letter
+                if (text.charAt(index) === '<') {
+                    let tag = '';
+                    while (text.charAt(index) !== '>' && index < text.length) {
+                        tag += text.charAt(index);
+                        index++;
+                    }
+                    tag += '>';
+                    element.innerHTML += tag;
+                    index++;
+                }
+                
+                if (index < text.length) {
+                    element.innerHTML += text.charAt(index);
+                    setTimeout(() => {
+                        typeWriter(text, element, index + 1);
+                    }, 25); // typing speed
+                } else {
+                    // Add a tiny link to auto-filter
+                    element.innerHTML += '<div style="margin-top:10px;"><button onclick="document.querySelector(\'form[action=searchCriteria]\').submit()" style="background:none; border:none; padding:0; color:#b59349; text-decoration:underline; font-size:13px; font-weight:bold; cursor:pointer;">Tiến hành tìm xe phù hợp <i class="fas fa-arrow-right"></i></button></div>';
+                }
+            }
+
             function handleSmartSearch(e, form) {
                 e.preventDefault();
                 
@@ -820,7 +984,7 @@
                     </div>
                 </div>
             </div>
-            <iframe id="motorcycleSlideIframe" src="slide.jsp?v=2.0" style="width: 100%; height: 720px; padding: 0; margin: 0; border: none; overflow: hidden;" scrolling="no"></iframe>
+            <iframe id="motorcycleSlideIframe" src="slide.jsp?v=<%= System.currentTimeMillis() %>" style="width: 100%; height: 720px; padding: 0; margin: 0; border: none; overflow: hidden;" scrolling="no"></iframe>
             
             <script>
                 window.addEventListener('message', function(e) {

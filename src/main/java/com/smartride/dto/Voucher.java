@@ -19,4 +19,5 @@ public class Voucher implements Serializable {
     private String description;
     private String createdTime;
     private String status;
+    private boolean isPublished;
 }

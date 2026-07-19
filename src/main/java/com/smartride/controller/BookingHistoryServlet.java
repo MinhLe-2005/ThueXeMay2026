@@ -36,6 +36,7 @@ public class BookingHistoryServlet extends HttpServlet {
         if (deliveryStatus == null) {
             deliveryStatus = "all";
         }
+        bookingDAO.markOverdueBookings();
         List<Booking> listB = bookingDAO.getBookingWithDetails(statusBooking, deliveryStatus, acc.getAccountId());
         Map<String, Feedback> feedbackMap = new HashMap<>();
         Map<String, com.smartride.dto.Payment> paymentMap = new HashMap<>();

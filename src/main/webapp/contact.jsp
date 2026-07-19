@@ -1,4 +1,4 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -335,7 +335,7 @@
                                         <div class="icon mr-3">
                                             <i class="fas fa-map-marker-alt"></i> <!-- Font Awesome class -->
                                         </div>
-                                        <p class="info"><span>Địa Chỉ:</span> Số 01 Đại lộ Tự Do, Quận Hành Trình, TP. SmartRide</p>
+                                        <p class="info"><span>Địa Chỉ:</span> Kiệt 144 Hải Phòng, Thanh Bình, Quận Hải Châu, Đà Nẵng</p>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -409,7 +409,7 @@
                     <!-- Iframe Google Maps -->
                     <div class="animate__animated animate__fadeInUp">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3835.8560635690856!2d108.2584456746545!3d15.968891342117118!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31421060734d1d45%3A0xee0cabb7ddf0acc7!2zS2h1IMSRw7QgdGjhu4sgRlBUIENpdHksIEhvw6AgSOG6o2ksIE5nxakgSMOgbmggU8ahbiwgxJDDoCBO4bq1bmcsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1715738592214!5m2!1svi!2s"
+                            src="https://maps.google.com/maps?q=16.0600568,108.2096704&hl=vi&z=16&output=embed"
                             width="1100" height="400" style="border:0;" allowfullscreen="" loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>

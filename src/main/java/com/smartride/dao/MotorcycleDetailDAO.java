@@ -36,11 +36,30 @@ public class MotorcycleDetailDAO implements Serializable, DAO<MotorcycleDetail> 
         PreparedStatement stm;
         ResultSet rs;
         try {
-            String sql = "select * from \"Motorcycle Detail\";";
+            String sql = "WITH LatestStatus AS (\n"
+                       + "    SELECT\n"
+                       + "        ms.\"MotorcycleDetailID\",\n"
+                       + "        ms.\"StatusAction\",\n"
+                       + "        ms.\"Note\",\n"
+                       + "        ROW_NUMBER() OVER (PARTITION BY ms.\"MotorcycleDetailID\" ORDER BY ms.\"MotorcycleStatusID\" DESC) AS \"RowNum\"\n"
+                       + "    FROM\n"
+                       + "        \"Motorcycle Status\" ms\n"
+                       + ")\n"
+                       + "SELECT\n"
+                       + "    md.*,\n"
+                       + "    ls.\"StatusAction\",\n"
+                       + "    ls.\"Note\"\n"
+                       + "FROM\n"
+                       + "    \"Motorcycle Detail\" md\n"
+                       + "LEFT JOIN\n"
+                       + "    LatestStatus ls ON md.\"MotorcycleDetailID\" = ls.\"MotorcycleDetailID\" AND ls.\"RowNum\" = 1;";
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
             while (rs.next()) {
-                list.add(new MotorcycleDetail(rs.getInt("MotorcycleDetailID"), rs.getString("MotorcycleID"), rs.getString("LicensePlate")));
+                MotorcycleDetail md = new MotorcycleDetail(rs.getInt("MotorcycleDetailID"), rs.getString("MotorcycleID"), rs.getString("LicensePlate"));
+                md.setStatusAction(rs.getString("StatusAction"));
+                md.setNote(rs.getString("Note"));
+                list.add(md);
             }
         } catch (Exception ex) {
             Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);

@@ -34,7 +34,7 @@ public class StaffDAO {
         PreparedStatement stm;
         ResultSet rs;
         try {
-            String sql = "select * from Staff";
+            String sql = "select * from \"Staff\"";
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
             while (rs.next()) {
@@ -49,8 +49,8 @@ public class StaffDAO {
     public Staff getStaffbyAccountID(int accountID) {
         PreparedStatement st;
         ResultSet rs;
-        String sql = "select * from Staff\n"
-                + "where accountID = (Select AccountID from Account where RoleID = 2 and AccountID = ?)";
+        String sql = "select * from \"Staff\"\n"
+                + "where \"AccountID\" = (Select \"AccountID\" from \"Account\" where \"RoleID\" = 2 and \"AccountID\" = ?)";
         try {
             st = conn.prepareStatement(sql);
             st.setInt(1, accountID);

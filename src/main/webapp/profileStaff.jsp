@@ -263,10 +263,8 @@
     </style>
 </head>
 <body>
-    <jsp:include page="/includes/staff/header-staff.jsp" />
-    <jsp:include page="/includes/staff/sidebar.jsp" />
 
-    <main id="main" class="main">
+    <div class="container-fluid mt-4">
         <div class="container-fluid">
             <!-- Page title -->
             <div class="pagetitle mb-4">
@@ -498,7 +496,7 @@
                 </div>
             </div><!-- /row -->
         </div>
-    </main>
+    </div>
 
     <script src="staffAssets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="staffAssets/js/main.js"></script>

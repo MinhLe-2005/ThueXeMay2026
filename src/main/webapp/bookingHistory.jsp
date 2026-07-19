@@ -406,7 +406,7 @@
                                                     </c:if>
                                                     <c:forEach items="${listB}" var="o">
                                                         <c:set var="status" value="${o.statusBooking == 'Chờ xác nhận' ? 'pending' : (o.statusBooking == 'Đã xác nhận' ? 'confirmed' : 'cancelled')}" />
-                                                        <c:set var="delivery" value="${o.deliveryStatus == 'Đã trả' ? 'returned' : (o.deliveryStatus == 'Đã giao' ? 'delivered' : 'notDelivered')}" />
+                                                        <c:set var="delivery" value="${o.deliveryStatus == 'Đã trả' ? 'returned' : ((o.deliveryStatus == 'Đã giao' || o.deliveryStatus == 'Quá hạn') ? 'delivered' : 'notDelivered')}" />
                                                         
                                                         <tr class="${status} ${delivery} hover:bg-slate-50 transition-colors duration-150 border-b border-gray-200">
                                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-amber-600">
@@ -441,6 +441,11 @@
                                                                         <c:when test="${o.statusBooking == 'Đã hủy'}">
                                                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold" style="background-color: #fff1f2; color: #be123c; border: 1px solid #ffe4e6;">
                                                                                 <i class="fas fa-times-circle"></i> Đã hủy
+                                                                            </span>
+                                                                        </c:when>
+                                                                        <c:when test="${o.deliveryStatus == 'Quá hạn'}">
+                                                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fca5a5;">
+                                                                                <i class="fas fa-exclamation-triangle animate-pulse" style="color: #ef4444;"></i> Quá hạn
                                                                             </span>
                                                                         </c:when>
                                                                         <c:when test="${o.deliveryStatus == 'Đã trả'}">

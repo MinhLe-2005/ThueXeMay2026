@@ -20,4 +20,5 @@ public class Event implements Serializable {
     private String eventImage;
     private double discount;
     private String staffID;
+    private boolean isPublished;
 }

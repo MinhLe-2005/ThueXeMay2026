@@ -261,10 +261,8 @@
     </style>
 </head>
 <body>
-    <jsp:include page="/includes/staff/header-staff.jsp" />
-    <jsp:include page="/includes/staff/sidebar.jsp" />
 
-    <main id="main" class="main">
+    <div class="container-fluid mt-4">
         <div class="container-fluid">
             <!-- Page Title -->
             <div class="pagetitle mb-4">
@@ -426,7 +424,7 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <!-- ===== Modal Xác Nhận ===== -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">

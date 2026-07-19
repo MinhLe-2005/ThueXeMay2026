@@ -102,10 +102,8 @@
         </style>
     </head>
     <body>
-        <jsp:include page="/includes/staff/header-staff.jsp" />
-        <jsp:include page="/includes/staff/sidebar.jsp" />
         
-        <main id="main" class="main">
+        <div class="container-fluid mt-4">
             <div class="pagetitle mb-4">
                 <h1>Quản lý khách hàng</h1>
                 <nav>
@@ -426,7 +424,7 @@
                     
                 </div>         
             </section>
-        </main>
+        </div>
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="staffAssets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

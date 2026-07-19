@@ -1,4 +1,4 @@
-﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -488,6 +488,8 @@ console.log("1");
                     img2.alt = 'Accessory Image Icon';
                     img2.className = 'img-fluid img-thumbnail';
                     img2.style.maxWidth = '150px';
+                    img2.style.cursor = 'pointer';
+                    img2.setAttribute('onclick', 'if(window.parent && window.parent.openLightbox) window.parent.openLightbox(this.src)');
                     imgContainer2.appendChild(img2);
                 }
 
@@ -512,8 +514,10 @@ console.log("1");
                             reader.onload = function(e) {
                                 var img = document.createElement('img');
                                 img.src = e.target.result;
-                                img.className = 'img-fluid img-thumbnail';
+                                img.className = 'img-fluid img-thumbnail cursor-pointer';
                                 img.style.maxWidth = '150px';
+                                img.style.cursor = 'pointer';
+                                img.setAttribute('onclick', 'if(window.parent && window.parent.openLightbox) window.parent.openLightbox(this.src)');
                                 
                                 var btn = document.createElement('button');
                                 btn.innerHTML = '&times;';

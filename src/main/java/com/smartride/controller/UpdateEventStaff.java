@@ -87,7 +87,7 @@ public class UpdateEventStaff extends HttpServlet {
             Event oldEvent = eventDAO.getEventbyID(eventID);
             String staffID = oldEvent != null ? oldEvent.getStaffID() : null;
             
-            Event event = new Event(eventID, eventTitle, formattedDateTime, startDate, endDate, content, publicUrl, dis, staffID);
+            Event event = new Event(eventID, eventTitle, formattedDateTime, startDate, endDate, content, publicUrl, dis, staffID, false);
             eventDAO.updateEvent(event);
         } catch (Exception e) {
         }

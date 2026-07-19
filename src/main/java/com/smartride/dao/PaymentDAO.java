@@ -38,7 +38,8 @@ public class PaymentDAO implements Serializable {
     public Payment getPayMentbyBookingId(String bookingId) {
         PreparedStatement stm;
         ResultSet rs;
-        String sql = "Select * from \"Payment\" where \"BookingID\" = ?";
+        String sql = "SELECT MAX(\"PaymentID\"), \"BookingID\", MAX(\"PaymentMethod\"), MAX(\"PaymentDate\"), SUM(\"PaymentAmount\"), MAX(\"PaymentStatus\") "
+                   + "FROM \"Payment\" WHERE \"BookingID\" = ? GROUP BY \"BookingID\"";
         try {
             stm = getConnection().prepareStatement(sql);
             stm.setString(1, bookingId);

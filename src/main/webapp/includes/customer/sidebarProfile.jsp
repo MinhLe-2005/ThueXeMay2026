@@ -46,3 +46,6 @@
         </ul>
     </div>
 </aside>
+
+<!-- Bootstrap JS required for Notifications Modal to work -->
+<script src="${pageContext.request.contextPath}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

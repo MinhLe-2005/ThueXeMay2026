@@ -74,9 +74,9 @@ public class NotificationSchedulerListener implements ServletContextListener {
             if (conn == null) return;
             
             // Lấy các Booking có trạng thái Confirmed hoặc Active
-            String sql = "SELECT b.BookingID, b.StartDate, b.EndDate, b.StatusBooking, b.CustomerID "
-                       + "FROM Booking b "
-                       + "WHERE b.StatusBooking IN ('Confirmed', 'Active')";
+            String sql = "SELECT b.\"BookingID\", b.\"StartDate\", b.\"EndDate\", b.\"StatusBooking\", b.\"CustomerID\" "
+                       + "FROM \"Booking\" b "
+                       + "WHERE b.\"StatusBooking\" IN ('Confirmed', 'Active')";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             

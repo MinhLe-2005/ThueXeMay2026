@@ -1,4 +1,4 @@
-﻿<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.sql.Date" %>
@@ -108,8 +108,9 @@
             letter-spacing: 0.05em !important;
         }
     </style>
-    <jsp:include page="/includes/customer/navbar.jsp" />
+    </head>
     <body class="  font-body " data-framework="tailwind">
+        <jsp:include page="/includes/customer/navbar.jsp" />
         <div class="builder-container builder-container-preview font-body">
             <jsp:include page="/includes/customer/sidebarProfile.jsp">
                 <jsp:param name="activePage" value="profile"/>

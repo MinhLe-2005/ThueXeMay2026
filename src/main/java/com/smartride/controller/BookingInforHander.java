@@ -168,26 +168,10 @@ public class BookingInforHander extends HttpServlet {
                 uploadedFilePath = filenameFront + "," + filenameBack;
             }
             daoC.createNewCustomer(identityCard, uploadedFilePath, issuedon, expdate, "CMND/CCCD", 1, accountId);
+            // We ALREADY uploaded the image as imageIdCTemp_front.jpg and got the public URL in uploadedFilePath.
+            // We DO NOT need to upload it again, because the stream is already exhausted.
+            // Just update the customer with the correct URL we already obtained!
             int newCustomerId = daoC.getCustomerbyAccountID(accountId).getCustomerId();
-            
-            String finalFilenameFront = "imageIdC" + newCustomerId + "_front.jpg";
-            String finalFilenameBack = "imageIdC" + newCustomerId + "_back.jpg";
-            String finalFrontPath = null;
-            String finalBackPath = null;
-            
-            if (fileFrontPart != null) {
-                finalFrontPath = fileUploaded.handleFileUpload(fileFrontPart, finalFilenameFront);
-            } else {
-                finalFrontPath = finalFilenameFront;
-            }
-            
-            if (fileBackPart != null) {
-                finalBackPath = fileUploaded.handleFileUpload(fileBackPart, finalFilenameBack);
-            } else {
-                finalBackPath = finalFilenameBack;
-            }
-            
-            uploadedFilePath = finalFrontPath + "," + finalBackPath;
             daoC.updateCustomer(identityCard, uploadedFilePath, issuedon, expdate, "CMND/CCCD", newCustomerId);
         } else {
             int existingCustomerId = Integer.parseInt(customerId);
@@ -358,7 +342,7 @@ public class BookingInforHander extends HttpServlet {
             bikeCounts.put(bikeName, bikeCounts.getOrDefault(bikeName, 0) + 1);
             List<Integer> list = daoMD.getListAvailableMotorcycleDetailIdByMotorcycleName(bikeName);
             int randomElement = list.get(random.nextInt(list.size()));
-            daoMS.insertMotorcycleStatus(randomElement, "STAFF00001", "KhÃ´ng cÃ³ sáºµn", formattedDateString, "Chá» nhÃ¢n viÃªn xÃ¡c nháº­n");
+            daoMS.insertMotorcycleStatus(randomElement, "STAFF00001", "\u004b\u0068\u00f4\u006e\u0067 \u0063\u00f3 \u0073\u1eb5\u006e", formattedDateString, "\u0043\u0068\u1edd \u006e\u0068\u00e2\u006e \u0076\u0069\u00ea\u006e \u0078\u00e1\u0063 \u006e\u0068\u1ead\u006e");
             daoBD.addBookingDetail(randomElement, bookingid, bikePrice);
         }
 

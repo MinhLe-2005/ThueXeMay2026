@@ -57,7 +57,7 @@ public class EventDAO implements Serializable {
                 String eventImg = rs.getString(7);
                 double discount = rs.getDouble(8);
                 String staffID = rs.getString(9);
-                Event c = new Event(eventId, eventTitle, createdDate, startDate, endDate, content, eventImg, discount, staffID);
+                Event c = new Event(eventId, eventTitle, createdDate, startDate, endDate, content, eventImg, discount, staffID, false);
                 list.add(c);
             }
         } catch (SQLException e) {
@@ -74,7 +74,7 @@ public class EventDAO implements Serializable {
                 + "    TO_CHAR(\"StartDate\", 'DD-MM-YYYY') AS \"StartDate\",\n"
                 + "    TO_CHAR(\"EndDate\", 'DD-MM-YYYY') AS \"EndDate\",\n"
                 + "	\"Content\", \"EventImage\", \"Discount\", \"StaffID\"\n"
-                + "FROM \"Event\" ORDER BY \"EventID\" OFFSET ? LIMIT 9;";
+                + "FROM \"Event\" WHERE \"EndDate\" >= CURRENT_DATE ORDER BY \"EventID\" OFFSET ? LIMIT 9;";
 
         try {
             PreparedStatement st = conn.prepareStatement(sql);
@@ -90,7 +90,8 @@ public class EventDAO implements Serializable {
                     rs.getString(6), 
                     rs.getString(7), 
                     rs.getDouble(8), 
-                    rs.getString(9)
+                    rs.getString(9),
+                    false
                 );
                 list.add(c);
             }
@@ -101,7 +102,7 @@ public class EventDAO implements Serializable {
     }
 
     public int getTotalEvent() {
-        String sql = "SELECT COUNT(*) FROM \"Event\"";
+        String sql = "SELECT COUNT(*) FROM \"Event\" WHERE \"EndDate\" >= CURRENT_DATE";
         try {
             PreparedStatement stm = conn.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
@@ -199,7 +200,8 @@ public class EventDAO implements Serializable {
                     rs.getString(6), 
                     rs.getString(7), 
                     rs.getDouble(8), 
-                    rs.getString(9)
+                    rs.getString(9),
+                    false
                 );
                 list.add(c);
             }

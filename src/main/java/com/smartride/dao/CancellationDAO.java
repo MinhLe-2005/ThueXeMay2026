@@ -28,7 +28,7 @@ public class CancellationDAO {
     }
 
     public boolean insertCancellation(String note, String bookingId, String staffID) {  //sẽ update thêm staff từ từ đã, hiện tại staff đang null
-        String sql = "INSERT INTO Cancellation (CancellationDate, Note, BookingID, StaffID) VALUES (CURRENT_TIMESTAMP, ?, ?, ?)";
+        String sql = "INSERT INTO \"Cancellation\" (\"CancellationDate\", \"Note\", \"BookingID\", \"StaffID\") VALUES (CURRENT_TIMESTAMP, ?, ?, ?)";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, note);
@@ -48,8 +48,8 @@ public class CancellationDAO {
         PreparedStatement stm;
         ResultSet rs;
         List<Cancellation> list = new ArrayList<>();
-        String sql = "Select CancellationID, TO_CHAR(CancellationDate, 'DD-MM-YYYY HH24:MI:SS') AS CancellationDate, Note, BookingID, StaffID\n"
-                + "from Cancellation";
+        String sql = "Select \"CancellationID\", TO_CHAR(\"CancellationDate\", 'DD-MM-YYYY HH24:MI:SS') AS \"CancellationDate\", \"Note\", \"BookingID\", \"StaffID\"\n"
+                + "from \"Cancellation\"";
         try {
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
@@ -70,7 +70,7 @@ public class CancellationDAO {
 
     public boolean updateCancellationByStaff(String staffId, String bookingId) {
         PreparedStatement stm;
-        String sql = "Update Cancellation SET StaffID = ? where BookingID = ?";
+        String sql = "Update \"Cancellation\" SET \"StaffID\" = ? where \"BookingID\" = ?";
         try {
             stm = conn.prepareStatement(sql);
             stm.setString(1, staffId);
@@ -89,7 +89,7 @@ public class CancellationDAO {
     public Cancellation getCancellationByBookingId(String bookingId) {
         PreparedStatement stm;
         ResultSet rs;
-        String sql = "Select CancellationID, TO_CHAR(CancellationDate, 'DD-MM-YYYY HH24:MI:SS') AS CancellationDate, Note, BookingID, StaffID from Cancellation where BookingID = ?";
+        String sql = "Select \"CancellationID\", TO_CHAR(\"CancellationDate\", 'DD-MM-YYYY HH24:MI:SS') AS \"CancellationDate\", \"Note\", \"BookingID\", \"StaffID\" from \"Cancellation\" where \"BookingID\" = ?";
         try {
             stm = conn.prepareStatement(sql);
             stm.setString(1, bookingId);

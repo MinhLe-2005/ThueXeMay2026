@@ -95,7 +95,7 @@
                             <!-- Items injected by JS -->
                         </div>
                         <div class="p-2 border-top text-center" style="background: #f8fafc; border-radius: 0 0 8px 8px;">
-                            <a href="#" class="text-muted" style="font-size: 0.85rem; text-decoration: none;">Xem tất cả</a>
+                            <a href="#" class="text-muted" style="font-size: 0.85rem; text-decoration: none;" data-bs-toggle="modal" data-bs-target="#allNotificationsModal">Xem tất cả</a>
                         </div>
                     </div>
                 </div>
@@ -173,6 +173,24 @@
     </div>
 
 </header>
+
+<!-- All Notifications Modal -->
+<div class="modal fade" id="allNotificationsModal" tabindex="-1" aria-labelledby="allNotificationsModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #f8fafc;">
+                <h5 class="modal-title fw-bold text-dark" id="allNotificationsModalLabel">Tất cả thông báo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0" id="all-notif-list">
+                <!-- Items injected by JS -->
+            </div>
+            <div class="modal-footer justify-content-center border-top">
+                <button type="button" class="btn btn-secondary" style="background-color: #6c757d; color: white; border: none;" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style>
 
@@ -660,10 +678,12 @@
             
             // Initial fetch
             fetchNotifications();
-            // Poll every 30s
-            setInterval(fetchNotifications, 30000);
+            // Poll every 3s for REALTIME effect
+            setInterval(fetchNotifications, 3000);
         }
     });
+
+    let lastUnreadCount = -1;
 
     function fetchNotifications() {
         fetch('notification?action=get')
@@ -675,7 +695,55 @@
         }).catch(err => console.error("Error fetching notifications", err));
     }
 
+    function showToast(title, message) {
+        // Create toast container if not exists
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;';
+            document.body.appendChild(container);
+        }
+        
+        let toast = document.createElement('div');
+        toast.style.cssText = 'background: white; border-left: 4px solid #198754; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 8px; padding: 15px 20px; min-width: 300px; transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: start; gap: 12px; cursor: pointer;';
+        toast.innerHTML = 
+            '<div style="background: #e8f5e9; color: #198754; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">' +
+                '<i class="fas fa-bell"></i>' +
+            '</div>' +
+            '<div>' +
+                '<div style="font-weight: bold; color: #333; font-size: 14px; margin-bottom: 4px;">' + title + '</div>' +
+                '<div style="color: #666; font-size: 12px; line-height: 1.4;">' + message + '</div>' +
+            '</div>';
+        
+        container.appendChild(toast);
+        
+        // Trượt ra
+        setTimeout(() => toast.style.transform = 'translateX(0)', 100);
+        
+        // Tự động đóng sau 5s
+        setTimeout(() => {
+            toast.style.transform = 'translateX(120%)';
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
     function updateNotificationUI(unreadCount, items) {
+        if (lastUnreadCount !== -1 && unreadCount > lastUnreadCount && items && items.length > 0) {
+            // Co thong bao moi
+            showToast(items[0].title, items[0].message);
+            // Hieu ung rung chuong
+            var icon = document.querySelector('.fa-bell');
+            if(icon) {
+                icon.style.transform = 'rotate(15deg)';
+                setTimeout(()=>icon.style.transform = 'rotate(-15deg)', 100);
+                setTimeout(()=>icon.style.transform = 'rotate(10deg)', 200);
+                setTimeout(()=>icon.style.transform = 'rotate(-10deg)', 300);
+                setTimeout(()=>icon.style.transform = 'rotate(0)', 400);
+            }
+        }
+        lastUnreadCount = unreadCount;
+
         var badge = document.getElementById('notif-badge');
         if (unreadCount > 0) {
             badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
@@ -685,8 +753,11 @@
         }
         
         var list = document.getElementById('notif-list');
+        var allList = document.getElementById('all-notif-list');
         if (!items || items.length === 0) {
-            list.innerHTML = '<div class="p-3 text-center text-muted"><small>Không có thông báo nào</small></div>';
+            var emptyHtml = '<div class="p-3 text-center text-muted"><small>Không có thông báo nào</small></div>';
+            list.innerHTML = emptyHtml;
+            if (allList) allList.innerHTML = emptyHtml;
             return;
         }
         
@@ -700,6 +771,7 @@
             html += '</a>';
         });
         list.innerHTML = html;
+        if (allList) allList.innerHTML = html;
     }
 
     function markNotifAsRead(id) {

@@ -1,4 +1,4 @@
-﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -508,7 +508,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn-outline-custom-blue" id="launchModalBtn" data-toggle="modal" data-target="#user-form-modal" onclick="OneClick(this)" data-motorcycleId="${m.motorcycleId}" data-motorcycleName="${m.model}" data-license="<c:forEach items="${m.listMotorcycleDetails}" var="listmd">${listmd.licensePlate},</c:forEach>">
+                                                    <button type="button" class="btn-outline-custom-blue" id="launchModalBtn" data-toggle="modal" data-target="#user-form-modal" onclick="OneClick(this)" data-motorcycleId="${m.motorcycleId}" data-motorcycleName="${m.model}" data-license="<c:forEach items="${m.listMotorcycleDetails}" var="listmd">${listmd.licensePlate}|${listmd.statusAction}|${listmd.note},</c:forEach>">
                                                         <i class="fas fa-eye"></i> Chi Tiết
                                                     </button>
                                                 </td>
@@ -973,7 +973,7 @@
         if (image && image !== 'null' && image !== '') {
             var imgSrc = image.startsWith('http') ? image : 'images/' + image;
             imgContainer.innerHTML = '<div style="position: relative; display: inline-block;">' +
-                '<img src="' + imgSrc + '" class="img-fluid img-thumbnail" style="max-height: 150px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" alt="Preview">' +
+                '<img src="' + imgSrc + '" class="img-fluid img-thumbnail" style="max-height: 150px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer;" alt="Preview" onclick="if(window.parent && window.parent.openLightbox) window.parent.openLightbox(this.src)">' +
                 '<button type="button" onclick="removeUpdateImage()" style="position: absolute; top: 5px; right: 5px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 18px; line-height: 1;">&times;</button>' +
                 '</div>';
         } else {
@@ -1021,7 +1021,21 @@
         var count = 0;
         for (var i = 0; i < str.length; i++) {
             if (str[i].trim() !== "") {
-                text += "<div style='display: inline-flex; align-items: center; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 12px; font-weight: 600; color: #334155; box-shadow: 0 1px 2px rgba(0,0,0,0.05);'><i class='fas fa-motorcycle' style='color: #64748b; margin-right: 8px;'></i>" + str[i].trim() + "</div>";
+                var parts = str[i].trim().split("|");
+                var plate = parts[0] || "";
+                var st = parts[1] || "Sẵn sàng";
+                var note = parts[2] || "";
+                
+                if (st === 'null' || st === '') st = "Sẵn sàng";
+                if (note === 'null') note = "";
+                
+                var stColor = (st === "Sẵn sàng" || st === "Có sẵn") ? "#16a34a" : "#dc2626";
+                var noteHtml = note ? " <span style='font-size: 11px; color: #64748b; font-weight: normal;'>(" + note + ")</span>" : "";
+                
+                text += "<div style='display: flex; flex-direction: column; align-items: flex-start; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 12px; margin-bottom: 6px; font-weight: 600; color: #334155; box-shadow: 0 1px 2px rgba(0,0,0,0.05);'>"
+                     + "  <div style='display: inline-flex; align-items: center;'><i class='fas fa-motorcycle' style='color: #64748b; margin-right: 8px;'></i>" + plate + "</div>"
+                     + "  <div style='font-size: 12px; color: " + stColor + "; margin-top: 4px; display: inline-flex; align-items: center;'><i class='fas fa-info-circle' style='margin-right: 4px;'></i>" + st + noteHtml + "</div>"
+                     + "</div>";
                 count++;
             }
         }
@@ -1051,7 +1065,7 @@
         reader.onload = function(){
             var imgContainer = document.getElementById('motorbikeImagePreview');
             imgContainer.innerHTML = '<div style="position: relative; display: inline-block;">' +
-                '<img src="' + reader.result + '" class="img-fluid img-thumbnail" style="max-height: 120px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" alt="Preview">' +
+                '<img src="' + reader.result + '" class="img-fluid img-thumbnail" style="max-height: 120px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer;" alt="Preview" onclick="if(window.parent && window.parent.openLightbox) window.parent.openLightbox(this.src)">' +
                 '<button type="button" onclick="removeAddImage()" style="position: absolute; top: 5px; right: 5px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 16px; line-height: 1;">&times;</button>' +
                 '</div>';
         };

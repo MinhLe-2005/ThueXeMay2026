@@ -109,6 +109,9 @@
         <link href="staffAssets/vendor/quill/quill.bubble.css" rel="stylesheet">
         <link href="staffAssets/vendor/remixicon/remixicon.css" rel="stylesheet">
         <link href="staffAssets/vendor/simple-datatables/style.css" rel="stylesheet">
+        <!-- Leaflet CSS for GPS Map -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+        
         <!-- Template Main CSS File -->
         <link href="staffAssets/css/style.css" rel="stylesheet">
     </head>
@@ -150,6 +153,10 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link global-filter-btn" data-period="custom" type="button" data-bs-toggle="modal" data-bs-target="#customDateModal">
                                 <i class="bi bi-calendar3 me-1"></i> Tùy chọn...
+                            </button>
+                        <li class="nav-item ms-3" role="presentation">
+                            <button class="nav-link global-filter-btn" style="background: #dc3545 !important; color: white !important; font-weight: bold;" onclick="document.getElementById('gps-section').scrollIntoView({behavior: 'smooth'})" type="button">
+                                <i class="bi bi-geo-alt-fill me-1"></i> Định Vị Xe
                             </button>
                         </li>
                     </ul>
@@ -374,6 +381,50 @@
                             </div><!-- End Top Selling -->
 
                 </div>
+                <!-- GPS Tracker Section -->
+                <div class="row mt-4" id="gps-section">
+                    <div class="col-12">
+                        <div class="card" style="border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background-color: rgba(220, 53, 69, 0.1); color: #dc3545;">
+                                        <i class="bi bi-geo-alt-fill fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="card-title text-dark fw-bold mb-0 p-0" style="font-family: 'Be Vietnam Pro', sans-serif;">Định vị GPS Trực Tuyến</h5>
+                                        <p class="text-muted mb-0" style="font-size: 13px;">Theo dõi lộ trình xe đang cho thuê theo thời gian thực</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="text-muted" style="font-size: 14px;">Hoạt động: <span id="stat-gps" class="fw-bold text-danger">0</span> xe</span>
+                                    <button id="btn-test-gps" class="btn btn-danger rounded-pill px-4 py-2 fw-semibold d-flex align-items-center shadow-sm" onclick="startGpsSimulation()" style="font-size: 14px; transition: all 0.3s;">
+                                        <i class="bi bi-play-fill fs-5 me-1" style="margin-left: -4px;"></i> Khởi chạy Test
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body p-0 position-relative">
+                                <div class="row g-0">
+                                    <div id="map-col" class="col-lg-8 position-relative" style="transition: all 0.4s ease;">
+                                        <button id="toggle-list-btn" class="btn btn-light shadow-sm" style="position: absolute; right: 15px; top: 15px; z-index: 1000;" onclick="toggleVehicleList()" title="Ẩn/Hiện danh sách">
+                                            <i class="bi bi-arrows-fullscreen"></i>
+                                        </button>
+                                        <div class="position-absolute top-0 start-0 w-100 h-100" style="box-shadow: inset 0 6px 12px -6px rgba(0,0,0,0.15); pointer-events: none; z-index: 2;"></div>
+                                        <div id="map" style="height: 550px; width: 100%; z-index: 1;"></div>
+                                    </div>
+                                    <div id="list-col" class="col-lg-4 border-start" style="transition: all 0.4s ease; overflow: hidden;">
+                                        <div class="p-3 bg-light border-bottom fw-bold text-dark d-flex justify-content-between align-items-center" style="white-space: nowrap;">
+                                            <span><i class="bi bi-list-ul me-2"></i>Danh sách phương tiện</span>
+                                        </div>
+                                        <div id="gps-vehicle-list" style="height: 501px; overflow-y: auto; background: #fff;">
+                                            <div class="p-4 text-center text-muted"><i class="bi bi-inbox fs-2"></i><br>Không có xe nào</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </section>
 
         </main><!-- End #main -->
@@ -541,7 +592,7 @@
                     document.getElementById('orders-container').style.opacity = '0.4';
                     document.getElementById('customers-container').style.opacity = '0.4';
 
-                    let url = 'api_dashboard.jsp?period=' + currentPeriod + '&startDate=' + currentStartDate + '&endDate=' + currentEndDate;
+                    let url = 'api/dashboard?period=' + currentPeriod + '&startDate=' + currentStartDate + '&endDate=' + currentEndDate;
                     fetch(url)
                         .then(res => res.json())
                         .then(data => {
@@ -718,9 +769,9 @@
                                             <div class="fw-bold text-dark fs-6 mb-1">`+m.model+`</div>
                                             <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 border border-primary border-opacity-25"><i class="bi bi-graph-up-arrow me-1"></i>Đã thuê: `+m.rentCount+` lần</span>
                                         </td>
-                                        <td class="fw-semibold text-success py-3">`+ new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(m.dailyPriceForDay).replace('₫', 'VNĐ') +`</td>
-                                        <td class="fw-semibold text-success py-3">`+ new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(m.dailyPriceForWeek).replace('₫', 'VNĐ') +`</td>
-                                        <td class="fw-semibold text-success py-3">`+ new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(m.dailyPriceForMonth).replace('₫', 'VNĐ') +`</td>
+                                        <td class="fw-semibold text-success py-3">`+ m.priceDay +`</td>
+                                        <td class="fw-semibold text-success py-3">`+ m.priceWeek +`</td>
+                                        <td class="fw-semibold text-success py-3">`+ m.priceMonth +`</td>
                                     `;
                                     topTbody.appendChild(tr);
                                 });
@@ -800,6 +851,291 @@
 
                     fetchDashboardData();
                 });
+            });
+        </script>
+        <!-- Leaflet JS for GPS Map -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        
+        <script>
+            // === GPS TRACKING MAP LOGIC ===
+            let map;
+            let vehicleMarkers = {};
+            let selectedVehicleId = null;
+            let isListVisible = true;
+            
+            function toggleVehicleList() {
+                let mapCol = document.getElementById('map-col');
+                let listCol = document.getElementById('list-col');
+                let btnIcon = document.querySelector('#toggle-list-btn i');
+                
+                if (isListVisible) {
+                    listCol.style.width = '0px';
+                    listCol.style.opacity = '0';
+                    listCol.classList.remove('col-lg-4');
+                    mapCol.classList.remove('col-lg-8');
+                    mapCol.classList.add('col-lg-12');
+                    btnIcon.className = 'bi bi-list-ul';
+                } else {
+                    listCol.style.width = '';
+                    listCol.style.opacity = '1';
+                    listCol.classList.add('col-lg-4');
+                    mapCol.classList.remove('col-lg-12');
+                    mapCol.classList.add('col-lg-8');
+                    btnIcon.className = 'bi bi-arrows-fullscreen';
+                }
+                isListVisible = !isListVisible;
+                setTimeout(() => { if (map) map.invalidateSize(); }, 400);
+            }
+            
+            function initMap() {
+                // Initialize map centered at FPT University Da Nang
+                map = L.map('map').setView([16.0600, 108.2096], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+                
+                // Fetch vehicle locations every 3 seconds
+                setInterval(fetchVehicleLocations, 3000);
+                fetchVehicleLocations();
+            }
+            
+            let currentVehicles = [];
+            let currentPage = 1;
+            const itemsPerPage = 6;
+            
+            function fetchVehicleLocations() {
+                fetch('api/get-locations')
+                    .then(res => res.json())
+                    .then(data => {
+                        currentVehicles = data.locations || [];
+                        updateMapMarkers();
+                        renderVehicleList();
+                    })
+                    .catch(err => console.error("Error fetching GPS:", err));
+            }
+            
+            function updateMapMarkers() {
+                let statGps = document.getElementById('stat-gps');
+                statGps.textContent = currentVehicles.length;
+                let newMarkers = {};
+                
+                currentVehicles.forEach(v => {
+                    let key = v.bookingId;
+                    
+                    let bikeIcon = L.icon({
+                        iconUrl: 'images/motorbike-marker.png', // Add a default marker or this
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 40],
+                        popupAnchor: [0, -40]
+                    });
+                    
+                    if(vehicleMarkers[key]) {
+                        // Update existing marker
+                        vehicleMarkers[key].setLatLng([v.lat, v.lon]);
+                        newMarkers[key] = vehicleMarkers[key];
+                    } else {
+                        // Create new marker
+                        let marker = L.marker([v.lat, v.lon]).addTo(map)
+                            .bindPopup('<b>Booking #'+v.bookingId+'</b><br>Khách hàng: '+v.name);
+                        newMarkers[key] = marker;
+                    }
+                });
+                
+                // Remove stale markers
+                Object.keys(vehicleMarkers).forEach(k => {
+                    if(!newMarkers[k]) {
+                        map.removeLayer(vehicleMarkers[k]);
+                    }
+                });
+                vehicleMarkers = newMarkers;
+            }
+
+            function renderVehicleList() {
+                let listContainer = document.getElementById('gps-vehicle-list');
+                if(currentVehicles.length === 0) {
+                    listContainer.innerHTML = '<div class="p-4 text-center text-muted"><i class="bi bi-inbox fs-2"></i><br>Không có xe nào đang hoạt động</div>';
+                    return;
+                }
+
+                let totalPages = Math.ceil(currentVehicles.length / itemsPerPage);
+                if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+
+                let startIdx = (currentPage - 1) * itemsPerPage;
+                let paginatedItems = currentVehicles.slice(startIdx, startIdx + itemsPerPage);
+
+                let html = '';
+                paginatedItems.forEach(v => {
+                    let key = v.bookingId;
+                    let statusColor = (v.age !== undefined && v.age <= 15) ? 'text-success' : 'text-warning';
+                    let statusText = (v.age !== undefined && v.age <= 15) ? 'Đang trực tuyến' : 'Mất tín hiệu (' + v.age + 's)';
+                    
+                    let vehicleName = v.vehicleName || 'Xe máy';
+                    let phone = v.phone || 'Chưa cập nhật';
+                    
+                    // Geofencing Check
+                    let dist = haversine(16.0600, 108.2096, v.lat, v.lon);
+                    let isOutOfBounds = (dist > 50);
+                    let isAllowed = allowedVehicles.includes(key);
+                    
+                    let isSelected = (key === selectedVehicleId) ? 'bg-primary bg-opacity-10 border-primary border-start border-4' : 'bg-white hover-bg-light';
+                    let warningStyle = '';
+                    let warningBadge = '';
+                    let actionBtn = '';
+                    
+                    if (isOutOfBounds && !isAllowed) {
+                        warningStyle = 'bg-danger bg-opacity-25 border-danger border-start border-4';
+                        warningBadge = '<span class="badge bg-danger mt-2" style="font-size:10px;"><i class="bi bi-exclamation-triangle"></i> Đi quá giới hạn (' + dist.toFixed(1) + 'km)</span>';
+                        actionBtn = '<button class="btn btn-sm btn-danger mt-2 ms-2" style="font-size:10px; font-weight:bold;" onclick="allowOutside(\''+key+'\', event)">Cho phép</button>';
+                        isSelected = ''; // Override selected style if warning
+                    } else if (isOutOfBounds && isAllowed) {
+                        warningBadge = '<span class="badge bg-success mt-2" style="font-size:10px;"><i class="bi bi-check-circle"></i> Đã cấp phép đi xa (' + dist.toFixed(1) + 'km)</span>';
+                    }
+                    
+                    html += `
+                        <div class="p-3 border-bottom d-flex align-items-center ${warningStyle || isSelected}" style="cursor: pointer; transition: 0.2s;" onclick="focusVehicle('`+key+`', `+v.lat+`, `+v.lon+`)">
+                            <div class="rounded-circle ${warningStyle ? 'bg-danger text-white' : 'bg-danger bg-opacity-10 text-danger'} d-flex justify-content-center align-items-center me-3" style="width: 42px; height: 42px; flex-shrink: 0;">
+                                <i class="bi ${warningStyle ? 'bi-exclamation-triangle-fill' : 'bi-person-bounding-box'} fs-5"></i>
+                            </div>
+                            <div style="flex-grow: 1; min-width: 0;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0 fw-bold text-dark text-truncate">`+v.name+`</h6>
+                                    <small class="text-primary fw-bold" style="font-size: 11px;">
+                                        <i class="bi bi-telephone-fill"></i> `+phone+`
+                                    </small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted text-truncate fw-semibold" style="font-size: 11.5px; max-width: 55%;">
+                                        `+vehicleName+`
+                                    </small>
+                                    <small class="`+statusColor+` fw-semibold text-end" style="font-size: 11px; white-space: nowrap;">
+                                        <i class="bi bi-circle-fill" style="font-size: 8px;"></i> `+statusText+`
+                                    </small>
+                                </div>
+                                ${warningBadge} ${actionBtn}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                if (totalPages > 1) {
+                    html += '<div class="d-flex justify-content-between align-items-center p-3 bg-light border-top">';
+                    html += '    <button class="btn btn-sm btn-outline-secondary" onclick="changePage(-1)" ' + (currentPage === 1 ? 'disabled' : '') + '>';
+                    html += '        <i class="bi bi-chevron-left"></i> Trước';
+                    html += '    </button>';
+                    html += '    <small class="fw-bold text-muted">Trang ' + currentPage + ' / ' + totalPages + '</small>';
+                    html += '    <button class="btn btn-sm btn-outline-secondary" onclick="changePage(1)" ' + (currentPage === totalPages ? 'disabled' : '') + '>';
+                    html += '        Sau <i class="bi bi-chevron-right"></i>';
+                    html += '    </button>';
+                    html += '</div>';
+                }
+                listContainer.innerHTML = html;
+            }
+
+            function changePage(delta) {
+                currentPage += delta;
+                renderVehicleList();
+            }
+            
+            function focusVehicle(id, lat, lng) {
+                selectedVehicleId = id;
+                renderVehicleList();
+                map.setView([lat, lng], 17);
+                if(vehicleMarkers[id]) vehicleMarkers[id].openPopup();
+            }
+            
+            let allowedVehicles = [];
+            
+            function allowOutside(id, event) {
+                event.stopPropagation();
+                if(!allowedVehicles.includes(id)) {
+                    allowedVehicles.push(id);
+                    renderVehicleList();
+                }
+            }
+            
+            function haversine(lat1, lon1, lat2, lon2) {
+                const R = 6371;
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                          Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
+            
+            let simulationInterval = null;
+            let fakeVehicles = [
+                { id: 'TEST-001', name: 'Nguyễn Văn Test', phone: '0987654321', vehicleName: 'Honda Airblade', lat: 16.0600, lon: 108.2096, dLat: 0.0001, dLon: 0.0001 },
+                { id: 'TEST-002', name: 'Trần Thị Demo', phone: '0912345678', vehicleName: 'Yamaha Vision', lat: 16.0604, lon: 108.2080, dLat: -0.00008, dLon: 0.00015 },
+                { id: 'TEST-003', name: 'Phượt Thủ Cứng', phone: '0933333333', vehicleName: 'Honda Winner X', lat: 15.6500, lon: 108.2080, dLat: 0.0002, dLon: 0.0001 } // Distance ~45km at start, will quickly go out of bounds
+            ];
+            
+            function startGpsSimulation() {
+                let btn = document.getElementById('btn-test-gps');
+                
+                if (simulationInterval) {
+                    // Stop simulation
+                    clearInterval(simulationInterval);
+                    simulationInterval = null;
+                    btn.innerHTML = '<i class="bi bi-play-fill fs-5 me-1" style="margin-left: -4px;"></i> Khởi chạy Test';
+                    btn.classList.remove('btn-warning');
+                    btn.classList.add('btn-danger');
+                    return;
+                }
+                
+                // Start simulation
+                btn.innerHTML = '<i class="bi bi-stop-fill fs-5 me-1" style="margin-left: -4px;"></i> Dừng Test';
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-warning');
+                
+                // Immediately send one tick, then every 3 seconds
+                simulateTick();
+                simulationInterval = setInterval(simulateTick, 3000);
+            }
+            
+            function simulateTick() {
+                fakeVehicles.forEach(v => {
+                    // Move slightly
+                    v.lat += v.dLat;
+                    v.lon += v.dLon;
+                    
+                    // Bounce back if they go too far (rough bounds around new shop)
+                    if (v.id !== 'TEST-003') {
+                        if(v.lat > 16.070 || v.lat < 16.050) v.dLat = -v.dLat;
+                        if(v.lon > 108.220 || v.lon < 108.190) v.dLon = -v.dLon;
+                    } else {
+                        // TEST-003 goes far away continuously
+                        if(v.lat > 16.070 || v.lat < 15.400) v.dLat = -v.dLat;
+                    }
+                    
+                    // Send to backend
+                    let formData = new URLSearchParams();
+                    formData.append('bookingId', v.id);
+                    formData.append('customerName', v.name);
+                    formData.append('phone', v.phone);
+                    formData.append('vehicleName', v.vehicleName);
+                    formData.append('lat', v.lat);
+                    formData.append('lon', v.lon);
+                    
+                    fetch('api/update-location', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: formData.toString()
+                    }).catch(err => console.error("Sim error:", err));
+                });
+            }
+            
+            // Wait for DOM
+            document.addEventListener('DOMContentLoaded', () => {
+                // ... (Existing code) ...
+                
+                setTimeout(() => {
+                    initMap();
+                }, 500);
             });
         </script>
     </body>

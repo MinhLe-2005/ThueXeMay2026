@@ -145,8 +145,16 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
     }
 
     public Customer getCustomerbyID(int id) {
-        String sql = " SELECT * FROM \"Customer\"\n"
-                + " WHERE \"CustomerID\" = ?";
+        String sql = "SELECT \n"
+                + "\"CustomerID\",\n"
+                + "\"IdentityCard\",\n"
+                + "\"IdentityCardImage\",\n"
+                + "TO_CHAR(\"IssuedOnDate\", 'DD-MM-YYYY'),\n"
+                + "TO_CHAR(\"ExpDate\", 'DD-MM-YYYY'),\n"
+                + "\"TypeCard\",\n"
+                + "\"AccountID\"\n"
+                + "FROM \"Customer\"\n"
+                + "WHERE \"CustomerID\" = ?";
         try {
             PreparedStatement st = conn.prepareStatement(sql);
             st.setInt(1, id);

@@ -474,9 +474,24 @@
                                                         <p class="motor-desc">${empty m.description ? 'Mẫu xe tuyệt vời cho những chuyến đi dài, được bảo dưỡng định kỳ và vận hành cực kỳ êm ái.' : m.description}</p>
                                                     </div>
                                                     <div class="motor-main-price">
-                                                        <div class="price-val-amount"><fmt:formatNumber value="${p.dailyPriceForDay}" type="number" groupingUsed="true" /></div>
-                                                        <div class="price-val-currency">VNĐ</div>
-                                                        <div class="price-sub">mỗi ngày</div>
+                                                        <c:choose>
+                                                            <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                <div style="font-size: 18px; color: #999; text-decoration: line-through; margin-bottom: -5px;">
+                                                                    <fmt:formatNumber value="${p.dailyPriceForDay}" type="number" groupingUsed="true" />
+                                                                </div>
+                                                                <div class="price-val-amount" style="color: #dc2626;"><fmt:formatNumber value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" type="number" groupingUsed="true" /></div>
+                                                                <div class="price-val-currency" style="color: #dc2626;">VNĐ</div>
+                                                                <div class="price-sub">
+                                                                    <span style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px; margin-right: 5px;">-<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
+                                                                    mỗi ngày
+                                                                </div>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="price-val-amount"><fmt:formatNumber value="${p.dailyPriceForDay}" type="number" groupingUsed="true" /></div>
+                                                                <div class="price-val-currency">VNĐ</div>
+                                                                <div class="price-sub">mỗi ngày</div>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                                 </div>
                                                 
@@ -484,9 +499,22 @@
                                                 <div class="pricing-grid">
                                                     <!-- BOX 1: Ngày -->
                                                     <div class="price-box box-daily">
+                                                        <c:if test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                            <div class="discount-tag" style="background: #fee2e2; color: #dc2626;">SỰ KIỆN -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</div>
+                                                        </c:if>
                                                         <div class="price-box-title">Theo Ngày</div>
                                                         <div class="price-box-val">
-                                                            <span class="big-money"><fmt:formatNumber value="${p.dailyPriceForDay / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                            <c:choose>
+                                                                <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                    <div style="font-size: 14px; color: #999; text-decoration: line-through; margin-bottom: 2px;">
+                                                                        <fmt:formatNumber value="${p.dailyPriceForDay / 1000}" maxFractionDigits="0" />k
+                                                                    </div>
+                                                                    <span class="big-money" style="color: #dc2626;"><fmt:formatNumber value="${(p.dailyPriceForDay * (1 - activeEvent.discount)) / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="big-money"><fmt:formatNumber value="${p.dailyPriceForDay / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </div>
                                                     </div>
                                                     
@@ -495,11 +523,31 @@
                                                         <c:if test="${discountWeek >= 1}">
                                                             <div class="discount-tag">GIẢM <fmt:formatNumber value="${discountWeek}" maxFractionDigits="0"/>%</div>
                                                         </c:if>
+                                                        <c:if test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                            <div class="discount-tag" style="background: #fee2e2; color: #dc2626; top: 15px;">SỰ KIỆN -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</div>
+                                                        </c:if>
                                                         <div class="price-box-title">Theo Tuần</div>
                                                         <div class="price-box-val">
-                                                            <span class="big-money"><fmt:formatNumber value="${p.dailyPriceForWeek / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                            <c:choose>
+                                                                <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                    <div style="font-size: 14px; color: #999; text-decoration: line-through; margin-bottom: 2px;">
+                                                                        <fmt:formatNumber value="${p.dailyPriceForWeek / 1000}" maxFractionDigits="0" />k
+                                                                    </div>
+                                                                    <span class="big-money" style="color: #dc2626;"><fmt:formatNumber value="${(p.dailyPriceForWeek * (1 - activeEvent.discount)) / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="big-money"><fmt:formatNumber value="${p.dailyPriceForWeek / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </div>
-                                                        <div class="price-box-total">Tổng: <fmt:formatNumber value="${p.dailyPriceForWeek * 7}" type="number" groupingUsed="true" /> VNĐ</div>
+                                                        <c:choose>
+                                                            <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                <div class="price-box-total">Tổng: <span style="text-decoration: line-through; color: #999;"><fmt:formatNumber value="${p.dailyPriceForWeek * 7}" type="number" groupingUsed="true" /></span> <span style="color: #dc2626; font-weight: bold;"><fmt:formatNumber value="${(p.dailyPriceForWeek * (1 - activeEvent.discount)) * 7}" type="number" groupingUsed="true" /></span> VNĐ</div>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="price-box-total">Tổng: <fmt:formatNumber value="${p.dailyPriceForWeek * 7}" type="number" groupingUsed="true" /> VNĐ</div>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                                     
                                                     <!-- BOX 3: Tháng -->
@@ -507,11 +555,31 @@
                                                         <c:if test="${discountMonth >= 1}">
                                                             <div class="discount-tag">GIẢM <fmt:formatNumber value="${discountMonth}" maxFractionDigits="0"/>%</div>
                                                         </c:if>
+                                                        <c:if test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                            <div class="discount-tag" style="background: #fee2e2; color: #dc2626; top: 15px;">SỰ KIỆN -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</div>
+                                                        </c:if>
                                                         <div class="price-box-title">Theo Tháng</div>
                                                         <div class="price-box-val">
-                                                            <span class="big-money"><fmt:formatNumber value="${p.dailyPriceForMonth / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                            <c:choose>
+                                                                <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                    <div style="font-size: 14px; color: #999; text-decoration: line-through; margin-bottom: 2px;">
+                                                                        <fmt:formatNumber value="${p.dailyPriceForMonth / 1000}" maxFractionDigits="0" />k
+                                                                    </div>
+                                                                    <span class="big-money" style="color: #dc2626;"><fmt:formatNumber value="${(p.dailyPriceForMonth * (1 - activeEvent.discount)) / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="big-money"><fmt:formatNumber value="${p.dailyPriceForMonth / 1000}" maxFractionDigits="0" />k</span> <span class="per-day">/ngày</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </div>
-                                                        <div class="price-box-total">Tổng: <fmt:formatNumber value="${p.dailyPriceForMonth * 30}" type="number" groupingUsed="true" /> VNĐ</div>
+                                                        <c:choose>
+                                                            <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                <div class="price-box-total">Tổng: <span style="text-decoration: line-through; color: #999;"><fmt:formatNumber value="${p.dailyPriceForMonth * 30}" type="number" groupingUsed="true" /></span> <span style="color: #dc2626; font-weight: bold;"><fmt:formatNumber value="${(p.dailyPriceForMonth * (1 - activeEvent.discount)) * 30}" type="number" groupingUsed="true" /></span> VNĐ</div>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="price-box-total">Tổng: <fmt:formatNumber value="${p.dailyPriceForMonth * 30}" type="number" groupingUsed="true" /> VNĐ</div>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                                 </div>
                                                 

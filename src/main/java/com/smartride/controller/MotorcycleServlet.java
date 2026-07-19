@@ -26,7 +26,7 @@ import java.util.Map;
 import com.smartride.dao.TouristLocationDAO;
 import com.smartride.dto.TouristLocation;
 
-@WebServlet(name = "MotorcycleServlet", urlPatterns = {"/motorcycle"})
+@WebServlet(name = "MotorcycleServlet", urlPatterns = {"/motorcycle", "/motorcycles"})
 public class MotorcycleServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

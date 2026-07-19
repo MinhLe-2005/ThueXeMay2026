@@ -24,6 +24,11 @@ public class BookingDAO {
     // Cấm new trực tiếp DAO
     //Chỉ new DAO qua hàm static getInstance() để quản lí được số object/instance đã new - SINGLETON DESIGN PATTERN
     private BookingDAO() {
+        try {
+            conn.createStatement().execute(
+                "ALTER TABLE \"Booking\" ADD COLUMN IF NOT EXISTS \"HandoverChecklist\" TEXT"
+            );
+        } catch (Exception ignored) {}
     }
     
     public static BookingDAO getInstance() {
@@ -144,6 +149,8 @@ public class BookingDAO {
                 b.setDeliveryStatus(rs.getString(8));
                 b.setVoucherID(rs.getInt(9));
                 b.setCustomerID(rs.getInt(10));
+                try { b.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
+                try { b.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
                 b.setListBookingDetails(listBookingDetails);
                 return b;
             }
@@ -203,6 +210,8 @@ public class BookingDAO {
                 b.setDeliveryStatus(rs.getString(8));
                 b.setVoucherID(rs.getInt(9));
                 b.setCustomerID(rs.getInt(10));
+                try { b.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
+                try { b.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
                 b.setListBookingDetails(listBookingDetails);
                 list.add(b);
             }
@@ -238,6 +247,63 @@ public class BookingDAO {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return motorcycleDetails;
+    }
+
+    public List<Map<String, Object>> getMotorcycleListForBooking(String bookingID) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String sql = "select m.\"MotorcycleID\", m.\"Model\", COUNT(m.\"MotorcycleID\") as \"Quantity\" "
+                + "from \"Motorcycle\" m "
+                + "JOIN \"Motorcycle Detail\" md ON m.\"MotorcycleID\" = md.\"MotorcycleID\" "
+                + "where md.\"MotorcycleDetailID\" IN ( "
+                + "    select \"MotorcycleDetailID\" from \"Booking Detail\" "
+                + "    where \"BookingID\" = ? "
+                + ") "
+                + "GROUP BY m.\"MotorcycleID\", m.\"Model\"";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, bookingID);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("motorcycleId", rs.getString("MotorcycleID"));
+                map.put("model", rs.getString("Model"));
+                map.put("quantity", rs.getInt("Quantity"));
+                list.add(map);
+            }
+            rs.close();
+            stm.close();
+        } catch (Exception ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public boolean checkOverlapForExtension(String bookingID, String newEndDate) {
+        String sql = "SELECT COUNT(*) FROM \"Booking Detail\" bd "
+                   + "JOIN \"Booking\" b ON bd.\"BookingID\" = b.\"BookingID\" "
+                   + "WHERE bd.\"MotorcycleDetailID\" IN ( "
+                   + "    SELECT \"MotorcycleDetailID\" FROM \"Booking Detail\" WHERE \"BookingID\" = ? "
+                   + ") "
+                   + "AND b.\"BookingID\" != ? "
+                   + "AND b.\"StatusBooking\" != 'Đã hủy' "
+                   + "AND b.\"StatusBooking\" != 'Từ chối' "
+                   + "AND CAST(b.\"StartDate\" AS TIMESTAMP) < CAST(? AS TIMESTAMP) "
+                   + "AND COALESCE((SELECT CAST(\"NewEndDate\" AS TIMESTAMP) FROM \"Extension\" WHERE \"BookingID\" = b.\"BookingID\" ORDER BY \"ExtensionDate\" DESC LIMIT 1), CAST(b.\"EndDate\" AS TIMESTAMP)) > (SELECT COALESCE((SELECT CAST(\"NewEndDate\" AS TIMESTAMP) FROM \"Extension\" WHERE \"BookingID\" = ? ORDER BY \"ExtensionDate\" DESC LIMIT 1), CAST(\"EndDate\" AS TIMESTAMP)) FROM \"Booking\" WHERE \"BookingID\" = ?)";
+        try {
+            java.sql.PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, bookingID);
+            stm.setString(2, bookingID);
+            stm.setString(3, newEndDate);
+            stm.setString(4, bookingID);
+            stm.setString(5, bookingID);
+            java.sql.ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
     
     public List<String> getMotorcyclePlatesByBookingID(String bookingID) {
@@ -284,6 +350,51 @@ public class BookingDAO {
         return false;
     }
     
+    public boolean updateDeliveryStatusWithChecklist(String deliveryStatus, String bookingID, String imagePaths, String checklistJson) {
+        PreparedStatement stm;
+        String sql = "UPDATE \"Booking\" SET \"DeliveryStatus\" = ?, \"DeliveryImage\" = ?, \"HandoverChecklist\" = ? WHERE \"BookingID\" = ?";
+        try {
+            stm = conn.prepareStatement(sql);
+            stm.setString(1, deliveryStatus);
+            stm.setString(2, imagePaths);
+            stm.setString(3, checklistJson);
+            stm.setString(4, bookingID);
+            
+            int rowAffect = stm.executeUpdate();
+            if (rowAffect > 0) {
+                if ("Đã trả".equals(deliveryStatus)) {
+                    updateBookingStatus(bookingID, "Đã hoàn thành");
+                }
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean updateDeliveryStatusWithImage(String deliveryStatus, String bookingID, String imagePath) {
+        PreparedStatement stm;
+        String sql = "UPDATE \"Booking\" SET \"DeliveryStatus\" = ?, \"DeliveryImage\" = ? WHERE \"BookingID\" = ?";
+        try {
+            stm = conn.prepareStatement(sql);
+            stm.setString(1, deliveryStatus);
+            stm.setString(2, imagePath);
+            stm.setString(3, bookingID);
+            
+            int rowAffect = stm.executeUpdate();
+            if (rowAffect > 0) {
+                if ("Đã trả".equals(deliveryStatus)) {
+                    updateBookingStatus(bookingID, "Đã hoàn thành");
+                }
+                return true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return false;
+    }
+
     public boolean updateDeliveryStatus(String deliveryStatus, String bookingID) {
         PreparedStatement stm;
         String sql = "UPDATE \"Booking\" SET \"DeliveryStatus\" = ? WHERE \"BookingID\" = ?";
@@ -331,7 +442,7 @@ public class BookingDAO {
     public void cancelExpiredPendingBookings(int minutes) {
         String sql = "SELECT \"BookingID\" FROM \"Booking\" "
                    + "WHERE \"StatusBooking\" = N'Chờ thanh toán' "
-                   + "  AND DATEDIFF(MINUTE, CAST(\"BookingDate\" AS DATETIME), GETDATE()) >= ?";
+                   + "  AND EXTRACT(EPOCH FROM (NOW() - CAST(\"BookingDate\" AS TIMESTAMP))) / 60 >= ?";
         java.util.List<String> expiredBookings = new java.util.ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, minutes);
@@ -405,6 +516,8 @@ public class BookingDAO {
                 b.setDeliveryStatus(rs.getString(8));
                 b.setVoucherID(rs.getInt(9));
                 b.setCustomerID(rs.getInt(10));
+                try { b.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
+                try { b.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
                 b.setListBookingDetails(listBookingDetails);
                 list.add(b);
             }
@@ -445,6 +558,8 @@ public class BookingDAO {
                 Account account = AccountDAO.getInstance().getAccountbyID(customer.getAccountId());
                 customer.setAccountId(account.getAccountId());
                 booking.setCustomerID(customer.getCustomerId());
+                try { booking.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
+                try { booking.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
                 
                 return booking;
             }
@@ -475,6 +590,8 @@ public class BookingDAO {
                 b.setDeliveryStatus(rs.getString(8));
                 b.setVoucherID(rs.getInt(9));
                 b.setCustomerID(rs.getInt(10));
+                try { b.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
+                try { b.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
                 list.add(b);
             }
         } catch (SQLException ex) {
@@ -491,16 +608,27 @@ public class BookingDAO {
     public List<String> markOverdueBookings() {
         List<String> overdueIds = new ArrayList<>();
         // Lấy các booking đang thuê nhưng đã qua EndDate (hoặc NewEndDate nếu đã gia hạn)
-        String sqlSelect = "SELECT b.\"BookingID\" FROM \"Booking\" b "
+        String sqlSelect = "SELECT b.\"BookingID\", c.\"AccountID\" FROM \"Booking\" b "
+                + "JOIN \"Customer\" c ON b.\"CustomerID\" = c.\"CustomerID\" "
                 + "LEFT JOIN \"Extension\" e ON b.\"BookingID\" = e.\"BookingID\" "
                 + "WHERE b.\"DeliveryStatus\" = 'Đã giao' "
                 + "AND b.\"StatusBooking\" = 'Đã xác nhận' "
-                + "AND COALESCE(e.\"NewEndDate\", b.\"EndDate\") < NOW()";
+                + "AND COALESCE(CAST(e.\"NewEndDate\" AS TIMESTAMP), CAST(b.\"EndDate\" AS TIMESTAMP)) < NOW()";
         try {
             PreparedStatement ps = conn.prepareStatement(sqlSelect);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                overdueIds.add(rs.getString("BookingID"));
+                String bookingID = rs.getString("BookingID");
+                int accountId = rs.getInt("AccountID");
+                overdueIds.add(bookingID);
+                
+                // Gửi thông báo cho khách hàng
+                try {
+                    String title = "Cảnh báo quá hạn trả xe!";
+                    String message = "Đơn hàng #" + bookingID + " đã hết thời gian thuê. Vui lòng mang xe đến trả hoặc gia hạn ngay để tránh phí phạt lố giờ.";
+                    String link = "bookingHistoryDetail?bookingId=" + bookingID;
+                    NotificationDAO.getInstance().insertNotification(accountId, title, message, link);
+                } catch (Exception e) {}
             }
             rs.close();
             ps.close();
@@ -515,14 +643,14 @@ public class BookingDAO {
                     + "WHERE \"BookingID\" = ?";
             try {
                 PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
-                for (String bid : overdueIds) {
-                    psUpdate.setString(1, bid);
+                for (String id : overdueIds) {
+                    psUpdate.setString(1, id);
                     psUpdate.addBatch();
                 }
                 psUpdate.executeBatch();
                 psUpdate.close();
             } catch (SQLException ex) {
-                Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, "Error in markOverdueBookings", ex);
             }
         }
         return overdueIds;
@@ -535,7 +663,7 @@ public class BookingDAO {
      */
     public double[] getOverdueDaysAndLateFee(String bookingID) {
         String sql = "SELECT "
-                + "CEIL(EXTRACT(EPOCH FROM (NOW() - COALESCE(e.\"NewEndDate\", b.\"EndDate\"))) / 86400) AS overdue_days, "
+                + "CEIL(EXTRACT(EPOCH FROM (NOW() - COALESCE(CAST(e.\"NewEndDate\" AS TIMESTAMP), CAST(b.\"EndDate\" AS TIMESTAMP)))) / 86400) AS overdue_days, "
                 + "b.\"EndDate\", "
                 + "COALESCE(e.\"NewEndDate\", b.\"EndDate\") AS effective_end_date, "
                 + "b.\"StartDate\" "
@@ -648,6 +776,59 @@ public class BookingDAO {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    // Save delivery start time and estimated minutes when staff marks as delivered
+    public boolean saveDeliveryEstimate(String bookingID, int estimatedMinutes) {
+        String sql = "UPDATE \"Booking\" SET \"delivery_start_time\" = NOW(), \"estimated_minutes\" = ? WHERE \"BookingID\" = ?";
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, estimatedMinutes);
+            ps.setString(2, bookingID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    // Get all deliveries that are late by more than 45 minutes from (Approval Time or Scheduled Time) and haven't sent voucher yet
+    public List<Map<String, Object>> getLateDeliveries() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String sql = "SELECT b.\"BookingID\", b.\"DeliveryLocation\", c.\"AccountID\" " +
+                     "FROM \"Booking\" b " +
+                     "JOIN \"Customer\" c ON c.\"CustomerID\" = b.\"CustomerID\" " +
+                     "WHERE b.\"DeliveryStatus\" != N'Đã giao' " +
+                     "AND b.\"StatusBooking\" IN (N'Đã xác nhận', N'Đã thanh toán') " +
+                     "AND b.\"DeliveryLocation\" NOT LIKE N'Tại cửa hàng%' " +
+                     "AND b.\"late_voucher_sent\" = FALSE " +
+                     "AND b.\"ApprovedDate\" IS NOT NULL " +
+                     "AND EXTRACT(EPOCH FROM (NOW() - GREATEST(b.\"ApprovedDate\", CAST(b.\"StartDate\" AS TIMESTAMP)))) / 60 > 45";
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Map<String, Object> row = new java.util.HashMap<>();
+                row.put("bookingID", rs.getString("BookingID"));
+                row.put("accountID", rs.getInt("AccountID"));
+                list.add(row);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return list;
+    }
+
+    // Mark that a late voucher has been sent for this booking
+    public boolean markLateVoucherSent(String bookingID) {
+        String sql = "UPDATE \"Booking\" SET \"late_voucher_sent\" = TRUE WHERE \"BookingID\" = ?";
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, bookingID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
     }
 }
 

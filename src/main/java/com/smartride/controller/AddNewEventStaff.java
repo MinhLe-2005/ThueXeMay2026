@@ -44,7 +44,7 @@ public class AddNewEventStaff extends HttpServlet {
             String staffID = null;
 
             // Create Event object
-            Event event = new Event(0, eventTitle, createdDate, startDate, endDate, content, publicUrl, discount, staffID);
+            Event event = new Event(0, eventTitle, createdDate, startDate, endDate, content, publicUrl, discount, staffID, false);
 
             // Add event to database
             eventDAO.addNewEvent(event);

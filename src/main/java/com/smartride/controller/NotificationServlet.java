@@ -37,7 +37,7 @@ public class NotificationServlet extends HttpServlet {
         String action = request.getParameter("action");
         
         if ("get".equals(action)) {
-            List<Notification> notifs = dao.getNotificationsForAccount(account.getAccountId());
+            List<Notification> notifs = dao.getNotificationsForAccount(account.getAccountId(), account.getRoleID());
             long unreadCount = notifs.stream().filter(n -> !n.isRead()).count();
             
             Gson gson = new Gson();

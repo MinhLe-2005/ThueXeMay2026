@@ -1,4 +1,4 @@
-﻿<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -330,7 +330,9 @@
             <div class="product-info d-flex">
                 <c:forEach var="motorcycle" items="${motorcycleBook}">
 
-                    <img style="margin-bottom: 20px" src="${motorcycle.Image}" alt="Motorcycle">
+                    <img style="margin-bottom: 20px" 
+                         src="${empty motorcycle['Image'] ? pageContext.request.contextPath.concat('/images/default.jpg') : (motorcycle['Image'].startsWith('http') ? motorcycle['Image'] : pageContext.request.contextPath.concat('/images/').concat(motorcycle['Image']))}" 
+                         alt="${motorcycle['Model']}" onerror="this.src='${pageContext.request.contextPath}/images/default.jpg'">
                     <div>
                         <h5>${motorcycle.Model}</h5>
                         <h7>Phân loại: ${motorcycle.CategoryName}</h7><br>

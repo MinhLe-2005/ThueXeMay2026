@@ -14,7 +14,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý thuê xe</title>
-
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
         <!-- Font Awesome 6 -->
@@ -73,6 +74,7 @@
                 display: flex;
                 background: transparent;
                 padding: 0;
+                list-style: none !important;
             }
             .nav-tabs li {
                 float: none !important;
@@ -324,11 +326,9 @@
     </head>
 
     <body>
-        <jsp:include page="/includes/staff/header-staff.jsp" />
-        <jsp:include page="/includes/staff/sidebar.jsp" />
         
         <!-- Main Content with proper offset for sidebar -->
-        <main id="main" class="main">
+        <div class="container-fluid mt-4">
             <div class="container-fluid" style="padding: 20px 30px;">
                 <div class="pagetitle" style="margin-bottom: 30px;">
                     <h1 style="color: #1a1816; font-weight: 800; font-size: 28px; text-transform: uppercase; margin: 0 0 10px 0; font-family: 'Tahoma', sans-serif;">QUẢN LÝ ĐẶT XE</h1>
@@ -467,17 +467,19 @@
                                                                                 </div>
                                                                             </c:when>
                                                                             <c:otherwise>
-                                                                                <c:set var="statusClass" value="${listB.deliveryStatus == 'Đã trả' ? 'status-returned' : (listB.deliveryStatus == 'Đã giao' ? 'status-delivered' : (listB.deliveryStatus == 'Chưa giao' ? 'status-pending' : 'status-empty'))}" />
-                                                                                <select name="delistatus_${listB.bookingID}" id="status-${listB.bookingID}" class="form-select form-select-sm ${statusClass}" aria-label="Trạng thái" onchange="document.getElementById('form-update-${listB.bookingID}').submit();" style="cursor: pointer;" ${listB.statusBooking == 'Chờ xác nhận' ? 'disabled' : ''}>
-                                                                                    <c:if test="${listB.statusBooking == 'Chờ xác nhận'}">
-                                                                                        <option value=""></option>
-                                                                                    </c:if>
-                                                                                    <c:if test="${listB.statusBooking != 'Chờ xác nhận'}">
-                                                                                        <option value="Chưa giao" ${listB.deliveryStatus == 'Chưa giao' ? 'selected' : ''}>Chờ nhận xe</option>
-                                                                                        <option value="Đã giao" ${listB.deliveryStatus == 'Đã giao' ? 'selected' : ''}>Đang thuê</option>
-                                                                                        <option value="Đã trả" ${listB.deliveryStatus == 'Đã trả' ? 'selected' : ''}>Đã trả xe</option>
-                                                                                    </c:if>
-                                                                                </select>
+                                                                                <c:choose>
+                                                                                    <c:when test="${listB.statusBooking == 'Chờ xác nhận' || listB.statusBooking == 'Đã hủy'}">
+                                                                                        <span class="text-muted font-monospace" style="font-size: 0.9rem;">-</span>
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <c:set var="statusClass" value="${listB.deliveryStatus == 'Đã trả' ? 'status-returned' : (listB.deliveryStatus == 'Đã giao' ? 'status-delivered' : (listB.deliveryStatus == 'Chưa giao' ? 'status-pending' : 'status-empty'))}" />
+                                                                                        <select name="delistatus_${listB.bookingID}" id="status-${listB.bookingID}" class="form-select form-select-sm ${statusClass}" aria-label="Trạng thái" onchange="document.getElementById('form-update-${listB.bookingID}').submit();" style="cursor: pointer;">
+                                                                                            <option value="Chưa giao" ${listB.deliveryStatus == 'Chưa giao' ? 'selected' : ''}>Chờ nhận xe</option>
+                                                                                            <option value="Đã giao" ${listB.deliveryStatus == 'Đã giao' ? 'selected' : ''}>Đang thuê</option>
+                                                                                            <option value="Đã trả" ${listB.deliveryStatus == 'Đã trả' ? 'selected' : ''}>Đã trả xe</option>
+                                                                                        </select>
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
                                                                             </c:otherwise>
                                                                         </c:choose>
                                                                     </td>
@@ -670,8 +672,35 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div style="padding: 30px 24px; background: #f8fafc;" class="info modal-body">
-                                <div class="container-fluid" id="order-details">
+                            <div style="padding: 20px 24px; background: #f8fafc;" class="info modal-body">
+                                <ul class="nav nav-tabs mb-3" id="bookingTab" role="tablist" style="border-bottom: 2px solid #e2e8f0;">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#order-details-tabpane" type="button" role="tab" style="font-weight: 600; color: #1e293b; border:none; background:transparent;">Chi tiết</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="chat-tab" data-bs-toggle="tab" data-bs-target="#order-chat-tabpane" type="button" role="tab" style="font-weight: 600; color: #64748b; border:none; background:transparent;" onclick="loadChatMessages()">Phản hồi & Báo cáo <span class="badge bg-danger rounded-pill" id="chat-badge" style="display:none;">!</span></button>
+                                    </li>
+                                </ul>
+                                
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        var tabEls = document.querySelectorAll('#bookingTab button[data-bs-toggle="tab"]');
+                                        tabEls.forEach(function(tabEl) {
+                                            tabEl.addEventListener('shown.bs.tab', function (event) {
+                                                event.target.style.color = '#1e293b';
+                                                event.target.style.borderBottom = '3px solid #3b82f6';
+                                                if(event.relatedTarget) {
+                                                    event.relatedTarget.style.color = '#64748b';
+                                                    event.relatedTarget.style.borderBottom = 'none';
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+
+                                <div class="tab-content" id="bookingTabContent">
+                                    <div class="tab-pane fade show active" id="order-details-tabpane" role="tabpanel">
+                                        <div class="container-fluid" id="order-details">
                                     <input type="hidden" id="modal-cusId">
                                     <div class="row" style="background: #ffffff; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 24px;">
                                         <div class="col-md-6 border-end">
@@ -774,8 +803,9 @@
                                     <div id="confirmyes" style="display: none;">
                                         <div class="row g-2">
                                             <div class="col-12" id="approveInvoiceArea" style="display: none;">
-                                                <button type="button" class="btn btn-warning w-100 py-3" style="font-weight: 700; border-radius: 8px; color: #92400e; background-color: #fef3c7; border: 1px solid #fcd34d;" onclick="showApproveInvoiceModal()">
-                                                    <i class="fas fa-file-invoice-dollar me-2"></i> Duyệt hóa đơn
+                                                <button type="button" class="btn btn-warning w-100 py-3" style="font-weight: 700; border-radius: 8px; color: #92400e; background-color: #fef3c7; border: 1px solid #fcd34d; display: flex; flex-direction: column; align-items: center;" onclick="showApproveInvoiceModal()">
+                                                    <div><i class="fas fa-file-invoice-dollar me-2"></i> Xác nhận đã nhận tiền (Thủ công)</div>
+                                                    <div style="font-size: 11px; font-weight: 500; opacity: 0.85; margin-top: 4px;">Dùng dự phòng khi hệ thống thanh toán bị lỗi</div>
                                                 </button>
                                             </div>
                                             <div class="col-12" id="paidInvoiceArea" style="display: none;">
@@ -783,6 +813,34 @@
                                                     <i class="fas fa-check-circle me-2"></i> <span id="paidInvoiceLabel">Đã thanh toán</span>
                                                 </button>
                                             </div>
+                                            <div class="col-12 mt-2" id="handoverArea" style="display: none;">
+                                                <button type="button" class="btn btn-primary w-100 py-3" style="font-weight: 700; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); display: flex; flex-direction: column; align-items: center;" onclick="showHandoverModal()">
+                                                    <div><i class="fas fa-motorcycle me-2"></i> Bàn Giao Xe & Thu Tiền Mặt</div>
+                                                    <div style="font-size: 11px; font-weight: 500; opacity: 0.85; margin-top: 4px;">Thu tiền, chụp ảnh tình trạng và giao xe cho khách</div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div> <!-- close order-details -->
+                                    </div> <!-- close order-details-tabpane -->
+                                    
+                                    <!-- CHAT TAB PANE -->
+                                    <div class="tab-pane fade" id="order-chat-tabpane" role="tabpanel">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px; background: #e0e7ff; color: #4f46e5; font-size: 18px;">
+                                                <i class="fas fa-headset"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold text-dark">Trao đổi với khách hàng</h6>
+                                                <small class="text-muted">Hỗ trợ các vấn đề về đơn hàng & báo lỗi</small>
+                                            </div>
+                                        </div>
+                                        <div id="chat-messages-container" style="height: 350px; overflow-y: auto; background: #f8fafc; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                                            <!-- Messages will be injected here -->
+                                        </div>
+                                        <div class="input-group" style="box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border-radius: 12px; overflow: hidden; background: #fff; padding: 4px; border: 1px solid #cbd5e1;">
+                                            <input type="text" id="chat-input" class="form-control" placeholder="Nhập nội dung phản hồi..." style="border: none; padding: 12px 16px; font-size: 14px; box-shadow: none;" onkeypress="if(event.key==='Enter') sendChatMessage()">
+                                            <button class="btn btn-primary rounded" type="button" style="padding: 0 20px; font-weight: 600; background: #4f46e5; border: none; margin: 2px;" onclick="sendChatMessage()"><i class="fas fa-paper-plane me-1"></i> Gửi</button>
                                         </div>
                                     </div>
                                 </div>
@@ -998,7 +1056,7 @@
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     </body>
     <script>
         // Toggle sidebar functionality
@@ -1010,17 +1068,86 @@
                 });
             }
         });
-        
+        function handleDeliveryStatusChange(selectEl, bId, deliveryAddress) {
+            var newVal = selectEl.value;
+            var oldVal = selectEl.dataset.oldVal || selectEl.options[0].value;
+            
+            if (!confirm('Cập nhật trạng thái giao xe?')) {
+                selectEl.value = oldVal;
+                return;
+            }
+            
+            document.getElementById('status-' + bId).value = newVal;
+            
+            if (newVal === 'Đã giao' && deliveryAddress && !deliveryAddress.includes('Your own address') === false) {
+                // Try OSRM calculation
+                var cleanAddr = deliveryAddress.replace('Your own address:', '').replace('Phí giao xe:', '').split('(')[0].trim();
+                var STORE_LAT = 16.0600, STORE_LON = 108.2096;
+                
+                fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(cleanAddr + ', Đà Nẵng, Việt Nam'))
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            return fetch('https://router.project-osrm.org/route/v1/driving/' + STORE_LON + ',' + STORE_LAT + ';' + data[0].lon + ',' + data[0].lat);
+                        }
+                        throw new Error('no geocode');
+                    })
+                    .then(r => r.json())
+                    .then(routeData => {
+                        var minutes = Math.ceil(routeData.routes[0].duration / 60);
+                        return fetch('${pageContext.request.contextPath}/api/save-delivery-estimate', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: 'bookingId=' + encodeURIComponent(bId) + '&minutes=' + minutes
+                        });
+                    })
+                    .catch(() => {})
+                    .finally(() => {
+                        document.getElementById('form-update-' + bId).submit();
+                    });
+            } else {
+                document.getElementById('form-update-' + bId).submit();
+            }
+            
+            selectEl.dataset.oldVal = newVal;
+        }
+
         function openUserModal(button) {
+            try {
             var modal = $('#user-form-modal');
-            modal.find('#modal-bookingId').text(button.getAttribute('data-bookingId'));
+            var bId = button.getAttribute('data-bookingId');
+            modal.find('#modal-bookingId').text(bId);
             modal.find('#modal-bookingDate').text(button.getAttribute('data-bookingDate'));
             modal.find('#modal-startDate').text(button.getAttribute('data-startDate'));
             modal.find('#modal-endDate').text(button.getAttribute('data-endDate'));
-            var sBooking = button.getAttribute('data-statusBooking');
-            var dStatus = button.getAttribute('data-deliveryStatus');
-            var sBHtml = sBooking === 'Đã xác nhận' ? '<span style="color: #059669; background: #ecfdf5; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #10b981;">' + sBooking + '</span>' : '<span style="color: #d97706; background: #fffbeb; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #fbbf24;">' + sBooking + '</span>';
-            var dSHtml = dStatus === 'Đã trả' ? '<span style="color: #059669; background: #ecfdf5; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #10b981;">' + dStatus + '</span>' : (dStatus === 'Đã giao' ? '<span style="color: #2563eb; background: #eff6ff; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #3b82f6;">' + dStatus + '</span>' : '<span style="color: #475569; background: #f1f5f9; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #cbd5e1;">' + dStatus + '</span>');
+            
+            var sBooking = button.getAttribute('data-statusBooking') || '';
+            var dStatus = button.getAttribute('data-deliveryStatus') || '';
+            var deliveryLocation = button.getAttribute('data-deliveryLocation') || '';
+            
+            var sBHtml = sBooking.includes('Đã xác') ? '<span style="color: #059669; background: #ecfdf5; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #10b981;">' + sBooking + '</span>' : '<span style="color: #d97706; background: #fffbeb; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #fbbf24;">' + sBooking + '</span>';
+            
+            // Editable Delivery Status Dropdown for Modal
+            var dSHtml = '';
+            if (dStatus.includes('Đã trả')) {
+                dSHtml = '<span style="color: #059669; background: #ecfdf5; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #10b981;">Đã trả xe</span>';
+            } else if (dStatus === 'Quá hạn') {
+                dSHtml = '<span style="color: #dc2626; background: #fef2f2; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #fca5a5;">Quá hạn</span>';
+            } else {
+                var isPending = dStatus.includes('Chưa giao');
+                var isDelivered = dStatus.includes('Đã giao');
+                var selColor = isDelivered ? '#2563eb' : '#475569';
+                var selBg = isDelivered ? '#eff6ff' : '#f1f5f9';
+                var selBorder = isDelivered ? '#3b82f6' : '#cbd5e1';
+                
+                var onChangeScript = "handleDeliveryStatusChange(this, '" + bId + "', '" + deliveryLocation.replace(/'/g, "\\\\'") + "')";
+                
+                dSHtml = `<select class="form-select form-select-sm" style="width: 140px; cursor: pointer; border-radius:6px; font-weight:600; color: \${selColor}; background: \${selBg}; border: 1px solid \${selBorder};" onchange="\${onChangeScript}">
+                            <option value="Chưa giao" \${isPending ? 'selected' : ''}>Chờ nhận xe</option>
+                            <option value="Đã giao" \${isDelivered ? 'selected' : ''}>Đang thuê</option>
+                            <option value="Đã trả">Đã trả xe</option>
+                          </select>`;
+            }
             
             modal.find('#modal-statusBooking').html(sBHtml);
             modal.find('#modal-deliveryLocation').text(button.getAttribute('data-deliveryLocation'));
@@ -1054,7 +1181,7 @@
                 $('#modal-paymentInfo').html('<span style="color:#d97706; background:#fffbeb; padding:2px 10px; border-radius:6px; border:1px solid #fbbf24;">' + payStatus + '</span>');
             }
 
-            if (statusBooking === 'Chờ xác nhận') {
+            if (sBooking.includes('Ch')) {
                 $('#confirmwait').show();
                 $('#confirmyes').hide();
             } else {
@@ -1069,9 +1196,22 @@
                     $('#approveInvoiceArea').show();
                     $('#paidInvoiceArea').hide();
                 }
+
+                var selectElement = button.closest('tr').querySelector('select[name^="delistatus_"]');
+                var deliveryStatus = selectElement ? selectElement.value : button.getAttribute('data-deliveryStatus');
+                if (deliveryStatus === 'Chưa giao') {
+                    $('#handoverArea').show();
+                } else {
+                    $('#handoverArea').hide();
+                }
             }
 
-            modal.modal('show');
+            var modalEl = document.getElementById('user-form-modal');
+            var bsModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            bsModal.show();
+            } catch (err) {
+                console.error("JS Error in openUserModal: ", err);
+            }
         }
         
         function viewImageFull(src) {
@@ -1107,7 +1247,7 @@
             if (expDate && expDate !== 'N/A') {
                 var parts = expDate.split('-');
                 if (parts.length === 3) {
-                    var expDateObj = new Date(parts[0], parts[1]-1, parts[2]);
+                    var expDateObj = new Date(parts[2], parts[1]-1, parts[0]);
                     var today = new Date();
                     if (expDateObj < today) {
                         $('#ai-badge-status').html('<span style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:700;"><i class="fas fa-exclamation-triangle me-1"></i>CCCD HẾT HẠN</span>').show();
@@ -1148,6 +1288,15 @@
             idCardHtml += generateImgHtml(frontImg, 'Mặt trước');
             idCardHtml += generateImgHtml(backImg, 'Mặt sau');
             $('#cinfo-idcards').html(idCardHtml);
+            
+            // Handle stacked modals (attach only once or just use CSS)
+            $('#customer-info-modal').off('show.bs.modal hidden.bs.modal');
+            $('#customer-info-modal').on('show.bs.modal', function () {
+                $('#user-form-modal').css('opacity', 0);
+            });
+            $('#customer-info-modal').on('hidden.bs.modal', function () {
+                $('#user-form-modal').css('opacity', 1);
+            });
             
             $('#customer-info-modal').modal('show');
         }
@@ -1327,7 +1476,6 @@
         }
 
         $('#confirmModalYesButton').click(function () {
-            alert('Xác nhận thành công');
             $('#confirmForm').submit();
         });
 
@@ -1350,7 +1498,6 @@
         }
 
         $('#confirmModalCancelButton').click(function () {
-            alert('Hủy đơn thành công');
             $('#rejectForm').submit();
         });
 
@@ -1362,7 +1509,6 @@
             $('#cancelBookingID').val(bookingId);
         }
         $('#confirmModalCancelYesButton').click(function () {
-            alert('Xác nhận thành công');
             $('#confirmFormCancel').submit();
 //            $('#tab-cancelling').tab('show');
         });
@@ -1374,7 +1520,6 @@
             $('#extendBookingID').val(bookingId);
         }
         $('#confirmModalExtendYesButton').click(function () {
-            alert('Xác nhận thành công');
             $('#confirmFormExtend').submit();
         });
 
@@ -1520,5 +1665,372 @@
         </div>
     </div>
     <!-- ===== END MODAL ===== -->
+
+<!-- Handover Modal -->
+<div class="modal fade" id="handoverModal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 16px 16px 0 0; border-bottom: 1px solid #bfdbfe; padding: 20px 24px;">
+                <h5 class="modal-title" style="font-weight: 800; color: #1e3a8a; margin: 0;">
+                    <i class="fas fa-clipboard-check me-2"></i>Bàn Giao Xe - <span id="handover-bId"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                
+                <!-- Thanh toán Section -->
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3 text-primary"><i class="fas fa-money-bill-wave me-2"></i>1. Xác nhận Thanh toán</h6>
+                    <div id="handover-payment-section" class="p-3 border rounded-3 bg-light text-center">
+                        <!-- QR Code will be loaded here -->
+                        <div id="handover-qr-container">
+                            <h4 class="text-danger fw-bold mb-1">Cần thu: <span id="handover-amount"></span> đ</h4>
+                            <p class="text-muted small mb-3">Mã đơn: <span id="handover-qr-note"></span></p>
+                            <img id="handover-qr-img" src="" alt="QR Code" style="width: 250px; border-radius: 12px; border: 1px solid #e2e8f0; display: inline-block;">
+                            <div class="mt-3">
+                                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                                <span class="text-primary fw-bold" id="handover-payment-status">Đang chờ quét mã...</span>
+                            </div>
+                            <div class="mt-3 pt-3 border-top d-flex justify-content-center gap-2">
+                                <button type="button" class="btn btn-outline-success btn-sm" onclick="markHandoverPaid('Tiền mặt')"><i class="fas fa-money-bill"></i> Đã thu tiền mặt</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="markHandoverPaid('Chuyển khoản (Xác nhận tay)')"><i class="fas fa-university"></i> Đã nhận CK</button>
+                            </div>
+                        </div>
+                        <div id="handover-paid-container" style="display: none;">
+                            <div class="py-4">
+                                <i class="fas fa-check-circle text-success" style="font-size: 48px;"></i>
+                                <h4 class="text-success fw-bold mt-3">Đã Thanh Toán</h4>
+                                <p class="mb-0 text-muted" id="handover-paid-method"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chụp Ảnh Section -->
+                <div>
+                    <h6 class="fw-bold mb-3 text-primary"><i class="fas fa-camera me-2"></i>2. Chụp ảnh tình trạng xe</h6>
+                    <p class="small text-muted mb-2">Bắt buộc chụp 5 góc để đối chiếu khi trả xe.</p>
+                    <div class="row g-2" id="handover-photos">
+                        <div class="col-4 col-md-2">
+                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
+                                <i class="fas fa-motorcycle text-muted mb-1"></i><small style="font-size: 11px;">Mặt trước</small>
+                                <input type="file" name="photo1" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 1)">
+                                <img id="h-preview-1" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
+                            </label>
+                        </div>
+                        <div class="col-4 col-md-2">
+                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
+                                <i class="fas fa-motorcycle text-muted mb-1" style="transform: scaleX(-1);"></i><small style="font-size: 11px;">Sườn trái</small>
+                                <input type="file" name="photo2" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 2)">
+                                <img id="h-preview-2" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
+                            </label>
+                        </div>
+                        <div class="col-4 col-md-2">
+                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
+                                <i class="fas fa-motorcycle text-muted mb-1"></i><small style="font-size: 11px;">Sườn phải</small>
+                                <input type="file" name="photo3" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 3)">
+                                <img id="h-preview-3" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
+                            </label>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
+                                <i class="fas fa-id-card text-muted mb-1"></i><small style="font-size: 11px;">Biển số xe</small>
+                                <input type="file" name="photo4" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 4)">
+                                <img id="h-preview-4" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
+                            </label>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
+                                <i class="fas fa-tachometer-alt text-muted mb-1"></i><small style="font-size: 11px;">Mặt đồng hồ</small>
+                                <input type="file" name="photo5" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 5)">
+                                <img id="h-preview-5" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #e2e8f0; padding: 16px 24px;">
+                <button type="button" class="btn btn-secondary" onclick="$('#handoverModal').modal('hide'); $('#user-form-modal').modal('show');">Quay lại</button>
+                <button type="button" class="btn btn-primary" id="btn-submit-handover" disabled onclick="submitHandover()" style="font-weight: 700; border-radius: 8px;">
+                    <i class="fas fa-check me-2"></i>Xác Nhận Bàn Giao
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let handoverPollingInterval;
+let isHandoverPaid = false;
+let uploadedPhotoCount = 0;
+
+function showHandoverModal() {
+    var bId = $('#modal-bookingId').text().trim();
+    var priceStr = $('#modal-Price').text().replace(/[^0-9]/g, '');
+    var totalAmount = parseInt(priceStr) || 0;
+    
+    // Check if there's any payment made
+    var paidStr = $('#modal-paymentInfo').text();
+    var hasPaid = !paidStr.includes('Chưa thanh toán');
+    
+    $('#handover-bId').text(bId);
+    
+    // Reset modal state
+    isHandoverPaid = hasPaid;
+    uploadedPhotoCount = 0;
+    for(let i=1; i<=5; i++) {
+        $('#h-preview-' + i).hide().attr('src', '');
+        $('input[name="photo'+i+'"]').val('');
+    }
+    checkHandoverReady();
+    
+    if (hasPaid) {
+        $('#handover-qr-container').hide();
+        $('#handover-paid-container').show();
+        $('#handover-paid-method').text('Phương thức: ' + $('#modal-paymentInfo').text());
+    } else {
+        // Assume deposit might be paid elsewhere, but here we assume total amount needs to be paid if status is Chua thanh toan
+        $('#handover-qr-container').show();
+        $('#handover-paid-container').hide();
+        $('#handover-amount').text(totalAmount.toLocaleString('vi-VN'));
+        var note = 'SMARTRIDE ' + bId;
+        $('#handover-qr-note').text(note);
+        
+        // VCB 1037077133 as configured in sepay_pay.jsp
+        var qrUrl = 'https://qr.sepay.vn/img?bank=VCB&acc=1037077133&template=compact&amount=' + totalAmount + '&des=' + encodeURIComponent(note);
+        $('#handover-qr-img').attr('src', qrUrl);
+        
+        // Start polling
+        if(handoverPollingInterval) clearInterval(handoverPollingInterval);
+        handoverPollingInterval = setInterval(function() {
+            fetch('${pageContext.request.contextPath}/api/check-payment?bookingId=' + bId)
+            .then(r => r.json())
+            .then(data => {
+                if(data.status === 'success' && data.paid) {
+                    markHandoverPaid('SePay Chuyển khoản');
+                }
+            });
+        }, 3000);
+    }
+    
+    $('#user-form-modal').modal('hide');
+    $('#handoverModal').modal('show');
+}
+
+function markHandoverPaid(method) {
+    if(handoverPollingInterval) clearInterval(handoverPollingInterval);
+    isHandoverPaid = true;
+    $('#handover-qr-container').hide();
+    $('#handover-paid-container').show();
+    $('#handover-paid-method').text('Phương thức: ' + method);
+    
+    // Auto submit to approve manual invoice if needed
+    if(method !== 'SePay Chuyển khoản') {
+        var bId = $('#modal-bookingId').text().trim();
+        fetch('${pageContext.request.contextPath}/manageBooking', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'manualPayment=true&bookingID=' + encodeURIComponent(bId)
+        });
+    }
+    checkHandoverReady();
+}
+
+function compressImage(file, maxWidth, maxHeight, quality) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(event) {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = function() {
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round(height *= maxWidth / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round(width *= maxHeight / height);
+                        height = maxHeight;
+                    }
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    resolve(new File([blob], file.name, {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                    }));
+                }, 'image/jpeg', quality);
+            };
+            img.onerror = function(err) { reject(err); };
+        };
+        reader.onerror = function(err) { reject(err); };
+    });
+}
+
+async function submitHandover() {
+    var bId = $('#modal-bookingId').text().trim();
+    var formData = new FormData();
+    formData.append('bookingId', bId);
+    
+    $('#btn-submit-handover').html('<i class="fas fa-spinner fa-spin me-2"></i>Đang nén ảnh & xử lý...').prop('disabled', true);
+    
+    try {
+        for(let i=1; i<=5; i++) {
+            var fileInput = document.querySelector('input[name="photo'+i+'"]');
+            if(fileInput.files[0]) {
+                // Compress image before upload (max 1200px, 80% quality)
+                let compressedFile = await compressImage(fileInput.files[0], 1200, 1200, 0.8);
+                formData.append('photo'+i, compressedFile);
+            }
+        }
+        
+        let response = await fetch('${pageContext.request.contextPath}/api/handover-upload', {
+            method: 'POST',
+            body: formData
+        });
+        let data = await response.json();
+        
+        if(data.status === 'success') {
+            alert('Bàn giao thành công! Trạng thái đã chuyển sang Đang thuê.');
+            location.reload();
+        } else {
+            alert('Lỗi: ' + data.message);
+            $('#btn-submit-handover').html('<i class="fas fa-check me-2"></i>Xác Nhận Bàn Giao').prop('disabled', false);
+        }
+    } catch (e) {
+        alert('Lỗi hệ thống: ' + e);
+        $('#btn-submit-handover').html('<i class="fas fa-check me-2"></i>Xác Nhận Bàn Giao').prop('disabled', false);
+    }
+}
+
+function previewHandoverImg(input, index) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var img = $('#h-preview-' + index);
+            if(img.attr('src') === '') uploadedPhotoCount++;
+            img.attr('src', e.target.result).show();
+            checkHandoverReady();
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function checkHandoverReady() {
+    if (isHandoverPaid && uploadedPhotoCount === 5) {
+        $('#btn-submit-handover').prop('disabled', false);
+    } else {
+        $('#btn-submit-handover').prop('disabled', true);
+    }
+}
+
+// ========================== CHAT LOGIC ==========================
+let chatInterval = null;
+
+function loadChatMessages() {
+    var bId = $('#modal-bookingId').text().trim();
+    if(!bId) return;
+    
+    fetch('${pageContext.request.contextPath}/api/chat?bookingId=' + bId)
+    .then(r => r.json())
+    .then(data => {
+        let html = '';
+        data.forEach(msg => {
+            let isStaff = msg.senderRole === 'STAFF';
+            let align = isStaff ? 'flex-end' : 'flex-start';
+            let bgColor = isStaff ? '#3b82f6' : '#f1f5f9';
+            let textColor = isStaff ? 'white' : '#1e293b';
+            let borderRadius = isStaff ? '16px 16px 4px 16px' : '16px 16px 16px 4px';
+            
+            html += `
+            <div style="display: flex; flex-direction: column; align-items: \${align}; margin-bottom: 8px;">
+                <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">\${msg.senderName} • \${msg.sentAt}</div>
+                <div style="background: \${bgColor}; color: \${textColor}; padding: 10px 16px; border-radius: \${borderRadius}; max-width: 80%; word-wrap: break-word;">
+                    \${msg.message}
+                </div>
+            </div>`;
+        });
+        
+        let container = $('#chat-messages-container');
+        let shouldScroll = container[0].scrollHeight - container.scrollTop() <= container.outerHeight() + 50;
+        
+        container.html(html);
+        
+        if (shouldScroll || data.length === 0) {
+            container.scrollTop(container[0].scrollHeight);
+        }
+    })
+    .catch(console.error);
+}
+
+function sendChatMessage() {
+    var bId = $('#modal-bookingId').text().trim();
+    var msgInput = $('#chat-input');
+    var text = msgInput.val().trim();
+    
+    if(!text || !bId) return;
+    
+    msgInput.val(''); // clear early
+    
+    fetch('${pageContext.request.contextPath}/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ bookingId: bId, message: text })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if(data.status === 'success') {
+            loadChatMessages(); // reload immediately
+        }
+    })
+    .catch(console.error);
+}
+
+// Auto load chat and Auto open chat tab
+$(document).ready(function() {
+    // If URL has openChat=true and bookingId
+    var urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('openChat') === 'true' && urlParams.get('bookingId')) {
+        var bId = urlParams.get('bookingId');
+        // Find the button with this bookingId and click it to open modal
+        var btn = $('button[data-bookingid="'+bId+'"]');
+        if(btn.length > 0) {
+            btn[0].click();
+            // Switch to chat tab
+            setTimeout(function() {
+                var triggerEl = document.querySelector('#chat-tab');
+                bootstrap.Tab.getInstance(triggerEl)?.show() || new bootstrap.Tab(triggerEl).show();
+            }, 500);
+        }
+    }
+    
+    // Setup polling when modal is open
+    var modalEl = document.getElementById('user-form-modal');
+    modalEl.addEventListener('show.bs.modal', function () {
+        // Switch back to details tab by default
+        var triggerEl = document.querySelector('#details-tab');
+        bootstrap.Tab.getInstance(triggerEl)?.show() || new bootstrap.Tab(triggerEl).show();
+        
+        if (chatInterval) clearInterval(chatInterval);
+        chatInterval = setInterval(loadChatMessages, 3000);
+    });
+    
+    modalEl.addEventListener('hidden.bs.modal', function () {
+        if (chatInterval) clearInterval(chatInterval);
+    });
+});
+
+</script>
 
 </html>

@@ -32,10 +32,47 @@ public class NotificationDAO implements Serializable {
         return instance;
     }
 
-    public List<Notification> getNotificationsForAccount(int accountId) {
+    public boolean isEventPublished(String eventTitle) {
+        String searchTitle = "🎉 Sự Kiện Mới: " + eventTitle;
+        String sql = "SELECT 1 FROM \"Notification\" WHERE title = ? AND account_id IS NULL LIMIT 1";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, searchTitle);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(NotificationDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    public boolean isVoucherPublished(String voucherCode) {
+        String searchMessage = "%" + voucherCode + "%";
+        String sql = "SELECT 1 FROM \"Notification\" WHERE title LIKE '%Voucher%' AND message LIKE ? AND account_id IS NULL LIMIT 1";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, searchMessage);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(NotificationDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    public List<Notification> getNotificationsForAccount(int accountId, int roleId) {
         List<Notification> list = new ArrayList<>();
-        // Lấy thông báo cá nhân + thông báo chung (account_id IS NULL)
-        String sql = "SELECT * FROM \"Notification\" WHERE account_id = ? OR account_id IS NULL ORDER BY created_at DESC LIMIT 20";
+        // Khách hàng (roleId == 1) nhận được thông báo chung (NULL), Staff/Admin (roleId > 1) chỉ nhận thông báo cá nhân
+        String sql;
+        if (roleId == 1) {
+            sql = "SELECT * FROM \"Notification\" WHERE account_id = ? OR account_id IS NULL ORDER BY created_at DESC LIMIT 20";
+        } else {
+            sql = "SELECT * FROM \"Notification\" WHERE account_id = ? ORDER BY created_at DESC LIMIT 20";
+        }
         try {
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setInt(1, accountId);
@@ -83,6 +120,21 @@ public class NotificationDAO implements Serializable {
 
     public boolean insertBroadcastNotification(String title, String message, String link) {
         String sql = "INSERT INTO \"Notification\" (account_id, title, message, link, is_read) VALUES (NULL, ?, ?, ?, FALSE)";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, title);
+            stm.setString(2, message);
+            stm.setString(3, link);
+            return stm.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(NotificationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean insertStaffNotification(String title, String message, String link) {
+        String sql = "INSERT INTO \"Notification\" (account_id, title, message, link, is_read) " +
+                     "SELECT \"AccountID\", ?, ?, ?, FALSE FROM \"Account\" WHERE \"RoleID\" IN (2, 3)";
         try {
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, title);

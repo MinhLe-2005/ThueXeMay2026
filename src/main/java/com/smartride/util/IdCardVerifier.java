@@ -118,8 +118,23 @@ public class IdCardVerifier {
         r.type    = extractString(fptJson, "\"type\"");
 
         r.idMatch   = storedId   != null && r.ocrId   != null && normalize(storedId).equals(normalize(r.ocrId));
-        r.nameMatch = storedName != null && r.ocrName != null
-                && normalizeVN(storedName).equalsIgnoreCase(normalizeVN(r.ocrName));
+        r.nameMatch = false;
+        if (storedName != null && r.ocrName != null) {
+            String normDB = normalizeVN(storedName);
+            String normOCR = normalizeVN(r.ocrName);
+            if (normDB.equalsIgnoreCase(normOCR)) {
+                r.nameMatch = true;
+            } else {
+                // Ignore word order
+                String[] dbWords = normDB.split("\\s+");
+                String[] ocrWords = normOCR.split("\\s+");
+                java.util.Set<String> dbSet = new java.util.HashSet<>(java.util.Arrays.asList(dbWords));
+                java.util.Set<String> ocrSet = new java.util.HashSet<>(java.util.Arrays.asList(ocrWords));
+                if (dbSet.equals(ocrSet)) {
+                    r.nameMatch = true;
+                }
+            }
+        }
 
         // Kiểm tra ngày hết hạn CCCD (ocrDoe định dạng dd/MM/yyyy hoặc yyyy-MM-dd hoặc ddMMyyyy)
         r.doeValid = true;

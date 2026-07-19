@@ -1496,26 +1496,30 @@
                                         <h2><a href="motorcycleDetail?id=${motorbike.motorcycleId}">${motorbike.model}</a></h2>
                                         <div class="category-label">${categoryMap[motorbike.categoryID]}</div>
                                         <div class="price-section">
-                                            <c:choose>
-                                                <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
-                                                    <div style="display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 5px;">
-                                                        <span style="font-size: 14px; color: #999; text-decoration: line-through;">
-                                                            <fmt:formatNumber value="${priceMap[motorbike.priceListID]}" type="number" maxFractionDigits="0"/>₫
-                                                        </span>
-                                                        <span style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px;">
-                                                            -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
-                                                        </span>
-                                                    </div>
-                                                    <div class="price-main">
-                                                        <fmt:formatNumber value="${priceMap[motorbike.priceListID] * (1 - activeEvent.discount)}" type="number" maxFractionDigits="0"/>₫<span class="price-unit">/ngày</span>
-                                                    </div>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <div class="price-main">
-                                                        <fmt:formatNumber value="${priceMap[motorbike.priceListID]}" type="number" maxFractionDigits="0"/>₫<span class="price-unit">/ngày</span>
-                                                    </div>
-                                                </c:otherwise>
-                                            </c:choose>
+                                            <c:forEach items="${priceLists}" var="p">
+                                                <c:if test="${motorbike.priceListID == p.priceListId}">
+                                                    <c:choose>
+                                                        <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                            <div style="display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 5px;">
+                                                                <span style="font-size: 14px; color: #999; text-decoration: line-through;">
+                                                                    <fmt:formatNumber value="${p.dailyPriceForDay}" type="number" maxFractionDigits="0"/>₫
+                                                                </span>
+                                                                <span style="color: #dc2626; font-size: 12px; font-weight: bold; background: #fee2e2; padding: 2px 6px; border-radius: 4px;">
+                                                                    -<fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%
+                                                                </span>
+                                                            </div>
+                                                            <div class="price-main">
+                                                                <fmt:formatNumber value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" type="number" maxFractionDigits="0"/>₫<span class="price-unit">/ngày</span>
+                                                            </div>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div class="price-main">
+                                                                <fmt:formatNumber value="${p.dailyPriceForDay}" type="number" maxFractionDigits="0"/>₫<span class="price-unit">/ngày</span>
+                                                            </div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:if>
+                                            </c:forEach>
                                         </div>
                                         <div class="button-wrapper">
                                             <a href="motorcycleDetail?id=${motorbike.motorcycleId}" class="btn outline-huhu">CHI TIẾT</a>

@@ -21,10 +21,10 @@
         }
     })();
 </script>
-<!-- Google Fonts: Inter + Playfair Display -->
+<!-- Google Fonts: Inter + Be Vietnam Pro -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Vendor CSS Files -->
 <link href="staffAssets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -56,6 +56,25 @@
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
+        <ul class="d-flex align-items-center">
+
+            <!-- Notification Dropdown -->
+            <li class="nav-item dropdown pe-3" style="position: relative; margin-top:5px; margin-right: 15px;">
+                <a class="nav-link nav-icon px-2" href="#" data-bs-toggle="dropdown" style="position: relative; color: #1e293b;">
+                    <i class="bi bi-bell" style="font-size: 24px;"></i>
+                    <span class="badge bg-danger badge-number" id="staffNotifBadge" style="position: absolute; top: 0px; right: 0px; font-size: 10px; border-radius: 50%; padding: 3px 6px; display: none;">0</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" id="staffNotifDropdown" style="width: 320px; max-height: 400px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 12px; border: 1px solid #e2e8f0; padding: 0;">
+                    <li class="dropdown-header d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+                        <span class="fw-bold" style="color: #0f172a;">Thông báo</span>
+                        <a href="javascript:void(0)" onclick="markAllStaffNotifsAsRead()" style="font-size: 12px; color: #3b82f6; text-decoration: none;">Đánh dấu đã đọc</a>
+                    </li>
+                    <div id="staffNotifList">
+                        <!-- Notifications will be loaded here via JS -->
+                    </div>
+                </ul>
+            </li><!-- End Notification Nav -->
+
             <li class="nav-item dropdown pe-3">
 
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
@@ -96,4 +115,99 @@
     </nav><!-- End Icons Navigation -->
 
 </header><!-- End Header -->
+
+<!-- Notification Script for Staff -->
+<script>
+    function fetchStaffNotifications() {
+        $.ajax({
+            url: '${pageContext.request.contextPath}/notification',
+            type: 'GET',
+            data: { action: 'get' },
+            success: function(response) {
+                if(response.status === 'success') {
+                    updateStaffNotifUI(response.unreadCount, response.data);
+                }
+            }
+        });
+    }
+
+    function updateStaffNotifUI(unreadCount, items) {
+        var badge = document.getElementById('staffNotifBadge');
+        if (unreadCount > 0) {
+            badge.innerText = unreadCount;
+            badge.style.display = 'block';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        var list = document.getElementById('staffNotifList');
+        if (!items || items.length === 0) {
+            list.innerHTML = '<div class="p-4 text-center text-muted" style="font-size: 13px;">Không có thông báo nào</div>';
+            return;
+        }
+
+        var html = '';
+        var hasSOS = false;
+        items.forEach(function(item) {
+            var isSOS = item.title.includes("SOS") || item.title.includes("KHẨN CẤP");
+            if(isSOS && !item.read) hasSOS = true;
+            
+            var bgClass = item.read ? 'bg-white' : (isSOS ? 'bg-danger bg-opacity-10' : 'bg-primary bg-opacity-10');
+            var titleColor = isSOS ? 'text-danger' : 'text-dark';
+            var icon = isSOS ? '<i class="fas fa-exclamation-triangle text-danger me-3 fs-4"></i>' : '<i class="fas fa-bell text-primary me-3 fs-4"></i>';
+            
+            var link = item.link ? item.link : '#';
+            var clickHandler = item.link ? "markStaffNotifAsRead(" + item.notificationId + ", '" + item.link + "')" : "markStaffNotifAsRead(" + item.notificationId + ", null)";
+            
+            html += '<a href="javascript:void(0)" onclick="' + clickHandler + '" class="d-flex align-items-start p-3 border-bottom text-decoration-none ' + bgClass + '">';
+            html += icon;
+            html += '<div style="flex-grow:1;">';
+            html += '<h6 class="mb-1 fw-bold ' + titleColor + '" style="font-size: 14px;">' + item.title + '</h6>';
+            html += '<p class="mb-1 text-muted" style="font-size: 12px; line-height: 1.4;">' + item.message + '</p>';
+            html += '</div>';
+            html += '</a>';
+        });
+        list.innerHTML = html;
+        
+        // Cảnh báo đỏ liên tục nếu có SOS chưa đọc
+        var bellIcon = document.querySelector('.bi-bell');
+        if(hasSOS) {
+            badge.classList.add('animate__animated', 'animate__flash', 'animate__infinite');
+            bellIcon.style.color = '#dc2626';
+        } else {
+            badge.classList.remove('animate__animated', 'animate__flash', 'animate__infinite');
+            bellIcon.style.color = '';
+        }
+    }
+
+    function markStaffNotifAsRead(id, link) {
+        $.ajax({
+            url: '${pageContext.request.contextPath}/notification',
+            type: 'POST',
+            data: { action: 'markRead', id: id },
+            success: function() {
+                fetchStaffNotifications();
+                if(link) {
+                    window.open(link, '_blank');
+                }
+            }
+        });
+    }
+
+    function markAllStaffNotifsAsRead() {
+        $.ajax({
+            url: '${pageContext.request.contextPath}/notification',
+            type: 'POST',
+            data: { action: 'markAllRead' },
+            success: function() {
+                fetchStaffNotifications();
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        fetchStaffNotifications();
+        setInterval(fetchStaffNotifications, 10000); // Polling every 10 seconds for emergencies
+    });
+</script>
 </c:if>

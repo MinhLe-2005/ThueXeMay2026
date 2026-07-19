@@ -18,7 +18,7 @@ public class FileUploaded {
         String originalFileName = getFileName(part);
         if (originalFileName != null && !originalFileName.isEmpty()) {
             // Upload to Supabase and return the public URL
-            String publicUrl = com.smartride.util.SupabaseStorageUtil.uploadFile(part.getInputStream(), fileName, bucketName);
+            String publicUrl = com.smartride.util.SupabaseStorageUtil.uploadFile(bucketName, fileName, part.getInputStream(), part.getContentType());
             return publicUrl;
         }
         return null;

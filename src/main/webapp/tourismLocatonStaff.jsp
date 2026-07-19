@@ -1,633 +1,740 @@
-﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
-    <head>
-        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản lý các địa điểm du lịch</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
-
-        <style>
-    body, html { height: 100%; margin: 0; font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
-    .container-fluid { padding: 2rem; }
+<head>
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/newlogo_transparent.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý các địa điểm du lịch - SmartRide</title>
     
-    /* --- Card Container --- */
-    .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: none; margin-bottom: 2rem; }
-    .card-header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; }
-    .card-title { color: #1e293b; font-size: 1.25rem; font-weight: 600; margin: 0; }
-    .card-body { padding: 0; }
-
-    /* --- Table Styles --- */
-    .table-responsive { overflow-x: auto; border-radius: 0 0 12px 12px; }
-    .table { margin-bottom: 0; width: 100%; border-collapse: separate !important; border-spacing: 0 !important; border: 1px solid #e2e8f0 !important; border-radius: 8px !important; overflow: hidden !important;}
-    .table th { background-color: #f1f5f9 !important; color: #334155 !important; font-size: 0.85rem !important; font-weight: 600; text-transform: uppercase !important; letter-spacing: 0.5px !important; padding: 14px 16px !important; border-bottom: 2px solid #cbd5e1 !important; border-right: 1px solid #e2e8f0 !important; text-align: center; vertical-align: middle; white-space: nowrap; }
-    .table th:last-child { border-right: none !important; }
-    .table td { vertical-align: middle !important; padding: 16px 16px !important; border-bottom: 1px solid #e2e8f0 !important; border-right: 1px solid #e2e8f0 !important; color: #334155; font-size: 15px !important; text-align: center; transition: background-color 0.2s; }
-    .table td:last-child { border-right: none !important; }
-    .table tbody tr:hover td { background-color: #f8fafc; }
-    .table tr:last-child td { border-bottom: none !important; }
-    .table img { max-width: 80px; height: auto; max-height: 80px; object-fit: contain; border-radius: 6px; border: 1px solid #e2e8f0; padding: 2px; }
-
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    /* --- Custom Select & Text Truncate --- */
-    .custom-select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23475569"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center; background-size: 16px; background-color: #fff; border: 1px solid #cbd5e1; border-radius: 20px; padding: 6px 36px 6px 16px; font-weight: 500; color: #475569; transition: all 0.2s; cursor: pointer; height: auto; }
-    .custom-select:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
-    .dataTables_wrapper .dataTables_length select { margin: 0 10px; border: 1px solid #cbd5e1; border-radius: 20px; padding: 5px 30px 5px 15px; outline: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23475569"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 8px center; background-size: 16px; appearance: none; -webkit-appearance: none; }
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    .desc-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 160px; color: #6c757d; font-size: 13px; text-align: center; margin: 0 auto; }
-    .url-text { max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; color: #3b82f6; text-decoration: none; }
-    .url-text:hover { text-decoration: underline; }
+    <!-- Bootstrap Icons & Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
 
-    /* --- Button Styles --- */
-    .btn-custom-add { background: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%); color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(212, 175, 55, 0.3); }
-    .btn-custom-add:hover { background: linear-gradient(135deg, #c5a030 0%, #e3b70e 100%); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(212, 175, 55, 0.4); }
-    .action-buttons .btn { border-radius: 6px; padding: 6px 10px; margin: 0 3px; font-size: 0.85rem; transition: all 0.2s; }
-    .btn-edit { background-color: #ecfeff; color: #0891b2; border: 1px solid #a5f3fc; }
-    .btn-edit:hover { background-color: #cffafe; color: #0e7490; }
-    .btn-delete { background-color: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
-    .btn-delete:hover { background-color: #fee2e2; color: #b91c1c; }
+    <!-- Simple Datatables -->
+    <link href="staffAssets/vendor/simple-datatables/style.css" rel="stylesheet">
 
-    /* --- Modal Styles --- */
-    .modal-content { border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-    .modal-header { background: #fff; border-bottom: 1px solid #e2e8f0; border-radius: 12px 12px 0 0; padding: 1.5rem; }
-    .modal-title { color: #1e293b; font-weight: 600; font-size: 1.25rem; }
-    .modal-body { padding: 1.5rem; }
-    .modal-footer { border-top: 1px solid #e2e8f0; padding: 1rem 1.5rem; background: #f8fafc; border-radius: 0 0 12px 12px; }
-    .close { color: #64748b; opacity: 0.7; transition: opacity 0.2s; }
-    .close:hover { opacity: 1; color: #0f172a; }
-    .form-control, .form-control-file { border-radius: 6px; border: 1px solid #cbd5e1; padding: 0.5rem 0.75rem; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
-    .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-    label { font-weight: 500; color: #475569; margin-bottom: 0.5rem; display: inline-block; }
-</style>
-    </head>
+    <style>
+        :root {
+            --gold: #b59349;
+            --gold-light: #d4af37;
+            --dark: #1a1816;
+            --bg: #f0f2f5;
+            --card-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+        
+        body, html {
+            background-color: var(--bg);
+            margin: 0;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            color: #334155;
+        }
 
-    <body>
-        <div class="container-fluid mt-4">
-            <div class="pagetitle" style="margin-bottom: 20px; padding-left: 0;">
-                <h1 style="color: #1a1816; font-weight: 800; font-size: 24px; text-transform: uppercase; margin-top: 0; margin-bottom: 5px; font-family: 'Tahoma', sans-serif;">QUẢN LÝ ĐỊA ĐIỂM DU LỊCH</h1>
-                <nav>
-                    <ol class="breadcrumb" style="background: transparent; padding: 0; margin: 0; font-size: 14px;">
-                        <li style="display: inline-block;"><a href="homeStaff" target="_top" style="color: #b59349; text-decoration: none; font-weight: 600;">Trang chủ</a></li>
-                        <li class="active" style="display: inline-block; font-weight: 500; color: #6c757d;">Quản lý địa điểm du lịch</li>
-                    </ol>
-                </nav>
-            </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title"><i class="fa fa-map-marked-alt text-primary mr-2"></i> DANH SÁCH ĐỊA ĐIỂM DU LỊCH</h3>
-                    <button class="btn btn-custom-add" data-toggle="modal" data-target="#addLocationModal">
-                        <i class="fa fa-plus-circle"></i> Thêm Mới Địa Điểm
-                    </button>
+        .main-container {
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-title {
+            color: #1a1816;
+            font-weight: 800;
+            font-size: 24px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .breadcrumb-custom {
+            display: flex;
+            gap: 8px;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .breadcrumb-custom a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Content Card */
+        .content-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Buttons */
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.25s;
+            box-shadow: 0 4px 12px rgba(181, 147, 73, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(181, 147, 73, 0.3);
+            color: #fff;
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            transition: all 0.2s;
+            margin: 0 2px;
+        }
+        .btn-edit { background: #ecfeff; color: #0891b2; }
+        .btn-edit:hover { background: #0891b2; color: #fff; }
+        .btn-delete { background: #fef2f2; color: #ef4444; }
+        .btn-delete:hover { background: #ef4444; color: #fff; }
+        .btn-manage-moto {
+            background: rgba(181, 147, 73, 0.1);
+            color: var(--gold-dark);
+            border: 1px solid rgba(181, 147, 73, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-manage-moto:hover {
+            background: var(--gold);
+            color: #fff;
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        .modal-header-gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            border: none;
+            padding: 20px 24px;
+        }
+        .modal-header-gold .modal-title {
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .btn-close-white {
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+        .btn-close-white:hover { opacity: 1; }
+        .modal-body { padding: 24px; }
+        .modal-footer {
+            border-top: 1px solid #f1f5f9;
+            padding: 16px 24px;
+            background: #f8fafc;
+        }
+
+        /* Form Controls */
+        .form-label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            padding: 10px 14px;
+            font-size: 14px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(181, 147, 73, 0.15);
+        }
+        
+        /* Table Customization */
+        .datatable-top { padding: 0 0 20px 0 !important; }
+        .datatable-search .datatable-input {
+            border-radius: 20px !important;
+            padding: 8px 16px !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        .datatable-search .datatable-input:focus {
+            border-color: var(--gold) !important;
+            box-shadow: 0 0 0 3px rgba(181,147,73,0.15) !important;
+            outline: none;
+        }
+        .table-custom { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .table-custom th {
+            background: linear-gradient(135deg, #1a1816 0%, #2d2926 100%) !important;
+            color: #fff !important;
+            padding: 14px 16px !important;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            border: none !important;
+            text-align: center;
+        }
+        .table-custom th:first-child { border-top-left-radius: 12px; }
+        .table-custom th:last-child { border-top-right-radius: 12px; }
+        .table-custom td {
+            padding: 16px !important;
+            vertical-align: middle !important;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+            text-align: center;
+        }
+        .table-custom tbody tr:hover td { background-color: #f8fafc; }
+        .img-location {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .desc-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-align: left;
+            max-width: 250px;
+            font-size: 13px;
+        }
+
+        /* Rec Table */
+        .rec-table th { background: #f8fafc !important; color: #475569 !important; border-bottom: 2px solid #e2e8f0 !important; }
+        .rec-box { background: #f8fafc; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="page-title">Quản Lý Địa Điểm Du Lịch</h1>
+                <div class="breadcrumb-custom">
+                    <a href="homeStaff">Trang chủ</a>
+                    <span>/</span>
+                    <span>Quản lý địa điểm</span>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Ảnh</th>
-                                            <th scope="col">Tên Địa Điểm</th>
-                                            <th scope="col">Mô Tả</th>
-                                            <th scope="col">Đường Dẫn Bài Viết</th>
-                                            <th scope="col">Xe Phù Hợp</th>
-                                            <th scope="col">Hành Động</th>
-
-                                        </tr>
-                                    </thead>
-                            <tbody>
-                                        <c:forEach var="touristLocations" items="${touristLocation}">
-                                            <tr>
-                                                <td>${touristLocations.locationId}</td>
-                                                <td class="w-25">
-                                                    <img src="${empty touristLocations.locationImage ? 'images/default.jpg' : (touristLocations.locationImage.startsWith('http') ? touristLocations.locationImage : 'images/'.concat(touristLocations.locationImage))}" class="img-fluid img-thumbnail" loading="lazy" alt="Location Image">
-                                                </td>
-                                                <td><strong>${touristLocations.locationName}</strong></td>
-                                                <td><div class="desc-text" title="${touristLocations.description}">${touristLocations.description}</div></td>
-                                                <td><a href="${touristLocations.urlArticle}" target="_blank" class="url-text" title="${touristLocations.urlArticle}">${touristLocations.urlArticle}</a></td>
-                                                <td>
-                                                    <button class="btn btn-warning btn-sm" onclick="manageRecommendations('${touristLocations.locationId}', '${touristLocations.locationName}')" title="Quản lý xe phù hợp với địa điểm này">
-                                                        <i class="fa fa-motorcycle text-white"></i> Quản Lý Xe
-                                                    </button>
-                                                </td>
-                                                <td class="action-buttons">
-                                                    <div class="buttons">
-                                                        <button class="btn btn-edit" onclick="editTouristLocation('${touristLocations.locationId}', '${touristLocations.locationName}', '${touristLocations.locationImage}', '${touristLocations.description}', '${touristLocations.urlArticle}', '${touristLocations.staffID}')">
-                                                            <i class="fa fa-edit"></i>
-                                                        </button>
-
-                                                        <button class="btn btn-delete" title="Delete" onclick="confirmDelete('${touristLocations.locationId}')">
-                                                            <i class="fa-solid fa fa-trash" ></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
+            <button class="btn-gold" data-bs-toggle="modal" data-bs-target="#addLocationModal">
+                <i class="bi bi-plus-lg"></i> Thêm Mới Địa Điểm
+            </button>
         </div>
-    </div>
-</div>
-                <!-- Section 2: Add New Tourist Location -->
-                
-<!-- Add Location Modal -->
-<div class="modal fade" id="addLocationModal" tabindex="-1" role="dialog" aria-labelledby="addLocationModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="addLocationModalLabel"><i class="fa fa-plus-circle text-primary"></i> Thêm Mới Địa Điểm Du Lịch</h4>
-            </div>
-            <form class="form-horizontal addnew-location-form" id="addLocationForm" action="AddTouristLocationServletStaff" method="post" enctype="multipart/form-data">
-                <div class="modal-body">
-                    
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="locationImage" style="font-weight: 600;">Ảnh Địa Điểm:</label>
-                                                        <div class="col-sm-9">
-                                                            <div id="locationImagePreview" style="margin-bottom: 15px; border-radius: 8px; overflow: hidden; display: inline-block;"></div>
-                                                            <input type="file" class="form-control-file" id="locationImage" name="locationImage" accept="image/*" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="locationName">Tên Địa Điểm:</label>
-                                                        <div class="col-sm-9">
-                                                            <input type="text" class="form-control" id="locationName" name="locationName" placeholder="Nhập tên địa điểm du lịch" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="description">Mô Tả:</label>
-                                                        <div class="col-sm-9">
-                                                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Nhập mô tả" required></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="urlArticle">Đường Dẫn:</label>
-                                                        <div class="col-sm-9">
-                                                            <input type="text" class="form-control" id="urlArticle" name="urlArticle" placeholder="Nhập đường dẫn bài viết" required>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Thêm Mới</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
-                                        </div>
+        <div class="content-card">
+            <div class="table-responsive">
+                <table class="table-custom datatable" id="locationTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ảnh</th>
+                            <th>Tên Địa Điểm</th>
+                            <th>Mô Tả</th>
+                            <th>Link Bài Viết</th>
+                            <th>Xe Gợi Ý</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="loc" items="${touristLocation}">
+                            <tr>
+                                <td class="fw-bold">#${loc.locationId}</td>
+                                <td>
+                                    <img src="${empty loc.locationImage ? 'images/default.jpg' : (loc.locationImage.startsWith('http') ? loc.locationImage : 'images/'.concat(loc.locationImage))}" 
+                                         class="img-location" alt="Location">
+                                </td>
+                                <td class="fw-bold text-dark" style="text-align: left;">${loc.locationName}</td>
+                                <td>
+                                    <div class="desc-text" title="${loc.description}">${loc.description}</div>
+                                </td>
+                                <td>
+                                    <a href="${loc.urlArticle}" target="_blank" class="text-primary text-decoration-none" title="${loc.urlArticle}">
+                                        <i class="bi bi-box-arrow-up-right"></i> Xem Link
+                                    </a>
+                                </td>
+                                <td>
+                                    <button class="btn-manage-moto" onclick="manageRecommendations('${loc.locationId}', '${loc.locationName.replace("'", "\\'")}')">
+                                        <i class="fa-solid fa-motorcycle me-1"></i> Quản Lý Xe
+                                    </button>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <button class="action-btn btn-edit" title="Sửa" 
+                                            onclick="editTouristLocation('${loc.locationId}', '${loc.locationName.replace("'", "\\'")}', '${loc.locationImage}', '${loc.description.replace("'", "\\'")}', '${loc.urlArticle.replace("'", "\\'")}')">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <button class="action-btn btn-delete" title="Xóa" onclick="confirmDelete('${loc.locationId}')">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <!-- Nội dung của Section 3 -->
-                
-<!-- Edit Location Modal -->
-<div class="modal fade" id="editLocationModal" tabindex="-1" role="dialog" aria-labelledby="editLocationModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="editLocationModalLabel"><i class="fa fa-edit text-info"></i> Chỉnh Sửa Địa Điểm Du Lịch</h4>
-            </div>
-            <form class="form-horizontal edit-location-form" id="editLocationForm" action="UpdateTourismLoctionServletStaff" method="post" enctype="multipart/form-data">
-                <div class="modal-body">
-                    
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="editLocationId">ID:</label>
-                                                        <div class="col-sm-9">
-                                                            <input type="text" class="form-control" id="editLocationId" name="locationId" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="editLocationImage">Ảnh:</label>
-                                                        <div class="col-sm-9">
-                                                            <div id="editLocationImagePreview" style="margin-bottom: 10px;"></div>
-                                                            <input type="file" class="form-control-file" id="editLocationImage" name="locationImage" accept="image/*">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="editLocationName">Tên Địa Điểm:</label>
-                                                        <div class="col-sm-9">
-                                                            <input type="text" class="form-control" id="editLocationName" name="locationName" placeholder="Nhập tên địa điểm">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="editDescription">Mô Tả:</label>
-                                                        <div class="col-sm-9">
-                                                            <textarea class="form-control" id="editDescription" name="description" rows="3" placeholder="Nhập mô tả"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-3" for="editUrlArticle">Đường Dẫn:</label>
-                                                        <div class="col-sm-9">
-                                                            <input type="text" class="form-control" id="editUrlArticle" name="urlArticle" placeholder="Nhập đường dẫn bài viết">
-                                                        </div>
-                                                    </div>
-                                                    
-                                                
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-info"><i class="fa fa-save"></i> Cập Nhật</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-        <!-- Modal Quản lý Gợi ý Xe -->
-        <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog" aria-labelledby="recommendationModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="background: linear-gradient(135deg, #b8860b 0%, #f1c40f 100%);">
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="recommendationModalLabel" style="color: #fff; font-weight: bold;"><i class="fa fa-motorcycle me-2"></i> Quản lý Gợi ý Xe - <span id="recLocationName"></span></h4>
-                    </div>
-                    <div class="modal-body" style="background-color: #f8fafc; padding: 1.5rem;">
-
-                        
-                        <!-- Form Thêm Xe Phù Hợp - Redesigned -->
-                        <div class="card mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);">
-                            <div class="card-body" style="padding: 1.5rem;">
-                                <h6 style="font-weight: 600; color: #fff; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa fa-plus-circle" style="font-size: 1.1rem;"></i> 
-                                    <span>Thêm Xe Phù Hợp Cho Địa Điểm</span>
-                                </h6>
-                                <form id="addRecForm">
-                                    <input type="hidden" id="recLocationId">
-                                    <div class="row" style="margin: 0;">
-                                        <div class="col-md-4" style="padding: 0 5px 0 0;">
-                                            <label style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 500; margin-bottom: 5px; display: block;">Chọn Xe</label>
-                                            <select class="form-control" id="recMotorcycleId" required style="height: 42px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); font-weight: 500;">
-                                                <option value="">-- Chọn Xe --</option>
-                                                <c:forEach var="motor" items="${allMotorcycles}">
-                                                    <option value="${motor.motorcycleId}">${motor.model} (${motor.motorcycleId})</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6" style="padding: 0 5px;">
-                                            <label style="color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 500; margin-bottom: 5px; display: block;">Lý Do Phù Hợp</label>
-                                            <input type="text" class="form-control" id="recReason" placeholder="VD: Leo đèo khỏe, phù hợp đường núi, tiết kiệm xăng..." style="height: 42px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);" maxlength="200">
-                                        </div>
-                                        <div class="col-md-2" style="padding: 0 0 0 5px;">
-                                            <label style="color: transparent; font-size: 12px; margin-bottom: 5px; display: block;">.</label>
-                                            <button type="submit" class="btn btn-success" style="height: 42px; width: 100%; border-radius: 8px; font-weight: 600; background: #10b981; border: none; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3); transition: all 0.2s;">
-                                                <i class="fa fa-plus"></i> Thêm
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        
-                        <!-- Danh sách xe đang được gợi ý -->
-                        <div style="background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
-                            <h5 style="font-weight: 700; margin: 0 0 1.25rem 0; color: #1e293b; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa fa-list-ul" style="color: #f59e0b;"></i>
-                                Danh Sách Xe Đang Được Gợi Ý
-                            </h5>
-                            <div class="table-responsive" style="border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb;">
-                                <table class="table table-hover" id="recTable" style="margin: 0; background: #fff;">
-                                    <thead style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);">
-                                        <tr>
-                                            <th style="width: 30%; padding: 14px 16px; font-weight: 600; color: #374151; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border: none;">
-                                                <i class="fa fa-motorcycle" style="margin-right: 6px; color: #f59e0b;"></i>Mẫu Xe
-                                            </th>
-                                            <th style="width: 15%; padding: 14px 16px; font-weight: 600; color: #374151; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border: none; text-align: center;">
-                                                <i class="fa fa-image" style="margin-right: 6px; color: #8b5cf6;"></i>Hình
-                                            </th>
-                                            <th style="width: 45%; padding: 14px 16px; font-weight: 600; color: #374151; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border: none;">
-                                                <i class="fa fa-comment-dots" style="margin-right: 6px; color: #3b82f6;"></i>Lý Do Phù Hợp
-                                            </th>
-                                            <th style="width: 10%; padding: 14px 16px; font-weight: 600; color: #374151; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border: none; text-align: center;">
-                                                <i class="fa fa-cog" style="margin-right: 6px; color: #64748b;"></i>Thao Tác
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recTableBody" style="background: #fff;">
-                                        <!-- Dữ liệu render bằng JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            // Parse dữ liệu map từ Backend sang JS
-            var recommendData = {
-                <c:forEach var="entry" items="${recommendMap}" varStatus="status">
-                    "${entry.key}": [
-                        <c:forEach var="rec" items="${entry.value}" varStatus="st">
-                            {
-                                motorcycleId: "${rec.motorcycleId}",
-                                model: "${rec.model}",
-                                image: "${rec.image}",
-                                reason: "${rec.reason}",
-                                priority: ${rec.priority}
-                            }${!st.last ? ',' : ''}
+                                </td>
+                            </tr>
                         </c:forEach>
-                    ]${!status.last ? ',' : ''}
-                </c:forEach>
-            };
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-            function manageRecommendations(locationId, locationName) {
-                $('#recLocationId').val(locationId);
-                $('#recLocationName').text(locationName);
-                
-                var tbody = $('#recTableBody');
-                tbody.empty();
-                
-                var recs = recommendData[locationId] || [];
-                if (recs.length === 0) {
-                    tbody.append('<tr><td colspan="4" style="padding: 40px 20px; text-align: center; color: #9ca3af; background: #f9fafb;"><div style="display: inline-flex; flex-direction: column; align-items: center; gap: 10px;"><i class="fa fa-inbox" style="font-size: 3rem; color: #d1d5db;"></i><span style="font-weight: 500; font-size: 15px;">Chưa có xe phù hợp nào cho địa điểm này</span><small style="color: #9ca3af;">Hãy thêm xe để gợi ý cho khách hàng</small></div></td></tr>');
-                } else {
-                    recs.forEach(function(rec, index) {
-                        var imgSrc = rec.image ? (rec.image.startsWith('http') ? rec.image : 'images/' + rec.image) : 'images/default.jpg';
-                        var tr = $('<tr style="border-bottom: 1px solid #f3f4f6; transition: all 0.2s;"></tr>');
-                        
-                        // Cột Mẫu Xe
-                        tr.append('<td style="padding: 16px; vertical-align: middle;"><div><strong style="color: #1e293b; font-size: 15px; display: block; margin-bottom: 4px;">' + rec.model + '</strong><small style="color: #64748b; font-size: 12px; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; display: inline-block;">' + rec.motorcycleId + '</small></div></td>');
-                        
-                        // Cột Hình Ảnh
-                        tr.append('<td style="padding: 16px; text-align: center; vertical-align: middle;"><img src="' + imgSrc + '" class="img-thumbnail" style="height: 70px; width: auto; max-width: 120px; object-fit: contain; border-radius: 8px; border: 2px solid #e5e7eb; padding: 4px; background: #fff;"></td>');
-                        
-                        // Cột Lý Do
-                        var reasonHtml = rec.reason 
-                            ? '<div style="display: flex; align-items: start; gap: 8px;"><i class="fa fa-quote-left" style="color: #cbd5e1; font-size: 12px; margin-top: 2px;"></i><span style="color: #475569; font-style: italic; line-height: 1.5;">' + rec.reason + '</span></div>' 
-                            : '<span style="color: #cbd5e1; font-style: italic;">Không có mô tả</span>';
-                        tr.append('<td style="padding: 16px; vertical-align: middle;">' + reasonHtml + '</td>');
-                        
-                        // Cột Thao Tác
-                        tr.append('<td style="padding: 16px; text-align: center; vertical-align: middle;"><button class="btn btn-sm" onclick="deleteRec(' + locationId + ', \'' + rec.motorcycleId + '\')" title="Xóa xe này" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: #dc2626; border: 1px solid #fecaca; border-radius: 6px; padding: 6px 12px; font-weight: 500; transition: all 0.2s;"><i class="fa fa-trash"></i></button></td>');
-                        
-                        tbody.append(tr);
-                    });
-                    
-                    // Hover effect
-                    $('#recTableBody tr').hover(
-                        function() { $(this).css('background-color', '#f8fafc'); },
-                        function() { $(this).css('background-color', '#fff'); }
-                    );
-                }
-                
-                // Reset form
-                $('#recMotorcycleId').val('');
-                $('#recReason').val('');
-                
-                $('#recommendationModal').modal('show');
-            }
+    <!-- ===== MODAL THÊM MỚI ===== -->
+    <div class="modal fade" id="addLocationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header-gold d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title m-0"><i class="bi bi-map-fill me-2"></i>Thêm Mới Địa Điểm</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addLocationForm" action="AddTouristLocationServletStaff" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Tên Địa Điểm</label>
+                                <input type="text" class="form-control" id="locationName" name="locationName" required placeholder="Nhập tên địa điểm du lịch...">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Ảnh Địa Điểm</label>
+                                <input type="file" class="form-control" id="locationImage" name="locationImage" accept="image/*" required>
+                                <div id="locationImagePreview" class="mt-2 text-center"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Mô Tả</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" required placeholder="Nhập mô tả về địa điểm này..."></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Đường Dẫn Bài Viết (Tùy chọn/Bắt buộc)</label>
+                                <input type="text" class="form-control" id="urlArticle" name="urlArticle" required placeholder="https://...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn-gold rounded-pill px-4"><i class="bi bi-floppy-fill"></i> Lưu Địa Điểm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    <!-- ===== MODAL CHỈNH SỬA ===== -->
+    <div class="modal fade" id="editLocationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header-gold d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title m-0"><i class="bi bi-pencil-square me-2"></i>Chỉnh Sửa Địa Điểm</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Sử dụng form truyền thống hoặc ajax tùy code cũ, ở đây giữ nguyên submit truyền thống tới UpdateTourismLoctionServletStaff như html gốc -->
+                <form id="editLocationForm" action="UpdateTourismLoctionServletStaff" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" id="editLocationId" name="locationId">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Tên Địa Điểm</label>
+                                <input type="text" class="form-control" id="editLocationName" name="locationName" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Ảnh Địa Điểm Mới (Bỏ trống nếu giữ nguyên)</label>
+                                <input type="file" class="form-control" id="editLocationImage" name="locationImage" accept="image/*">
+                                <div id="editLocationImagePreview" class="mt-2 text-center"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Mô Tả</label>
+                                <textarea class="form-control" id="editDescription" name="description" rows="3" required></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Đường Dẫn Bài Viết</label>
+                                <input type="text" class="form-control" id="editUrlArticle" name="urlArticle" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn-gold rounded-pill px-4"><i class="bi bi-floppy-fill"></i> Cập Nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-            // Xử lý Thêm Gợi ý (Ajax)
-            $('#addRecForm').submit(function(e) {
-                e.preventDefault();
-                var locId = $('#recLocationId').val();
-                var motId = $('#recMotorcycleId').val();
-                if (!motId) {
-                    Swal.fire('Thiếu thông tin!', 'Vui lòng chọn xe.', 'warning');
-                    return;
-                }
-                
-                // Kiểm tra xe đã tồn tại chưa
-                var recs = recommendData[locId] || [];
-                var exists = recs.some(function(rec) {
-                    return rec.motorcycleId === motId;
-                });
-                
-                if (exists) {
-                    Swal.fire('Xe đã tồn tại!', 'Xe này đã được thêm vào danh sách gợi ý.', 'warning');
-                    return;
-                }
-                
-                var reason = $('#recReason').val().trim();
-                
-                $.post('TourismLocationServletStaff', {
-                    action: 'add',
-                    locationId: locId,
-                    motorcycleId: motId,
-                    reason: reason,
-                    priority: 1
-                }, function(res) {
-                    if (res.success) {
-                        Swal.fire('Thành công!', 'Đã thêm xe phù hợp.', 'success').then(() => {
-                            window.location.reload();
-                        });
-                    } else {
-                        Swal.fire('Lỗi!', res.message || 'Không thể thêm xe này.', 'error');
+    <!-- ===== MODAL QUẢN LÝ XE GỢI Ý ===== -->
+    <div class="modal fade" id="recommendationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header-gold d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title m-0"><i class="fa-solid fa-motorcycle me-2"></i>Quản Lý Xe Gợi Ý - <span id="recLocationName"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-light">
+                    <!-- Form Thêm Xe -->
+                    <div class="rec-box mb-4">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-plus-circle-fill text-success me-2"></i>Thêm Xe Gợi Ý Mới</h6>
+                        <form id="addRecForm" class="row g-2 align-items-end">
+                            <input type="hidden" id="recLocationId">
+                            <div class="col-md-4">
+                                <label class="form-label">Chọn Xe</label>
+                                <select class="form-select" id="recMotorcycleId" required>
+                                    <option value="">-- Chọn một chiếc xe --</option>
+                                    <c:forEach var="motor" items="${allMotorcycles}">
+                                        <option value="${motor.motorcycleId}">${motor.model} (${motor.motorcycleId})</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Lý do phù hợp</label>
+                                <input type="text" class="form-control" id="recReason" placeholder="VD: Xe khỏe, dễ leo dốc..." maxlength="200">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-success w-100 fw-bold rounded-3">
+                                    <i class="bi bi-plus-lg me-1"></i>Thêm
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Bảng Danh Sách -->
+                    <div class="bg-white p-3 rounded-4 shadow-sm border">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-list-stars text-warning me-2"></i>Danh Sách Xe Đang Gợi Ý</h6>
+                        <div class="table-responsive">
+                            <table class="table-custom rec-table" id="recTable">
+                                <thead>
+                                    <tr>
+                                        <th>Mẫu Xe</th>
+                                        <th>Hình Ảnh</th>
+                                        <th>Lý Do</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recTableBody">
+                                    <!-- Rendered via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <script src="staffAssets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="js/imagePreview.js"></script> <!-- Giữ nguyên script preview ảnh nếu có -->
+
+    <script>
+        // Datatable Init
+        document.addEventListener('DOMContentLoaded', () => {
+            const table = document.querySelector('.datatable');
+            if(table) {
+                new simpleDatatables.DataTable(table, {
+                    searchable: true,
+                    fixedHeight: false,
+                    perPage: 10,
+                    labels: {
+                        placeholder: "Tìm kiếm địa điểm...",
+                        noRows: "Không tìm thấy dữ liệu",
+                        info: "Hiển thị {start} đến {end} của {rows} kết quả"
                     }
-                }).fail(function() {
-                    Swal.fire('Lỗi!', 'Không thể kết nối đến máy chủ.', 'error');
-                });
-            });
-
-            // Xử lý Xóa Gợi ý (Ajax)
-            function deleteRec(locationId, motorcycleId) {
-                Swal.fire({
-                    title: 'Xóa xe khỏi danh sách?',
-                    text: "Bạn chắc chắn muốn xóa xe này khỏi danh sách gợi ý?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#dc3545',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: '<i class="fa fa-trash"></i> Xóa',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.post('TourismLocationServletStaff', {
-                            action: 'delete',
-                            locationId: locationId,
-                            motorcycleId: motorcycleId
-                        }, function(res) {
-                            if (res.success) {
-                                Swal.fire('Đã xóa!', 'Xe đã được xóa khỏi danh sách.', 'success').then(() => {
-                                    window.location.reload();
-                                });
-                            } else {
-                                Swal.fire('Lỗi!', 'Không thể xóa xe này.', 'error');
-                            }
-                        }).fail(function() {
-                            Swal.fire('Lỗi!', 'Không thể kết nối đến máy chủ.', 'error');
-                        });
-                    }
                 });
             }
 
-            function editTouristLocation(locationId, locationName, locationImage, description, urlArticle, staffID) {
-                document.getElementById('editLocationId').value = locationId;
-                document.getElementById('editLocationName').value = locationName;
-                document.getElementById('editDescription').value = description;
-                document.getElementById('editUrlArticle').value = urlArticle;
+            // Function to setup live preview and lightbox
+            function setupLivePreview(inputId, previewId) {
+                var input = document.getElementById(inputId);
+                var previewContainer = document.getElementById(previewId);
+                if (input && previewContainer) {
+                    previewContainer.style.position = 'relative';
+                    previewContainer.style.display = 'inline-block';
 
-                var imgContainer = document.getElementById('editLocationImagePreview');
-                imgContainer.innerHTML = ''; // Xóa hình ảnh cũ (nếu có)
-                console.log("thinh");
-                // Hiển thị hình ảnh đối tượng
-                if (locationImage) {
-                    console.log("hihihi");
-                    var img = document.createElement('img');
-                    img.src = 'images/' + locationImage;
-                    img.alt = 'Location Image';
-                    img.className = 'img-thumbnail';
-                    img.style.maxWidth = '150px';
-                    img.style.maxHeight = '150px';
-                    
-                    var btn = document.createElement('button');
-                    btn.innerHTML = '&times;';
-                    btn.type = 'button';
-                    btn.title = 'Remove Image';
-                    btn.style.position = 'absolute';
-                    btn.style.top = '0px';
-                    btn.style.right = '-10px';
-                    btn.style.background = '#dc2626';
-                    btn.style.color = 'white';
-                    btn.style.border = 'none';
-                    btn.style.borderRadius = '50%';
-                    btn.style.width = '24px';
-                    btn.style.height = '24px';
-                    btn.style.cursor = 'pointer';
-                    btn.onclick = function() {
-                        document.getElementById('editLocationImage').value = '';
-                        imgContainer.innerHTML = '';
-                    };
-                    
-                    imgContainer.style.position = 'relative';
-                    imgContainer.style.display = 'inline-block';
-                    imgContainer.appendChild(img);
-                    imgContainer.appendChild(btn);
-                } else {
-                    imgContainer.innerHTML = '<span class="text-muted">No image available</span>';
-                }
-
-                // Hiển thị modal chỉnh sửa
-                $('#editLocationModal').modal('show');
-            }
-
-        </script>
-
-        <script type="text/javascript">
-            function confirmDelete(locationId) {
-                Swal.fire({
-                    title: 'Bạn có chắc chắn?',
-                    text: "Bạn sẽ không thể khôi phục hành động này!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#1089FF',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Vâng, xóa nó!',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'DeleteTourismLocationServletStaff?locationId=' + locationId;
-                    }
-                })
-            }
-        </script>
-
-        <script>
-            document.getElementById('addLocationForm').addEventListener('submit', function (event) {
-                var fileInput = document.getElementById('locationImage');
-                var errorMessage = document.getElementById('error-message');
-                var successMessage = document.getElementById('success-message');
-
-                // Validate file type if needed
-                var fileName = fileInput.value;
-                var idxDot = fileName.lastIndexOf(".") + 1;
-                var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-                if (extFile != "jpg" && extFile != "jpeg" && extFile != "png" && extFile != "gif") {
-                    event.preventDefault();
-                    errorMessage.style.display = 'block';
-                } else {
-                    errorMessage.style.display = 'none';
-                    successMessage.style.display = 'block';
-                }
-            });
-        </script>
-
-        <script>
-            $(document).ready(function () {
-                $('#addLocationForm').submit(function (event) {
-                    event.preventDefault(); // Ngăn chặn hành động mặc định của form
-
-                    var formData = new FormData(this); // Lấy dữ liệu từ form
-
-                    $.ajax({
-                        type: 'POST',
-                        url: $(this).attr('action'),
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (response) {
-                            // Hiển thị thông báo thành công bằng SweetAlert
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Location added successfully!',
-                                timer: 2000, // Tự động đóng sau 2 giây
-                                showConfirmButton: false
-                            }).then(function () {
-                                // Chuyển hướng về trang TourismLocationServletStaff sau khi thêm thành công
-                                window.location.href = 'TourismLocationServletStaff';
-                            });
-                        },
-                        error: function (xhr, status, error) {
-                            // Hiển thị thông báo lỗi bằng SweetAlert
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Error adding location. Please try again.',
-                                confirmButtonText: 'OK'
-                            });
-                            console.error(xhr.responseText);
+                    input.addEventListener('change', function(event) {
+                        var file = event.target.files[0];
+                        previewContainer.innerHTML = '';
+                        if (file) {
+                            var reader = new FileReader();
+                            reader.onload = function(e) {
+                                var img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'img-fluid img-thumbnail cursor-pointer';
+                                img.style.maxWidth = '150px';
+                                img.style.cursor = 'pointer';
+                                img.setAttribute('onclick', 'if(window.parent && window.parent.openLightbox) window.parent.openLightbox(this.src)');
+                                
+                                var btn = document.createElement('button');
+                                btn.innerHTML = '&times;';
+                                btn.type = 'button';
+                                btn.style.position = 'absolute';
+                                btn.style.top = '5px';
+                                btn.style.right = '5px';
+                                btn.style.background = '#ef4444';
+                                btn.style.color = 'white';
+                                btn.style.border = 'none';
+                                btn.style.borderRadius = '50%';
+                                btn.style.width = '24px';
+                                btn.style.height = '24px';
+                                btn.style.display = 'flex';
+                                btn.style.alignItems = 'center';
+                                btn.style.justifyContent = 'center';
+                                btn.style.cursor = 'pointer';
+                                btn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                                btn.style.fontSize = '16px';
+                                btn.style.lineHeight = '1';
+                                btn.onclick = function() {
+                                    input.value = '';
+                                    previewContainer.innerHTML = '';
+                                };
+                                
+                                previewContainer.appendChild(img);
+                                previewContainer.appendChild(btn);
+                            };
+                            reader.readAsDataURL(file);
                         }
                     });
-                });
-            });
-        </script>
+                }
+            }
 
+            setupLivePreview('locationImage', 'locationImagePreview');
+            setupLivePreview('editLocationImage', 'editLocationImagePreview');
+        });
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        // Xóa địa điểm
+        function confirmDelete(locationId) {
+            Swal.fire({
+                title: 'Xóa địa điểm này?',
+                text: "Bạn sẽ không thể khôi phục dữ liệu!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: '<i class="bi bi-trash-fill"></i> Vâng, xóa nó!',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'DeleteTourismLocationServletStaff?locationId=' + locationId;
+                }
+            })
+        }
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="js/imagePreview.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                if (typeof setupLivePreview === 'function') {
-                    setupLivePreview('locationImage', 'locationImagePreview');
-                    setupLivePreview('editLocationImage', 'editLocationImagePreview');
+        // Mở Modal Chỉnh Sửa
+        function editTouristLocation(locationId, locationName, locationImage, description, urlArticle) {
+            document.getElementById('editLocationId').value = locationId;
+            document.getElementById('editLocationName').value = locationName;
+            document.getElementById('editDescription').value = description;
+            document.getElementById('editUrlArticle').value = urlArticle;
+
+            var imgContainer = document.getElementById('editLocationImagePreview');
+            imgContainer.innerHTML = '';
+            
+            if (locationImage && locationImage.trim() !== '') {
+                var imgSrc = locationImage.startsWith('http') ? locationImage : 'images/' + locationImage;
+                imgContainer.innerHTML = `
+                    <div style="position:relative; display:inline-block;">
+                        <img src="\${imgSrc}" class="img-thumbnail cursor-pointer" style="max-width:150px; max-height:150px; border-radius:8px; cursor: pointer;" onclick="if(window.parent && window.parent.openLightbox) window.parent.openLightbox(this.src)">
+                        <button type="button" title="Xóa ảnh này" onclick="clearEditImage()" 
+                                style="position:absolute; top:-10px; right:-10px; background:#ef4444; color:white; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-weight:bold;">&times;</button>
+                    </div>
+                `;
+            }
+
+            var editModal = new bootstrap.Modal(document.getElementById('editLocationModal'));
+            editModal.show();
+        }
+
+        function clearEditImage() {
+            document.getElementById('editLocationImage').value = '';
+            document.getElementById('editLocationImagePreview').innerHTML = '';
+        }
+
+        // Form Add Submit Ajax
+        $('#addLocationForm').submit(function (event) {
+            event.preventDefault();
+            
+            // Validate image ext
+            var fileInput = document.getElementById('locationImage').value;
+            var ext = fileInput.split('.').pop().toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp'].indexOf(ext) === -1) {
+                Swal.fire('Lỗi', 'Chỉ chấp nhận file ảnh (jpg, jpeg, png, gif, webp)', 'error');
+                return;
+            }
+
+            var formData = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Đã thêm địa điểm mới.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                },
+                error: function () {
+                    Swal.fire('Lỗi!', 'Không thể thêm địa điểm. Vui lòng thử lại.', 'error');
                 }
             });
-        </script>
-    </body>
+        });
 
+        // -------------------------
+        // QUẢN LÝ XE GỢI Ý
+        // -------------------------
+        var recommendData = {
+            <c:forEach var="entry" items="${recommendMap}" varStatus="status">
+                "${entry.key}": [
+                    <c:forEach var="rec" items="${entry.value}" varStatus="st">
+                        {
+                            motorcycleId: "${rec.motorcycleId}",
+                            model: "${rec.model.replace("\"", "\\\"")}",
+                            image: "${rec.image}",
+                            reason: "${rec.reason.replace("\"", "\\\"")}",
+                            priority: ${rec.priority}
+                        }${!st.last ? ',' : ''}
+                    </c:forEach>
+                ]${!status.last ? ',' : ''}
+            </c:forEach>
+        };
+
+        function manageRecommendations(locationId, locationName) {
+            $('#recLocationId').val(locationId);
+            $('#recLocationName').text(locationName);
+            
+            var tbody = $('#recTableBody');
+            tbody.empty();
+            
+            var recs = recommendData[locationId] || [];
+            if (recs.length === 0) {
+                tbody.append('<tr><td colspan="4" class="text-center py-5 text-muted"><i class="bi bi-inbox fs-1 d-block mb-2 text-black-50"></i>Chưa có xe phù hợp nào cho địa điểm này</td></tr>');
+            } else {
+                recs.forEach(function(rec) {
+                    var imgSrc = rec.image ? (rec.image.startsWith('http') ? rec.image : 'images/' + rec.image) : 'images/default.jpg';
+                    var reasonHtml = rec.reason 
+                        ? '<span class="fst-italic text-secondary"><i class="bi bi-quote"></i>' + rec.reason + '</span>'
+                        : '<span class="text-muted fst-italic">Không có lý do cụ thể</span>';
+                    
+                    var tr = `
+                        <tr>
+                            <td class="text-start">
+                                <div class="fw-bold text-dark">\${rec.model}</div>
+                                <span class="badge bg-secondary">\${rec.motorcycleId}</span>
+                            </td>
+                            <td><img src="\${imgSrc}" class="img-thumbnail" style="height:60px; object-fit:cover;"></td>
+                            <td class="text-start">\${reasonHtml}</td>
+                            <td>
+                                <button class="action-btn btn-delete" onclick="deleteRec('\${locationId}', '\${rec.motorcycleId}')" title="Xóa gợi ý này">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(tr);
+                });
+            }
+            
+            $('#recMotorcycleId').val('');
+            $('#recReason').val('');
+            
+            var recModal = new bootstrap.Modal(document.getElementById('recommendationModal'));
+            recModal.show();
+        }
+
+        // Ajax Thêm Gợi Ý
+        $('#addRecForm').submit(function(e) {
+            e.preventDefault();
+            var locId = $('#recLocationId').val();
+            var motId = $('#recMotorcycleId').val();
+            if (!motId) {
+                Swal.fire('Lỗi', 'Vui lòng chọn một chiếc xe!', 'warning');
+                return;
+            }
+            
+            var recs = recommendData[locId] || [];
+            var exists = recs.some(rec => rec.motorcycleId === motId);
+            if (exists) {
+                Swal.fire('Đã tồn tại', 'Xe này đã có trong danh sách gợi ý của địa điểm này.', 'info');
+                return;
+            }
+            
+            var reason = $('#recReason').val().trim();
+            $.post('TourismLocationServletStaff', {
+                action: 'add',
+                locationId: locId,
+                motorcycleId: motId,
+                reason: reason,
+                priority: 1
+            }, function(res) {
+                if (res.success) {
+                    Swal.fire({
+                        title: 'Thành công!', text: 'Đã thêm xe vào danh sách gợi ý.', icon: 'success', timer: 1500, showConfirmButton: false
+                    }).then(() => window.location.reload());
+                } else {
+                    Swal.fire('Lỗi', res.message || 'Không thể thêm xe này.', 'error');
+                }
+            }).fail(() => Swal.fire('Lỗi', 'Mất kết nối máy chủ', 'error'));
+        });
+
+        // Ajax Xóa Gợi Ý
+        function deleteRec(locationId, motorcycleId) {
+            Swal.fire({
+                title: 'Bỏ gợi ý xe này?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Vâng, Xóa!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('TourismLocationServletStaff', {
+                        action: 'delete',
+                        locationId: locationId,
+                        motorcycleId: motorcycleId
+                    }, function(res) {
+                        if (res.success) {
+                            Swal.fire({ title: 'Đã xóa!', icon: 'success', timer: 1500, showConfirmButton: false })
+                                .then(() => window.location.reload());
+                        } else {
+                            Swal.fire('Lỗi', 'Không thể xóa xe này.', 'error');
+                        }
+                    }).fail(() => Swal.fire('Lỗi', 'Mất kết nối máy chủ', 'error'));
+                }
+            });
+        }
+    </script>
+</body>
 </html>

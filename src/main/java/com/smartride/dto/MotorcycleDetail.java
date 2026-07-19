@@ -17,4 +17,12 @@ public class MotorcycleDetail implements Serializable {
     private int motorcycleDetailId;
     private String motorcycleId;
     private String licensePlate;
+    private String statusAction;
+    private String note;
+    
+    public MotorcycleDetail(int motorcycleDetailId, String motorcycleId, String licensePlate) {
+        this.motorcycleDetailId = motorcycleDetailId;
+        this.motorcycleId = motorcycleId;
+        this.licensePlate = licensePlate;
+    }
 }

@@ -5,25 +5,36 @@ import com.smartride.dao.AccountDAO;
 import com.smartride.dao.BookingDAO;
 import com.smartride.dao.CancellationDAO;
 import com.smartride.dao.ExtensionDAO;
+import com.smartride.dao.NotificationDAO;
+import com.smartride.dao.PaymentDAO;
 import com.smartride.dao.StaffDAO;
 import com.smartride.dto.Account;
 import com.smartride.dto.Booking;
 import com.smartride.dto.Cancellation;
 import com.smartride.dto.Extension;
+import com.smartride.dto.Payment;
 import com.smartride.dto.Staff;
+import com.smartride.util.SupabaseStorageUtil;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @WebServlet(name = "ManageBookingServlet", urlPatterns = {"/manageBooking"})
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10, // 10MB
+        maxRequestSize = 1024 * 1024 * 50) // 50MB
 public class ManageBookingServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -47,6 +58,7 @@ public class ManageBookingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        BookingDAO.getInstance().markOverdueBookings();
         List<Booking> bookings = BookingDAO.getInstance().getAllBookings();
         List<Cancellation> cancels = CancellationDAO.getInstance().getAllCancellation();
         List<Extension> extend = ExtensionDAO.getInstance().getAllExtension();
@@ -95,7 +107,53 @@ public class ManageBookingServlet extends HttpServlet {
             } else {
                 String delistatus = request.getParameter("delistatus_" + bookingID);
                 if (delistatus != null && !delistatus.isEmpty()) {
-                    BookingDAO.getInstance().updateDeliveryStatus(delistatus, bookingID);
+                    if ("Đã giao".equals(delistatus)) {
+                        StringBuilder imagePathsBuilder = new StringBuilder();
+                        for (int i = 1; i <= 5; i++) {
+                            Part filePart = request.getPart("deliveryImage" + i + "_" + bookingID);
+                            if (filePart != null && filePart.getSize() > 0) {
+                                String fileName = UUID.randomUUID().toString() + ".png";
+                                // Upload lên Supabase Storage
+                                String publicUrl = SupabaseStorageUtil.uploadFile("motor-images", fileName, filePart.getInputStream(), "image/png");
+                                if (publicUrl != null) {
+                                    if (imagePathsBuilder.length() > 0) imagePathsBuilder.append(",");
+                                    imagePathsBuilder.append(publicUrl);
+                                }
+                            }
+                        }
+                        
+                        String imagePaths = imagePathsBuilder.toString();
+                        if (imagePaths.isEmpty()) {
+                            // Fallback cho form cũ nếu có
+                            Part filePart = request.getPart("deliveryImage_" + bookingID);
+                            if (filePart != null && filePart.getSize() > 0) {
+                                String fileName = UUID.randomUUID().toString() + ".png";
+                                String publicUrl = SupabaseStorageUtil.uploadFile("motor-images", fileName, filePart.getInputStream(), "image/png");
+                                if (publicUrl != null) {
+                                    imagePaths = publicUrl;
+                                }
+                            }
+                        }
+                        
+                        String fuel = request.getParameter("checklistFuel_" + bookingID);
+                        String helmets = request.getParameter("checklistHelmets_" + bookingID);
+                        String raincoats = request.getParameter("checklistRaincoats_" + bookingID);
+                        String note = request.getParameter("checklistNote_" + bookingID);
+                        
+                        if (fuel != null) {
+                            String noteClean = note != null ? note.replace("\"", "\\\"").replace("\n", " ") : "";
+                            String checklistJson = String.format("{\"fuel\":\"%s\", \"helmets\":%s, \"raincoats\":%s, \"note\":\"%s\"}", 
+                                                                fuel, helmets != null && !helmets.isEmpty() ? helmets : "0", 
+                                                                raincoats != null && !raincoats.isEmpty() ? raincoats : "0", noteClean);
+                            BookingDAO.getInstance().updateDeliveryStatusWithChecklist(delistatus, bookingID, imagePaths, checklistJson);
+                        } else if (!imagePaths.isEmpty()) {
+                            BookingDAO.getInstance().updateDeliveryStatusWithImage(delistatus, bookingID, imagePaths);
+                        } else {
+                            BookingDAO.getInstance().updateDeliveryStatus(delistatus, bookingID);
+                        }
+                    } else {
+                        BookingDAO.getInstance().updateDeliveryStatus(delistatus, bookingID);
+                    }
                 } else {
                     BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã xác nhận");
                     BookingDAO.getInstance().updateDeliveryStatus("Chưa giao", bookingID);
@@ -112,8 +170,44 @@ public class ManageBookingServlet extends HttpServlet {
         if (cusId != null && !cusId.isEmpty()) {
             Account accountCus = AccountDAO.getInstance().getAccountbyCustomerId(Integer.parseInt(cusId));
             if (cancelReason != null) {
-                CancellationDAO.getInstance().insertCancellation(cancelReason, bookingID, StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId()).getStaffID());
+                com.smartride.dto.Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
+                String staffId = (staff != null) ? staff.getStaffID() : "STAFF00001";
+                CancellationDAO.getInstance().insertCancellation(cancelReason, bookingID, staffId);
                 BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã hủy");
+
+                // Ghi nhận Lý do Hủy vào Chat để làm tin nhắn đầu tiên trong cuộc hội thoại Hỗ trợ
+                try {
+                    com.smartride.dao.ChatMessageDAO.getInstance().insertMessage(
+                        bookingID, 
+                        accountStaff.getAccountId(), 
+                        "STAFF", 
+                        "Thông báo Hủy Đơn: " + cancelReason
+                    );
+                } catch (Exception e) { e.printStackTrace(); }
+
+                // Realtime Notification & Refund logic
+                Payment payment = PaymentDAO.getInstance().getPayMentbyBookingId(bookingID);
+                boolean isPaid = false;
+                String amountStr = "";
+                if (payment != null) {
+                    if ("Đã thanh toán".equalsIgnoreCase(payment.getPaymentStatus()) || "Success".equalsIgnoreCase(payment.getPaymentStatus())) {
+                        isPaid = true;
+                        amountStr = String.format("%,.0f", payment.getPaymentAmount()) + " VNĐ";
+                    }
+                }
+                
+                String notifTitle = "Đơn thuê xe " + bookingID + " đã bị từ chối";
+                String notifMessage = "Lý do: " + cancelReason;
+                String link = "history"; // default link
+                
+                if (isPaid) {
+                    notifMessage += ". Số tiền cần hoàn lại: <strong>" + amountStr + "</strong>. Vui lòng click vào đây để cung cấp Số tài khoản hoàn tiền.";
+                    link = "refundRequest.jsp?bookingId=" + bookingID;
+                } else {
+                    notifMessage += ". Vui lòng cập nhật lại thông tin và đặt lại đơn mới.";
+                }
+                
+                NotificationDAO.getInstance().insertNotification(accountCus.getAccountId(), notifTitle, notifMessage, link);
             }
 
             String emailContent = ""
@@ -144,6 +238,7 @@ public class ManageBookingServlet extends HttpServlet {
         //--------------------------------------------------------------------------------
        
         //--------------------------------------------------------------------------------
+        BookingDAO.getInstance().markOverdueBookings();
         List<Booking> bookings = BookingDAO.getInstance().getAllBookings();
         List<Cancellation> cancels = CancellationDAO.getInstance().getAllCancellation();
         List<Extension> extend = ExtensionDAO.getInstance().getAllExtension();

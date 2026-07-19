@@ -2122,6 +2122,35 @@
                         //     form.parent().parent().parent().append('<div class="footer" style="height:752px;"></div>');
                         // }
                         form.validate().settings.ignore = ":disabled,:hidden";
+                        
+                        if (currentIndex === 0 && newIndex === 1) {
+                            if (!form.valid()) return false;
+                            
+                            var newEndDate = document.getElementById("returndate").value;
+                            var newEndTime = document.getElementById("returntime").value;
+                            if (newEndDate && newEndTime) {
+                                var overlap = false;
+                                $.ajax({
+                                    url: 'api/check-overlap',
+                                    type: 'GET',
+                                    async: false,
+                                    data: {
+                                        bookingId: '${booking.bookingID}',
+                                        newEndDate: newEndDate + ' ' + newEndTime
+                                    },
+                                    success: function(response) {
+                                        if (response.overlap) {
+                                            overlap = true;
+                                            alert("Không thể gia hạn! Xe đã được khách hàng khác đặt trong khoảng thời gian này.");
+                                        }
+                                    }
+                                });
+                                if (overlap) {
+                                    return false;
+                                }
+                            }
+                        }
+
                         return form.valid();
                     },
                     onFinishing: function (event, currentIndex) {

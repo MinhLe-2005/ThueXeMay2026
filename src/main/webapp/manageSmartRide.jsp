@@ -42,6 +42,33 @@
         </main>
         
         <!-- Vendor JS Files -->
+        <!-- Global Lightbox Modal -->
+        <div class="modal fade" id="globalLightboxModal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 90vw;">
+                <div class="modal-content" style="background: transparent; border: none; box-shadow: none;">
+                    <div class="modal-header" style="border: none; position: absolute; right: 0; z-index: 1070;">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 10px; margin: 10px;"></button>
+                    </div>
+                    <div class="modal-body text-center p-0" style="position: relative;">
+                        <img id="globalLightboxImage" src="" alt="Enlarged Image" style="max-width: 100%; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            // Global function to open lightbox, callable from iframes via window.parent.openLightbox(src)
+            window.openLightbox = function(imageSrc) {
+                if (!imageSrc || imageSrc === '#' || imageSrc.includes('no-image')) return;
+                const lightboxImage = document.getElementById('globalLightboxImage');
+                if (lightboxImage) {
+                    lightboxImage.src = imageSrc;
+                    const lightboxModal = new bootstrap.Modal(document.getElementById('globalLightboxModal'));
+                    lightboxModal.show();
+                }
+            };
+        </script>
+
         <script src="staffAssets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="staffAssets/vendor/simple-datatables/simple-datatables.js"></script>
         <script src="staffAssets/vendor/tinymce/tinymce.min.js"></script>

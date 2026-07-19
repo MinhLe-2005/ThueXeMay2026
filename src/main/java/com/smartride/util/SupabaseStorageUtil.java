@@ -1,100 +1,105 @@
 package com.smartride.util;
 
-import java.io.File;
-import java.io.FileInputStream;
+import com.smartride.constant.IConstant;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class SupabaseStorageUtil {
-    private static final String SUPABASE_URL = "https://zfvgigfjmbtgwgirdify.supabase.co";
-    // Replace this with the actual secret key for internal usage
-    private static final String SUPABASE_KEY = "sb_secret_NPCVczwoBfCtl-SdopZhLw_gLqzB2ut";
-    private static final String BUCKET_NAME = "images";
 
-    public static String uploadFile(java.io.InputStream is, String fileName) {
-        return uploadFile(is, fileName, "images");
-    }
+    private static final String STORAGE_URL = IConstant.SUPABASE_URL + "/storage/v1/object/";
 
-    public static String uploadFile(java.io.InputStream is, String fileName, String bucketName) {
+    /**
+     * Tải file lên Supabase Storage (Bucket public)
+     * 
+     * @param bucket Tên bucket (VD: "motor-images")
+     * @param fileName Tên file (VD: "booking-123.png")
+     * @param fileStream Luồng dữ liệu của file
+     * @param contentType Loại nội dung (VD: "image/jpeg", "image/png")
+     * @return URL public của file sau khi tải lên thành công, hoặc null nếu lỗi
+     */
+    public static String uploadFile(String bucket, String fileName, InputStream fileStream, String contentType) {
         try {
-            String endpoint = SUPABASE_URL + "/storage/v1/object/" + bucketName + "/" + fileName;
-            URL url = new URL(endpoint);
+            // URL API endpoint
+            URL url = new URL(STORAGE_URL + bucket + "/" + fileName);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("apikey", SUPABASE_KEY);
-            conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_KEY);
             
-            // Map file extension to the correct image Content-Type for in-browser preview
-            String contentType = "application/octet-stream";
-            String lowerName = fileName.toLowerCase();
-            if (lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg")) {
-                contentType = "image/jpeg";
-            } else if (lowerName.endsWith(".png")) {
-                contentType = "image/png";
-            } else if (lowerName.endsWith(".gif")) {
-                contentType = "image/gif";
-            } else if (lowerName.endsWith(".webp")) {
-                contentType = "image/webp";
-            }
+            // Thiết lập method POST
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            
+            // Set Headers
+            conn.setRequestProperty("Authorization", "Bearer " + IConstant.SUPABASE_SERVICE_ROLE_KEY);
             conn.setRequestProperty("Content-Type", contentType);
-            conn.setRequestProperty("x-upsert", "true"); // Allow overwriting existing files
-
+            
+            // Copy InputStream từ file sang OutputStream của Request
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] buffer = new byte[4096];
                 int bytesRead;
-                while ((bytesRead = is.read(buffer)) != -1) {
+                while ((bytesRead = fileStream.read(buffer)) != -1) {
                     os.write(buffer, 0, bytesRead);
                 }
+                os.flush();
             }
-
+            
+            // Lấy kết quả phản hồi
             int responseCode = conn.getResponseCode();
             if (responseCode == 200 || responseCode == 201) {
-                return SUPABASE_URL + "/storage/v1/object/public/" + bucketName + "/" + fileName;
+                // Nếu thành công, trả về link public
+                return IConstant.SUPABASE_URL + "/storage/v1/object/public/" + bucket + "/" + fileName;
             } else {
-                System.out.println("Supabase upload failed with response code: " + responseCode);
+                System.out.println("Lỗi upload file lên Supabase. Mã lỗi: " + responseCode);
+                // Đọc response error
+                try (InputStream errorStream = conn.getErrorStream()) {
+                    if (errorStream != null) {
+                        byte[] errorBuffer = new byte[1024];
+                        int read = errorStream.read(errorBuffer);
+                        if(read > 0) {
+                            System.out.println("Chi tiết lỗi: " + new String(errorBuffer, 0, read));
+                        }
+                    }
+                }
                 return null;
             }
+            
         } catch (Exception e) {
+            System.out.println("Exception khi upload file lên Supabase: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
-
-    public static boolean deleteFile(String publicUrl) {
-        if (publicUrl == null || !publicUrl.startsWith(SUPABASE_URL)) {
-            return false;
-        }
+    
+    /**
+     * Xóa file khỏi Supabase Storage
+     * 
+     * @param fileUrl URL public của file cần xóa, hoặc tên file
+     * @return true nếu xóa thành công, false nếu lỗi
+     */
+    public static boolean deleteFile(String fileUrl) {
+        if (fileUrl == null || fileUrl.trim().isEmpty()) return false;
+        
         try {
-            // Support deleting from both 'images' and 'profileImg' dynamically
-            String bucketName = "images";
-            if (publicUrl.contains("/profileImg/")) {
-                bucketName = "profileImg";
+            // Lấy tên file từ URL (nếu là URL)
+            String fileName = fileUrl;
+            if (fileUrl.contains("/")) {
+                fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
             }
             
-            String prefix = SUPABASE_URL + "/storage/v1/object/public/" + bucketName + "/";
-            if (!publicUrl.startsWith(prefix)) {
-                return false;
-            }
-            String fileName = publicUrl.substring(prefix.length());
+            // Mặc định xóa từ bucket "motor-images" (điều chỉnh nếu có nhiều bucket)
+            String bucket = "motor-images";
             
-            String endpoint = SUPABASE_URL + "/storage/v1/object/" + bucketName + "/" + fileName;
-            URL url = new URL(endpoint);
+            URL url = new URL(STORAGE_URL + bucket + "/" + fileName);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            
             conn.setRequestMethod("DELETE");
-            conn.setRequestProperty("apikey", SUPABASE_KEY);
-            conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_KEY);
+            conn.setRequestProperty("Authorization", "Bearer " + IConstant.SUPABASE_SERVICE_ROLE_KEY);
             
             int responseCode = conn.getResponseCode();
-            if (responseCode == 200 || responseCode == 204) {
-                return true;
-            } else {
-                System.out.println("Supabase delete failed with response code: " + responseCode);
-                return false;
-            }
+            return (responseCode == 200 || responseCode == 204);
+            
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Exception khi xóa file trên Supabase: " + e.getMessage());
             return false;
         }
     }

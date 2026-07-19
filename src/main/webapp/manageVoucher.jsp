@@ -22,6 +22,8 @@
         <link href="staffAssets/css/style.css" rel="stylesheet">
         <!-- SweetAlert2 -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <style type="text/css">
             .custom-card {
@@ -177,10 +179,8 @@
         </style>
     </head>
     <body>
-        <jsp:include page="/includes/staff/header-staff.jsp" />
-        <jsp:include page="/includes/staff/sidebar.jsp" />
-        
-        <main id="main" class="main">
+
+        <div class="container-fluid mt-4">
             <div class="pagetitle mb-4 d-flex justify-content-between align-items-center">
                 <div>
                     <h1>Quản lý Khuyến mãi (Voucher)</h1>
@@ -247,6 +247,18 @@
                                                                 onclick="openEditModal(this)" title="Chỉnh sửa">
                                                                 <i class="bi bi-pencil-square me-1"></i> Sửa
                                                             </button>
+                                                            <c:choose>
+                                                                <c:when test="${v.published}">
+                                                                    <button id="publish-btn-${v.voucherId}" class="btn btn-sm rounded-pill fw-medium px-3" style="background-color: #198754; color: #fff; cursor: default; opacity: 0.8;" title="Đã phát hành" disabled>
+                                                                        <i class="bi bi-check-circle me-1"></i> Đã phát hành
+                                                                    </button>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <button id="publish-btn-${v.voucherId}" class="btn btn-sm btn-outline-success rounded-pill fw-medium px-3" onclick="publishNotification('voucher', ${v.voucherId})" title="Phát hành">
+                                                                        <i class="bi bi-send me-1"></i> Phát hành
+                                                                    </button>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                             <button class="btn btn-sm btn-outline-danger rounded-pill fw-medium px-3" onclick="confirmDelete(${v.voucherId})" title="Xóa">
                                                                 <i class="bi bi-trash me-1"></i> Xóa
                                                             </button>
@@ -306,7 +318,7 @@
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
 
         <!-- Modal Create/Edit Voucher -->
         <div class="modal fade" id="voucherModal" tabindex="-1">
@@ -403,12 +415,12 @@
             function confirmDelete(id) {
                 Swal.fire({
                     title: 'Xóa Voucher này?',
-                    text: "Hành động này không thể hoàn tác!",
+                    text: "Khách hàng sẽ không thể sử dụng mã này nữa!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#d33',
+                    confirmButtonColor: '#dc3545',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Có, xóa ngay!',
+                    confirmButtonText: 'Xóa ngay',
                     cancelButtonText: 'Hủy'
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -416,6 +428,47 @@
                         document.getElementById('deleteForm').submit();
                     }
                 })
+            }
+            
+            function publishNotification(type, id) {
+                Swal.fire({
+                    title: 'Phát hành thông báo?',
+                    text: "Một thông báo Push Notification sẽ được gửi tự động đến TẤT CẢ KHÁCH HÀNG trong hệ thống!",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#198754',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Phát hành ngay',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '${pageContext.request.contextPath}/api/publish-notification',
+                            type: 'POST',
+                            data: { type: type, id: id },
+                            success: function(res) {
+                                if (res.status === 'success') {
+                                    Swal.fire('Thành công!', 'Thông báo đã được phủ sóng đến toàn bộ khách hàng!', 'success');
+                                    var btn = document.getElementById('publish-btn-' + id);
+                                    if(btn) {
+                                        btn.innerHTML = '<i class="bi bi-check-circle me-1"></i> Đã phát hành';
+                                        btn.classList.remove('btn-outline-success');
+                                        btn.style.backgroundColor = '#198754';
+                                        btn.style.color = '#fff';
+                                        btn.style.cursor = 'default';
+                                        btn.style.opacity = '0.8';
+                                        btn.disabled = true;
+                                    }
+                                } else {
+                                    Swal.fire('Lỗi!', res.message || 'Không thể phát hành thông báo.', 'error');
+                                }
+                            },
+                            error: function() {
+                                Swal.fire('Lỗi!', 'Không thể kết nối đến máy chủ.', 'error');
+                            }
+                        });
+                    }
+                });
             }
             
             // Show alert from session
