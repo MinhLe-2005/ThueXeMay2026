@@ -112,7 +112,7 @@
                         <c:set var="endMinute" value="${fn:substring(endDate, 14, 16)}" />
 
                         <!-- Content Grid: Premium Layout -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <!-- Column 1: Lịch trình -->
                             <div class="flex flex-col h-full">
                                 <!-- Card: Lịch trình -->
