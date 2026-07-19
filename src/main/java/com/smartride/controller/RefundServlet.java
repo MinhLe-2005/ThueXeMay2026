@@ -70,7 +70,7 @@ public class RefundServlet extends HttpServlet {
             
             // Send notification back to customer
             String cusMessage = "Cảm ơn bạn đã cung cấp thông tin STK. Kế toán sẽ tiến hành hoàn tiền <strong>" + amountStr + "</strong> vào TK " + bankAccount + " (" + bankName + ") trong thời gian sớm nhất.";
-            NotificationDAO.getInstance().insertNotification(account.getAccountId(), "Thông tin hoàn tiền " + amountStr + " đã được ghi nhận", cusMessage, "history");
+            NotificationDAO.getInstance().insertNotification(account.getAccountId(), "Thông tin hoàn tiền " + amountStr + " đã được ghi nhận", cusMessage, "bookingHistory");
 
             request.setAttribute("message", "Đã gửi yêu cầu hoàn tiền thành công!");
             request.getRequestDispatcher("refundRequest.jsp").forward(request, response);

@@ -198,7 +198,7 @@ public class ManageBookingServlet extends HttpServlet {
                 
                 String notifTitle = "Đơn thuê xe " + bookingID + " đã bị từ chối";
                 String notifMessage = "Lý do: " + cancelReason;
-                String link = "history"; // default link
+                String link = "bookingHistoryDetail?bookingId=" + bookingID; // default link
                 
                 if (isPaid) {
                     notifMessage += ". Số tiền cần hoàn lại: <strong>" + amountStr + "</strong>. Vui lòng click vào đây để cung cấp Số tài khoản hoàn tiền.";
