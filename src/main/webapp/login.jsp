@@ -499,8 +499,12 @@
 
                 <!-- Google -->
                 <%
-                    String scheme = request.getScheme();
+                    String scheme = request.getHeader("X-Forwarded-Proto");
+                    if (scheme == null) scheme = request.getScheme();
                     String serverName = request.getServerName();
+                    if (!serverName.equals("localhost") && !serverName.equals("127.0.0.1")) {
+                        scheme = "https";
+                    }
                     int serverPort = request.getServerPort();
                     String contextPath = request.getContextPath();
                     String redirectUri = scheme + "://" + serverName + (serverPort == 80 || serverPort == 443 ? "" : ":" + serverPort) + contextPath + "/login-google";
