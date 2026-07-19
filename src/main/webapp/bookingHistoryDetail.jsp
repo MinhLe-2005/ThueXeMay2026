@@ -111,6 +111,52 @@
                         <c:set var="endHour" value="${fn:substring(endDate, 11, 13)}" />
                         <c:set var="endMinute" value="${fn:substring(endDate, 14, 16)}" />
 
+                        <!-- Giao xe banner -->
+                        <c:if test="${(statusBooking eq 'Đã xác nhận' or booking.deliveryStatus eq 'Đang giao') and not fn:containsIgnoreCase(booking.deliveryLocation, 'Tại cửa hàng')}">
+                            <div class="mb-6 w-full animate-fadeIn">
+                                <div id="delivery-estimate-history" style="display:none; padding:16px 20px; border-radius:16px; font-size:14px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                                    <i class="fas fa-spinner fa-spin mr-1"></i> Đang tính toán thời gian giao xe dự kiến...
+                                </div>
+                            </div>
+                            
+                            <script>
+                            (function() {
+                                var startDateStr = "${booking.startDate}"; 
+                                var parsedStr = startDateStr.replace(/-/g, '/').replace('.0', '');
+                                var targetTime = new Date(parsedStr);
+                                var now = new Date();
+                                
+                                var diffMs = targetTime - now;
+                                var diffMins = Math.floor(diffMs / 60000);
+                                
+                                var estBox = document.getElementById('delivery-estimate-history');
+                                estBox.style.display = 'block';
+                                
+                                if (diffMins > 0) {
+                                    estBox.innerHTML = '<div class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 text-xl"><i class="fas fa-clock"></i></div><div><strong class="text-blue-900 text-base">Thời gian giao xe dự kiến còn:</strong> <span class="text-xl font-bold text-blue-700 ml-1">' + diffMins + ' phút</span><br><span class="text-sm text-blue-700 mt-1 block">Tài xế đang chuẩn bị xe và sẽ đến đúng giờ.</span></div></div>';
+                                    estBox.style.background = '#eff6ff';
+                                    estBox.style.border = '1px solid #bfdbfe';
+                                } else {
+                                    var lateMins = Math.abs(diffMins);
+                                    if (lateMins <= 45) {
+                                        estBox.innerHTML = '<div class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shrink-0 text-xl"><i class="fas fa-exclamation-triangle"></i></div><div><strong class="text-orange-900 text-base">Tài xế đang đến trễ:</strong> <span class="text-lg font-bold text-orange-700">' + lateMins + ' phút</span>.<br><span class="text-sm text-orange-800 mt-1 block">Mong quý khách thông cảm chờ trong giây lát. Nếu quá 45 phút, SmartRide sẽ gửi tặng mã giảm giá đền bù!</span></div></div>';
+                                        estBox.style.background = '#fff7ed';
+                                        estBox.style.border = '1px solid #fed7aa';
+                                    } else {
+                                        estBox.innerHTML = '<div class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0 text-xl"><i class="fas fa-exclamation-circle"></i></div><div><strong class="text-red-900 text-base">Giao xe trễ quá 45 phút!</strong><br><p class="mt-1 text-sm text-red-800">Hệ thống đã tự động gửi mã đền bù vào <strong>Hộp thư Thông báo</strong> của bạn. Vui lòng kiểm tra chuông thông báo nhé!</p></div></div>';
+                                        estBox.style.background = '#fef2f2';
+                                        estBox.style.border = '1px solid #fecaca';
+                                        if (!window.lateVoucherTriggered) {
+                                            window.lateVoucherTriggered = true;
+                                            fetch('notification?action=triggerLateVoucher&bookingId=' + encodeURIComponent('${booking.bookingID}'), { method: 'POST' })
+                                            .then(() => { if(typeof fetchNotifications === 'function') fetchNotifications(); });
+                                        }
+                                    }
+                                }
+                            })();
+                            </script>
+                        </c:if>
+
                         <!-- Content Grid: Premium Layout -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <!-- Column 1: Lịch trình -->
@@ -181,59 +227,7 @@
                                             </div>
                                         </c:if>
 
-                                        <c:if test="${(statusBooking eq 'Đã xác nhận' or booking.deliveryStatus eq 'Đang giao') and not fn:containsIgnoreCase(booking.deliveryLocation, 'Tại cửa hàng')}">
-                                            <div class="mt-6 pt-5 border-t border-gray-100 flex items-center gap-4">
-                                                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                                                    <i class="fas fa-motorcycle text-blue-500 text-lg"></i>
-                                                </div>
-                                                <div class="w-full">
-                                                    <p class="text-xs text-gray-400 font-bold uppercase mb-1">Dự kiến giao xe</p>
-                                                    <div id="delivery-estimate-history" style="display:none; margin-top:8px; padding:10px 14px; border-radius:8px; background:#f0faf0; border:1px solid #b2dfb2; font-size:13px; color:#2e7d32;">
-                                                        <i class="fas fa-spinner fa-spin mr-1"></i> Đang tính toán thời gian...
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <script>
-                                            (function() {
-                                                var startDateStr = "${booking.startDate}"; 
-                                                var parsedStr = startDateStr.replace(/-/g, '/').replace('.0', '');
-                                                var targetTime = new Date(parsedStr);
-                                                var now = new Date();
-                                                
-                                                var diffMs = targetTime - now;
-                                                var diffMins = Math.floor(diffMs / 60000);
-                                                
-                                                var estBox = document.getElementById('delivery-estimate-history');
-                                                estBox.style.display = 'block';
-                                                
-                                                if (diffMins > 0) {
-                                                    estBox.innerHTML = '<i class="fas fa-clock text-blue-500 mr-1"></i> <strong>Thời gian giao xe dự kiến còn:</strong> <span class="text-lg font-bold text-blue-700 ml-1">' + diffMins + ' phút</span><br><span class="text-xs text-gray-500 mt-1 block">Tài xế đang chuẩn bị xe và sẽ đến đúng giờ.</span>';
-                                                    estBox.style.background = '#eff6ff';
-                                                    estBox.style.borderColor = '#bfdbfe';
-                                                    estBox.style.color = '#1e3a8a';
-                                                } else {
-                                                    var lateMins = Math.abs(diffMins);
-                                                    if (lateMins <= 45) {
-                                                        estBox.innerHTML = '<i class="fas fa-exclamation-triangle text-orange-500 mr-1"></i> <strong>Tài xế đang đến trễ:</strong> ' + lateMins + ' phút.<br><span class="text-xs text-gray-600 mt-1 block">Mong quý khách thông cảm chờ trong giây lát. Nếu quá 45 phút, SmartRide sẽ gửi tặng mã giảm giá đền bù!</span>';
-                                                        estBox.style.background = '#fff7ed';
-                                                        estBox.style.borderColor = '#fed7aa';
-                                                        estBox.style.color = '#9a3412';
-                                                    } else {
-                                                        estBox.innerHTML = '<i class="fas fa-exclamation-triangle text-red-600 mr-1 text-lg"></i> <strong>Giao xe trễ quá 45 phút!</strong><br><p class="mt-2 text-gray-700">Hệ thống đã tự động gửi mã đền bù vào <strong>Hộp thư Thông báo</strong> của bạn. Vui lòng kiểm tra chuông thông báo nhé!</p>';
-                                                        estBox.style.background = '#fef2f2';
-                                                        estBox.style.borderColor = '#fecaca';
-                                                        estBox.style.color = '#991b1b';
-                                                        if (!window.lateVoucherTriggered) {
-                                                            window.lateVoucherTriggered = true;
-                                                            fetch('notification?action=triggerLateVoucher&bookingId=' + encodeURIComponent('${booking.bookingID}'), { method: 'POST' })
-                                                            .then(() => { if(typeof fetchNotifications === 'function') fetchNotifications(); });
-                                                        }
-                                                    }
-                                                }
-                                            })();
-                                            </script>
-                                        </c:if>
+
                                         <c:if test="${statusBooking == 'Đã hủy' && not empty cancellation}">
                                             <div class="mt-6 pt-5 border-t border-gray-100 flex items-start gap-4">
                                                 <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
@@ -455,6 +449,27 @@
                                 
                             </div>
                         </div>
+
+                        <!-- Gửi khiếu nại (Report) khi Admin từ chối/Hủy -->
+                        <c:if test="${statusBooking == 'Đã hủy'}">
+                            <div class="mb-6 bg-white border border-red-100 shadow-sm rounded-2xl p-6 relative overflow-hidden animate-fadeIn">
+                                <h4 class="text-lg font-extrabold text-red-800 mb-4 flex items-center">
+                                    <i class="fas fa-headset text-red-500 mr-3 text-xl"></i> Hỗ trợ & Khiếu nại (Report)
+                                </h4>
+                                <div class="bg-red-50 border border-red-100 rounded-xl p-4 flex flex-col gap-3">
+                                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-red-50 self-start max-w-[90%]">
+                                        <p class="text-sm text-gray-700 leading-relaxed">Rất tiếc vì đơn hàng của bạn đã bị hủy. Nếu bạn cần hỗ trợ thêm hoặc muốn khiếu nại về quyết định này, vui lòng gửi tin nhắn cho Admin tại đây. Chúng tôi sẽ phản hồi sớm nhất có thể!</p>
+                                        <span class="text-xs text-gray-400 mt-2 block font-medium">Hệ thống CSKH SmartRide</span>
+                                    </div>
+                                    <form action="#" onsubmit="event.preventDefault(); alert('Đã gửi khiếu nại thành công! Admin sẽ liên hệ lại với bạn.');" class="flex gap-3 mt-2">
+                                        <input type="text" name="message" required placeholder="Nhập nội dung khiếu nại của bạn..." class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-white">
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white rounded-xl px-5 flex items-center justify-center shadow-md transition-colors font-bold cursor-pointer">
+                                            Gửi <i class="fas fa-paper-plane ml-2"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </c:if>
 
                         <!-- Mini Extension Info Link -->
                         <div class="mb-8 text-right relative z-50">
