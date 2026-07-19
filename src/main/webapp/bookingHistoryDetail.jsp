@@ -743,6 +743,98 @@
                 </div>
             </div>
         </div>
+
+        <%-- ========== REAL-TIME GPS TRACKING (chạy khi xe đang được giao cho khách) ========== --%>
+        <c:if test="${statusBooking == 'Đã xác nhận' && booking.deliveryStatus == 'Đã giao'}">
+        <script>
+        (function() {
+            var BOOKING_ID    = '${booking.bookingID}';
+            var CUSTOMER_NAME = '${sessionScope.account.userName}';
+            var MOTOR_NAME    = '${booking.motorcycle.model}';
+            var PHONE         = '${sessionScope.account.phone}';
+            var CTX           = '${pageContext.request.contextPath}';
+            var watchId       = null;
+            var indicator     = null;
+
+            // Tạo indicator nhỏ ở góc màn hình
+            function createIndicator() {
+                indicator = document.createElement('div');
+                indicator.id = 'gps-track-indicator';
+                indicator.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:6px;animation:gpsPulse 1.5s infinite;"></span>Đang chia sẻ vị trí';
+                indicator.style.cssText = 'position:fixed;bottom:18px;right:18px;z-index:99999;background:rgba(0,0,0,0.75);color:#fff;font-size:12px;padding:7px 14px;border-radius:20px;display:flex;align-items:center;font-family:sans-serif;';
+                var style = document.createElement('style');
+                style.textContent = '@keyframes gpsPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}';
+                document.head.appendChild(style);
+                document.body.appendChild(indicator);
+            }
+
+            function setIndicator(text, color) {
+                if (!indicator) return;
+                indicator.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + color + ';margin-right:6px;"></span>' + text;
+            }
+
+            // Gửi tọa độ lên server
+            function sendLocation(lat, lon) {
+                var fd = new URLSearchParams();
+                fd.append('bookingId',    BOOKING_ID);
+                fd.append('lat',          lat);
+                fd.append('lon',          lon);
+                fd.append('customerName', CUSTOMER_NAME);
+                fd.append('vehicleName',  MOTOR_NAME);
+                fd.append('phone',        PHONE);
+                fetch(CTX + '/api/update-location', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: fd.toString() 
+                })
+                .then(function(r){ return r.json(); })
+                .then(function(d){
+                    if (d.ok) setIndicator('Đang chia sẻ vị trí', '#22c55e');
+                    else      setIndicator('Lỗi gửi vị trí', '#ef4444');
+                })
+                .catch(function(){ setIndicator('Mất kết nối', '#f59e0b'); });
+            }
+
+            // Bắt đầu watch
+            function startTracking() {
+                if (!navigator.geolocation) {
+                    alert("Điện thoại của bạn không hỗ trợ GPS.");
+                    return;
+                }
+                createIndicator();
+                setIndicator('Đang kết nối GPS...', '#f59e0b');
+                watchId = navigator.geolocation.watchPosition(
+                    function(pos) {
+                        var alertBox = document.getElementById('gps-warning-banner');
+                        if (alertBox) alertBox.remove();
+                        sendLocation(pos.coords.latitude, pos.coords.longitude);
+                    },
+                    function(err) {
+                        setIndicator('Chưa cấp quyền GPS', '#ef4444');
+                        if (!document.getElementById('gps-warning-banner')) {
+                            var banner = document.createElement('div');
+                            banner.id = 'gps-warning-banner';
+                            banner.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#ef4444;color:white;text-align:center;padding:15px;z-index:999999;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1);';
+                            banner.innerHTML = '<i class="fas fa-exclamation-triangle"></i> BẮT BUỘC: Bạn đang trong thời gian thuê xe. Vui lòng bật Vị trí (GPS) trên trình duyệt để tiếp tục!';
+                            document.body.prepend(banner);
+                        }
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                );
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', startTracking);
+            } else {
+                startTracking();
+            }
+
+            window.addEventListener('beforeunload', function() {
+                if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+            });
+        })();
+        </script>
+        </c:if>
     </body>
 </html>
 
