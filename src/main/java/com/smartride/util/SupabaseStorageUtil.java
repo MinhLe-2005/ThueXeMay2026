@@ -32,6 +32,7 @@ public class SupabaseStorageUtil {
             // Set Headers
             conn.setRequestProperty("Authorization", "Bearer " + IConstant.SUPABASE_SERVICE_ROLE_KEY);
             conn.setRequestProperty("Content-Type", contentType);
+            conn.setRequestProperty("x-upsert", "true");
             
             // Copy InputStream từ file sang OutputStream của Request
             try (OutputStream os = conn.getOutputStream()) {
