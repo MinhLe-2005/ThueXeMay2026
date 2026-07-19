@@ -10,6 +10,7 @@ import com.smartride.dao.ExtensionDAO;
 import com.smartride.dao.MotorcycleDetailDAO;
 import com.smartride.dao.MotorcycleStatusDAO;
 import com.smartride.dao.PaymentDAO;
+import com.smartride.dao.NotificationDAO;
 import com.smartride.dto.AccessoryDetail;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -111,6 +112,13 @@ public class ExtendBookingHandlerServlet extends HttpServlet {
         String paymentDateText = dateTime.format(outputFormatter);
         PaymentDAO daoP = PaymentDAO.getInstance();
         daoP.addPayment(bookingid, "Ngân hàng", paymentDateText, amount/100000, "Giao dịch thành công");
+        
+        // Notify staff
+        NotificationDAO.getInstance().insertStaffNotification(
+            "Khách gia hạn thuê xe",
+            "Đơn " + bookingid + " vừa được gia hạn và thanh toán thành công " + (amount/100000) + "k.",
+            "manageBooking"
+        );
         
         // Send confirmation email
 //       StringBuilder emailContent = new StringBuilder();

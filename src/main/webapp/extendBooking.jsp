@@ -2699,15 +2699,13 @@
             if (event.data === 'activateOverlay') {
                 const overlay = document.getElementById('overlay');
                 overlay.classList.add('active');
-//                
-//                // Thực hiện các hành động cần thiết tại đây, ví dụ: tắt overlay sau 3 giây
-//                setTimeout(() => {
-//                    overlay.classList.remove('active');
-//                }, 30000000);
             }
             if(event.data === 'stopOverlay') {
                 const overlay = document.getElementById('overlay');
                 overlay.classList.remove('active');
+            }
+            if (event.data && event.data.status === 'success') {
+                handlePaymentStatus(event.data);
             }
         });
            // Kiểm tra nếu có dữ liệu nào được gửi từ servlet
