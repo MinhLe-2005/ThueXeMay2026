@@ -59,7 +59,7 @@ public class BookingHistoryDetailServlet extends HttpServlet {
             java.time.format.DateTimeFormatter outputFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String formattedPaymentDate = dateTime.format(outputFormatter);
             
-            PaymentDAO.getInstance().addPayment(bookingId, "Ngân hàng", formattedPaymentDate, (int)amount, "Giao dịch thành công");
+            PaymentDAO.getInstance().addPayment(bookingId, "Ngân hàng", formattedPaymentDate, (int)amount, "Thành công");
             
             // Check if fully paid and update status
             com.smartride.dto.Payment totalPayment = PaymentDAO.getInstance().getPayMentbyBookingId(bookingId);

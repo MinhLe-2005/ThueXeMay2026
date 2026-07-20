@@ -380,7 +380,7 @@ public class BookingInforHander extends HttpServlet {
         
         String paymentDateText = dateTime.format(outputFormatter);
         PaymentDAO daoP = PaymentDAO.getInstance();
-        daoP.addPayment(bookingid, "Ngân hàng", paymentDateText, amount, "Giao dịch thành công");
+        daoP.addPayment(bookingid, "Ngân hàng", paymentDateText, amount, "Thành công");
         
         StringBuilder emailContent = new StringBuilder();
         emailContent.append("<!DOCTYPE html>\n");

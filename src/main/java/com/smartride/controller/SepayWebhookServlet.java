@@ -78,7 +78,7 @@ public class SepayWebhookServlet extends HttpServlet {
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String paymentDateText = currentDateTime.format(outputFormatter);
-                daoP.addPayment(bookingId, "SePay VietQR", paymentDateText, amount, "Giao dịch thành công");
+                daoP.addPayment(bookingId, "SePay VietQR", paymentDateText, amount, "Thành công");
                 
                 // Calculate total paid
                 com.smartride.dto.Payment totalPayment = daoP.getPayMentbyBookingId(bookingId);

@@ -10,7 +10,11 @@ public final class RentalPricingUtil {
 
     private static final DateTimeFormatter[] BOOKING_DATE_FORMATS = {
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"),
+        DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"),
+        DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"),
+        DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"),
+        DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
     };
 
     private RentalPricingUtil() {
