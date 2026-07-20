@@ -510,7 +510,9 @@
                                     function appendMessageToUI(msg) {
                                         const div = document.createElement('div');
                                         div.className = 'max-w-[75%] px-4 py-2.5 shadow-sm flex flex-col ' + 
-                                            (msg.senderRole === 'CUSTOMER' ? 'self-end bg-[#7c3aed] text-white rounded-[20px] rounded-br-sm' : 'self-start bg-[#e4e6eb] text-gray-900 rounded-[20px] rounded-bl-sm');
+                                            (msg.senderRole === 'CUSTOMER' ? 'self-end text-white' : 'self-start text-gray-900');
+                                        div.style.backgroundColor = msg.senderRole === 'CUSTOMER' ? '#7c3aed' : '#e4e6eb';
+                                        div.style.borderRadius = msg.senderRole === 'CUSTOMER' ? '20px 20px 4px 20px' : '20px 20px 20px 4px';
                                         
                                         const p = document.createElement('p');
                                         p.className = 'text-[15px] leading-relaxed break-words';

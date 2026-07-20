@@ -612,9 +612,9 @@
                                                                         <i class="fas fa-check me-1"></i>${buttonText}
                                                                     </button>
                                                                 </c:if>
-                                                                <a href="manageSmartRide.jsp?iframeSrc=manageBooking&openChat=true&bookingId=${listC.bookingID}" class="btn btn-sm btn-info w-100 text-white" style="background-color: #0ea5e9; border: none;">
+                                                                <button type="button" class="btn btn-sm btn-info w-100 text-white" style="background-color: #0ea5e9; border: none;" onclick="openChatForCancelledBooking('${listC.bookingID}')">
                                                                     <i class="fas fa-comments me-1"></i> Xem khiếu nại
-                                                                </a>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
@@ -2244,6 +2244,19 @@ document.getElementById('user-form-modal').addEventListener('hidden.bs.modal', f
         if (gpsMarker) { gpsMarker.remove(); gpsMarker = null; }
     }
 });
+    
+    function openChatForCancelledBooking(bId) {
+        var triggerBtn = document.querySelector('button[data-bookingId="' + bId + '"]');
+        if (triggerBtn) {
+            triggerBtn.click();
+            setTimeout(function() {
+                var triggerEl = document.querySelector('#chat-tab');
+                if (triggerEl) bootstrap.Tab.getOrCreateInstance(triggerEl).show();
+            }, 500);
+        } else {
+            alert("Không tìm thấy dữ liệu đơn hàng trong danh sách Đặt Đơn.");
+        }
+    }
 </script>
 
 </html>
