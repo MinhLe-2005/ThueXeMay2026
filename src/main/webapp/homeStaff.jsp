@@ -1019,8 +1019,8 @@
                 let html = '';
                 paginatedItems.forEach(v => {
                     let key = v.bookingId;
-                    let statusColor = (v.age !== undefined && v.age <= 15) ? 'text-success' : 'text-warning';
-                    let statusText = (v.age !== undefined && v.age <= 15) ? 'Đang trực tuyến' : 'Mất tín hiệu (' + v.age + 's)';
+                    let statusColor = (v.age !== undefined && v.age <= 60) ? 'text-success' : 'text-warning';
+                    let statusText = (v.age !== undefined && v.age <= 60) ? 'Đang trực tuyến' : 'Mất tín hiệu (' + v.age + 's)';
                     
                     let vehicleName = v.vehicleName || 'Xe máy';
                     let phone = v.phone || 'Chưa cập nhật';
@@ -1134,6 +1134,19 @@
                     btn.innerHTML = '<i class="bi bi-play-fill fs-5 me-1" style="margin-left: -4px;"></i> Khởi chạy Test';
                     btn.classList.remove('btn-warning');
                     btn.classList.add('btn-danger');
+                    
+                    // Remove fake vehicles from server
+                    fakeVehicles.forEach(v => {
+                        let fdStop = new URLSearchParams();
+                        fdStop.append('action', 'stop');
+                        fdStop.append('bookingId', v.id);
+                        fetch('api/update-location', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: fdStop.toString()
+                        });
+                    });
+                    
                     return;
                 }
                 

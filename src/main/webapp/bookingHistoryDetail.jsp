@@ -302,6 +302,14 @@
                                                       gpsWatchId = null;
                                                       if (wakeLock !== null) wakeLock.release().then(() => wakeLock = null);
                                                       
+                                                      let fdStop = new FormData();
+                                                      fdStop.append('action', 'stop');
+                                                      fdStop.append('bookingId', '${booking.bookingID}');
+                                                      fetch('${pageContext.request.contextPath}/api/update-location', {
+                                                          method: 'POST',
+                                                          body: fdStop
+                                                      });
+                                                      
                                                       btn.innerHTML = '<i class="fas fa-play"></i> BẮT ĐẦU PHÁT VỊ TRÍ';
                                                       btn.className = "w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md transition-all flex items-center justify-center gap-2 relative z-10";
                                                       statusBox.classList.add('hidden');
@@ -1107,6 +1115,7 @@
 
             // Gửi tọa độ lên server
             function sendLocation(lat, lon) {
+                lastLat = lat; lastLon = lon;
                 var fd = new URLSearchParams();
                 fd.append('bookingId',    BOOKING_ID);
                 fd.append('lat',          lat);
@@ -1155,11 +1164,21 @@
                 );
             }
 
+            var lastLat = null, lastLon = null;
+            var heartbeatInterval = null;
+
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', startTracking);
             } else {
                 startTracking();
             }
+
+            // Heartbeat: resend last known position every 20s to keep signal alive when stationary
+            heartbeatInterval = setInterval(function() {
+                if (lastLat !== null && lastLon !== null) {
+                    sendLocation(lastLat, lastLon);
+                }
+            }, 20000);
 
             window.addEventListener('beforeunload', function() {
                 if (watchId !== null) navigator.geolocation.clearWatch(watchId);

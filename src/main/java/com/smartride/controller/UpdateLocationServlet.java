@@ -37,7 +37,15 @@ public class UpdateLocationServlet extends HttpServlet {
         }
         */
 
+        String action       = request.getParameter("action");
         String bookingId    = request.getParameter("bookingId");
+
+        if ("stop".equals(action) && bookingId != null) {
+            LocationStore.remove(bookingId);
+            response.getWriter().write("{\"ok\":true}");
+            return;
+        }
+
         String latStr       = request.getParameter("lat");
         String lonStr       = request.getParameter("lon");
         String customerName = request.getParameter("customerName");
