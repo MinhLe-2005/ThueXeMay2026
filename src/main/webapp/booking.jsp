@@ -4228,7 +4228,7 @@
                     document.getElementById('sepay-transfer-note').textContent = bookingId;
                     document.getElementById('sepay-amount-text').textContent = amount.toLocaleString('vi-VN') + ' ₫';
                     
-                    var qrUrl = 'https://qr.sepay.vn/img?bank=MB&acc=0943515000&template=compact&amount=' + amount + '&des=' + encodeURIComponent(bookingId);
+                    var qrUrl = 'https://img.vietqr.io/image/MB-0943515000-compact2.png?amount=' + amount + '&addInfo=' + encodeURIComponent(bookingId) + '&accountName=SMARTRIDE';
                     document.getElementById('sepay-qr-img').src = qrUrl;
                     
                     if (window.sepayInterval) clearInterval(window.sepayInterval);

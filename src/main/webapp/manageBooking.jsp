@@ -1844,7 +1844,7 @@ function showHandoverModal() {
         $('#handover-qr-note').text(note);
         
         // VCB 0943515000 as configured in sepay_pay.jsp
-        var qrUrl = 'https://qr.sepay.vn/img?bank=MB&acc=0943515000&template=compact&amount=' + totalAmount + '&des=' + encodeURIComponent(note);
+        var qrUrl = 'https://img.vietqr.io/image/MB-0943515000-compact2.png?amount=' + totalAmount + '&addInfo=' + encodeURIComponent(note) + '&accountName=SMARTRIDE';
         $('#handover-qr-img').attr('src', qrUrl);
         
         // Start polling
