@@ -889,7 +889,7 @@
             
             function initMap() {
                 // Initialize map centered at FPT University Da Nang
-                map = L.map('map').setView([16.0600, 108.2096], 15);
+                map = L.map('map').setView([16.0609, 108.2057], 15);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '&copy; OpenStreetMap contributors'
@@ -929,8 +929,8 @@
                     popupAnchor: [0, -24]
                 });
                 
-                L.marker([16.0600, 108.2096], {icon: storeIcon, zIndexOffset: 1000}).addTo(map)
-                    .bindPopup('<div style="text-align:center; min-width: 120px;"><b style="color:#b59349; font-size:16px;">SmartRide Store</b><br><span style="color:#666; font-size:13px;">Đại học FPT Đà Nẵng</span></div>');
+                L.marker([16.0609, 108.2057], {icon: storeIcon, zIndexOffset: 1000}).addTo(map)
+                    .bindPopup('<div style="text-align:center; min-width: 120px;"><b style="color:#b59349; font-size:16px;">SmartRide Store</b><br><span style="color:#666; font-size:13px;">254 Nguyễn Văn Linh, Đà Nẵng</span></div>');
 
                 
                 // Fetch vehicle locations every 3 seconds
@@ -1012,7 +1012,7 @@
                     let phone = v.phone || 'Chưa cập nhật';
                     
                     // Geofencing Check
-                    let dist = haversine(16.0600, 108.2096, v.lat, v.lon);
+                    let dist = haversine(16.0609, 108.2057, v.lat, v.lon);
                     let isOutOfBounds = (dist > 50);
                     let isAllowed = allowedVehicles.includes(key);
                     
@@ -1105,7 +1105,7 @@
             
             let simulationInterval = null;
             let fakeVehicles = [
-                { id: 'TEST-001', name: 'Nguyễn Văn Test', phone: '0987654321', vehicleName: 'Honda Airblade', lat: 16.0600, lon: 108.2096, dLat: 0.0001, dLon: 0.0001 },
+                { id: 'TEST-001', name: 'Nguyễn Văn Test', phone: '0987654321', vehicleName: 'Honda Airblade', lat: 16.0609, lon: 108.2057, dLat: 0.0001, dLon: 0.0001 },
                 { id: 'TEST-002', name: 'Trần Thị Demo', phone: '0912345678', vehicleName: 'Yamaha Vision', lat: 16.0604, lon: 108.2080, dLat: -0.00008, dLon: 0.00015 },
                 { id: 'TEST-003', name: 'Phượt Thủ Cứng', phone: '0933333333', vehicleName: 'Honda Winner X', lat: 15.6500, lon: 108.2080, dLat: 0.0002, dLon: 0.0001 } // Distance ~45km at start, will quickly go out of bounds
             ];

@@ -1125,7 +1125,7 @@
             if (newVal === 'Đã giao' && deliveryAddress && !deliveryAddress.includes('Your own address') === false) {
                 // Try OSRM calculation
                 var cleanAddr = deliveryAddress.replace('Your own address:', '').replace('Phí giao xe:', '').split('(')[0].trim();
-                var STORE_LAT = 16.0600, STORE_LON = 108.2096;
+                var STORE_LAT = 16.0609, STORE_LON = 108.2057;
                 
                 fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(cleanAddr + ', Đà Nẵng, Việt Nam'))
                     .then(r => r.json())
@@ -1338,7 +1338,7 @@
                 var imgSrc = isUrl ? imgStr : 'upload/' + imgStr;
                 return `<div style="flex: 1; min-width: 200px; text-align: center; cursor: pointer; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0; background:#f8fafc;" onclick="viewImageFull('${imgSrc}')">
                             <div style="font-size:11px; font-weight:700; color:#64748b; padding:8px; border-bottom: 1px solid #e2e8f0; text-transform:uppercase; letter-spacing:1px;">${label}</div>
-                            <img src="${imgSrc}" style="width: 100%; height: 130px; object-fit: cover; transition: transform 0.2s; display:block;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Ảnh CCCD" onerror="console.error('Image load failed:', this.src); this.onerror=null; this.src='https://via.placeholder.com/300x200?text=L%E1%BB%97i+T%E1%BA%A3i+%E1%BA%A2nh';">
+                            <img src="${imgSrc}" style="width: 100%; height: 130px; object-fit: cover; transition: transform 0.2s; display:block;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Ảnh CCCD" onerror="console.error('Image load failed:', this.src); this.onerror=null; this.src='https://placehold.co/300x200?text=Loi+Tai+Anh';">
                         </div>`;
             }
 
@@ -2127,7 +2127,7 @@ function toggleGpsMap() {
 
         // Init map only once
         if (!gpsMap) {
-            gpsMap = L.map('leaflet-map').setView([16.0600, 108.2096], 14);
+            gpsMap = L.map('leaflet-map').setView([16.0609, 108.2057], 14);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap',
                 maxZoom: 19

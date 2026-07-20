@@ -5169,7 +5169,7 @@
         }
 
         // Tọa độ cửa hàng SmartRide
-        var SHOP_LAT = 16.0600, SHOP_LON = 108.2096;
+        var SHOP_LAT = 16.0609, SHOP_LON = 108.2057;
 
         function haversineKm(lat1, lon1, lat2, lon2) {
             var R = 6371;
