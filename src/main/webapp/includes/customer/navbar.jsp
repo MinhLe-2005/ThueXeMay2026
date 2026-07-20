@@ -103,12 +103,11 @@
 
             <div class="user-menu-wrap">
                 <c:choose>
-                    <c:when test="${sessionScope.account.image != null}">
+                    <c:when test="${not empty sessionScope.account.image}">
                         <a class="mini-photo-wrapper"><img class="mini-photo" style="object-fit: cover; cursor: pointer" src="${sessionScope.account.image}?${now.time}" width="36" height="36"/></a>
                     </c:when>
                     <c:otherwise>
                         <a class="mini-photo-wrapper"><img class="mini-photo" style="object-fit: cover; cursor: pointer"  src="images/avarta.jpg" width="36" height="36"/></a>
-
                     </c:otherwise>
                 </c:choose>
 
@@ -121,7 +120,7 @@
                         <div style="background-color: #ffffff !important; padding-top: 5px;">
                             <div class="profile-highlight">
                             <c:choose>
-                                <c:when test="${sessionScope.account.image != null}">
+                                <c:when test="${not empty sessionScope.account.image}">
                                     <img src="${sessionScope.account.image}?${now.time}" alt="profile-img" width="36" height="36">
                                 </c:when>
                                 <c:otherwise>
