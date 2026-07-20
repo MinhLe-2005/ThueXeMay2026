@@ -508,6 +508,11 @@
                                                                             <a href="bookingHistoryDetail?bookingId=${o.bookingID}" class="px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm flex items-center h-[28px]" style="background-color: #1e293b; color: #ffffff;" title="Chi tiết / Gia hạn" onmouseover="this.style.backgroundColor='#0f172a'" onmouseout="this.style.backgroundColor='#1e293b'">
                                                                                 <i class="fas fa-file-invoice mr-1.5"></i> Chi tiết / Gia hạn
                                                                             </a>
+                                                                            <c:if test="${o.statusBooking == 'Đã xác nhận' && o.deliveryStatus == 'Đã giao'}">
+                                                                                <a href="bookingHistoryDetail?bookingId=${o.bookingID}&openSos=true" class="px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-200 text-decoration-none shadow-sm flex items-center h-[28px] animate-pulse" style="background-color: #dc2626; color: #ffffff;" title="Cứu hộ khẩn cấp">
+                                                                                    <i class="fas fa-exclamation-triangle mr-1.5"></i> SOS
+                                                                                </a>
+                                                                            </c:if>
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                     

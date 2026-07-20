@@ -112,7 +112,7 @@
                         <c:set var="endMinute" value="${fn:substring(endDate, 14, 16)}" />
 
                         <!-- Giao xe banner -->
-                        <c:if test="${(statusBooking eq 'Đã xác nhận' or booking.deliveryStatus eq 'Đang giao') and not fn:containsIgnoreCase(booking.deliveryLocation, 'Tại cửa hàng')}">
+                        <c:if test="${statusBooking eq 'Đã xác nhận' and booking.deliveryStatus ne 'Đã giao' and booking.deliveryStatus ne 'Đã trả' and not fn:containsIgnoreCase(booking.deliveryLocation, 'Tại cửa hàng')}">
                             <div class="mb-6 w-full animate-fadeIn">
                                 <div id="delivery-estimate-history" style="display:none; padding:16px 20px; border-radius:16px; font-size:14px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
                                     <i class="fas fa-spinner fa-spin mr-1"></i> Đang tính toán thời gian giao xe dự kiến...
@@ -1053,6 +1053,13 @@
                     alert("Không thể lấy vị trí hiện tại. Vui lòng cấp quyền vị trí cho trình duyệt!");
                 }, { enableHighAccuracy: true, timeout: 10000 });
             }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('openSos') === 'true') {
+                    setTimeout(openSosModal, 300);
+                }
+            });
         </script>
         </c:if>
 
