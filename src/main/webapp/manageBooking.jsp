@@ -1504,14 +1504,17 @@
         }
         
         function submitApproveInvoice() {
-            var form = $('#approveInvoiceForm');
-            var btn = form.find('.btn-warning');
+            var bookingID = $('#approveInvoiceBookingID').val();
+            var btn = $('#approveInvoiceForm').find('.btn-warning');
             btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
+            
+            var fd = new FormData();
+            fd.append('bookingID', bookingID);
+            fd.append('manualPayment', 'true');
             
             fetch('${pageContext.request.contextPath}/manageBooking', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: form.serialize()
+                body: fd
             })
             .then(function() {
                 location.reload();
