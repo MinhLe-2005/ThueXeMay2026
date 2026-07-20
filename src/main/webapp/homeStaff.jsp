@@ -895,6 +895,44 @@
                     attribution: '&copy; OpenStreetMap contributors'
                 }).addTo(map);
                 
+                // --- Store Marker ---
+                var storeIcon = L.divIcon({
+                    className: 'custom-store-marker',
+                    html: `
+                        <style>
+                        @keyframes pulse-ring-store {
+                          0% { box-shadow: 0 0 0 0 rgba(181, 147, 73, 0.7); }
+                          70% { box-shadow: 0 0 0 20px rgba(181, 147, 73, 0); }
+                          100% { box-shadow: 0 0 0 0 rgba(181, 147, 73, 0); }
+                        }
+                        .store-pulse-icon {
+                          background-color: #b59349; 
+                          color: white; 
+                          width: 48px; 
+                          height: 48px; 
+                          border-radius: 50%; 
+                          display: flex; 
+                          align-items: center; 
+                          justify-content: center; 
+                          border: 3px solid white;
+                          animation: pulse-ring-store 2s infinite;
+                          position: relative;
+                          z-index: 1000;
+                        }
+                        </style>
+                        <div class="store-pulse-icon">
+                            <i class="fas fa-store" style="font-size: 22px;"></i>
+                        </div>
+                    `,
+                    iconSize: [48, 48],
+                    iconAnchor: [24, 24],
+                    popupAnchor: [0, -24]
+                });
+                
+                L.marker([16.0600, 108.2096], {icon: storeIcon, zIndexOffset: 1000}).addTo(map)
+                    .bindPopup('<div style="text-align:center; min-width: 120px;"><b style="color:#b59349; font-size:16px;">SmartRide Store</b><br><span style="color:#666; font-size:13px;">Đại học FPT Đà Nẵng</span></div>');
+
+                
                 // Fetch vehicle locations every 3 seconds
                 setInterval(fetchVehicleLocations, 3000);
                 fetchVehicleLocations();
