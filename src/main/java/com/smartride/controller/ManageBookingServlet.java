@@ -105,10 +105,14 @@ public class ManageBookingServlet extends HttpServlet {
                 com.smartride.dao.MotorcycleStatusDAO daoMS = com.smartride.dao.MotorcycleStatusDAO.getInstance();
                 com.smartride.dao.BookingDetailDAO daoBD = com.smartride.dao.BookingDetailDAO.getInstance();
                 List<com.smartride.dto.BookingDetail> listBD = daoBD.getListBookingDetails(bookingID);
+                Account accountStaff = (Account) session.getAttribute("account");
+                com.smartride.dto.Staff staff = (accountStaff != null) ? StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId()) : null;
+                String staffId = (staff != null) ? staff.getStaffID() : "STAFF00001";
+                
                 for(com.smartride.dto.BookingDetail bd : listBD) {
                     int mcId = bd.getMotorcycleDetailID();
                     if(mcId > 0) {
-                        daoMS.insertMotorcycleStatus(mcId, "STAFF00001", "Đã thanh toán cọc", paymentDateText, "Xác nhận thủ công bởi Admin");
+                        daoMS.insertMotorcycleStatus(mcId, staffId, "Đã thanh toán cọc", paymentDateText, "Xác nhận thủ công bởi Admin");
                     }
                 }
             } else {

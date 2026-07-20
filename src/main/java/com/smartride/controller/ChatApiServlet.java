@@ -73,7 +73,7 @@ public class ChatApiServlet extends HttpServlet {
                 return;
             }
             
-            String senderRole = (account.getRoleID() == 1) ? "STAFF" : "CUSTOMER";
+            String senderRole = (account.getRoleID() == 1) ? "CUSTOMER" : "STAFF";
             
             // Insert into DB
             ChatMessageDAO.getInstance().insertMessage(

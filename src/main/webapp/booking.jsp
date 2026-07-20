@@ -3529,6 +3529,7 @@
                             if (totalDistance > 3) {
                                 deliveryFee = Math.ceil(totalDistance - 3) * 5000;
                             }
+                            window.calculatedDeliveryFee = deliveryFee;
                             
                             // Cộng phí giao xe vào tổng
                             totalAmount += deliveryFee;
@@ -4537,7 +4538,7 @@
             console.log(bikeDetails);
             console.log(accessoriesData);
             console.log(fistname);
-            let deliveryFee = window.deliveryFee || 0;
+            let deliveryFee = window.calculatedDeliveryFee || 0;
             
             if (deliveryFee > 0) {
                 pickupLocation += " (Phí giao xe: " + deliveryFee + "đ)";

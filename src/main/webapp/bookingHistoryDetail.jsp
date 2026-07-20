@@ -465,13 +465,13 @@
                                         <c:choose>
                                             <c:when test="${not empty cancellation}">
                                                 <div class="bg-white p-3.5 rounded-xl shadow-sm border border-red-50 self-start max-w-[90%] animate-fadeIn">
-                                                    <p class="text-sm text-gray-700 leading-relaxed">Đơn hàng của bạn đã bị hủy. Lý do: <strong class="text-red-600">${cancellation.note}</strong></p>
-                                                    <span class="text-xs text-gray-400 mt-2 block font-medium">Hệ thống CSKH SmartRide</span>
+                                                    <p class="text-base font-medium text-gray-800 leading-relaxed">Đơn hàng của bạn đã bị hủy. Lý do: <strong class="text-red-600">${cancellation.note}</strong></p>
+                                                    <span class="text-xs text-gray-500 mt-2 block font-medium">Hệ thống CSKH SmartRide</span>
                                                 </div>
                                             </c:when>
                                             <c:otherwise>
                                                 <div class="bg-white p-3.5 rounded-xl shadow-sm border border-red-50 self-start max-w-[90%] animate-fadeIn">
-                                                    <p class="text-sm text-gray-700 leading-relaxed">Rất tiếc vì đơn hàng của bạn đã bị hủy. Nếu bạn cần hỗ trợ thêm hoặc muốn khiếu nại về quyết định này, vui lòng gửi tin nhắn cho Admin tại đây. Chúng tôi sẽ phản hồi sớm nhất có thể!</p>
+                                                    <p class="text-base font-medium text-gray-800 leading-relaxed">Rất tiếc vì đơn hàng của bạn đã bị hủy. Nếu bạn cần hỗ trợ thêm hoặc muốn khiếu nại về quyết định này, vui lòng gửi tin nhắn cho Admin tại đây. Chúng tôi sẽ phản hồi sớm nhất có thể!</p>
                                                     <span class="text-xs text-gray-400 mt-2 block font-medium">Hệ thống CSKH SmartRide</span>
                                                 </div>
                                             </c:otherwise>
@@ -509,16 +509,16 @@
 
                                     function appendMessageToUI(msg) {
                                         const div = document.createElement('div');
-                                        div.className = 'max-w-[90%] p-3.5 rounded-xl shadow-sm border animate-fadeIn flex flex-col ' + 
-                                            (msg.senderRole === 'CUSTOMER' ? 'self-end bg-red-500 border-red-600 text-white' : 'self-start bg-white border-red-50 text-gray-700');
+                                        div.className = 'max-w-[75%] px-4 py-2.5 shadow-sm flex flex-col ' + 
+                                            (msg.senderRole === 'CUSTOMER' ? 'self-end bg-[#7c3aed] text-white rounded-[20px] rounded-br-sm' : 'self-start bg-[#e4e6eb] text-gray-900 rounded-[20px] rounded-bl-sm');
                                         
                                         const p = document.createElement('p');
-                                        p.className = 'text-sm leading-relaxed';
+                                        p.className = 'text-[15px] leading-relaxed break-words';
                                         p.textContent = msg.message;
                                         
                                         const span = document.createElement('span');
-                                        span.className = 'text-xs mt-2 block font-medium ' + (msg.senderRole === 'CUSTOMER' ? 'text-red-200 text-right' : 'text-gray-400');
-                                        span.textContent = msg.senderRole === 'CUSTOMER' ? 'Bạn (' + msg.sentAt + ')' : 'Admin (' + msg.sentAt + ')';
+                                        span.className = 'text-[10px] mt-1 block ' + (msg.senderRole === 'CUSTOMER' ? 'text-indigo-100 text-right' : 'text-gray-500');
+                                        span.textContent = msg.senderRole === 'CUSTOMER' ? msg.sentAt : 'Admin • ' + msg.sentAt;
                                         
                                         div.appendChild(p);
                                         div.appendChild(span);

@@ -602,16 +602,19 @@
                                                             <td>${listC.note}</td>
                                                             <td>
                                                                 <c:if test="${buttonText == 'Đã xác nhận'}">
-                                                                    <button disabled class="btn btn-sm btn-success w-100">
+                                                                    <button disabled class="btn btn-sm btn-success w-100 mb-1">
                                                                         <i class="fas fa-check-double me-1"></i>${buttonText}
                                                                     </button>
                                                                 </c:if>
                                                                 <c:if test="${buttonText == 'Xác nhận'}">
-                                                                    <button type="button" class="btn btn-sm btn-primary w-100" 
+                                                                    <button type="button" class="btn btn-sm btn-primary w-100 mb-1" 
                                                                             onclick="showConfirmModal('${listC.bookingID}')">
                                                                         <i class="fas fa-check me-1"></i>${buttonText}
                                                                     </button>
                                                                 </c:if>
+                                                                <a href="manageSmartRide.jsp?iframeSrc=manageBooking&openChat=true&bookingId=${listC.bookingID}" class="btn btn-sm btn-info w-100 text-white" style="background-color: #0ea5e9; border: none;">
+                                                                    <i class="fas fa-comments me-1"></i> Xem khiếu nại
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
@@ -1090,7 +1093,7 @@
                                 </div>
                                 <div class="modal-footer" style="border-top: 1px solid #e2e8f0; padding: 16px 24px;">
                                     <button type="button" class="btn btn-secondary" onclick="$('#approveInvoiceModal').modal('hide'); $('#user-form-modal').modal('show');">Quay về</button>
-                                    <button type="submit" class="btn btn-warning" style="font-weight: 700; color: #92400e; background: #fbbf24; border: none; padding: 10px 24px; border-radius: 8px;">
+                                    <button type="button" class="btn btn-warning" onclick="submitApproveInvoice()" style="font-weight: 700; color: #92400e; background: #fbbf24; border: none; padding: 10px 24px; border-radius: 8px;">
                                         <i class="fas fa-check me-2"></i>Xác nhận đã nhận tiền
                                     </button>
                                 </div>
@@ -1498,6 +1501,25 @@
             $('#user-form-modal').modal('hide');
             $('#confirmModalCancel').modal('hide');
             $('#confirmModalExtend').modal('hide');
+        }
+        
+        function submitApproveInvoice() {
+            var form = $('#approveInvoiceForm');
+            var btn = form.find('.btn-warning');
+            btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
+            
+            fetch('${pageContext.request.contextPath}/manageBooking', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: form.serialize()
+            })
+            .then(function() {
+                location.reload();
+            })
+            .catch(function(err) {
+                alert('Có lỗi xảy ra: ' + err);
+                btn.prop('disabled', false).html('<i class="fas fa-check me-2"></i>Xác nhận đã nhận tiền');
+            });
         }
 
         function changeType(bookingID, button) {
@@ -1928,7 +1950,7 @@ async function submitHandover() {
         for(let i=0; i<selectedHandoverFiles.length; i++) {
             // Compress image before upload (max 1200px, 80% quality)
             let compressedFile = await compressImage(selectedHandoverFiles[i], 1200, 1200, 0.8);
-            formData.append('photo'+(i+1), compressedFile);
+            formData.append('photo'+(i+1), compressedFile, selectedHandoverFiles[i].name);
         }
         
         let response = await fetch('${pageContext.request.contextPath}/api/handover-upload', {
@@ -1958,15 +1980,15 @@ function handleHandoverPhotos(input) {
             selectedHandoverFiles.push(input.files[i]);
             let reader = new FileReader();
             reader.onload = function(e) {
-                let imgHtml = `
-                <div class="col-4 col-md-3 position-relative photo-preview-item">
-                    <div class="border rounded" style="height: 100px; overflow: hidden; position: relative;">
-                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">
-                        <button type="button" class="btn btn-sm btn-danger position-absolute" style="top: 2px; right: 2px; padding: 0.1rem 0.3rem;" onclick="removeHandoverPhoto(this)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>`;
+                let imgHtml = 
+                '<div class="col-4 col-md-3 position-relative photo-preview-item">' +
+                    '<div class="border rounded" style="height: 100px; overflow: hidden; position: relative;">' +
+                        '<img src="' + e.target.result + '" style="width:100%; height:100%; object-fit:cover;">' +
+                        '<button type="button" class="btn btn-sm btn-danger position-absolute" style="top: 2px; right: 2px; padding: 0.1rem 0.3rem;" onclick="removeHandoverPhoto(this)">' +
+                            '<i class="fas fa-times"></i>' +
+                        '</button>' +
+                    '</div>' +
+                '</div>';
                 $('#handover-photos-container').append(imgHtml);
             }
             reader.readAsDataURL(input.files[i]);
@@ -2010,16 +2032,16 @@ function loadChatMessages() {
         data.forEach(msg => {
             let isStaff = msg.senderRole === 'STAFF';
             let align = isStaff ? 'flex-end' : 'flex-start';
-            let bgColor = isStaff ? '#3b82f6' : '#f1f5f9';
+            let bgColor = isStaff ? '#7c3aed' : '#e4e6eb';
             let textColor = isStaff ? 'white' : '#1e293b';
-            let borderRadius = isStaff ? '16px 16px 4px 16px' : '16px 16px 16px 4px';
+            let borderRadius = isStaff ? '20px 20px 4px 20px' : '20px 20px 20px 4px';
             
             html += `
             <div style="display: flex; flex-direction: column; align-items: \${align}; margin-bottom: 8px;">
-                <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">\${msg.senderName} • \${msg.sentAt}</div>
-                <div style="background: \${bgColor}; color: \${textColor}; padding: 10px 16px; border-radius: \${borderRadius}; max-width: 80%; word-wrap: break-word;">
+                <div style="background: \${bgColor}; color: \${textColor}; padding: 8px 14px; border-radius: \${borderRadius}; max-width: 75%; word-wrap: break-word; font-size: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                     \${msg.message}
                 </div>
+                <div style="font-size: 10px; color: #94a3b8; margin-top: 4px; padding: 0 4px;">\${isStaff ? msg.sentAt : 'Khách hàng • ' + msg.sentAt}</div>
             </div>`;
         });
         
