@@ -968,14 +968,28 @@
                         popupAnchor: [0, -40]
                     });
                     
+                    let ageMin = Math.floor(v.age / 60);
+                    let ageSec = v.age % 60;
+                    let ageStr = ageMin > 0 ? ageMin + ' phút ' + ageSec + ' giây' : ageSec + ' giây';
+                    
+                    let popupHtml = '<div style="font-family:Inter,sans-serif;min-width:200px;">' +
+                        '<div style="font-weight:800;color:#e11d48;margin-bottom:6px;font-size:14px;"><i class="fas fa-motorcycle"></i> ' + (v.vehicleName||'Xe máy') + '</div>' +
+                        '<div style="font-size:12px;color:#374151;margin-bottom:2px;"><i class="fas fa-hashtag" style="color:#94a3b8;width:16px;"></i> Mã đơn: <strong>' + v.bookingId + '</strong></div>' +
+                        '<div style="font-size:12px;color:#374151;margin-bottom:2px;"><i class="fas fa-user" style="color:#94a3b8;width:16px;"></i> Khách: <strong>' + (v.name||'') + '</strong></div>' +
+                        '<div style="font-size:12px;color:#374151;margin-bottom:2px;"><i class="fas fa-phone" style="color:#94a3b8;width:16px;"></i> SĐT: <strong>' + (v.phone||'') + '</strong></div>' +
+                        '<div style="font-size:11px;color:#94a3b8;margin-top:6px;border-top:1px solid #e5e7eb;padding-top:4px;"><i class="fas fa-clock"></i> Cập nhật: ' + ageStr + ' trước</div>' +
+                        '<div style="font-size:11px;color:#94a3b8;font-family:monospace;">Lat: ' + v.lat.toFixed(5) + ' / Lon: ' + v.lon.toFixed(5) + '</div>' +
+                        '</div>';
+                    
                     if(vehicleMarkers[key]) {
                         // Update existing marker
                         vehicleMarkers[key].setLatLng([v.lat, v.lon]);
+                        vehicleMarkers[key].getPopup().setContent(popupHtml);
                         newMarkers[key] = vehicleMarkers[key];
                     } else {
                         // Create new marker
                         let marker = L.marker([v.lat, v.lon]).addTo(map)
-                            .bindPopup('<b>Booking #'+v.bookingId+'</b><br>Khách hàng: '+v.name);
+                            .bindPopup(popupHtml, {maxWidth: 260});
                         newMarkers[key] = marker;
                     }
                 });
