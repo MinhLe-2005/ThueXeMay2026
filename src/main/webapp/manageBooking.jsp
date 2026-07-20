@@ -2246,16 +2246,18 @@ document.getElementById('user-form-modal').addEventListener('hidden.bs.modal', f
 });
     
     function openChatForCancelledBooking(bId) {
-        var triggerBtn = document.querySelector('button[data-bookingId="' + bId + '"]');
-        if (triggerBtn) {
-            triggerBtn.click();
-            setTimeout(function() {
-                var triggerEl = document.querySelector('#chat-tab');
-                if (triggerEl) bootstrap.Tab.getOrCreateInstance(triggerEl).show();
-            }, 500);
-        } else {
-            alert("Không tìm thấy dữ liệu đơn hàng trong danh sách Đặt Đơn.");
-        }
+        var modal = $('#user-form-modal');
+        modal.find('#modal-bookingId').text(bId);
+        
+        var modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('user-form-modal'));
+        modalInstance.show();
+        
+        setTimeout(function() {
+            var triggerEl = document.querySelector('#chat-tab');
+            if (triggerEl) {
+                bootstrap.Tab.getOrCreateInstance(triggerEl).show();
+            }
+        }, 500);
     }
 </script>
 
