@@ -41,11 +41,9 @@ public class HandoverAPI extends HttpServlet {
             }
 
             List<String> savedImages = new ArrayList<>();
-            String[] photoKeys = {"photo1", "photo2", "photo3", "photo4", "photo5"};
 
-            for (String key : photoKeys) {
-                Part part = request.getPart(key);
-                if (part != null && part.getSize() > 0) {
+            for (Part part : request.getParts()) {
+                if (part.getName().startsWith("photo") && part.getSize() > 0) {
                     String fileName = getFileName(part);
                     String uniqueFileName = bookingId + "_" + System.currentTimeMillis() + "_" + fileName;
                     
@@ -59,7 +57,7 @@ public class HandoverAPI extends HttpServlet {
 
             if (savedImages.isEmpty()) {
                 json.put("status", "error");
-                json.put("message", "No photos uploaded. Handover requires 5 photos.");
+                json.put("message", "Vui lòng chụp ít nhất 1 bức ảnh tình trạng xe.");
                 out.print(new Gson().toJson(json));
                 return;
             }

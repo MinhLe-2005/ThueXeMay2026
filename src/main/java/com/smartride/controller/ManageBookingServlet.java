@@ -250,12 +250,24 @@ public class ManageBookingServlet extends HttpServlet {
         List<Cancellation> cancels = CancellationDAO.getInstance().getAllCancellation();
         List<Extension> extend = ExtensionDAO.getInstance().getAllExtension();
         Map<String, Map<String, Integer>> motorcycleDetailsMap = new HashMap<>();
+        Map<String, List<String>> motorcyclePlatesMap = new HashMap<>();
+        Map<String, Payment> paymentsMap = new HashMap<>();
 
         for (Booking book : bookings) {
             Map<String, Integer> motorcycleDetails = BookingDAO.getInstance().getMotorcycleDetailsByBookingID(book.getBookingID());
             motorcycleDetailsMap.put(book.getBookingID(), motorcycleDetails);
+            
+            List<String> plates = BookingDAO.getInstance().getMotorcyclePlatesByBookingID(book.getBookingID());
+            motorcyclePlatesMap.put(book.getBookingID(), plates);
+            
+            Payment payment = PaymentDAO.getInstance().getPayMentbyBookingId(book.getBookingID());
+            if (payment != null) {
+                paymentsMap.put(book.getBookingID(), payment);
+            }
         }
         request.setAttribute("motorcycleDetailsMap", motorcycleDetailsMap);
+        session.setAttribute("motorcyclePlatesMap", motorcyclePlatesMap);
+        session.setAttribute("paymentsMap", paymentsMap);
         session.setAttribute("bookings", bookings);
         session.setAttribute("cancels", cancels);
         session.setAttribute("extend", extend);

@@ -1756,43 +1756,16 @@
                 <!-- Chụp Ảnh Section -->
                 <div>
                     <h6 class="fw-bold mb-3 text-primary"><i class="fas fa-camera me-2"></i>2. Chụp ảnh tình trạng xe</h6>
-                    <p class="small text-muted mb-2">Bắt buộc chụp 5 góc để đối chiếu khi trả xe.</p>
-                    <div class="row g-2" id="handover-photos">
-                        <div class="col-4 col-md-2">
-                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
-                                <i class="fas fa-motorcycle text-muted mb-1"></i><small style="font-size: 11px;">Mặt trước</small>
-                                <input type="file" name="photo1" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 1)">
-                                <img id="h-preview-1" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
+                    <p class="small text-muted mb-2">Thêm ảnh tình trạng xe (ít nhất 1 ảnh).</p>
+                    <div class="row g-2" id="handover-photos-container">
+                        <!-- Nút thêm ảnh -->
+                        <div class="col-4 col-md-3">
+                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden; border-style: dashed !important; border-color: #cbd5e1 !important;">
+                                <i class="fas fa-plus text-primary mb-1" style="font-size: 24px;"></i><small style="font-size: 11px; text-align: center;">Thêm ảnh</small>
+                                <input type="file" id="handover-file-input" accept="image/*" capture="environment" multiple class="d-none" onchange="handleHandoverPhotos(this)">
                             </label>
                         </div>
-                        <div class="col-4 col-md-2">
-                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
-                                <i class="fas fa-motorcycle text-muted mb-1" style="transform: scaleX(-1);"></i><small style="font-size: 11px;">Sườn trái</small>
-                                <input type="file" name="photo2" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 2)">
-                                <img id="h-preview-2" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
-                            </label>
-                        </div>
-                        <div class="col-4 col-md-2">
-                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
-                                <i class="fas fa-motorcycle text-muted mb-1"></i><small style="font-size: 11px;">Sườn phải</small>
-                                <input type="file" name="photo3" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 3)">
-                                <img id="h-preview-3" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
-                            </label>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
-                                <i class="fas fa-id-card text-muted mb-1"></i><small style="font-size: 11px;">Biển số xe</small>
-                                <input type="file" name="photo4" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 4)">
-                                <img id="h-preview-4" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
-                            </label>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <label class="d-flex flex-column align-items-center justify-content-center border rounded p-2" style="height: 100px; cursor: pointer; background: #f8fafc; position: relative; overflow: hidden;">
-                                <i class="fas fa-tachometer-alt text-muted mb-1"></i><small style="font-size: 11px;">Mặt đồng hồ</small>
-                                <input type="file" name="photo5" accept="image/*" capture="environment" class="d-none" onchange="previewHandoverImg(this, 5)">
-                                <img id="h-preview-5" src="" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; border-radius:inherit; z-index: 1;">
-                            </label>
-                        </div>
+                        <!-- Preview ảnh sẽ được thêm vào đây -->
                     </div>
                 </div>
             </div>
@@ -1825,10 +1798,11 @@ function showHandoverModal() {
     // Reset modal state
     isHandoverPaid = hasPaid;
     uploadedPhotoCount = 0;
-    for(let i=1; i<=5; i++) {
-        $('#h-preview-' + i).hide().attr('src', '');
-        $('input[name="photo'+i+'"]').val('');
+    if (typeof selectedHandoverFiles !== 'undefined') {
+        selectedHandoverFiles = [];
     }
+    $('.photo-preview-item').remove();
+    $('#handover-file-input').val('');
     checkHandoverReady();
     
     if (hasPaid) {
@@ -1933,13 +1907,10 @@ async function submitHandover() {
     $('#btn-submit-handover').html('<i class="fas fa-spinner fa-spin me-2"></i>Đang nén ảnh & xử lý...').prop('disabled', true);
     
     try {
-        for(let i=1; i<=5; i++) {
-            var fileInput = document.querySelector('input[name="photo'+i+'"]');
-            if(fileInput.files[0]) {
-                // Compress image before upload (max 1200px, 80% quality)
-                let compressedFile = await compressImage(fileInput.files[0], 1200, 1200, 0.8);
-                formData.append('photo'+i, compressedFile);
-            }
+        for(let i=0; i<selectedHandoverFiles.length; i++) {
+            // Compress image before upload (max 1200px, 80% quality)
+            let compressedFile = await compressImage(selectedHandoverFiles[i], 1200, 1200, 0.8);
+            formData.append('photo'+(i+1), compressedFile);
         }
         
         let response = await fetch('${pageContext.request.contextPath}/api/handover-upload', {
@@ -1961,21 +1932,46 @@ async function submitHandover() {
     }
 }
 
-function previewHandoverImg(input, index) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            var img = $('#h-preview-' + index);
-            if(img.attr('src') === '') uploadedPhotoCount++;
-            img.attr('src', e.target.result).show();
-            checkHandoverReady();
+let selectedHandoverFiles = [];
+
+function handleHandoverPhotos(input) {
+    if (input.files && input.files.length > 0) {
+        for (let i = 0; i < input.files.length; i++) {
+            selectedHandoverFiles.push(input.files[i]);
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let imgHtml = `
+                <div class="col-4 col-md-3 position-relative photo-preview-item">
+                    <div class="border rounded" style="height: 100px; overflow: hidden; position: relative;">
+                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute" style="top: 2px; right: 2px; padding: 0.1rem 0.3rem;" onclick="removeHandoverPhoto(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>`;
+                $('#handover-photos-container').append(imgHtml);
+            }
+            reader.readAsDataURL(input.files[i]);
         }
-        reader.readAsDataURL(input.files[0]);
+        uploadedPhotoCount = selectedHandoverFiles.length;
+        checkHandoverReady();
+    }
+    input.value = ''; // Reset input to allow selecting same files again if needed
+}
+
+function removeHandoverPhoto(btn) {
+    let item = $(btn).closest('.photo-preview-item');
+    let index = item.index() - 1; // -1 because the add button is the first child
+    if (index >= 0 && index < selectedHandoverFiles.length) {
+        selectedHandoverFiles.splice(index, 1);
+        item.remove();
+        uploadedPhotoCount = selectedHandoverFiles.length;
+        checkHandoverReady();
     }
 }
 
 function checkHandoverReady() {
-    if (isHandoverPaid && uploadedPhotoCount === 5) {
+    if (isHandoverPaid && uploadedPhotoCount > 0) {
         $('#btn-submit-handover').prop('disabled', false);
     } else {
         $('#btn-submit-handover').prop('disabled', true);
