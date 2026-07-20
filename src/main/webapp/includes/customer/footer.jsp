@@ -1,4 +1,4 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="/includes/customer/header.jsp" />
 <footer id="footer" class="footer">
 
@@ -9,9 +9,9 @@
                     <img src="${pageContext.request.contextPath}/images/newlogo_transparent.png" alt="SmartRide Logo" style="height: 52px; width: auto; object-fit: contain;" />
                     <span style="font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #b59349 0%, #d4a843 50%, #8c6f32 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1;">SmartRide</span>
                 </a>
-                <p>"Tá»± do trÃªn tá»«ng chuyáº¿n hÃ nh trÃ¬nh"</p>
-                <p>Chá»n chÃºng tÃ´i Ä‘á»ƒ khá»Ÿi Ä‘áº§u hÃ nh trÃ¬nh cá»§a báº¡n vá»›i sá»± tiá»‡n lá»£i vÃ 
-                    cháº¥t lÆ°á»£ng dá»‹ch vá»¥ tuyá»‡t vá»i nháº¥t.</p>
+                <p>"Tự do trên từng chuyến hành trình"</p>
+                <p>Chọn chúng tôi để khởi đầu hành trình của bạn với sự tiện lợi và
+                    chất lượng dịch vụ tuyệt vời nhất.</p>
                 <div class="social-links d-flex mt-4">
                     <a href="https://www.facebook.com/profile.php?id=61589731149339" target="_blank"><i class="bi bi-facebook"></i></a>
                     <a href="https://www.facebook.com/profile.php?id=61589731149339" target="_blank"><i class="bi bi-instagram"></i></a>
@@ -20,41 +20,41 @@
             </div>
 
             <div class="col-lg-2 col-6 footer-links">
-                <h4>ThÃ´ng Tin</h4>
+                <h4>Thông Tin</h4>
                 <ul>
-                    <li><a href="home">Trang Chá»§</a></li>
-                    <li><a href="about.jsp">Vá» ChÃºng TÃ´i</a></li>
-                    <li><a href="home#featured-services">Dá»‹ch Vá»¥</a></li>
-                    <li><a href="policies.jsp">ChÃ­nh SÃ¡ch & Äiá»u Khoáº£n</a></li>
+                    <li><a href="home">Trang Chủ</a></li>
+                    <li><a href="about.jsp">Về Chúng Tôi</a></li>
+                    <li><a href="home#featured-services">Dịch Vụ</a></li>
+                    <li><a href="policies.jsp">Chính Sách & Điều Khoản</a></li>
                 </ul>
             </div>
 
             <div class="col-lg-2 col-6 footer-links">
-                <h4>Dá»‹ch Vá»¥</h4>
+                <h4>Dịch Vụ</h4>
                 <ul>
                     <li><a href="FAQ">FAQs</a></li>
-                    <li><a href="event">Sá»± Kiá»‡n</a></li>
-                    <li><a href="touristLocation ">Äá»‹a Äiá»ƒm Du Lá»‹ch</a></li>
-                    <li><a href="event">Quáº£ng CÃ¡o</a></li>
+                    <li><a href="event">Sự Kiện</a></li>
+                    <li><a href="touristLocation ">Địa Điểm Du Lịch</a></li>
+                    <li><a href="event">Quảng Cáo</a></li>
                 </ul>
             </div>
 
             <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start col-lg-2 col-6 footer-links">
-                <h4>Há»— Trá»£ KhÃ¡ch HÃ ng</h4>
-                <p class="mb-4"><a href="contact.jsp" class="gradient-button">LiÃªn há»‡ chÃºng tÃ´i</a></p>
-                <p><i class="bi bi-geo-alt-fill" style="color: #b59349; margin-right: 8px;"></i> 254 Nguyá»…n VÄƒn Linh</p>
-                <p style="padding-left: 20px;">Tháº¡c GiÃ¡n, Thanh KhÃª, ÄÃ  Náºµng</p>
+                <h4>Hỗ Trợ Khách Hàng</h4>
+                <p class="mb-4"><a href="contact.jsp" class="gradient-button">Liên hệ chúng tôi</a></p>
+                <p><i class="bi bi-geo-alt-fill" style="color: #b59349; margin-right: 8px;"></i> 254 Nguyễn Văn Linh</p>
+                <p style="padding-left: 20px;">Thạc Gián, Thanh Khê, Đà Nẵng</p>
                 <p class="mt-4"><strong>Phone:</strong> <span style="color: #b59349; font-weight: 600;">0824 551 789</span></p>
                 <p><strong>Email:</strong> <span>support@smartride.com</span></p>
-                <p class="mt-3"><i class="bi bi-clock-fill" style="color: #b59349; margin-right: 8px;"></i><strong>Giá» hoáº¡t Ä‘á»™ng:</strong> <span>Thá»© Hai - Chá»§ Nháº­t: 7:00 - 23:00</span></p>
+                <p class="mt-3"><i class="bi bi-clock-fill" style="color: #b59349; margin-right: 8px;"></i><strong>Giờ hoạt động:</strong> <span>Thứ Hai - Chủ Nhật: 7:00 - 23:00</span></p>
             </div>
 
         </div>
     </div>
 
     <div class="container copyright text-center mt-4">
-        <p><span>CÃ´ng Ty</span> <strong class="px-1 sitename">SmartRide</strong>
-            <span>ChÃºc Báº¡n Váº¡n Niá»m Vui</span></p>
+        <p><span>Công Ty</span> <strong class="px-1 sitename">SmartRide</strong>
+            <span>Chúc Bạn Vạn Niềm Vui</span></p>
         <div class="credits">
             <!-- All the links in the footer should remain intact. -->
             <!-- You can delete the links only if you've purchased the pro version. -->
@@ -65,12 +65,12 @@
 
 </footer>
 
-<!-- Floating Action Buttons (GÃ³c trÃ¡i dÆ°á»›i - FAB dáº¡ng trÆ°á»£t) -->
+<!-- Floating Action Buttons (Góc trái dưới - FAB dạng trượt) -->
 <div class="floating-contact">
     <div class="contact-sub-buttons">
-        <a href="tel:0824551789" class="contact-btn phone-btn" title="Gá»i ngay">
+        <a href="tel:0824551789" class="contact-btn phone-btn" title="Gọi ngay">
             <i class="fas fa-phone-alt" style="color: #d93838;"></i>
-            <span>Gá»i ngay</span>
+            <span>Gọi ngay</span>
         </a>
         <a href="https://zalo.me/0824551789" target="_blank" class="contact-btn zalo-btn" title="Chat Zalo">
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" width="18" height="18">
@@ -81,7 +81,7 @@
             <span>Messenger</span>
         </a>
     </div>
-    <button class="main-contact-fab" title="LiÃªn há»‡ há»— trá»£">
+    <button class="main-contact-fab" title="Liên hệ hỗ trợ">
         <i class="bi bi-chat-dots-fill"></i>
     </button>
 </div>
@@ -309,8 +309,273 @@
 }
 </style>
 
-
 <script>
-(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="HNBmb5fk-wSlCm4pwAPS6";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+window.toggleChatWidget = function() {
+    const popup = document.getElementById('chatbot-iframe-container');
+    const bubble = document.querySelector('.custom-chatbot-bubble');
+    if (popup && popup.style.display === 'none') {
+        popup.style.display = 'flex';
+        if (bubble) bubble.style.display = 'none';
+    } else if (popup) {
+        popup.style.display = 'none';
+        if (bubble) bubble.style.display = 'flex';
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    const fabContainer = document.querySelector('.floating-contact');
+    const fabButton = document.querySelector('.main-contact-fab');
+    
+    if (!fabContainer || !fabButton) return;
+    
+    let isDragging = false;
+    let startX, startY;
+    let initialLeft, initialTop;
+    let hasMoved = false;
+    
+    fabButton.addEventListener('mousedown', startDrag);
+    fabButton.addEventListener('touchstart', startDrag, { passive: true });
+    
+    function startDrag(e) {
+        hasMoved = false;
+        isDragging = true;
+        
+        fabContainer.classList.add('is-active-drag');
+        
+        const rect = fabContainer.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+        
+        fabContainer.style.transition = 'none';
+        
+        const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+        
+        startX = clientX - initialLeft;
+        startY = clientY - initialTop;
+        
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: false });
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+    }
+    
+    function drag(e) {
+        if (!isDragging) return;
+        
+        if (e.cancelable) e.preventDefault();
+        
+        const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+        
+        let newLeft = clientX - startX;
+        let newTop = clientY - startY;
+        
+        const padding = 20;
+        const maxLeft = window.innerWidth - 56 - padding;
+        const maxTop = window.innerHeight - 56 - padding;
+        
+        newLeft = Math.max(padding, Math.min(newLeft, maxLeft));
+        newTop = Math.max(padding, Math.min(newTop, maxTop));
+        
+        const bottomVal = window.innerHeight - newTop - 56;
+        
+        fabContainer.style.bottom = bottomVal + 'px';
+        fabContainer.style.top = 'auto';
+        fabContainer.style.right = 'auto';
+        fabContainer.style.left = newLeft + 'px';
+        
+        if (Math.abs(newLeft - initialLeft) > 5 || Math.abs(newTop - initialTop) > 5) {
+            hasMoved = true;
+            fabContainer.classList.add('dragging');
+        }
+    }
+    
+    function endDrag(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        fabContainer.classList.remove('is-active-drag');
+        
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('mouseup', endDrag);
+        document.removeEventListener('touchend', endDrag);
+        
+        fabContainer.classList.remove('dragging');
+        
+        fabContainer.style.transition = 'max-height 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), left 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), right 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)';
+        
+        const rect = fabContainer.getBoundingClientRect();
+        const midPoint = window.innerWidth / 2;
+        const padding = 30;
+        
+        if (rect.left + rect.width / 2 < midPoint) {
+            fabContainer.style.left = padding + 'px';
+            fabContainer.style.right = 'auto';
+            fabContainer.classList.remove('snap-right');
+            fabContainer.classList.add('snap-left');
+        } else {
+            fabContainer.style.left = 'auto';
+            fabContainer.style.right = padding + 'px';
+            fabContainer.classList.remove('snap-left');
+            fabContainer.classList.add('snap-right');
+        }
+        
+        let finalBottom = window.innerHeight - rect.bottom;
+        const maxBottom = window.innerHeight - 56 - padding;
+        finalBottom = Math.max(padding, Math.min(finalBottom, maxBottom));
+        
+        fabContainer.style.bottom = finalBottom + 'px';
+        fabContainer.style.top = 'auto';
+        
+        if (hasMoved) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            fabButton.style.pointerEvents = 'none';
+            setTimeout(() => {
+                fabButton.style.pointerEvents = 'auto';
+            }, 100);
+        }
+    }
+    
+    // Make Chatbot Bubble Draggable
+    const botBubble = document.querySelector('.custom-chatbot-bubble');
+    if (botBubble) {
+        let isBotDragging = false;
+        let bStartX, bStartY;
+        let bInitialLeft, bInitialTop;
+        let bHasMoved = false;
+        
+        botBubble.addEventListener('mousedown', startBotDrag);
+        botBubble.addEventListener('touchstart', startBotDrag, { passive: true });
+        
+        function startBotDrag(e) {
+            bHasMoved = false;
+            isBotDragging = true;
+            
+            const rect = botBubble.getBoundingClientRect();
+            bInitialLeft = rect.left;
+            bInitialTop = rect.top;
+            
+            botBubble.style.transition = 'none';
+            
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            
+            bStartX = clientX - bInitialLeft;
+            bStartY = clientY - bInitialTop;
+            
+            document.addEventListener('mousemove', dragBot);
+            document.addEventListener('touchmove', dragBot, { passive: false });
+            document.addEventListener('mouseup', endBotDrag);
+            document.addEventListener('touchend', endBotDrag);
+        }
+        
+        function dragBot(e) {
+            if (!isBotDragging) return;
+            
+            if (e.cancelable) e.preventDefault();
+            
+            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            
+            let newLeft = clientX - bStartX;
+            let newTop = clientY - bStartY;
+            
+            const padding = 20;
+            const maxLeft = window.innerWidth - 60 - padding;
+            const maxTop = window.innerHeight - 60 - padding;
+            
+            newLeft = Math.max(padding, Math.min(newLeft, maxLeft));
+            newTop = Math.max(padding, Math.min(newTop, maxTop));
+            
+            const bottomVal = window.innerHeight - newTop - 60;
+            
+            botBubble.style.bottom = bottomVal + 'px';
+            botBubble.style.top = 'auto';
+            botBubble.style.right = 'auto';
+            botBubble.style.left = newLeft + 'px';
+            
+            if (Math.abs(newLeft - bInitialLeft) > 5 || Math.abs(newTop - bInitialTop) > 5) {
+                bHasMoved = true;
+            }
+        }
+        
+        function endBotDrag(e) {
+            if (!isBotDragging) return;
+            isBotDragging = false;
+            
+            document.removeEventListener('mousemove', dragBot);
+            document.removeEventListener('touchmove', dragBot);
+            document.removeEventListener('mouseup', endBotDrag);
+            document.removeEventListener('touchend', endBotDrag);
+            
+            botBubble.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            
+            if (bHasMoved) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }
+        
+        // Prevent click if dragged
+        botBubble.addEventListener('click', function(e) {
+            if (bHasMoved) {
+                e.stopPropagation();
+                e.preventDefault();
+            } else {
+                window.toggleChatWidget();
+            }
+        });
+        
+        // Remove the inline onclick from the div later.
+    }
+});
 </script>
 
+<!-- Custom Chatbot UI (Bulletproof Iframe) -->
+<div class="custom-chatbot-bubble" title="Chat với AI">
+    <i class="bi bi-robot"></i>
+</div>
+
+<div id="chatbot-iframe-container" style="display: none; position: fixed; bottom: 30px; right: 30px; width: 400px; height: 600px; z-index: 9999; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.2); border: 1px solid rgba(181, 147, 73, 0.2); background: #fff; flex-direction: column;">
+    <div style="background: #1a1a1a; color: #fff; padding: 12px 20px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #b59349; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="bi bi-robot" style="color: #b59349; font-size: 20px;"></i>
+            <span>Trợ Lý AI SmartRide</span>
+        </div>
+        <i class="bi bi-x-lg" style="cursor: pointer; font-size: 18px; transition: color 0.3s;" onmouseover="this.style.color='#b59349'" onmouseout="this.style.color='#fff'" onclick="window.toggleChatWidget()"></i>
+    </div>
+    <iframe src="https://www.chatbase.co/chatbot-iframe/HNBmb5fk-wSlCm4pwAPS6" style="flex-grow: 1; border: none; width: 100%; height: 100%;"></iframe>
+</div>
+
+<style>
+.custom-chatbot-bubble {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 9999;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid #b59349;
+}
+.custom-chatbot-bubble:hover {
+    transform: translateY(-5px) scale(1.08);
+    box-shadow: 0 15px 35px rgba(181, 147, 73, 0.4);
+    background: #b59349;
+    color: #fff;
+    border-color: #1a1a1a;
+}
+</style>

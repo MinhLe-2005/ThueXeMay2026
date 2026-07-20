@@ -105,6 +105,7 @@ public class IdCardVerifier {
         r.success = true;
         int errorCode = extractInt(fptJson, "\"errorCode\"");
         if (errorCode != 0) {
+            r.success  = false;
             r.valid    = false;
             r.errorMsg = "FPT API lỗi: " + extractString(fptJson, "\"errorMessage\"");
             return r;
