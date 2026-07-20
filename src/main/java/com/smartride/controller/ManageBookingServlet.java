@@ -94,13 +94,18 @@ public class ManageBookingServlet extends HttpServlet {
         if (bookingID != null && !bookingID.isEmpty()) {
             String manualPayment = request.getParameter("manualPayment");
             if ("true".equals(manualPayment)) {
+                String amtStr = request.getParameter("amount");
+                int amt = 0;
+                if (amtStr != null && !amtStr.isEmpty()) {
+                    try { amt = Integer.parseInt(amtStr); } catch (Exception ignored) {}
+                }
                 BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã thanh toán");
                 com.smartride.dao.PaymentDAO daoP = com.smartride.dao.PaymentDAO.getInstance();
                 java.time.LocalDateTime currentDateTime = java.time.LocalDateTime.now();
                 java.time.format.DateTimeFormatter outputFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String paymentDateText = currentDateTime.format(outputFormatter);
-                // Tìm giá tiền từ form (hoặc để 0 vì Admin duyệt thủ công)
-                daoP.addPayment(bookingID, "Nhận chuyển khoản (Thủ công)", paymentDateText, 0, "Giao dịch thành công");
+                // Sử dụng số tiền từ form
+                daoP.addPayment(bookingID, "Nhận chuyển khoản (Thủ công)", paymentDateText, amt, "Giao dịch thành công");
                 
                 com.smartride.dao.MotorcycleStatusDAO daoMS = com.smartride.dao.MotorcycleStatusDAO.getInstance();
                 com.smartride.dao.BookingDetailDAO daoBD = com.smartride.dao.BookingDetailDAO.getInstance();
