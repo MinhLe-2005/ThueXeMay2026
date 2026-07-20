@@ -234,10 +234,17 @@ public class BookingInforHander extends HttpServlet {
         
         System.out.println(accountId);
         
-        // Generate booking ID
+        // Generate booking ID - ensure it is unique in the DB
         String bookingid = (String) dataMap.get("bookingId");
         if (bookingid == null || bookingid.isEmpty() || "undefined".equals(bookingid)) {
             bookingid = generateBookingCode();
+        }
+        // Retry until we get a non-duplicate ID
+        BookingDAO daoCheck = BookingDAO.getInstance();
+        int retries = 0;
+        while (daoCheck.getBookingById(bookingid) != null && retries < 10) {
+            bookingid = generateBookingCode();
+            retries++;
         }
 
         // Read voucherID (0 = no voucher)
@@ -474,15 +481,10 @@ public class BookingInforHander extends HttpServlet {
     }
 
     private String generateBookingCode() {
-          //Khá»Ÿi táº¡o má»™t Ä‘á»‘i tÆ°á»£ng Random
-        Random random = new Random();
-
-        // Sinh ra 6 sá»‘ ngáº«u nhiÃªn tá»« 0 Ä‘áº¿n 999999
-        int randomNumber = random.nextInt(1000000);
-
-        // Format sá»‘ ngáº«u nhiÃªn thÃ nh chuá»—i, thÃªm vÃ o "BOOK"
-        String bookingCode = "BOOK" + String.format("%06d", randomNumber);
-
+        // Dùng timestamp + random để tránh trùng BookingID
+        long timestamp = System.currentTimeMillis() % 100000L; // 5 chữ số cuối timestamp
+        int random = new Random().nextInt(1000);               // 3 chữ số random
+        String bookingCode = "BK" + String.format("%05d", timestamp) + String.format("%03d", random);
         return bookingCode;
     }
     @Override

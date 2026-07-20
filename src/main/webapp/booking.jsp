@@ -4217,7 +4217,7 @@
                         window.location.href = ctxPath + (ctxPath.endsWith('/') ? '' : '/') + 'bookingHistoryDetail?bookingId=' + bid + '&autoContract=1';
                     }, 2000);
                 } else {
-                    if (!window._sepayBookingId) window._sepayBookingId = 'BK' + Date.now();
+                    if (!window._sepayBookingId) window._sepayBookingId = 'BK' + (Date.now() % 100000).toString().padStart(5, '0') + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
                     var bookingId = window._sepayBookingId;
                     
                     var sepaySection = document.getElementById('sepay-payment-section');
@@ -4351,13 +4351,15 @@
 
             if (method === 'cash') {
                 if (!window._cashBookingId) {
-                    window._cashBookingId = 'BK' + Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
+                    // timestamp 5 ký tự cuối + 3 số random → khớp format backend
+                    window._cashBookingId = 'BK' + (Date.now() % 100000).toString().padStart(5, '0') + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
                 }
                 var bookingId = window._cashBookingId;
                 BookingHandler({ action: 'finish', bookingId: bookingId, method: 'CASH', amount: amount, time: formatDateVN() }, onSuccess, onError);
             } else {
                 if (!window._sepayBookingId) {
-                    window._sepayBookingId = 'BK' + Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
+                    // timestamp 5 ký tự cuối + 3 số random → khớp format backend
+                    window._sepayBookingId = 'BK' + (Date.now() % 100000).toString().padStart(5, '0') + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
                 }
                 var bookingId = window._sepayBookingId;
                 BookingHandler({ action: 'create_only', bookingId: bookingId, method: 'SEPAY', amount: amount, time: formatDateVN() }, onSuccess, onError);
