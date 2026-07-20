@@ -80,9 +80,14 @@ public class SepayWebhookServlet extends HttpServlet {
                 String paymentDateText = currentDateTime.format(outputFormatter);
                 daoP.addPayment(bookingId, "SePay VietQR", paymentDateText, amount, "Thành công");
                 
-                // Calculate total paid
-                com.smartride.dto.Payment totalPayment = daoP.getPayMentbyBookingId(bookingId);
-                double totalPaid = totalPayment != null ? totalPayment.getPaymentAmount() : amount;
+                // Calculate total paid - sum all payments for this booking
+                java.util.List<com.smartride.dto.Payment> allPayments = daoP.getListByBookingId(bookingId);
+                double totalPaid = 0;
+                for (com.smartride.dto.Payment p : allPayments) {
+                    if ("Thành công".equals(p.getPaymentStatus())) {
+                        totalPaid += p.getPaymentAmount();
+                    }
+                }
                 
                 double bookingTotal = 0;
                 for (com.smartride.dto.BookingDetail detail : existingBooking.getListBookingDetails()) {
@@ -92,19 +97,29 @@ public class SepayWebhookServlet extends HttpServlet {
                 com.smartride.dto.Extension ext = com.smartride.dao.ExtensionDAO.getInstance().getExtensionByBookingID(bookingId);
                 if (ext != null) bookingTotal += ext.getExtensionFee();
                 
-                if ("Chờ thanh toán".equals(existingBooking.getStatusBooking())) {
+                boolean fullyPaid = (bookingTotal > 0 && totalPaid >= bookingTotal);
+                String currentStatus = existingBooking.getStatusBooking();
+                String currentDelivery = existingBooking.getDeliveryStatus();
+                
+                if ("Chờ thanh toán".equals(currentStatus)) {
                     daoB.updateBookingStatus(bookingId, "Chờ xác nhận");
-                } else if ("Đã xác nhận".equals(existingBooking.getStatusBooking()) && totalPaid >= bookingTotal) {
-                    daoB.updateBookingStatus(bookingId, "Đã thanh toán");
+                } else if (fullyPaid && ("Đã xác nhận".equals(currentStatus) || "Đang thuê".equals(currentStatus))) {
+                    // Nếu xe đã giao cho khách thì chuyển thẳng sang Đang thuê, ngược lại là Đã thanh toán
+                    if ("Đã giao".equals(currentDelivery)) {
+                        daoB.updateBookingStatus(bookingId, "Đang thuê");
+                    } else {
+                        daoB.updateBookingStatus(bookingId, "Đã thanh toán");
+                    }
                 }
 
                 MotorcycleStatusDAO daoMS = MotorcycleStatusDAO.getInstance();
                 BookingDetailDAO daoBD = BookingDetailDAO.getInstance();
                 List<com.smartride.dto.BookingDetail> listBD = daoBD.getListBookingDetails(bookingId);
+                String mcStatusMsg = fullyPaid ? "Đã thanh toán toàn bộ" : "Đã thanh toán cọc";
                 for(com.smartride.dto.BookingDetail bd : listBD) {
                     int mcId = bd.getMotorcycleDetailID();
                     if(mcId > 0) {
-                        daoMS.insertMotorcycleStatus(mcId, "STAFF00001", "Đã thanh toán cọc", paymentDateText, "Xác nhận tự động qua SePay");
+                        daoMS.insertMotorcycleStatus(mcId, "STAFF00001", mcStatusMsg, paymentDateText, "Xác nhận tự động qua SePay");
                     }
                 }
                 
@@ -114,7 +129,9 @@ public class SepayWebhookServlet extends HttpServlet {
                     if (acc != null && acc.getEmail() != null) {
                         // 1. Thêm Notification vào chuông
                         String notiTitle = "Thanh toán thành công";
-                        String notiMsg = "Đơn hàng " + bookingId + " đã thanh toán cọc thành công.";
+                        String notiMsg = fullyPaid
+                            ? "Đơn hàng " + bookingId + " đã thanh toán toàn bộ thành công."
+                            : "Đơn hàng " + bookingId + " đã thanh toán cọc thành công.";
                         String notiLink = "bookingHistoryDetail?bookingId=" + bookingId;
                         NotificationDAO.getInstance().insertNotification(acc.getAccountId(), notiTitle, notiMsg, notiLink);
                         

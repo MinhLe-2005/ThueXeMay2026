@@ -187,11 +187,8 @@
     function startPolling(bookingId) {
         if (pollInterval) clearInterval(pollInterval);
         
-        let ctxPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
-        if (ctxPath === '') ctxPath = '/MotorcyleHiringProject'; 
-        
         pollInterval = setInterval(() => {
-            fetch(ctxPath + '/check-payment-status?bookingId=' + bookingId)
+            fetch('check-payment-status?bookingId=' + bookingId)
                 .then(r => r.json())
                 .then(d => {
                     if (d.status === 'paid') {

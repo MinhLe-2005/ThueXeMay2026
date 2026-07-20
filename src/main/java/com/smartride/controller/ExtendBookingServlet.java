@@ -34,6 +34,12 @@ public class ExtendBookingServlet extends HttpServlet {
         String bookingid = request.getParameter("bookingid");
         BookingDAO daoB = BookingDAO.getInstance();
         Booking booking = daoB.getBookingById(bookingid);
+        
+        if (booking == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Booking not found");
+            return;
+        }
+        
         request.setAttribute("booking", booking);
         
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");

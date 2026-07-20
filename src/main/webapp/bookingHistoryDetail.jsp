@@ -23,6 +23,7 @@
             }
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     
     <c:if test="${param.layout != 'modal'}">
@@ -898,6 +899,22 @@
                         loadingOverlay.style.display = 'flex';
                     } else if (event.data === 'stopOverlay') {
                         loadingOverlay.style.display = 'none';
+                    }
+                }
+                // Handle payment success from sepay_pay.jsp iframe
+                if (event.data && event.data.status === 'success') {
+                    closePaymentModal();
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thanh toán thành công!',
+                            text: 'Đơn hàng của bạn đã được ghi nhận. Trạng thái sẽ được cập nhật ngay.',
+                            confirmButtonColor: '#b59349',
+                            confirmButtonText: 'OK'
+                        }).then(() => { window.location.reload(); });
+                    } else {
+                        alert('Thanh toán thành công! Trang sẽ tải lại để cập nhật trạng thái.');
+                        window.location.reload();
                     }
                 }
             });

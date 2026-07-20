@@ -5128,16 +5128,26 @@
                     fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&accept-language=vi')
                     .then(response => response.json())
                     .then(data => {
-                        var address = data.display_name.replace(/ Ward/g, '').replace(/ District/g, '');
+                        btn.innerHTML = oldHtml;
+                        var address;
+                        if (data && data.display_name) {
+                            address = data.display_name.replace(/ Ward/g, '').replace(/ District/g, '');
+                        } else {
+                            // Fallback: dùng tọa độ khi không lấy được tên địa chỉ
+                            address = lat.toFixed(5) + ', ' + lon.toFixed(5);
+                        }
                         document.getElementById('custom_' + type + '_input').value = address;
                         updateCustomLocation(type);
                         processDistance(lat, lon, type);
-                        btn.innerHTML = oldHtml;
                     })
                     .catch(error => {
                         console.error('Error reverse geocoding:', error);
                         btn.innerHTML = oldHtml;
-                        Swal.fire({icon: 'error', title: 'Lỗi', text: 'Không thể phân tích địa chỉ từ tọa độ.'});
+                        // Fallback: dùng tọa độ thay vì báo lỗi cứng
+                        var fallbackAddress = lat.toFixed(5) + ', ' + lon.toFixed(5);
+                        document.getElementById('custom_' + type + '_input').value = fallbackAddress;
+                        updateCustomLocation(type);
+                        processDistance(lat, lon, type);
                     });
                 }, function(error) {
                     btn.innerHTML = oldHtml;
