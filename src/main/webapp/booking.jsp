@@ -5161,10 +5161,22 @@
                     processDistance(parseFloat(data[0].lat), parseFloat(data[0].lon), type);
                 } else {
                     info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Không tìm thấy địa chỉ này, vui lòng thử lại.</span>';
+                    var inputEl = document.getElementById('custom_' + type + '_input');
+                    if (inputEl) inputEl.dataset.dist = "8";
+                    if (type === 'pickup') window._pickupFee = 25000;
+                    else window._returnFee = 25000;
+                    recalculateDeliveryFee();
+                    updateTotal();
                 }
             })
             .catch(function() {
                 info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Lỗi tính khoảng cách.</span>';
+                var inputEl = document.getElementById('custom_' + type + '_input');
+                if (inputEl) inputEl.dataset.dist = "8";
+                if (type === 'pickup') window._pickupFee = 25000;
+                else window._returnFee = 25000;
+                recalculateDeliveryFee();
+                updateTotal();
             });
         }
 
@@ -5211,9 +5223,16 @@
                 'Khoảng cách: <strong>' + km.toFixed(1) + ' km</strong>. '+
                 'Phụ phí giao: <strong>' + feeStr + '</strong></span>';
 
+            // Lưu vào dataset để updateTotal() tính lại giá trị chính xác
+            var inputEl = document.getElementById('custom_' + type + '_input');
+            if (inputEl) {
+                inputEl.dataset.dist = km.toFixed(1);
+            }
+
             if (type === 'pickup') window._pickupFee = fee;
             else window._returnFee = fee;
             recalculateDeliveryFee();
+            updateTotal();
         }
 
         function recalculateDeliveryFee() {
