@@ -432,7 +432,7 @@
                                                                 com.smartride.dto.Payment pay = com.smartride.dao.PaymentDAO.getInstance().getPayMentbyBookingId(b.getBookingID());
                                                                 pageContext.setAttribute("pay", pay);
                                                             %>
-                                                            <form action="manageBooking" method="post" id="form-update-${listB.bookingID}" class="row">
+                                                            <form action="manageBooking" method="post" id="form-update-${listB.bookingID}" class="row" enctype="multipart/form-data">
                                                                 <input type="hidden" name="bookingID" value="${listB.bookingID}">
                                                                 <tr>
                                                                     <th scope="row">${listB.bookingID}</th>
@@ -1072,7 +1072,7 @@
                 <!-- Modal duyệt hóa đơn thủ công -->
                 <div class="modal fade" id="approveInvoiceModal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static">
                     <div class="modal-dialog modal-dialog-centered" role="document">
-                        <form id="approveInvoiceForm" action="manageBooking" method="post">
+                        <form id="approveInvoiceForm" action="manageBooking" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="bookingID" id="approveInvoiceBookingID">
                             <input type="hidden" name="manualPayment" value="true">
                             <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
@@ -1888,10 +1888,12 @@ function markHandoverPaid(method) {
     
     // Auto submit to approve manual invoice if needed
     if(method !== 'SePay Chuyển khoản') {
+        var fd = new FormData();
+        fd.append('manualPayment', 'true');
+        fd.append('bookingID', bId);
         fetch('${pageContext.request.contextPath}/manageBooking', {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: 'manualPayment=true&bookingID=' + encodeURIComponent(bId)
+            body: fd
         });
     }
     checkHandoverReady();
