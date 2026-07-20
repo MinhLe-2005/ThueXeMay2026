@@ -1845,9 +1845,17 @@ function markHandoverPaid(method) {
     $('#handover-paid-container').show();
     $('#handover-paid-method').text('Phương thức: ' + method);
     
+    var bId = $('#modal-bookingId').text().trim();
+    // Cập nhật giao diện và data attributes để giữ trạng thái nếu đóng mở lại modal
+    $('#modal-paymentInfo').html('<span style="color:#059669; background:#ecfdf5; padding:2px 10px; border-radius:6px; border:1px solid #10b981;"><i class="fas fa-check-circle me-1"></i>' + method + '</span>');
+    var triggerBtn = document.querySelector('button[data-bookingId="'+bId+'"]');
+    if (triggerBtn) {
+        triggerBtn.setAttribute('data-paymentStatus', 'Thành công');
+        triggerBtn.setAttribute('data-paymentMethod', method);
+    }
+    
     // Auto submit to approve manual invoice if needed
     if(method !== 'SePay Chuyển khoản') {
-        var bId = $('#modal-bookingId').text().trim();
         fetch('${pageContext.request.contextPath}/manageBooking', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
