@@ -52,7 +52,8 @@ public class SOSServlet extends HttpServlet {
                 // Send notification to Staff
                 String title = "[🚨 SOS KHẨN CẤP] Xe gặp sự cố!";
                 String message = "Khách hàng " + account.getFirstName() + " báo hỏng xe. Ghi chú: " + note;
-                String link = "https://www.google.com/maps?q=" + lat + "," + lng;
+                String origin = "16.073860,108.149867"; // SmartRide Shop Coordinates
+                String link = "https://www.google.com/maps/dir/?api=1&origin=" + origin + "&destination=" + lat + "," + lng;
                 NotificationDAO.getInstance().insertStaffNotification(title, message, link);
                 
                 out.print("{\"status\":\"success\"}");

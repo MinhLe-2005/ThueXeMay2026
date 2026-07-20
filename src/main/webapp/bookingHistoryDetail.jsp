@@ -459,18 +459,112 @@
                                 <h4 class="text-lg font-extrabold text-red-800 mb-4 flex items-center">
                                     <i class="fas fa-headset text-red-500 mr-3 text-xl"></i> Hỗ trợ & Khiếu nại (Report)
                                 </h4>
-                                <div class="bg-red-50 border border-red-100 rounded-xl p-4 flex flex-col gap-3">
-                                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-red-50 self-start max-w-[90%]">
-                                        <p class="text-sm text-gray-700 leading-relaxed">Rất tiếc vì đơn hàng của bạn đã bị hủy. Nếu bạn cần hỗ trợ thêm hoặc muốn khiếu nại về quyết định này, vui lòng gửi tin nhắn cho Admin tại đây. Chúng tôi sẽ phản hồi sớm nhất có thể!</p>
-                                        <span class="text-xs text-gray-400 mt-2 block font-medium">Hệ thống CSKH SmartRide</span>
+                                <div class="bg-red-50 border border-red-100 rounded-xl p-4 flex flex-col gap-3 h-[400px]">
+                                    <div id="chat-messages" class="flex-1 overflow-y-auto flex flex-col gap-3 pr-2 scrollbar-thin scrollbar-thumb-red-200">
+                                        <!-- Default Welcome / Cancel Reason Message -->
+                                        <c:choose>
+                                            <c:when test="${not empty cancellation}">
+                                                <div class="bg-white p-3.5 rounded-xl shadow-sm border border-red-50 self-start max-w-[90%] animate-fadeIn">
+                                                    <p class="text-sm text-gray-700 leading-relaxed">Đơn hàng của bạn đã bị hủy. Lý do: <strong class="text-red-600">${cancellation.note}</strong></p>
+                                                    <span class="text-xs text-gray-400 mt-2 block font-medium">Hệ thống CSKH SmartRide</span>
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="bg-white p-3.5 rounded-xl shadow-sm border border-red-50 self-start max-w-[90%] animate-fadeIn">
+                                                    <p class="text-sm text-gray-700 leading-relaxed">Rất tiếc vì đơn hàng của bạn đã bị hủy. Nếu bạn cần hỗ trợ thêm hoặc muốn khiếu nại về quyết định này, vui lòng gửi tin nhắn cho Admin tại đây. Chúng tôi sẽ phản hồi sớm nhất có thể!</p>
+                                                    <span class="text-xs text-gray-400 mt-2 block font-medium">Hệ thống CSKH SmartRide</span>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
-                                    <form action="#" onsubmit="event.preventDefault(); alert('Đã gửi khiếu nại thành công! Admin sẽ liên hệ lại với bạn.');" class="flex gap-3 mt-2">
-                                        <input type="text" name="message" required placeholder="Nhập nội dung khiếu nại của bạn..." class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-white">
-                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white rounded-xl px-5 flex items-center justify-center shadow-md transition-colors font-bold cursor-pointer">
+                                    <form id="chat-form" onsubmit="sendChatMessage(event)" class="flex gap-3 mt-2 shrink-0">
+                                        <input type="text" id="chat-input" required placeholder="Nhập nội dung khiếu nại của bạn..." class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-white">
+                                        <button type="submit" id="chat-submit-btn" class="bg-red-500 hover:bg-red-600 text-white rounded-xl px-5 flex items-center justify-center shadow-md transition-colors font-bold cursor-pointer disabled:opacity-50">
                                             Gửi <i class="fas fa-paper-plane ml-2"></i>
                                         </button>
                                     </form>
                                 </div>
+                                <script>
+                                    const chatBookingId = '${booking.bookingID}';
+                                    const chatApiUrl = '${pageContext.request.contextPath}/api/chat';
+                                    const chatMessagesBox = document.getElementById('chat-messages');
+                                    let lastMessageId = 0;
+
+                                    function fetchChatMessages() {
+                                        fetch(chatApiUrl + '?bookingId=' + chatBookingId)
+                                            .then(response => response.json())
+                                            .then(messages => {
+                                                if (messages.length > 0) {
+                                                    // Only append new messages
+                                                    messages.forEach(msg => {
+                                                        if (msg.messageId > lastMessageId) {
+                                                            appendMessageToUI(msg);
+                                                            lastMessageId = msg.messageId;
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                            .catch(console.error);
+                                    }
+
+                                    function appendMessageToUI(msg) {
+                                        const div = document.createElement('div');
+                                        div.className = 'max-w-[90%] p-3.5 rounded-xl shadow-sm border animate-fadeIn flex flex-col ' + 
+                                            (msg.senderRole === 'CUSTOMER' ? 'self-end bg-red-500 border-red-600 text-white' : 'self-start bg-white border-red-50 text-gray-700');
+                                        
+                                        const p = document.createElement('p');
+                                        p.className = 'text-sm leading-relaxed';
+                                        p.textContent = msg.message;
+                                        
+                                        const span = document.createElement('span');
+                                        span.className = 'text-xs mt-2 block font-medium ' + (msg.senderRole === 'CUSTOMER' ? 'text-red-200 text-right' : 'text-gray-400');
+                                        span.textContent = msg.senderRole === 'CUSTOMER' ? 'Bạn (' + msg.sentAt + ')' : 'Admin (' + msg.sentAt + ')';
+                                        
+                                        div.appendChild(p);
+                                        div.appendChild(span);
+                                        chatMessagesBox.appendChild(div);
+                                        chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+                                    }
+
+                                    function sendChatMessage(event) {
+                                        event.preventDefault();
+                                        const input = document.getElementById('chat-input');
+                                        const btn = document.getElementById('chat-submit-btn');
+                                        const message = input.value.trim();
+                                        if (!message) return;
+
+                                        input.disabled = true;
+                                        btn.disabled = true;
+
+                                        fetch(chatApiUrl, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ bookingId: chatBookingId, message: message })
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            input.disabled = false;
+                                            btn.disabled = false;
+                                            if (data.status === 'success') {
+                                                input.value = '';
+                                                fetchChatMessages(); // instantly fetch to show the new message
+                                            } else {
+                                                alert('Lỗi: ' + data.error);
+                                            }
+                                        })
+                                        .catch(err => {
+                                            input.disabled = false;
+                                            btn.disabled = false;
+                                            alert('Lỗi kết nối khi gửi tin nhắn.');
+                                        });
+                                    }
+
+                                    // Auto fetch every 10 seconds and on load
+                                    document.addEventListener('DOMContentLoaded', () => {
+                                        fetchChatMessages();
+                                        setInterval(fetchChatMessages, 10000);
+                                    });
+                                </script>
                             </div>
                         </c:if>
 
@@ -486,6 +580,13 @@
                             <c:if test="${statusBooking == 'Chờ xác nhận'}">
                                 <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #ef4444" onclick="openCancellation()">
                                     <i class="fas fa-times-circle"></i> Hủy đơn hàng
+                                </button>
+                            </c:if>
+                            
+                            <c:if test="${statusBooking == 'Đã xác nhận' && booking.deliveryStatus == 'Đã giao'}">
+                                <button type="button" class="px-4 py-2 bg-red-600 text-white rounded-xl font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-2 hover:bg-red-700 hover:shadow-md hover:-translate-y-0.5 animate-pulse" onclick="openSosModal()">
+                                    <i class="fas fa-exclamation-triangle text-lg"></i> 
+                                    <span>SOS Khẩn Cấp</span>
                                 </button>
                             </c:if>
                             <c:if test="${statusBooking != 'Đã hủy'}">
@@ -884,6 +985,76 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal for SOS Request -->
+        <c:if test="${statusBooking == 'Đã xác nhận' && booking.deliveryStatus == 'Đã giao'}">
+        <div id="sos-modal" class="hidden items-center justify-center p-4" style="position: fixed; inset: 0; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 999999;">
+            <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative flex flex-col overflow-hidden animate-fade-in-up p-6">
+                <div class="flex items-center gap-3 text-red-600 border-b border-red-100 pb-4 mb-4">
+                    <i class="fas fa-exclamation-triangle text-3xl"></i>
+                    <h3 class="text-xl font-bold">Gửi yêu cầu Cứu hộ (SOS)</h3>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">Hệ thống sẽ tự động lấy vị trí hiện tại của bạn cho SmartRide. Hãy cho chúng tôi biết vấn đề bạn đang gặp phải.</p>
+                <textarea id="sos-note" rows="3" class="w-full border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 mb-4" placeholder="Ví dụ: Xe lủng lốp, không nổ máy được..."></textarea>
+                <div class="flex justify-end gap-3 mt-2">
+                    <button type="button" onclick="closeSosModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors">Hủy</button>
+                    <button type="button" onclick="sendSosRequest()" class="px-5 py-2 bg-red-600 text-white rounded-xl font-bold shadow-md hover:bg-red-700 transition-colors flex items-center gap-2">
+                        <i class="fas fa-paper-plane"></i> Gửi yêu cầu
+                    </button>
+                </div>
+            </div>
+        </div>
+        <script>
+            function openSosModal() {
+                const modal = document.getElementById("sos-modal");
+                if (modal) { modal.style.display = 'flex'; modal.classList.remove('hidden'); }
+            }
+            function closeSosModal() {
+                const modal = document.getElementById("sos-modal");
+                if (modal) { modal.style.display = 'none'; modal.classList.add('hidden'); }
+            }
+            function sendSosRequest() {
+                const note = document.getElementById('sos-note').value;
+                if (!note) {
+                    alert('Vui lòng nhập lý do gặp sự cố!');
+                    return;
+                }
+                if (!navigator.geolocation) {
+                    alert("Trình duyệt không hỗ trợ định vị. Không thể gửi SOS.");
+                    return;
+                }
+                document.body.style.cursor = 'wait';
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    const fd = new URLSearchParams();
+                    fd.append('bookingId', '${booking.bookingID}');
+                    fd.append('lat', lat);
+                    fd.append('lng', lng);
+                    fd.append('note', note);
+                    fetch('${pageContext.request.contextPath}/api/sos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: fd.toString()
+                    }).then(r => r.json()).then(data => {
+                        document.body.style.cursor = 'default';
+                        if(data.status === 'success') {
+                            alert('Gửi yêu cầu cứu hộ thành công! Vị trí đã được gửi, Đội ngũ SmartRide đang đến.');
+                            closeSosModal();
+                        } else {
+                            alert('Lỗi: ' + data.message);
+                        }
+                    }).catch(e => {
+                        document.body.style.cursor = 'default';
+                        alert('Lỗi kết nối. Hãy thử lại.');
+                    });
+                }, function(err) {
+                    document.body.style.cursor = 'default';
+                    alert("Không thể lấy vị trí hiện tại. Vui lòng cấp quyền vị trí cho trình duyệt!");
+                }, { enableHighAccuracy: true, timeout: 10000 });
+            }
+        </script>
+        </c:if>
 
         <%-- ========== REAL-TIME GPS TRACKING (chạy khi xe đang được giao cho khách) ========== --%>
         <c:if test="${statusBooking == 'Đã xác nhận' && booking.deliveryStatus == 'Đã giao'}">
