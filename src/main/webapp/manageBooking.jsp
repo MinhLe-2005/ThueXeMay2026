@@ -1508,19 +1508,30 @@
             var btn = $('#approveInvoiceForm').find('.btn-warning');
             btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
             
+            if (!bookingID) {
+                alert('Lỗi: Không tìm thấy mã đơn hàng!');
+                btn.prop('disabled', false).html('<i class="fas fa-check me-2"></i>Xác nhận đã nhận tiền');
+                return;
+            }
+            
             var fd = new FormData();
             fd.append('bookingID', bookingID);
             fd.append('manualPayment', 'true');
             
-            fetch('${pageContext.request.contextPath}/manageBooking', {
+            fetch('manageBooking', {
                 method: 'POST',
                 body: fd
             })
-            .then(function() {
-                location.reload();
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.text().then(function(text) {
+                        throw new Error('Server lỗi ' + response.status + ': ' + text.substring(0, 200));
+                    });
+                }
+                location.href = 'manageBooking?iframe=true';
             })
             .catch(function(err) {
-                alert('Có lỗi xảy ra: ' + err);
+                alert('Có lỗi xảy ra:\n' + err);
                 btn.prop('disabled', false).html('<i class="fas fa-check me-2"></i>Xác nhận đã nhận tiền');
             });
         }
