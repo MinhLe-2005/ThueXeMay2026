@@ -495,6 +495,7 @@
                                                                     </td>
                                                                     <td class="text-center align-middle font-weight-bold">
                                                                         <c:set var="paid" value="0"/>
+                                                                        <c:set var="pay" value="${paymentsMap[listB.bookingID]}"/>
                                                                         <c:if test="${not empty pay}">
                                                                             <c:set var="paid" value="${pay.paymentAmount}"/>
                                                                         </c:if>

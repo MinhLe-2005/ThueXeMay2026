@@ -2314,12 +2314,12 @@
                                                             <c:set var="imagesArr" value="${fn:split(c.identityCardImage, ',')}" />
                                                             
                                                             <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
-                                                                <label for="imageFront" class="upload-card">
+                                                                <label for="imageFrontAuth" class="upload-card">
                                                                     <i class="bi bi-person-vcard"></i>
                                                                     <span class="upload-title">Cập nhật mặt trước</span>
                                                                     <span class="upload-subtitle">Nhấn để chọn ảnh mới</span>
                                                                 </label>
-                                                                <input type="file" name="imageFront" id="imageFront" style="display: none;" />
+                                                                <input type="file" name="imageFront" id="imageFrontAuth" style="display: none;" />
                                                                 
                                                                 <!-- Preview Container (managed by JS) -->
                                                                 <div class="image-preview-container" style="display: none;">
@@ -2339,12 +2339,12 @@
                                                             </div>
 
                                                             <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
-                                                                <label for="imageBack" class="upload-card">
+                                                                <label for="imageBackAuth" class="upload-card">
                                                                     <i class="bi bi-credit-card-2-back"></i>
                                                                     <span class="upload-title">Cập nhật mặt sau</span>
                                                                     <span class="upload-subtitle">Nhấn để chọn ảnh mới</span>
                                                                 </label>
-                                                                <input type="file" name="imageBack" id="imageBack" style="display: none;" />
+                                                                <input type="file" name="imageBack" id="imageBackAuth" style="display: none;" />
                                                                 
                                                                 <!-- Preview Container (managed by JS) -->
                                                                 <div class="image-preview-container" style="display: none;">
@@ -3940,10 +3940,10 @@
                 });
                 
                 // Add event listeners to validate form on image change
-                const frontInput = document.getElementById('imageFront');
-                const backInput = document.getElementById('imageBack');
-                if (frontInput) frontInput.addEventListener('change', validateForm);
-                if (backInput) backInput.addEventListener('change', validateForm);
+                const frontInputsAll = document.querySelectorAll('input[name="imageFront"]');
+                const backInputsAll = document.querySelectorAll('input[name="imageBack"]');
+                frontInputsAll.forEach(input => input.addEventListener('change', validateForm));
+                backInputsAll.forEach(input => input.addEventListener('change', validateForm));
                 
                 // Add zoom capability to all existing images
                 document.querySelectorAll('.existing-image .img-preview').forEach(function(img) {
@@ -4583,14 +4583,14 @@
             formData.append("jsonData", JSON.stringify(data));
 
             // Add files to formData
-            var frontInputs = document.querySelectorAll('input[name="imageFront"], input[id="imageFront"]');
+            var frontInputs = document.querySelectorAll('input[name="imageFront"]');
             for (var i = 0; i < frontInputs.length; i++) {
                 if (frontInputs[i].files && frontInputs[i].files.length > 0) {
                     formData.append("fileFront", frontInputs[i].files[0]);
                     break;
                 }
             }
-            var backInputs = document.querySelectorAll('input[name="imageBack"], input[id="imageBack"]');
+            var backInputs = document.querySelectorAll('input[name="imageBack"]');
             for (var i = 0; i < backInputs.length; i++) {
                 if (backInputs[i].files && backInputs[i].files.length > 0) {
                     formData.append("fileBack", backInputs[i].files[0]);

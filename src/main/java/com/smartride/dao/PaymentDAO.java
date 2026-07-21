@@ -65,19 +65,21 @@ public class PaymentDAO implements Serializable {
         String insertSql = "INSERT INTO \"Payment\" \n"
                 + "    (\"BookingID\", \"PaymentMethod\", \"PaymentDate\", \"PaymentAmount\", \"PaymentStatus\")\n"
                 + "VALUES \n"
-                + "    (?,?, CAST(? AS TIMESTAMP), ?, ?);";
-        String updateSql = "UPDATE \"Payment\" SET \"PaymentMethod\" = ?, \"PaymentDate\" = CAST(? AS TIMESTAMP), \"PaymentAmount\" = \"PaymentAmount\" + ?, \"PaymentStatus\" = ? WHERE \"BookingID\" = ?";
+                + "    (?,?, ?, ?, ?);";
+        String updateSql = "UPDATE \"Payment\" SET \"PaymentMethod\" = ?, \"PaymentDate\" = ?, \"PaymentAmount\" = \"PaymentAmount\" + ?, \"PaymentStatus\" = ? WHERE \"BookingID\" = ?";
 
         try {
             PreparedStatement checkPs = getConnection().prepareStatement(checkSql);
             checkPs.setString(1, bookingId);
             ResultSet rs = checkPs.executeQuery();
             
+            java.sql.Timestamp ts = java.sql.Timestamp.valueOf(paymentDate);
+
             if (rs.next()) {
                 // Update
                 PreparedStatement updatePs = getConnection().prepareStatement(updateSql);
                 updatePs.setString(1, method);
-                updatePs.setString(2, paymentDate);
+                updatePs.setTimestamp(2, ts);
                 updatePs.setInt(3, amount);
                 updatePs.setString(4, status);
                 updatePs.setString(5, bookingId);
@@ -87,7 +89,7 @@ public class PaymentDAO implements Serializable {
                 PreparedStatement insertPs = getConnection().prepareStatement(insertSql);
                 insertPs.setString(1, bookingId);
                 insertPs.setString(2, method);
-                insertPs.setString(3, paymentDate);
+                insertPs.setTimestamp(3, ts);
                 insertPs.setInt(4, amount);
                 insertPs.setString(5, status);
                 insertPs.executeUpdate();
