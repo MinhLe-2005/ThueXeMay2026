@@ -61,20 +61,40 @@ public class PaymentDAO implements Serializable {
     }
 
     public void addPayment(String bookingId, String method, String paymentDate, int amount, String status) {
-        String sql = "INSERT INTO \"Payment\" \n"
+        String checkSql = "SELECT \"PaymentAmount\" FROM \"Payment\" WHERE \"BookingID\" = ?";
+        String insertSql = "INSERT INTO \"Payment\" \n"
                 + "    (\"BookingID\", \"PaymentMethod\", \"PaymentDate\", \"PaymentAmount\", \"PaymentStatus\")\n"
                 + "VALUES \n"
-                + "    (?,?, ?, ?, ?);";
+                + "    (?,?, CAST(? AS TIMESTAMP), ?, ?);";
+        String updateSql = "UPDATE \"Payment\" SET \"PaymentMethod\" = ?, \"PaymentDate\" = CAST(? AS TIMESTAMP), \"PaymentAmount\" = \"PaymentAmount\" + ?, \"PaymentStatus\" = ? WHERE \"BookingID\" = ?";
+
         try {
-            PreparedStatement ps = getConnection().prepareStatement(sql);
-            ps.setString(1, bookingId);
-            ps.setString(2, method);
-            ps.setString(3, paymentDate);
-            ps.setInt(4, amount);
-            ps.setString(5, status);
-            ps.executeUpdate();
+            PreparedStatement checkPs = getConnection().prepareStatement(checkSql);
+            checkPs.setString(1, bookingId);
+            ResultSet rs = checkPs.executeQuery();
+            
+            if (rs.next()) {
+                // Update
+                PreparedStatement updatePs = getConnection().prepareStatement(updateSql);
+                updatePs.setString(1, method);
+                updatePs.setString(2, paymentDate);
+                updatePs.setInt(3, amount);
+                updatePs.setString(4, status);
+                updatePs.setString(5, bookingId);
+                updatePs.executeUpdate();
+            } else {
+                // Insert
+                PreparedStatement insertPs = getConnection().prepareStatement(insertSql);
+                insertPs.setString(1, bookingId);
+                insertPs.setString(2, method);
+                insertPs.setString(3, paymentDate);
+                insertPs.setInt(4, amount);
+                insertPs.setString(5, status);
+                insertPs.executeUpdate();
+            }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("addPayment error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

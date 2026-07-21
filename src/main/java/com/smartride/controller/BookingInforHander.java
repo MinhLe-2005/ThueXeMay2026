@@ -134,8 +134,9 @@ public class BookingInforHander extends HttpServlet {
         // Save front and back files if present
         String uploadedFilePath = null;
         String custIdStr = customerId.equalsIgnoreCase("Not") ? "Temp" : customerId;
-        String filenameFront = "imageIdC" + custIdStr + "_front.jpg";
-        String filenameBack = "imageIdC" + custIdStr + "_back.jpg";
+        long timestamp = System.currentTimeMillis();
+        String filenameFront = "imageIdC" + custIdStr + "_" + timestamp + "_front.jpg";
+        String filenameBack = "imageIdC" + custIdStr + "_" + timestamp + "_back.jpg";
         
         String uploadedFrontPath = null;
         String uploadedBackPath = null;
