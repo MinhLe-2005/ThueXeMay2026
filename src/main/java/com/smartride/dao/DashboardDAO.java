@@ -72,15 +72,53 @@ public class DashboardDAO {
         return ((current - previous) / previous) * 100.0;
     }
 
+    private String getPaymentDateCondition(String period, String startDate, String endDate, boolean isPrevious) {
+        if ("custom".equals(period) && startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+            try {
+                LocalDate start = LocalDate.parse(startDate);
+                LocalDate end = LocalDate.parse(endDate);
+                if (isPrevious) {
+                    long days = ChronoUnit.DAYS.between(start, end) + 1;
+                    return "p.\"PaymentDate\" >= '" + start.minusDays(days) + "' AND p.\"PaymentDate\" <= '" + start.minusDays(1) + " 23:59:59'";
+                }
+                return "p.\"PaymentDate\" >= '" + start + "' AND p.\"PaymentDate\" <= '" + end + " 23:59:59'";
+            } catch (Exception e) {
+            }
+        }
+        
+        switch (period) {
+            case "today":
+                if (isPrevious) return "p.\"PaymentDate\" >= current_date - interval '1 day' AND p.\"PaymentDate\" < current_date";
+                return "p.\"PaymentDate\" >= current_date";
+            case "30days":
+                if (isPrevious) return "p.\"PaymentDate\" >= current_date - interval '60 days' AND p.\"PaymentDate\" < current_date - interval '30 days'";
+                return "p.\"PaymentDate\" >= current_date - interval '30 days'";
+            case "90days":
+                if (isPrevious) return "p.\"PaymentDate\" >= current_date - interval '180 days' AND p.\"PaymentDate\" < current_date - interval '90 days'";
+                return "p.\"PaymentDate\" >= current_date - interval '90 days'";
+            case "180days":
+                if (isPrevious) return "p.\"PaymentDate\" >= current_date - interval '360 days' AND p.\"PaymentDate\" < current_date - interval '180 days'";
+                return "p.\"PaymentDate\" >= current_date - interval '180 days'";
+            case "7days":
+                if (isPrevious) return "p.\"PaymentDate\" >= current_date - interval '14 days' AND p.\"PaymentDate\" < current_date - interval '7 days'";
+                return "p.\"PaymentDate\" >= current_date - interval '7 days'";
+            default:
+                return "";
+        }
+    }
+
     private StatRaw getStatsForPeriod(Connection conn, String period, String startDate, String endDate, boolean isPrevious) {
         StatRaw raw = new StatRaw();
         String dateCondition = getDateCondition(period, startDate, endDate, isPrevious);
         String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
         String conditionRentals = " WHERE b.\"DeliveryStatus\" IN ('Đã giao', 'Đã trả')" + (dateCondition.isEmpty() ? "" : (" AND " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\"")));
 
+        String paymentDateCondition = getPaymentDateCondition(period, startDate, endDate, isPrevious);
+        String paymentConditionWithAlias = paymentDateCondition.isEmpty() ? "" : (" WHERE " + paymentDateCondition);
+
         String sql = "SELECT "
                    + "(SELECT COUNT(*) FROM \"Booking\" b " + conditionWithAlias + ") AS orders, "
-                   + "(SELECT COALESCE(SUM(p.\"PaymentAmount\"), 0) FROM \"Payment\" p JOIN \"Booking\" b ON p.\"BookingID\" = b.\"BookingID\" " + conditionWithAlias + ") AS revenue, "
+                   + "(SELECT COALESCE(SUM(p.\"PaymentAmount\"), 0) FROM \"Payment\" p JOIN \"Booking\" b ON p.\"BookingID\" = b.\"BookingID\" " + paymentConditionWithAlias + ") AS revenue, "
                    + "(SELECT COUNT(DISTINCT b.\"CustomerID\") FROM \"Booking\" b " + conditionWithAlias + ") AS customers, "
                    + "(SELECT COUNT(*) FROM \"Booking\" b " + conditionRentals + ") AS rentals";
 
@@ -196,9 +234,13 @@ public class DashboardDAO {
         String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
 
         String dtSelect = "DATE(b.\"BookingDate\")";
-        if (diffDays == 0) dtSelect = "TO_CHAR(b.\"BookingDate\", 'YYYY-MM-DD\"T\"HH24:00:00')";
-        else if (diffDays > 31) dtSelect = "DATE(DATE_TRUNC('month', b.\"BookingDate\"))";
-        else if (diffDays > 7) dtSelect = "DATE(DATE_TRUNC('week', b.\"BookingDate\"))";
+        if (diffDays == 0) {
+            dtSelect = "TO_CHAR(b.\"BookingDate\", 'YYYY-MM-DD\"T\"HH24:00:00')";
+        } else if (diffDays > 31) {
+            dtSelect = "DATE(DATE_TRUNC('month', b.\"BookingDate\"))";
+        } else if (diffDays > 7) {
+            dtSelect = "DATE(DATE_TRUNC('week', b.\"BookingDate\"))";
+        }
 
         String sql = "SELECT " + dtSelect + " as dt, COUNT(b.\"BookingID\") as orders, "
                    + "COALESCE(SUM(p.\"PaymentAmount\"), 0) as revenue, "
@@ -266,8 +308,8 @@ public class DashboardDAO {
             e.printStackTrace();
         }
 
-        String dateCondition = getDateCondition(period, startDate, endDate, false);
-        String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
+        String paymentDateCondition = getPaymentDateCondition(period, startDate, endDate, false);
+        String paymentConditionWithAlias = paymentDateCondition.isEmpty() ? "" : (" WHERE " + paymentDateCondition);
         
         String sql = "SELECT br.\"BrandName\", SUM(p.\"PaymentAmount\") as revenue "
                    + "FROM \"Payment\" p "
@@ -276,7 +318,7 @@ public class DashboardDAO {
                    + "JOIN \"Motorcycle Detail\" md ON bd.\"MotorcycleDetailID\" = md.\"MotorcycleDetailID\" "
                    + "JOIN \"Motorcycle\" m ON md.\"MotorcycleID\" = m.\"MotorcycleID\" "
                    + "JOIN \"Brand\" br ON m.\"BrandID\" = br.\"BrandID\" "
-                   + conditionWithAlias
+                   + paymentConditionWithAlias
                    + " GROUP BY br.\"BrandName\"";
                    
         try (PreparedStatement ps = conn.prepareStatement(sql);

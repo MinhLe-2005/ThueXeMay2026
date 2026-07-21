@@ -2757,11 +2757,6 @@
                                 </div>
 
                                 <!-- Dev test button (remove in production) -->
-                                <div style="text-align:center; margin-top:12px;">
-                                    <button type="button" onclick="simulatePaymentSuccess()" style="background:#6b7280; color:#fff; border:none; padding:8px 18px; border-radius:8px; cursor:pointer; font-size:12px; opacity:0.6;">
-                                        [Dev] Giả lập thanh toán thành công
-                                    </button>
-                                </div>
                             </div>
 
                             <!-- Hiển thị khi chưa tạo QR -->
@@ -4235,7 +4230,8 @@
                     if (window.sepayInterval) clearInterval(window.sepayInterval);
                     if (window.sepayPollInterval) clearInterval(window.sepayPollInterval);
                     
-                    var timeLeft = 10 * 60;
+                    var PAYMENT_TIMEOUT_MINUTES = 10;
+                    var timeLeft = PAYMENT_TIMEOUT_MINUTES * 60;
                     var countdownEl = document.getElementById('sepay-countdown');
                     
                     window.sepayInterval = setInterval(function() {

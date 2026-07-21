@@ -26,7 +26,24 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "SepayWebhookServlet", urlPatterns = {"/sepay-webhook"})
 public class SepayWebhookServlet extends HttpServlet {
 
-    public static java.util.Map<String, Boolean> paidOrders = new java.util.concurrent.ConcurrentHashMap<>();
+    public static java.util.Map<String, Long> paidOrders = new java.util.concurrent.ConcurrentHashMap<>();
+
+    static {
+        Thread cleanupThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(300_000);
+                    long cutoff = System.currentTimeMillis() - 600_000;
+                    paidOrders.values().removeIf(v -> v < cutoff);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }, "paidOrders-cleanup");
+        cleanupThread.setDaemon(true);
+        cleanupThread.start();
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -59,7 +76,7 @@ public class SepayWebhookServlet extends HttpServlet {
             }
         }
         
-        if (bookingId == null || bookingId.isEmpty()) {
+        if (bookingId == null || bookingId.isEmpty() || !bookingId.matches("BK\\d+")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
@@ -68,7 +85,7 @@ public class SepayWebhookServlet extends HttpServlet {
             int amount = (amountStr != null) ? Integer.parseInt(amountStr) : 0;
             
             // Lưu vào map tĩnh để frontend polling có thể lấy ngay lập tức!
-            paidOrders.put(bookingId, true);
+            paidOrders.put(bookingId, System.currentTimeMillis());
             
             BookingDAO daoB = BookingDAO.getInstance();
             com.smartride.dto.Booking existingBooking = daoB.getBookingById(bookingId);
@@ -175,16 +192,4 @@ public class SepayWebhookServlet extends HttpServlet {
     }
 }
 
-// Minor update 10
 
-// Minor update 14
-
-// Minor update 34
-
-// fix patch 3
-
-// fix patch 8
-
-// fix patch 48
-
-// fix patch 50
