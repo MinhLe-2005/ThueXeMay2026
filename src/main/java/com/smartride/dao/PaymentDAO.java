@@ -74,8 +74,23 @@ public class PaymentDAO implements Serializable {
             ps.setString(5, status);
             ps.executeUpdate();
         } catch (Exception e) {
-            System.err.println("[PaymentDAO] addPayment error for booking " + bookingId + ": " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("[PaymentDAO] Pool connection failed for booking " + bookingId + ": " + e.getMessage());
+            // Retry with a fresh connection (bypass pool) to avoid prepared statement conflicts
+            try (Connection freshConn = com.smartride.util.DBUtil.makeFreshConnection();
+                 PreparedStatement freshPs = freshConn.prepareStatement(sql)) {
+                freshPs.setString(1, bookingId);
+                freshPs.setString(2, method);
+                freshPs.setString(3, paymentDate);
+                freshPs.setDouble(4, amount);
+                freshPs.setString(5, status);
+                freshPs.executeUpdate();
+                System.out.println("[PaymentDAO] Retry succeeded for booking " + bookingId);
+            } catch (Exception e2) {
+                System.out.println("[PaymentDAO] addPayment error for booking " + bookingId + ": " + e2.getMessage());
+                java.io.StringWriter sw = new java.io.StringWriter();
+                e2.printStackTrace(new java.io.PrintWriter(sw));
+                System.out.println("[PaymentDAO] StackTrace: " + sw.toString());
+            }
         }
     }
 

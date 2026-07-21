@@ -201,7 +201,10 @@ public class SepayWebhookServlet extends HttpServlet {
             out.print("{\"success\":true}");
             out.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("[SepayWebhook] ERROR: " + e.getMessage());
+            java.io.StringWriter sw = new java.io.StringWriter();
+            e.printStackTrace(new java.io.PrintWriter(sw));
+            System.out.println("[SepayWebhook] StackTrace: " + sw.toString());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }

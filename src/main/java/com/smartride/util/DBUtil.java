@@ -170,6 +170,15 @@ public class DBUtil {
         }
     }
 
+    public static Connection makeFreshConnection() {
+        try {
+            return DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        } catch (Exception e) {
+            System.out.println("[DBUtil] Cannot create fresh connection: " + e.getMessage());
+            return null;
+        }
+    }
+
     static class ConnectionProxyHandler implements InvocationHandler {
         volatile Connection realConn;
 
