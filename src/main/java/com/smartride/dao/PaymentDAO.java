@@ -32,10 +32,11 @@ public class PaymentDAO implements Serializable {
 
     public Payment getPayMentbyBookingId(String bookingId) {
         String sql = "SELECT \"PaymentID\", \"BookingID\", \"PaymentMethod\", \"PaymentDate\", \"PaymentAmount\", \"PaymentStatus\" "
-                   + "FROM \"Payment\" WHERE \"BookingID\" = ? ORDER BY \"PaymentDate\" DESC";
+                   + "FROM \"Payment\" WHERE \"BookingID\" = ? AND \"PaymentStatus\" = ? ORDER BY \"PaymentDate\" DESC";
         try (Connection conn = getConnection();
              PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, bookingId);
+            stm.setString(2, "Thành công");
             try (ResultSet rs = stm.executeQuery()) {
                 List<Payment> allPayments = new ArrayList<>();
                 double totalAmount = 0;
@@ -79,7 +80,7 @@ public class PaymentDAO implements Serializable {
 
     public List<Payment> getListByBookingId(String id) {
         List<Payment> list = new ArrayList<>();
-        String sql = "SELECT * FROM \"Payment\" WHERE \"BookingID\" = ?";
+        String sql = "SELECT * FROM \"Payment\" WHERE \"BookingID\" = ? ORDER BY \"PaymentDate\" DESC";
         try (Connection conn = getConnection();
              PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, id);

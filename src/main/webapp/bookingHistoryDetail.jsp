@@ -446,9 +446,9 @@
                                         </div>
                                         <c:set var="depositAmount" value="0" />
                                         <c:if test="${not empty paymentList}">
-                                            <c:forEach items="${paymentList}" var="pm" varStatus="loop">
-                                                <c:if test="${loop.first && pm.paymentStatus == 'Thành công'}">
-                                                    <c:set var="depositAmount" value="${pm.paymentAmount}" />
+                                            <c:forEach items="${paymentList}" var="pm">
+                                                <c:if test="${pm.paymentStatus == 'Thành công'}">
+                                                    <c:set var="depositAmount" value="${depositAmount + pm.paymentAmount}" />
                                                 </c:if>
                                             </c:forEach>
                                         </c:if>
@@ -710,6 +710,7 @@
                         <p class="text-gray-600 text-sm font-semibold">Đang kết nối cổng thanh toán SePay VietQR...</p>
                     </div>
                 </div>
+                <button type="button" onclick="confirmBankPayment()" style="margin-top:16px; width:100%; padding:12px; background:#16a34a; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; cursor:pointer;">Tôi đã chuyển khoản</button>
             </div>
         </div>
 
@@ -924,6 +925,38 @@
                     alert('Thanh toán thành công!');
                     window.location.reload();
                 }
+            }
+
+            function confirmBankPayment() {
+                const bookingId = '${booking.bookingID}';
+                const totalPrice = parseFloat("${total}") || 0;
+                const amountPaid = parseFloat("${depositAmount}") || 0;
+                const amount = totalPrice - amountPaid;
+                if (amount <= 0) {
+                    Swal.fire({ icon: 'info', title: 'Đã thanh toán', text: 'Đơn hàng này đã được thanh toán đủ.' });
+                    return;
+                }
+                const params = new URLSearchParams();
+                params.append("bookingId", bookingId);
+                params.append("amount", amount.toString());
+                fetch('${pageContext.request.contextPath}/sepay-webhook', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        closePaymentModal();
+                        Swal.fire({ icon: 'success', title: 'Xác nhận thành công!', text: 'Đơn hàng đã được ghi nhận thanh toán.', confirmButtonColor: '#b59349' })
+                            .then(() => { window.location.reload(); });
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể ghi nhận thanh toán.' });
+                    }
+                })
+                .catch(() => {
+                    Swal.fire({ icon: 'error', title: 'Lỗi kết nối', text: 'Vui lòng thử lại.' });
+                });
             }
 
             // Listen for iframe postMessages to activate/stop overlays

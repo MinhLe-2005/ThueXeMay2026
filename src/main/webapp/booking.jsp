@@ -2756,7 +2756,7 @@
                                     ⏳ Đang chờ thanh toán...
                                 </div>
 
-                                <!-- Dev test button (remove in production) -->
+                                <button type="button" onclick="simulatePaymentSuccess(event)" style="margin-top:12px; width:100%; padding:10px; background:#16a34a; color:white; border:none; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer;">Tôi đã chuyển khoản</button>
                             </div>
 
                             <!-- Hiển thị khi chưa tạo QR -->
@@ -4212,8 +4212,9 @@
                         window.location.href = ctxPath + (ctxPath.endsWith('/') ? '' : '/') + 'bookingHistoryDetail?bookingId=' + bid + '&autoContract=1';
                     }, 2000);
                 } else {
-                    if (!window._sepayBookingId) window._sepayBookingId = 'BK' + (Date.now() % 100000).toString().padStart(5, '0') + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-                    var bookingId = window._sepayBookingId;
+                    var bookingId = (response && response.bookingId) ? response.bookingId : window._sepayBookingId;
+                    if (!bookingId) bookingId = 'BK' + (Date.now() % 100000).toString().padStart(5, '0') + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                    window._sepayBookingId = bookingId;
                     
                     var sepaySection = document.getElementById('sepay-payment-section');
                     if (sepaySection) sepaySection.style.display = 'block';
@@ -4427,7 +4428,8 @@
             return yyyy + mm + dd + hh + mi + ss;
         }
 
-        function simulatePaymentSuccess() {
+        function simulatePaymentSuccess(event) {
+            if (!event) event = window.event;
             var bookingId = document.getElementById('sepay-transfer-note').textContent.trim();
             var amountText = document.getElementById('sepay-amount-text').textContent;
             var amount = amountText ? amountText.replace(/[^0-9]/g, '') : '0';
