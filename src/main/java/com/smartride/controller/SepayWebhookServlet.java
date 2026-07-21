@@ -1,4 +1,4 @@
-﻿package com.smartride.controller;
+package com.smartride.controller;
 
 import com.smartride.dao.BookingDAO;
 import com.smartride.dao.BookingDetailDAO;

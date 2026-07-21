@@ -1,4 +1,4 @@
-﻿package com.smartride.controller;
+package com.smartride.controller;
 
 import com.smartride.dao.PaymentDAO;
 import com.smartride.dto.Payment;
