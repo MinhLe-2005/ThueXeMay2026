@@ -84,9 +84,6 @@ public class SepayWebhookServlet extends HttpServlet {
         try {
             int amount = (amountStr != null) ? Integer.parseInt(amountStr) : 0;
             
-            // Lưu vào map tĩnh để frontend polling có thể lấy ngay lập tức!
-            paidOrders.put(bookingId, System.currentTimeMillis());
-            
             BookingDAO daoB = BookingDAO.getInstance();
             com.smartride.dto.Booking existingBooking = daoB.getBookingById(bookingId);
             
@@ -179,6 +176,9 @@ public class SepayWebhookServlet extends HttpServlet {
                 } catch (Exception ex) {
                     System.out.println("Lỗi gửi email/thông báo SePay: " + ex.getMessage());
                 }
+                
+                // Chỉ thêm vào paidOrders sau khi đã insert Payment thành công vào DB
+                paidOrders.put(bookingId, System.currentTimeMillis());
             }
             
             response.setContentType("application/json");
