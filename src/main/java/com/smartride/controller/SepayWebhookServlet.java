@@ -1,4 +1,4 @@
-package com.smartride.controller;
+﻿package com.smartride.controller;
 
 import com.smartride.dao.BookingDAO;
 import com.smartride.dao.BookingDetailDAO;
@@ -92,7 +92,21 @@ public class SepayWebhookServlet extends HttpServlet {
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String paymentDateText = currentDateTime.format(outputFormatter);
-                daoP.addPayment(bookingId, "SePay VietQR", paymentDateText, amount, "Thành công");
+                // Check if payment already exists to avoid UNIQUE constraint violation
+                java.util.List<com.smartride.dto.Payment> existingPays = daoP.getListByBookingId(bookingId);
+                boolean alreadyInserted = false;
+                for (com.smartride.dto.Payment p : existingPays) {
+                    if ("Thành công".equals(p.getPaymentStatus())) {
+                        alreadyInserted = true;
+                        break;
+                    }
+                }
+                if (!alreadyInserted) {
+                    daoP.addPayment(bookingId, "SePay VietQR", paymentDateText, amount, "Thành công");
+                    System.out.println("[SepayWebhook] Inserted payment for booking " + bookingId);
+                } else {
+                    System.out.println("[SepayWebhook] Skipped duplicate payment for booking " + bookingId);
+                }
                 
                 // Calculate total paid - sum all payments for this booking
                 java.util.List<com.smartride.dto.Payment> allPayments = daoP.getListByBookingId(bookingId);
@@ -179,6 +193,7 @@ public class SepayWebhookServlet extends HttpServlet {
                 
                 // Chỉ thêm vào paidOrders sau khi đã insert Payment thành công vào DB
                 paidOrders.put(bookingId, System.currentTimeMillis());
+                System.out.println("[SepayWebhook] paidOrders marked for booking " + bookingId);
             }
             
             response.setContentType("application/json");

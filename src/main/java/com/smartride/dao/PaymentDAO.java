@@ -74,7 +74,8 @@ public class PaymentDAO implements Serializable {
             ps.setString(5, status);
             ps.executeUpdate();
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println("[PaymentDAO] addPayment error for booking " + bookingId + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
