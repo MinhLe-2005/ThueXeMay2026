@@ -52,6 +52,7 @@ public class SepayWebhookServlet extends HttpServlet {
         String bookingId = request.getParameter("bookingId");
         String amountStr = request.getParameter("amount");
         
+        System.out.println("[SepayWebhook] Received request - bookingId param: " + request.getParameter("bookingId"));
         if (bookingId == null && amountStr == null) {
             StringBuilder buffer = new StringBuilder();
             BufferedReader reader = request.getReader();
