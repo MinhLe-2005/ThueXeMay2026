@@ -38,11 +38,6 @@
         customer.setIdentityCard("048099001234");
         
         motorcycles = new java.util.ArrayList<>();
-        Map<String, Object> mockMoto = new java.util.HashMap<>();
-        mockMoto.put("name", "Honda Air Blade 125");
-        mockMoto.put("licensePlate", "43A1-12345");
-        mockMoto.put("rentalPrice", 150000);
-        motorcycles.add(mockMoto);
     } else {
         BookingDAO dao = BookingDAO.getInstance();
         booking = dao.getBookingById(bookingId);
@@ -123,10 +118,10 @@
     <div class="section-title">BÊN THUÊ (BÊN B)</div>
     <div class="info-block">
         <% if (account != null && customer != null) { %>
-        <p>Ông/Bà: <span class="highlight"><%= account.getFirstName() %> <%= account.getLastName() %></span></p>
-        <p>Số CMND/CCCD/Passport: <span class="highlight"><%= customer.getIdentityCard() %></span></p>
+        <p>Ông/Bà: <span class="highlight" id="preview-name"><%= account.getFirstName() %> <%= account.getLastName() %></span></p>
+        <p>Số CMND/CCCD/Passport: <span class="highlight" id="preview-cccd"><%= customer.getIdentityCard() %></span></p>
         <p>Địa chỉ liên lạc: <%= account.getAddress() != null ? account.getAddress() : "Không có" %></p>
-        <p>Số điện thoại: <span class="highlight"><%= account.getPhoneNumber() %></span></p>
+        <p>Số điện thoại: <span class="highlight" id="preview-phone"><%= account.getPhoneNumber() %></span></p>
         <% } else { %>
         <p>Thông tin khách hàng không có sẵn hoặc đã bị xóa khỏi hệ thống.</p>
         <% } %>
@@ -135,23 +130,27 @@
     <div class="section-title">ĐIỀU 1: NỘI DUNG HỢP ĐỒNG</div>
     <p>Bên A đồng ý cho Bên B thuê xe với các thông tin chi tiết như sau:</p>
     <table>
-        <tr>
-            <th>Loại xe (Model)</th>
-            <th>Phân khúc (Category)</th>
-            <th>Số lượng (Quantity)</th>
-        </tr>
-        <% for(Map<String, Object> mc : motorcycles) { %>
-        <tr>
-            <td style="font-weight: bold;"><%= mc.get("Model") %></td>
-            <td><%= mc.get("CategoryName") %></td>
-            <td style="text-align: center; font-weight: bold;"><%= mc.get("Quantity") %> chiếc</td>
-        </tr>
-        <% } %>
+        <thead>
+            <tr>
+                <th>Loại xe (Model)</th>
+                <th>Phân khúc (Category)</th>
+                <th>Số lượng (Quantity)</th>
+            </tr>
+        </thead>
+        <tbody id="contract-motor-list">
+            <% for(Map<String, Object> mc : motorcycles) { %>
+            <tr>
+                <td style="font-weight: bold;"><%= mc.get("Model") %></td>
+                <td><%= mc.get("CategoryName") %></td>
+                <td style="text-align: center; font-weight: bold;"><%= mc.get("Quantity") %> chiếc</td>
+            </tr>
+            <% } %>
+        </tbody>
     </table>
     
     <div class="info-block">
-        <p>Thời gian nhận xe: <span class="highlight"><%= booking.getStartDate() %></span></p>
-        <p>Thời gian trả xe: <span class="highlight"><%= booking.getEndDate() %></span></p>
+        <p>Thời gian nhận xe: <span class="highlight" id="preview-start-date"><%= booking.getStartDate() %></span></p>
+        <p>Thời gian trả xe: <span class="highlight" id="preview-end-date"><%= booking.getEndDate() %></span></p>
         <p>Địa điểm giao xe: <%= booking.getDeliveryLocation() %></p>
         <p>Địa điểm thu hồi xe: <%= booking.getReturnedLocation() %></p>
     </div>
@@ -173,8 +172,8 @@
             <p><em>(Ký, ghi rõ họ tên)</em></p>
             <div class="signature">
                 <% if (account != null) { %>
-                    <span class="signature-font"><%= account.getFirstName() %> <%= account.getLastName() %></span>
-                    <span class="highlight"><%= account.getFirstName() %> <%= account.getLastName() %></span>
+                    <span class="signature-font" id="preview-sign-name1"><%= account.getFirstName() %> <%= account.getLastName() %></span>
+                    <span class="highlight" id="preview-sign-name2"><%= account.getFirstName() %> <%= account.getLastName() %></span>
                 <% } %>
             </div>
         </div>
@@ -188,6 +187,59 @@
         </div>
     </div>
 
-    </div>
+</div>
+
+<script>
+    if ('<%= bookingId %>' === 'preview') {
+        try {
+            const parentDoc = window.parent.document;
+            
+            // Sync user info
+            const fname = parentDoc.querySelector('input[name="firstName"]');
+            const lname = parentDoc.querySelector('input[name="lastName"]');
+            const cccd = parentDoc.querySelector('input[name="cccd"]');
+            const phone = parentDoc.querySelector('input[name="phoneNumber"]');
+            
+            let fullName = '';
+            if (fname && fname.value) {
+                fullName = (lname && lname.value ? lname.value + ' ' : '') + fname.value;
+                document.getElementById('preview-name').textContent = fullName;
+                document.getElementById('preview-sign-name1').textContent = fullName;
+                document.getElementById('preview-sign-name2').textContent = fullName;
+            }
+            if (cccd && cccd.value) document.getElementById('preview-cccd').textContent = cccd.value;
+            if (phone && phone.value) document.getElementById('preview-phone').textContent = phone.value;
+            
+            // Sync dates
+            const pDate = parentDoc.querySelector('input[name="pickupDate"]');
+            const rDate = parentDoc.querySelector('input[name="returnDate"]');
+            if (pDate && pDate.value) document.getElementById('preview-start-date').textContent = pDate.value.replace('T', ' ');
+            if (rDate && rDate.value) document.getElementById('preview-end-date').textContent = rDate.value.replace('T', ' ');
+            
+            // Sync motorcycles
+            const selects = parentDoc.querySelectorAll('#motorcyclelist .form-check-select');
+            const tbody = document.getElementById('contract-motor-list');
+            let hasItems = false;
+            selects.forEach(function(sel) {
+                const qty = parseInt(sel.value) || 0;
+                if (qty > 0) {
+                    hasItems = true;
+                    const box = sel.closest('.form-box');
+                    const name = box.querySelector('.motor-name').textContent.trim();
+                    const category = box.querySelector('.motor-category') ? box.querySelector('.motor-category').textContent.trim() : 'Xe máy';
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = '<td style="font-weight: bold;">' + name + '</td>' +
+                                   '<td>' + category + '</td>' +
+                                   '<td style="text-align: center; font-weight: bold;">' + qty + ' chiếc</td>';
+                    tbody.appendChild(tr);
+                }
+            });
+            if (!hasItems) {
+                 tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Bạn chưa chọn xe nào trong Đơn Hàng</td></tr>';
+            }
+        } catch(e) { console.error("Could not fetch data from parent:", e); }
+    }
+</script>
 </body>
 </html>
