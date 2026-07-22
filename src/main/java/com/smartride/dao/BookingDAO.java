@@ -443,7 +443,7 @@ public class BookingDAO {
         String sql = "SELECT \"BookingID\" FROM \"Booking\" "
                    + "WHERE \"StatusBooking\" = 'Chờ thanh toán' "
                    + "  AND \"BookingDate\" IS NOT NULL "
-                   + "  AND EXTRACT(EPOCH FROM (NOW() - TO_TIMESTAMP(\"BookingDate\", 'YYYY-MM-DD HH24:MI:SS'))) / 60 >= ?";
+                   + "  AND EXTRACT(EPOCH FROM (NOW() - \"BookingDate\"::timestamp)) / 60 >= ?";
         java.util.List<String> expiredBookings = new java.util.ArrayList<>();
         try (java.sql.Connection c = com.smartride.util.DBUtil.makeConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
