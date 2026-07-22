@@ -76,7 +76,8 @@ public class SendEmail {
                 System.out.println("Gửi mail thành công!");
 
             } catch (Exception e) {
-                System.out.println("Lỗi trong quá trình gửi mail.");
+                System.out.println("[SendEmail ERROR] Lỗi gửi mail tới: " + to);
+                System.out.println("[SendEmail ERROR] Exception: " + e.getClass().getName() + " - " + e.getMessage());
                 e.printStackTrace();
             }
         }).start();
