@@ -34,10 +34,13 @@ public class SendEmail {
 
             Properties props = new Properties();
             props.put("mail.smtp.host", "smtp.gmail.com");
-            props.put("mail.smtp.port", "587");
+            props.put("mail.smtp.port", "465");
             props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.starttls.enable", "true"); // TLS
-            props.put("mail.smtp.ssl.protocols", "TLSv1.2"); // Bắt buộc dùng TLSv1.2 để tránh lỗi trên server Render
+            props.put("mail.smtp.ssl.enable", "true");
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+            props.put("mail.smtp.connectiontimeout", "10000"); // 10 seconds timeout
+            props.put("mail.smtp.timeout", "10000"); // 10 seconds timeout
+            props.put("mail.smtp.writetimeout", "10000"); // 10 seconds timeout
 
             Authenticator auth = new Authenticator() {
                 @Override
