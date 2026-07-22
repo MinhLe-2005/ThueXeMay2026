@@ -24,9 +24,9 @@
     if (bookingId.equals("preview")) {
         // Dummy data for preview mode
         booking = new Booking();
-        booking.setBookingDate(new java.sql.Date(System.currentTimeMillis()));
-        booking.setStartDate(new java.sql.Date(System.currentTimeMillis()));
-        booking.setEndDate(new java.sql.Date(System.currentTimeMillis()));
+        booking.setBookingDate("2026-07-23 10:00:00");
+        booking.setStartDate("2026-07-23 12:00:00");
+        booking.setEndDate("2026-07-24 12:00:00");
         booking.setTotalAmount(1000000);
         
         account = new Account();
