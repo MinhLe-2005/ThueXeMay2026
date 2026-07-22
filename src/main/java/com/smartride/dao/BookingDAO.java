@@ -441,10 +441,12 @@ public class BookingDAO {
 
     public void cancelExpiredPendingBookings(int minutes) {
         String sql = "SELECT \"BookingID\" FROM \"Booking\" "
-                   + "WHERE \"StatusBooking\" = N'Chờ thanh toán' "
-                   + "  AND EXTRACT(EPOCH FROM (NOW() - CAST(\"BookingDate\" AS TIMESTAMP))) / 60 >= ?";
+                   + "WHERE \"StatusBooking\" = 'Chờ thanh toán' "
+                   + "  AND \"BookingDate\" IS NOT NULL "
+                   + "  AND EXTRACT(EPOCH FROM (NOW() - TO_TIMESTAMP(\"BookingDate\", 'YYYY-MM-DD HH24:MI:SS'))) / 60 >= ?";
         java.util.List<String> expiredBookings = new java.util.ArrayList<>();
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (java.sql.Connection c = com.smartride.util.DBUtil.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, minutes);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -452,6 +454,7 @@ public class BookingDAO {
                 }
             }
         } catch (Exception e) {
+            System.out.println("[cancelExpiredPendingBookings] SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
 
