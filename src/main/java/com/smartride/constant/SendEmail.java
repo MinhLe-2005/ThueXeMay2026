@@ -37,6 +37,7 @@ public class SendEmail {
             props.put("mail.smtp.port", "587");
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.starttls.enable", "true"); // TLS
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2"); // Bắt buộc dùng TLSv1.2 để tránh lỗi trên server Render
 
             Authenticator auth = new Authenticator() {
                 @Override
