@@ -2565,7 +2565,8 @@
                                         </div>
                                         <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; font-weight:600; color:#333;">
                                             <input type="checkbox" id="daily-checkbox-term" style="width:18px; height:18px; accent-color:#b59349; cursor:pointer;" />
-                                            Tôi đã đọc và đồng ý với <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('terms-modal').style.display='flex'">Điều khoản dịch vụ</span>
+                                            <span>Tôi đã đọc và đồng ý với <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('terms-modal').style.display='flex'">Điều khoản dịch vụ</span> &amp; 
+                                            <span style="color:#3b82f6; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('contract-modal').style.display='flex'">Hợp đồng thuê xe</span></span>
                                         </label>
                                     </div>
 
@@ -2771,6 +2772,27 @@
                 </form>
             </div>
 
+        </div>
+
+        <!-- MODAL HỢP ĐỒNG THUÊ XE PREVIEW -->
+        <div id="contract-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.65); z-index:99999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+            <div style="background:#fff; border-radius:12px; max-width:850px; width:100%; height:90vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.3);">
+                <div style="padding:16px 24px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; background:#fafafa;">
+                    <div>
+                        <h3 style="margin:0; color:#3b82f6; font-size:18px;"><i class="fas fa-file-signature"></i> Hợp Đồng Thuê Xe (Bản xem trước)</h3>
+                        <p style="margin:4px 0 0; font-size:12px; color:#777;">Hợp đồng thực tế sẽ có đầy đủ thông tin của bạn sau khi thanh toán cọc.</p>
+                    </div>
+                    <button type="button" onclick="document.getElementById('contract-modal').style.display='none'"
+                        style="background:#f1f5f9; border:none; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; color:#475569; transition: background 0.2s;">&times;</button>
+                </div>
+                <div style="flex:1; width:100%; overflow:hidden;">
+                    <iframe src="contract.jsp?id=preview" style="width:100%; height:100%; border:none;"></iframe>
+                </div>
+                <div style="padding:14px 24px; border-top:1px solid #eee; display:flex; justify-content:flex-end; background:#fafafa;">
+                    <button type="button" onclick="document.getElementById('daily-checkbox-term').checked=true; document.getElementById('contract-modal').style.display='none'; if(typeof toggleNextButton==='function') toggleNextButton();"
+                        style="padding:10px 24px; background:#3b82f6; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);">Đã đọc &amp; Đồng ý</button>
+                </div>
+            </div>
         </div>
 
         <!-- MODAL ĐIỀU KHOẢN SMARTRIDE -->

@@ -626,12 +626,38 @@
                                     <i class="fas fa-redo"></i> Đặt thuê xe lại
                                 </button>
                             </c:if>
+                            <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #059669" onclick="document.getElementById('contract-modal').style.display='flex'">
+                                <i class="fas fa-file-contract"></i> Xem Hợp Đồng
+                            </button>
                             <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #1e293b" onclick="closeDetail()">
                                 <i class="fas fa-chevron-left"></i> Quay về danh sách
                             </button>
                         </div>
 
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HỢP ĐỒNG THUÊ XE MODAL -->
+        <div id="contract-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.65); z-index:99999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+            <div style="background:#fff; border-radius:12px; max-width:850px; width:100%; height:90vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.3);">
+                <div style="padding:16px 24px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; background:#fafafa;">
+                    <div>
+                        <h3 style="margin:0; color:#059669; font-size:18px;"><i class="fas fa-file-signature"></i> Hợp Đồng Thuê Xe Điện Tử</h3>
+                        <p style="margin:4px 0 0; font-size:12px; color:#777;">Hợp đồng được lập dựa trên sự đồng ý của bạn lúc đặt xe.</p>
+                    </div>
+                    <button type="button" onclick="document.getElementById('contract-modal').style.display='none'"
+                        style="background:#f1f5f9; border:none; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; color:#475569; transition: background 0.2s;">&times;</button>
+                </div>
+                <div style="flex:1; width:100%; overflow:hidden;">
+                    <iframe src="contract.jsp?id=${booking.bookingID}" style="width:100%; height:100%; border:none;"></iframe>
+                </div>
+                <div style="padding:14px 24px; border-top:1px solid #eee; display:flex; justify-content:flex-end; gap:10px; background:#fafafa;">
+                    <button type="button" onclick="document.getElementById('contract-modal').style.display='none'"
+                        style="padding:10px 24px; background:#e2e8f0; color:#334155; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer;">Đóng</button>
+                    <button type="button" onclick="window.open('contract.jsp?id=${booking.bookingID}', '_blank')"
+                        style="padding:10px 24px; background:#059669; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.5);"><i class="fas fa-print"></i> In / Tải về</button>
                 </div>
             </div>
         </div>
@@ -797,6 +823,13 @@
                 if (urlParams.get('autoPay') === 'true' && document.getElementById("pay-btn")) {
                     setTimeout(openPaymentModal, 300);
                 }
+                
+                // Auto open contract modal if requested (from email link)
+                if (urlParams.get('autoContract') === '1') {
+                    setTimeout(() => {
+                        document.getElementById('contract-modal').style.display='flex';
+                    }, 500);
+                }
             });
             function togglePayButton() {
                 const payButton = document.getElementById("pay-btn");
@@ -908,13 +941,22 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Thanh toán thành công!',
-                            text: 'Đơn hàng của bạn đã được ghi nhận. Trạng thái sẽ được cập nhật ngay.',
-                            confirmButtonColor: '#b59349',
-                            confirmButtonText: 'OK'
-                        }).then(() => { window.location.reload(); });
+                            text: 'Đơn hàng của bạn đã được ghi nhận. Vui lòng xem Hợp Đồng Điện Tử bên dưới.',
+                            showCancelButton: true,
+                            confirmButtonColor: '#059669',
+                            cancelButtonColor: '#1e293b',
+                            confirmButtonText: '<i class="fas fa-file-contract"></i> Xem Hợp Đồng',
+                            cancelButtonText: 'Đóng'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                document.getElementById('contract-modal').style.display='flex';
+                            } else {
+                                window.location.reload();
+                            }
+                        });
                     } else {
-                        alert('Thanh toán thành công! Trang sẽ tải lại để cập nhật trạng thái.');
-                        window.location.reload();
+                        alert('Thanh toán thành công!');
+                        document.getElementById('contract-modal').style.display='flex';
                     }
                 }
             });

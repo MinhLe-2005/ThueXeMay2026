@@ -16,22 +16,52 @@
         return;
     }
     
-    BookingDAO dao = BookingDAO.getInstance();
-    Booking booking = dao.getBookingById(bookingId);
-    if (booking == null) {
-        out.println("Hợp đồng không tồn tại!");
-        return;
-    }
-    
-    CustomerDAO daoCus = CustomerDAO.getInstance();
-    Customer customer = daoCus.getCustomerbyID(booking.getCustomerID());
-    AccountDAO daoAcc = AccountDAO.getInstance();
+    Booking booking = null;
+    Customer customer = null;
     Account account = null;
-    if (customer != null) {
-        account = daoAcc.getAccountbyID(customer.getAccountId());
+    List<Map<String, Object>> motorcycles = null;
+    
+    if (bookingId.equals("preview")) {
+        // Dummy data for preview mode
+        booking = new Booking();
+        booking.setBookingDate(new java.sql.Date(System.currentTimeMillis()));
+        booking.setStartDate(new java.sql.Date(System.currentTimeMillis()));
+        booking.setEndDate(new java.sql.Date(System.currentTimeMillis()));
+        booking.setTotalAmount(1000000);
+        
+        account = new Account();
+        account.setFirstName("Nguyễn Văn");
+        account.setLastName("A");
+        account.setPhoneNumber("0901234567");
+        account.setAddress("Hải Châu, Đà Nẵng");
+        
+        customer = new Customer();
+        customer.setIdentityCard("048099001234");
+        
+        motorcycles = new java.util.ArrayList<>();
+        Map<String, Object> mockMoto = new java.util.HashMap<>();
+        mockMoto.put("name", "Honda Air Blade 125");
+        mockMoto.put("licensePlate", "43A1-12345");
+        mockMoto.put("rentalPrice", 150000);
+        motorcycles.add(mockMoto);
+    } else {
+        BookingDAO dao = BookingDAO.getInstance();
+        booking = dao.getBookingById(bookingId);
+        if (booking == null) {
+            out.println("Hợp đồng không tồn tại!");
+            return;
+        }
+        
+        CustomerDAO daoCus = CustomerDAO.getInstance();
+        customer = daoCus.getCustomerbyID(booking.getCustomerID());
+        AccountDAO daoAcc = AccountDAO.getInstance();
+        if (customer != null) {
+            account = daoAcc.getAccountbyID(customer.getAccountId());
+        }
+        
+        motorcycles = dao.getMotorcyclesByBookingID(bookingId);
     }
     
-    List<Map<String, Object>> motorcycles = dao.getMotorcyclesByBookingID(bookingId);
     NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
 %>
 <!DOCTYPE html>
