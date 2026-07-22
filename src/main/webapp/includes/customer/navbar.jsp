@@ -149,13 +149,13 @@
                                                 </li>-->
                         <div class="user-menu__item">
                             <a class="user-menu-link" href="profileCustomer.jsp">
-                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1604623/team.png" alt="team_icon" width=20 height=20 >
+                                <i class="fas fa-user-circle" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
                                 <div>Thông tin cá nhân</div>
                             </a>
                         </div>
                         <div class="user-menu__item">
                             <a class="user-menu-link" href="bookingHistory?status=all">
-                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1604623/book.png" alt="team_icon" width=20 height=20 >
+                                <i class="fas fa-file-invoice" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
                                 <div>Quản lý đặt hàng</div>
                             </a>
                         </div>
