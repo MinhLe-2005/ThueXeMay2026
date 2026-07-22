@@ -445,7 +445,7 @@ public class BookingDAO {
                    + "  AND \"BookingDate\" IS NOT NULL "
                    + "  AND EXTRACT(EPOCH FROM (NOW() - TO_TIMESTAMP(\"BookingDate\", 'YYYY-MM-DD HH24:MI:SS'))) / 60 >= ?";
         java.util.List<String> expiredBookings = new java.util.ArrayList<>();
-        try (java.sql.Connection c = com.smartride.util.DBUtil.getConnection();
+        try (java.sql.Connection c = com.smartride.util.DBUtil.makeConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, minutes);
             try (ResultSet rs = ps.executeQuery()) {
