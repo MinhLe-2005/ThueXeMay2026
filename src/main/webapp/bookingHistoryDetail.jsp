@@ -656,8 +656,8 @@
                 <div style="padding:14px 24px; border-top:1px solid #eee; display:flex; justify-content:flex-end; gap:10px; background:#fafafa;">
                     <button type="button" onclick="document.getElementById('contract-modal').style.display='none'"
                         style="padding:10px 24px; background:#e2e8f0; color:#334155; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer;">Đóng</button>
-                    <button type="button" onclick="window.open('contract.jsp?id=${booking.bookingID}', '_blank')"
-                        style="padding:10px 24px; background:#059669; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.5);"><i class="fas fa-print"></i> In / Tải về</button>
+                    <button type="button" onclick="window.open('contract.jsp?id=${booking.bookingID}&print=1', '_blank')"
+                        style="padding:10px 24px; background:#059669; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.5);"><i class="fas fa-print"></i> In / Tải về PDF</button>
                 </div>
             </div>
         </div>
