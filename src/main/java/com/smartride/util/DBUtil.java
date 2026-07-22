@@ -21,7 +21,7 @@ public class DBUtil {
     // =============================================
     private static final String DB_URL =
         "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres" +
-        "?sslmode=require&socketTimeout=30&connectTimeout=15&loginTimeout=15";
+        "?sslmode=require&socketTimeout=30&connectTimeout=15&loginTimeout=15&prepareThreshold=0";
     private static final String DB_USER = "postgres.zfvgigfjmbtgwgirdify";
     private static final String DB_PASS = "Bimdiendie1@";
 
