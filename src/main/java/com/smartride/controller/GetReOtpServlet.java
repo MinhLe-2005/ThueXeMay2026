@@ -19,6 +19,12 @@ public class GetReOtpServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
 
+        if (email == null || email.trim().isEmpty()) {
+            request.setAttribute("errorInput", "Phiên đăng ký đã hết hạn. Vui lòng đăng ký lại.");
+            request.getRequestDispatcher("register2.jsp").forward(request, response);
+            return;
+        }
+
         // Generate verification code
         String verificationCode = SendEmail.generateRandomSixDigits();
         // Save verification code in session
