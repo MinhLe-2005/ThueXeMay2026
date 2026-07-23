@@ -99,6 +99,12 @@
                         </div>
                     </div>
                 </div>
+                
+                <c:if test="${sessionScope.account.roleID == 2 or sessionScope.account.roleID == 3}">
+                    <a href="manageSmartRide.jsp?iframeSrc=homeStaff" class="nav-action-icon position-relative d-flex align-items-center text-decoration-none" title="Trang Quản Trị" style="color: #ffffff; transition: all 0.3s; background-color: #b59349; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 600;" onmouseover="this.style.transform='scale(1.05)'; this.style.backgroundColor='#9b7a37';" onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#b59349';">
+                        <i class="fas fa-user-shield me-2"></i> Quản lý
+                    </a>
+                </c:if>
             </div>
 
             <div class="user-menu-wrap">
@@ -159,14 +165,6 @@
                                 <div>Quản lý đặt hàng</div>
                             </a>
                         </div>
-                        <c:if test="${sessionScope.account.roleID == 2 or sessionScope.account.roleID == 3}">
-                            <div class="user-menu__item">
-                                <a class="user-menu-link" href="manageSmartRide.jsp?iframeSrc=homeStaff">
-                                    <i class="fas fa-cogs" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
-                                    <div>Trang Quản Trị</div>
-                                </a>
-                            </div>
-                        </c:if>
                         </div>
                         <div class="user-menu-footer" style="padding: 12px 20px; margin-bottom: 0 !important; display: flex; flex-direction: column;">
                             <a href="logout" style="display: flex; align-items: center; justify-content: center; gap: 8px; background-color: #b59349; color: #ffffff !important; font-weight: 600; font-size: 0.875rem; padding: 10px 0; border-radius: 9999px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(181, 147, 73, 0.2); margin-bottom: 0 !important;">
