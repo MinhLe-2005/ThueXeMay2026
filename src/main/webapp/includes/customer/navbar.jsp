@@ -159,6 +159,14 @@
                                 <div>Quản lý đặt hàng</div>
                             </a>
                         </div>
+                        <c:if test="${sessionScope.account.roleID == 2 or sessionScope.account.roleID == 3}">
+                            <div class="user-menu__item">
+                                <a class="user-menu-link" href="manageSmartRide.jsp?iframeSrc=homeStaff">
+                                    <i class="fas fa-cogs" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
+                                    <div>Trang Quản Trị</div>
+                                </a>
+                            </div>
+                        </c:if>
                         </div>
                         <div class="user-menu-footer" style="padding: 12px 20px; margin-bottom: 0 !important; display: flex; flex-direction: column;">
                             <a href="logout" style="display: flex; align-items: center; justify-content: center; gap: 8px; background-color: #b59349; color: #ffffff !important; font-weight: 600; font-size: 0.875rem; padding: 10px 0; border-radius: 9999px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(181, 147, 73, 0.2); margin-bottom: 0 !important;">
