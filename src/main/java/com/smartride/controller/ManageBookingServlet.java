@@ -260,6 +260,16 @@ public class ManageBookingServlet extends HttpServlet {
         
         //Staff tu tao Don Gia han cho Khach
         String staffExtendAction = request.getParameter("action");
+
+        if ("mark_paid".equals(staffExtendAction)) {
+            String bId = request.getParameter("bookingId");
+            if (bId != null) {
+                ExtensionDAO.getInstance().markExtensionPaid(bId);
+            }
+            response.sendRedirect("manageBooking");
+            return;
+        }
+
         if ("staff_extend".equals(staffExtendAction)) {
             String bId = request.getParameter("bookingId");
             String previousEnd = request.getParameter("previousEndDate");
@@ -275,8 +285,12 @@ public class ManageBookingServlet extends HttpServlet {
                 // 1. Them vao bang Extension voi StaffID luon
                 Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
                 String staffId = staff != null ? staff.getStaffID() : "STAFF00001";
+                
                 ExtensionDAO.getInstance().addExtension(previousEnd, newEnd, extFee, bId);
                 ExtensionDAO.getInstance().updateExtensionByStaff(staffId, bId);
+                // staff creating it means customer hasn't paid online, they pay cash
+                ExtensionDAO.getInstance().markExtensionUnpaid(bId);
+
                 
                 // 2. Cap nhat vao Booking
                 BookingDAO.getInstance().updateBookingEndDateAndPrice(bId, newEnd, extFee);

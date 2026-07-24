@@ -38,9 +38,9 @@ public class ExtensionDAO implements Serializable {
                 + "           ,\"NewEndDate\"\n"
                 + "           ,\"ExtenstionFee\"\n"
                 + "           ,\"BookingID\"\n"
-                + "           ,\"StaffID\")\n"
+                + "           ,\"StaffID\", \"PaymentStatus\")\n"
                 + "     VALUES\n"
-                + "           (NOW(), ?, ?, ?, ?, null)";
+                + "           (NOW(), ?, ?, ?, ?, null, ?)";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, previousEndDate);
@@ -75,6 +75,7 @@ public class ExtensionDAO implements Serializable {
                 extension.setExtensionFee(rs.getDouble("ExtenstionFee"));
                 extension.setBookingID(rs.getString("BookingID"));
                 extension.setStaffID(rs.getString("StaffID"));
+                extension.setPaymentStatus(rs.getString("PaymentStatus"));
                 return extension;
             }
         } catch (SQLException e) {
@@ -93,7 +94,8 @@ public class ExtensionDAO implements Serializable {
                 + "       TO_CHAR(\"NewEndDate\", 'DD-MM-YYYY HH24:MI:SS') AS NewEndDateFormatted,\n"
                 + "       \"ExtenstionFee\", \n"
                 + "       \"BookingID\", \n"
-                + "       \"StaffID\"\n"
+                + "       \"StaffID\", \n"
+                + "       \"PaymentStatus\"\n"
                 + "FROM \"Extension\";";
         try {
             stm = conn.prepareStatement(sql);
@@ -107,6 +109,7 @@ public class ExtensionDAO implements Serializable {
                 e.setExtensionFee(rs.getDouble(5));
                 e.setBookingID(rs.getString(6));
                 e.setStaffID(rs.getString(7));
+                  e.setPaymentStatus(rs.getString(8));
                 list.add(e);
             }
         } catch (SQLException ex) {
@@ -129,6 +132,32 @@ public class ExtensionDAO implements Serializable {
             }
         } catch (SQLException ex) {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    
+    
+    public boolean markExtensionUnpaid(String bookingId) {
+        String sql = "UPDATE \"Extension\" SET \"PaymentStatus\" = 'Chưa thanh toán' WHERE \"BookingID\" = ?";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, bookingId);
+            return stm.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean markExtensionPaid(String bookingId) {
+        String sql = "UPDATE \"Extension\" SET \"PaymentStatus\" = 'Đã thanh toán (Tiền mặt)' WHERE \"BookingID\" = ?";
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, bookingId);
+            return stm.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

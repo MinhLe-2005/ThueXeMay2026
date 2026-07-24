@@ -531,6 +531,7 @@
                                                         <th scope="col">Ngày hạn trước</th>
                                                         <th scope="col">Ngày hạn mới</th>
                                                         <th scope="col">Phí gia hạn</th>
+                                                        <th scope="col">Thanh toán</th>
                                                         <th scope="col">Thao tác</th>
 
                                                     </tr>
@@ -544,22 +545,46 @@
                                                             <td>${extend.extensionDate}</td>
                                                             <td>${extend.previousEndDate}</td>
                                                             <td>${extend.newEndDate}</td>
-                                                            <td>
-                                                                <fmt:formatNumber value="${extend.extensionFee}" type="number" pattern="#,##0" /> VNĐ
-                                                            </td>                        
-                                                            <td>
-                                                                <c:if test="${buttonText == 'Đã xác nhận'}">
-                                                                    <button disabled class="btn btn-sm btn-success w-100">
-                                                                        <i class="fas fa-check-double me-1"></i>${buttonText}
-                                                                    </button>
-                                                                </c:if>
-                                                                <c:if test="${buttonText == 'Xác nhận'}">
-                                                                    <button type="button" class="btn btn-sm btn-primary w-100" 
-                                                                            onclick="showConfirmExtendModal('${extend.bookingID}')">
-                                                                        <i class="fas fa-check me-1"></i>${buttonText}
-                                                                    </button>
-                                                                </c:if>
-                                                            </td>
+                                                            
+        <td>
+            <fmt:formatNumber value="${extend.extensionFee}" type="number" pattern="#,##0" /> VND
+        </td>
+        <td>
+            <c:choose>
+                <c:when test="${extend.paymentStatus == 'Đã thanh toán (CK)'}">
+                    <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Đã thanh toán</span>
+                </c:when>
+                <c:when test="${extend.paymentStatus == 'Đã thanh toán (Tiền mặt)'}">
+                    <span class="badge bg-success"><i class="fas fa-money-bill-wave me-1"></i>Đã thu tiền mặt</span>
+                </c:when>
+                <c:otherwise>
+                    <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Chưa thanh toán</span>
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td>
+            <c:if test="${buttonText == 'Đã xác nhận'}">
+                <button disabled class="btn btn-sm btn-success w-100 mb-1">
+                    <i class="fas fa-check-double me-1"></i>${buttonText}
+                </button>
+            </c:if>
+            <c:if test="${buttonText == 'Xác nhận'}">
+                <button type="button" class="btn btn-sm btn-primary w-100 mb-1" 
+                        onclick="showConfirmExtendModal('${extend.bookingID}')">
+                    <i class="fas fa-check me-1"></i>${buttonText}
+                </button>
+            </c:if>
+            <c:if test="${extend.paymentStatus == 'Chưa thanh toán'}">
+                <form action="manageBooking" method="post" style="display:inline;">
+                    <input type="hidden" name="action" value="mark_paid">
+                    <input type="hidden" name="bookingId" value="${extend.bookingID}">
+                    <button type="submit" class="btn btn-sm btn-outline-success w-100">
+                        <i class="fas fa-money-bill-wave me-1"></i>Thu tiền
+                    </button>
+                </form>
+            </c:if>
+        </td>
+
                                                         </tr>
                                                     </tbody>
                                                 </c:forEach>
