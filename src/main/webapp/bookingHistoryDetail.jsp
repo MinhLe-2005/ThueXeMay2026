@@ -697,7 +697,9 @@
                 <form id="cancel-form" action="cancelbooking" method="get" class="space-y-4">
                     <input type="hidden" id="bookingId" name="bookingId" value="${booking.bookingID}">
                     <div>
-                        <textarea required name="cancelreason" id="cancelReason" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50" placeholder="Nhập lý do hủy đơn của bạn..."></textarea>
+                        <textarea required name="cancelreason" id="cancelReason" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50 mb-3" placeholder="Nhập lý do hủy đơn của bạn..."></textarea>
+                        <input type="text" name="bankinfo" id="bankInfo" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50" placeholder="Số tài khoản ngân hàng để hoàn tiền (Không bắt buộc)">
+                        <p class="text-xs text-gray-400 mt-1 ml-1">* Nếu bạn đã đặt cọc, vui lòng cung cấp STK để chúng tôi hoàn tiền.</p>
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                         <button type="button" class="px-5 py-2 rounded-xl font-bold text-sm transition-colors cursor-pointer" style="background-color: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db;" onclick="closeCancellation()">Đóng</button>

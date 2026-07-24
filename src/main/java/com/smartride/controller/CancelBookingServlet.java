@@ -36,10 +36,15 @@ public class CancelBookingServlet extends HttpServlet {
             throws ServletException, IOException {
         String bookingId = request.getParameter("bookingId");
         String cancelReason = request.getParameter("cancelreason");
+        String bankInfo = request.getParameter("bankinfo");
         HttpSession session = request.getSession();
 
         if (cancelReason != null && !cancelReason.trim().isEmpty()) {
-            boolean isInserted = CancellationDAO.getInstance().insertCancellation(cancelReason, bookingId, null);
+            String finalReason = cancelReason.trim();
+            if (bankInfo != null && !bankInfo.trim().isEmpty()) {
+                finalReason += " | STK hoàn tiền: " + bankInfo.trim();
+            }
+            boolean isInserted = CancellationDAO.getInstance().insertCancellation(finalReason, bookingId, null);
             BookingDAO.getInstance().updateBookingStatus(bookingId, "Đã hủy");
             if (isInserted) {
                 session.setAttribute("cancelSuccess", "Hủy đơn thành công");

@@ -101,12 +101,21 @@ public class ChatApiServlet extends HttpServlet {
                     }
                 } else {
                     // Customer sent message to Staff
-                    // We can notify ALL staffs since anyone can reply
+                    // Notify ALL staffs and admins (roles 2 and 3)
                     String link = "manageSmartRide.jsp?iframeSrc=manageBooking&openChat=true&bookingId=" + inputMsg.getBookingId();
-                    List<com.smartride.dto.Staff> staffs = com.smartride.dao.StaffDAO.getInstance().getAllStaff();
-                    for(com.smartride.dto.Staff stf : staffs) {
+                    
+                    java.util.List<com.smartride.dto.Account> staffs = com.smartride.dao.AccountDAO.getInstance().getListAccountByRole(2);
+                    java.util.List<com.smartride.dto.Account> admins = com.smartride.dao.AccountDAO.getInstance().getListAccountByRole(3);
+                    
+                    for(com.smartride.dto.Account stf : staffs) {
                         NotificationDAO.getInstance().insertNotification(
-                            stf.getAccountID(), 
+                            stf.getAccountId(), 
+                            title, message, link
+                        );
+                    }
+                    for(com.smartride.dto.Account adm : admins) {
+                        NotificationDAO.getInstance().insertNotification(
+                            adm.getAccountId(), 
                             title, message, link
                         );
                     }

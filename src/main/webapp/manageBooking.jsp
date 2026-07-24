@@ -599,25 +599,25 @@
                                                 <tbody>
                                                     <c:forEach items="${sessionScope.cancels}" var="listC">
                                                         <tr>
-                                                            <c:set var="buttonText" value="${empty listC.staffID ? 'Xác nhận' : 'Đã xác nhận'}" />
+                                                            <c:set var="buttonText" value="${empty listC.staffID ? 'Hoàn tất xử lý' : 'Đã hoàn tiền / Xong'}" />
                                                             <th scope="row">${listC.cancellationID}</th>
                                                             <td>${listC.bookingID}</td>
                                                             <td>${listC.cancellationDate}</td>
                                                             <td>${listC.note}</td>
                                                             <td>
-                                                                <c:if test="${buttonText == 'Đã xác nhận'}">
+                                                                <c:if test="${buttonText == 'Đã hoàn tiền / Xong'}">
                                                                     <button disabled class="btn btn-sm btn-success w-100 mb-1">
                                                                         <i class="fas fa-check-double me-1"></i>${buttonText}
                                                                     </button>
                                                                 </c:if>
-                                                                <c:if test="${buttonText == 'Xác nhận'}">
+                                                                <c:if test="${buttonText == 'Hoàn tất xử lý'}">
                                                                     <button type="button" class="btn btn-sm btn-primary w-100 mb-1" 
                                                                             onclick="showConfirmModal('${listC.bookingID}')">
                                                                         <i class="fas fa-check me-1"></i>${buttonText}
                                                                     </button>
                                                                 </c:if>
                                                                 <button type="button" class="btn btn-sm btn-info w-100 text-white" style="background-color: #0ea5e9; border: none;" onclick="openChatForCancelledBooking('${listC.bookingID}')">
-                                                                    <i class="fas fa-comments me-1"></i> Xem khiếu nại
+                                                                    <i class="fas fa-info-circle me-1"></i> Xem chi tiết
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -2270,12 +2270,20 @@ document.getElementById('user-form-modal').addEventListener('hidden.bs.modal', f
 });
     
     function openChatForCancelledBooking(bId) {
-        var modal = $('#user-form-modal');
-        modal.find('#modal-bookingId').text(bId);
+        // Find the "Xem chi tiết" button in the booking tab for this booking ID
+        var btn = document.querySelector('#booking button[data-bookingId="' + bId + '"]');
+        if (btn) {
+            // Trigger a click to populate all the modal fields properly
+            btn.click();
+        } else {
+            // Fallback if the button is not found
+            var modal = $('#user-form-modal');
+            modal.find('#modal-bookingId').text(bId);
+            var modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('user-form-modal'));
+            modalInstance.show();
+        }
         
-        var modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('user-form-modal'));
-        modalInstance.show();
-        
+        // Wait for the modal to open, then switch to the Chat tab
         setTimeout(function() {
             var triggerEl = document.querySelector('#chat-tab');
             if (triggerEl) {
