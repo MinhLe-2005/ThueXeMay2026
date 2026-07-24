@@ -417,6 +417,23 @@ public class BookingDAO {
         }
         return false;
     }
+
+    public boolean updateBookingEndDateAndPrice(String bookingID, String newEndDate, double additionalPrice) {
+        PreparedStatement stm;
+        // The DB might have NewEndDate in yyyy-MM-dd HH:mm:ss format
+        String sql = "UPDATE \"Booking\" SET \"EndDate\" = ?, \"TotalPrice\" = COALESCE(\"TotalPrice\", 0) + ? WHERE \"BookingID\" = ?";
+        try {
+            stm = conn.prepareStatement(sql);
+            stm.setString(1, newEndDate);
+            stm.setDouble(2, additionalPrice);
+            stm.setString(3, bookingID);
+            int rowAffect = stm.executeUpdate();
+            return rowAffect > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     
     private void makeMotorcyclesStatus(String bookingID, String status, String note) {
         String sqlDetails = "SELECT \"MotorcycleDetailID\" FROM \"Booking Detail\" WHERE \"BookingID\" = ?";

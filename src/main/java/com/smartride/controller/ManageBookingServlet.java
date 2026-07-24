@@ -249,7 +249,41 @@ public class ManageBookingServlet extends HttpServlet {
         if (extendBookId != null && !extendBookId.isEmpty()) {
             Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
             String staffId = staff != null ? staff.getStaffID() : "STAFF00001";
-            ExtensionDAO.getInstance().updateExtensionByStaff(staffId, extendBookId);
+            boolean updated = ExtensionDAO.getInstance().updateExtensionByStaff(staffId, extendBookId);
+            if (updated) {
+                com.smartride.dto.Extension ext = ExtensionDAO.getInstance().getExtensionByBookingID(extendBookId);
+                if (ext != null) {
+                    BookingDAO.getInstance().updateBookingEndDateAndPrice(extendBookId, ext.getNewEndDate(), ext.getExtensionFee());
+                }
+            }
+        }
+        
+        //Staff tu tao Don Gia han cho Khach
+        String staffExtendAction = request.getParameter("action");
+        if ("staff_extend".equals(staffExtendAction)) {
+            String bId = request.getParameter("bookingId");
+            String previousEnd = request.getParameter("previousEndDate");
+            String newEnd = request.getParameter("newEndDate");
+            String extFeeStr = request.getParameter("extensionFee");
+            
+            if (bId != null && newEnd != null && extFeeStr != null) {
+                double extFee = 0;
+                try {
+                    extFee = Double.parseDouble(extFeeStr.replace(",", "").replace(".", ""));
+                } catch(Exception e){}
+                
+                // 1. Them vao bang Extension voi StaffID luon
+                Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
+                String staffId = staff != null ? staff.getStaffID() : "STAFF00001";
+                ExtensionDAO.getInstance().addExtension(previousEnd, newEnd, extFee, bId);
+                ExtensionDAO.getInstance().updateExtensionByStaff(staffId, bId);
+                
+                // 2. Cap nhat vao Booking
+                BookingDAO.getInstance().updateBookingEndDateAndPrice(bId, newEnd, extFee);
+                
+                response.sendRedirect("manageBooking");
+                return;
+            }
         }
         //--------------------------------------------------------------------------------
        

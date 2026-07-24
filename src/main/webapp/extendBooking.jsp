@@ -2012,6 +2012,9 @@
                             <h2>THANH TOÁN CỌC</h2>
                             <p class="desc">Hãy thanh toán số tiền cọc theo bên dưới để hoàn thành đơn đặt xe của bạn</p>
                             <iframe id="myIframe" src="sepay_pay.jsp" style="width: 100%; height: 550px; border-style: hidden"></iframe>
+                            <button type="button" class="btn btn-warning mt-3" style="width: 100%; padding: 12px; font-weight: bold; font-size: 16px; border-radius: 8px; background-color: #f59e0b; color: white; border: none; cursor: pointer;" onclick="handlePaymentStatus({status: 'success', amount: document.getElementById('dataInput').innerText.replace(/[^\d]/g, ''), time: new Date().getTime()})">
+                                <i class="fas fa-magic"></i> DEMO: Bỏ qua thanh toán (Tạo đơn ngay)
+                            </button>
                             
                         </fieldset>
                     </div>

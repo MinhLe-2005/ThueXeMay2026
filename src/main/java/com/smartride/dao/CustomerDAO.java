@@ -128,7 +128,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
 
     public Customer getCustomerbyAccountID(int id) {
         String sql = " SELECT * FROM \"Customer\"\n"
-                + " WHERE \"AccountID\" = ?";
+                + " WHERE \"AccountID\" = ? ORDER BY \"CustomerID\" DESC LIMIT 1";
         try {
             PreparedStatement st = conn.prepareStatement(sql);
             st.setInt(1, id);

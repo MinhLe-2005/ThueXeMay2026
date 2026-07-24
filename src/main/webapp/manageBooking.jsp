@@ -344,7 +344,7 @@
                                                                                     </c:when>
                                                                                     <c:otherwise>
                                                                                         <c:set var="statusClass" value="${listB.deliveryStatus == 'Đã trả' ? 'status-returned' : (listB.deliveryStatus == 'Đã giao' ? 'status-delivered' : (listB.deliveryStatus == 'Chưa giao' ? 'status-pending' : 'status-empty'))}" />
-                                                                                        <select name="delistatus_${listB.bookingID}" id="status-${listB.bookingID}" class="form-select form-select-sm ${statusClass}" aria-label="Trạng thái" onchange="document.getElementById('form-update-${listB.bookingID}').submit();" style="cursor: pointer;">
+                                                                                        <select name="delistatus_${listB.bookingID}" id="status-${listB.bookingID}" class="form-select form-select-sm ${statusClass}" aria-label="Trạng thái" onchange="updateDeliveryStatusAjax('${listB.bookingID}', this);" style="cursor: pointer;">
                                                                                             <option value="Chưa giao" ${listB.deliveryStatus == 'Chưa giao' ? 'selected' : ''}>Chờ nhận xe</option>
                                                                                             <option value="Đã giao" ${listB.deliveryStatus == 'Đã giao' ? 'selected' : ''}>Đang thuê</option>
                                                                                             <option value="Đã trả" ${listB.deliveryStatus == 'Đã trả' ? 'selected' : ''}>Đã trả xe</option>
@@ -360,6 +360,15 @@
                                                                             <c:set var="total" value="${total + detail.totalPrice}"/>
                                                                         </c:forEach>
                                                                         <c:set var="total" value="${total + (listB.deliveryFee != null ? listB.deliveryFee : 0)}"/>
+                                                                        
+                                                                        <c:set var="extensionTotal" value="0"/>
+                                                                        <c:forEach items="${sessionScope.extend}" var="ext">
+                                                                            <c:if test="${ext.bookingID == listB.bookingID and not empty ext.staffID}">
+                                                                                <c:set var="extensionTotal" value="${extensionTotal + ext.extensionFee}"/>
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                        <c:set var="total" value="${total + extensionTotal}"/>
+                                                                        
                                                                         <fmt:formatNumber value="${total}" type="number" pattern="#,##0" /> VNĐ
                                                                     </td>
                                                                     <td class="text-center align-middle font-weight-bold">
@@ -369,14 +378,17 @@
                                                                             <c:set var="paid" value="${pay.paymentAmount}"/>
                                                                         </c:if>
                                                                         <c:choose>
-                                                                            <c:when test="${listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành'}">
+                                                                            <c:when test="${listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả'}">
                                                                                 <span class="badge bg-success border"><i class="fas fa-check me-1"></i>Đã TT</span>
+                                                                            </c:when>
+                                                                            <c:when test="${listB.statusBooking == 'Đã xác nhận' && (empty pay || not fn:contains(pay.paymentMethod, 'Tiền mặt'))}">
+                                                                                <span class="badge bg-info text-dark border"><i class="fas fa-adjust me-1"></i>Đã cọc</span>
+                                                                            </c:when>
+                                                                            <c:when test="${paid > 0 && paid < total}">
+                                                                                <span class="badge bg-info text-dark border"><i class="fas fa-adjust me-1"></i>Đã cọc</span>
                                                                             </c:when>
                                                                             <c:when test="${empty pay || paid == 0}">
                                                                                 <span class="badge bg-warning text-dark border"><i class="fas fa-clock me-1"></i>Chờ TT</span>
-                                                                            </c:when>
-                                                                            <c:when test="${paid < total}">
-                                                                                <span class="badge bg-info text-dark border"><i class="fas fa-adjust me-1"></i>Đã cọc</span>
                                                                             </c:when>
                                                                             <c:otherwise>
                                                                                 <span class="badge bg-success border"><i class="fas fa-check me-1"></i>Đã TT</span>
@@ -411,6 +423,13 @@
                                                                                         <c:set var="total" value="${total + detail.totalPrice}"/>
                                                                                     </c:forEach>
                                                                                     <c:set var="total" value="${total + (listB.deliveryFee != null ? listB.deliveryFee : 0)}"/>
+                                                                                    <c:set var="extensionTotal" value="0"/>
+                                                                                    <c:forEach items="${sessionScope.extend}" var="ext">
+                                                                                        <c:if test="${ext.bookingID == listB.bookingID and not empty ext.staffID}">
+                                                                                            <c:set var="extensionTotal" value="${extensionTotal + ext.extensionFee}"/>
+                                                                                        </c:if>
+                                                                                    </c:forEach>
+                                                                                    <c:set var="total" value="${total + extensionTotal}"/>
                                                                                     <c:set var="paid" value="0"/>
                                                                                     <c:if test="${not empty paymentsMap[listB.bookingID]}">
                                                                                         <c:set var="paid" value="${paymentsMap[listB.bookingID].paymentAmount}"/>
@@ -428,9 +447,9 @@
                                                                                     data-typeCard="${cus.typeCard}"
                                                                                     data-customerId="searchCustomer?id=${listB.customerID}"
                                                                                     data-cusId="${listB.customerID}"
-                                                                                    data-paymentStatus="${(listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') ? 'Đã thanh toán' : (pay != null ? pay.paymentStatus : '')}"
-                                                                                    data-paymentMethod="${(listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') && (pay == null || pay.paymentMethod == '') ? 'Đã thanh toán' : (pay != null ? pay.paymentMethod : '')}"
-                                                                                    data-paymentAmount="${(listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') && paid == 0 ? total : (pay != null ? pay.paymentAmount : '0')}"
+                                                                                    data-paymentStatus="${(listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả') ? 'Đã thanh toán' : ((listB.statusBooking == 'Đã xác nhận' && (empty pay || not fn:contains(pay.paymentMethod, 'Tiền mặt'))) ? 'Đã cọc' : (pay != null ? pay.paymentStatus : ''))}"
+                                                                                    data-paymentMethod="${(listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả') && (pay == null || pay.paymentMethod == '') ? 'Đã thanh toán' : (pay != null ? pay.paymentMethod : '')}"
+                                                                                    data-paymentAmount="${(listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả') && paid == 0 ? total : (pay != null ? pay.paymentAmount : '0')}"
                                                                                     onclick="openUserModal(this)">
                                                                                 <i class="fas ${buttonIcon} me-1"></i>${buttonText}
                                                                             </button>
@@ -558,7 +577,7 @@
                 <!-- modal để hiển thị thông tin chi tiết của đặt đơn-->
                 <div class="modal fade" role="dialog" tabindex="-1" id="user-form-modal">
                     <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
                             <div style="padding: 20px 24px; border-bottom: 1px solid #e2e8f0; border-top-left-radius: 12px; border-top-right-radius: 12px; background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);" class="modal-header d-flex align-items-center justify-content-between">
                                 <h5 class="modal-title" id="modal-title" style="font-weight: 800; color: #1e293b; font-size: 18px; margin: 0;">
                                     <i class="fas fa-file-invoice text-primary me-2"></i>Chi tiết Đơn hàng
@@ -714,7 +733,11 @@
                                                     <div style="font-size: 11px; font-weight: 500; opacity: 0.85; margin-top: 4px;">Thu tiền, chụp ảnh tình trạng và giao xe cho khách</div>
                                                 </button>
                                             </div>
-
+                                            <div class="col-12 mt-2" id="btn-staff-extend" style="display: none;">
+                                                <button type="button" class="btn btn-secondary w-100 py-3" style="font-weight: 700; border-radius: 8px;" onclick="showStaffExtendModal()">
+                                                    <i class="fas fa-calendar-plus me-2"></i> Gia hạn xe (Cho Staff)
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     </div> <!-- close order-details -->
@@ -829,7 +852,7 @@
                     <div class="modal-dialog" role="document">
                         <form id="confirmFormExtend" action="manageBooking" method="post">
                             <input type="hidden" id="extendBookingID" name="extendBookId">
-                            <input type="hidden" id=extendStaffID" name="staffIdforEx">
+                            <input type="hidden" id="extendStaffID" name="staffIdforEx">
 
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -841,6 +864,34 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" onclick="closeDetail()">Quay về</button>
                                     <button type="button" id="confirmModalExtendYesButton" class="btn btn-primary">Có</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Modal cho Staff Extend -->
+                <div class="modal fade" id="staffExtendModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <form action="manageBooking" method="post">
+                            <input type="hidden" name="bookingId" id="staffExtendBID">
+                            <input type="hidden" name="previousEndDate" id="staffExtendPreviousEnd">
+                            <input type="hidden" name="action" value="staff_extend">
+                            <div class="modal-content">
+                                <div class="modal-header"><h5>Gia h?n don hng</h5></div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label>Ngy tr? m?i (VD: 2024-12-31 15:00:00)</label>
+                                        <input type="text" name="newEndDate" class="form-control" required placeholder="YYYY-MM-DD HH:MM:SS">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Ph gia h?n (VN?)</label>
+                                        <input type="number" name="extensionFee" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">?ng</button>
+                                    <button type="submit" class="btn btn-primary">Xc nh?n</button>
                                 </div>
                             </div>
                         </form>
@@ -965,6 +1016,12 @@
 function showLoader() {
     document.getElementById('fullPageLoader').style.display = 'flex';
 }
+function showStaffExtendModal() {
+    var bid = $('#modal-bookingId').text();
+    $('#staffExtendBID').val(bid);
+    $('#user-form-modal').modal('hide');
+    $('#staffExtendModal').modal('show');
+}
 </script>
 </body>
 
@@ -1081,10 +1138,8 @@ function showLoader() {
             modal.find('#modal-nameMotorcycle').html(button.getAttribute('data-nameMotorcycle'));
             
             var totalStr = button.getAttribute('data-Price') || '0';
-            var totalVal = parseInt(totalStr.replace(/[^0-9]/g, '')) || 0;
-            var payAmtStr = button.getAttribute('data-paymentAmount') || '0';
-            var payAmtVal = parseInt(payAmtStr) || 0;
-            var remaining = totalVal - payAmtVal;
+            // data-Price contains the ALREADY CALCULATED remaining amount from JSP
+            var remaining = parseInt(totalStr.replace(/[^0-9]/g, '')) || 0;
             if (remaining < 0) remaining = 0;
             var remainingStr = remaining.toLocaleString('vi-VN') + ' VNĐ';
             modal.find('#modal-Price').text(remainingStr);
@@ -1457,6 +1512,15 @@ function showLoader() {
         function returnModalStep() {
             $('#user-form-modal').modal('show');
             $('#confirmModal').modal('hide');
+        }
+        
+        function showStaffExtendModal() {
+            var bId = $('#modal-bookingId').text();
+            var currentEnd = $('#modal-endDate').text().trim();
+            // Parse dd/MM/yyyy HH:mm:ss if possible to set minimum date for input, but simpler is just open modal
+            $('#staffExtendBookingId').val(bId);
+            $('#staffExtendPreviousEnd').val(currentEnd); // Can pass as raw string to DB, or format it
+            $('#staffExtendModal').modal('show');
         }
 
         function showError() {
@@ -2157,6 +2221,43 @@ document.getElementById('user-form-modal').addEventListener('hidden.bs.modal', f
                 bootstrap.Tab.getOrCreateInstance(triggerEl).show();
             }
         }, 500);
+    }
+    function updateDeliveryStatusAjax(bookingID, selectElement) {
+        var newVal = selectElement.value;
+        var oldVal = selectElement.dataset.oldVal || selectElement.options[0].value;
+        
+        var formData = new FormData();
+        formData.append("bookingID", bookingID);
+        formData.append("delistatus_" + bookingID, newVal);
+        
+        selectElement.style.opacity = '0.5';
+        
+        fetch('manageBooking', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            selectElement.style.opacity = '1';
+            if (response.ok) {
+                selectElement.dataset.oldVal = newVal;
+                selectElement.classList.remove('status-pending', 'status-delivered', 'status-returned', 'status-empty');
+                if (newVal === 'Da tr?') {
+                    selectElement.classList.add('status-returned');
+                } else if (newVal === 'Da giao') {
+                    selectElement.classList.add('status-delivered');
+                } else if (newVal === 'Chua giao') {
+                    selectElement.classList.add('status-pending');
+                }
+            } else {
+                alert('Có lỗi xảy ra khi cập nhật!');
+                selectElement.value = oldVal;
+            }
+        })
+        .catch(error => {
+            selectElement.style.opacity = '1';
+            alert('Có lỗi xảy ra khi cập nhật!');
+            selectElement.value = oldVal;
+        });
     }
 </script>
 
