@@ -714,30 +714,7 @@
                                                     <div style="font-size: 11px; font-weight: 500; opacity: 0.85; margin-top: 4px;">Thu tiền, chụp ảnh tình trạng và giao xe cho khách</div>
                                                 </button>
                                             </div>
-                                            <!-- GPS Tracking Button -->
-                                            <div class="col-12 mt-2" id="gpsTrackArea">
-                                                <button type="button" class="btn w-100 py-2" id="btnToggleGpsMap"
-                                                    style="font-weight: 700; border-radius: 8px; background: linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; border:none; display:flex; align-items:center; justify-content:center; gap:8px;"
-                                                    onclick="toggleGpsMap()">
-                                                    <i class="fas fa-map-marked-alt"></i>
-                                                    <span>Theo dõi vị trí GPS khách hàng</span>
-                                                    <span id="gpsLiveDot" class="position-relative" style="display:none;">
-                                                        <span style="width:10px;height:10px;background:#4ade80;border-radius:50%;display:inline-block;animation:ping 1s infinite;"></span>
-                                                    </span>
-                                                </button>
-                                                <!-- GPS Map Panel -->
-                                                <div id="gpsMapPanel" style="display:none; margin-top:10px; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0;">
-                                                    <div style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:between;">
-                                                        <span style="font-size:13px; font-weight:600; color:#4f46e5;"><i class="fas fa-satellite-dish me-1"></i> Vị trí thời gian thực</span>
-                                                        <span id="gpsStatusText" style="font-size:12px; color:#94a3b8; margin-left:10px;">Chờ tín hiệu...</span>
-                                                    </div>
-                                                    <div id="leaflet-map" style="height:280px; width:100%;"></div>
-                                                    <div style="padding:8px 12px; background:#f8fafc; font-size:12px; color:#64748b;">
-                                                        <i class="fas fa-info-circle me-1"></i>
-                                                        Bản đồ tự cập nhật mỗi 5 giây. Khách cần bật "Phát vị trí GPS" trong trang chi tiết đơn hàng.
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                         </div>
                                     </div>
                                     </div> <!-- close order-details -->
@@ -1103,12 +1080,13 @@
             var payStatus = button.getAttribute('data-paymentStatus') || '';
             var payMethod = button.getAttribute('data-paymentMethod') || '';
             var payAmt = button.getAttribute('data-paymentAmount') || '0';
-            var hasPaid = payStatus !== '' && !payStatus.includes('Chờ');
+            var isFullyPaid = payStatus === 'Đã thanh toán' || payStatus === 'Success';
+            var isDeposited = payStatus === 'Đã cọc' || payStatus === 'Đã thanh toán cọc';
 
             // Hiển thị thông tin thanh toán
             if (payStatus === '') {
                 $('#modal-paymentInfo').html('<span style="color:#94a3b8; font-style:italic;">Chưa thanh toán</span>');
-            } else if (hasPaid) {
+            } else if (isFullyPaid || isDeposited) {
                 $('#modal-paymentInfo').html('<span style="color:#059669; background:#ecfdf5; padding:2px 10px; border-radius:6px; border:1px solid #10b981;"><i class="fas fa-check-circle me-1"></i>' + payMethod + '</span>');
             } else {
                 $('#modal-paymentInfo').html('<span style="color:#d97706; background:#fffbeb; padding:2px 10px; border-radius:6px; border:1px solid #fbbf24;">' + payStatus + '</span>');
@@ -1121,10 +1099,14 @@
                 $('#confirmwait').hide();
                 $('#confirmyes').show();
                 // Hiển thị nút duyệt hóa đơn nếu chưa thanh toán, ẩn nếu đã thanh toán
-                if (hasPaid) {
+                if (isFullyPaid) {
                     $('#approveInvoiceArea').hide();
                     $('#paidInvoiceArea').show();
                     $('#paidInvoiceLabel').text('Đã thanh toán (' + payMethod + ')');
+                } else if (isDeposited) {
+                    $('#approveInvoiceArea').show();
+                    $('#paidInvoiceArea').show();
+                    $('#paidInvoiceLabel').text('Đã cọc (' + payMethod + ')');
                 } else {
                     $('#approveInvoiceArea').show();
                     $('#paidInvoiceArea').hide();
