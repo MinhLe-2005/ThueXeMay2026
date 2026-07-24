@@ -159,6 +159,14 @@
                                 <div>Thông tin cá nhân</div>
                             </a>
                         </div>
+                        <c:if test="${sessionScope.account != null && (sessionScope.account.roleID == 2 || sessionScope.account.roleID == 3)}">
+                        <div class="user-menu__item">
+                            <a class="user-menu-link" href="manageSmartRide.jsp?iframeSrc=homeStaff">
+                                <i class="fas fa-user-shield" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
+                                <div>Trang Quản Trị</div>
+                            </a>
+                        </div>
+                        </c:if>
                         <div class="user-menu__item">
                             <a class="user-menu-link" href="bookingHistory?status=all">
                                 <i class="fas fa-file-invoice" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
