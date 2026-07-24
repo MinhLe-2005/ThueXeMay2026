@@ -1,11 +1,11 @@
-﻿<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quáº£n LÃ½ CÃ¢u Há»i ThÆ°á»ng Gáº·p</title>
+    <title>Quản Lý Câu Hỏi Thường Gặp</title>
 
     <!-- Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
@@ -29,7 +29,7 @@
             color: #1a1a2e;
         }
 
-        /* â”€â”€â”€ Page header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ─── Page header ─────────────────────────────── */
         .page-header {
             display: flex;
             align-items: center;
@@ -58,7 +58,7 @@
         .breadcrumb-item.active { color: #6c757d; }
         .breadcrumb-item + .breadcrumb-item::before { color: #adb5bd; }
 
-        /* â”€â”€â”€ Add button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ─── Add button ──────────────────────────────── */
         .btn-add-faq {
             background: linear-gradient(135deg, #b59349 0%, #d4af37 60%, #f1c40f 100%);
             color: #fff;
@@ -83,7 +83,7 @@
         }
         .btn-add-faq:active { transform: translateY(0); }
 
-        /* â”€â”€â”€ Stats strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ─── Stats strip ─────────────────────────────── */
         .stats-strip {
             display: flex;
             align-items: center;
@@ -102,7 +102,7 @@
             border-radius: 50px;
         }
 
-        /* â”€â”€â”€ Empty state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ─── Empty state ─────────────────────────────── */
         .empty-state {
             text-align: center;
             padding: 80px 20px;
@@ -121,7 +121,7 @@
         .empty-state h5 { font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
         .empty-state p { color: #6c757d; font-size: .9rem; }
 
-        /* â”€â”€â”€ FAQ Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ─── FAQ Card ────────────────────────────────── */
         .faq-card {
             background: #fff;
             border-radius: 14px;
@@ -219,7 +219,7 @@
         .btn-delete{ background: #fde8e8; color: #dc3545; }
         .btn-delete:hover{ background: #dc3545; color: #fff; }
 
-        /* â”€â”€â”€ Modals â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ─── Modals ──────────────────────────────────── */
         .modal-header-gold {
             background: linear-gradient(135deg, #b59349 0%, #d4af37 60%, #f1c40f 100%);
             border-radius: 12px 12px 0 0;
@@ -296,10 +296,10 @@
             padding: 10px 20px;
         }
 
-        /* â”€â”€â”€ Divider between cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ─── Divider between cards ───────────────────── */
         .faq-list { display: flex; flex-direction: column; gap: 14px; }
 
-        /* â”€â”€â”€ Scrollbar polish â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        /* ─── Scrollbar polish ────────────────────────── */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f0f2f5; }
         ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
@@ -307,40 +307,40 @@
 </head>
 <body>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+<!-- ══════════════════════════════════════════
      PAGE HEADER
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+═══════════════════════════════════════════ -->
 <div class="page-header">
     <div class="page-header-left">
-        <h1><i class="fa-solid fa-circle-question me-2" style="color:#b59349;"></i>Quáº£n LÃ½ CÃ¢u Há»i ThÆ°á»ng Gáº·p</h1>
+        <h1><i class="fa-solid fa-circle-question me-2" style="color:#b59349;"></i>Quản Lý Câu Hỏi Thường Gặp</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#"><i class="fa-solid fa-house-chimney me-1"></i>Trang chá»§</a></li>
+                <li class="breadcrumb-item"><a href="#"><i class="fa-solid fa-house-chimney me-1"></i>Trang chủ</a></li>
                 <li class="breadcrumb-item active" aria-current="page">FAQ</li>
             </ol>
         </nav>
     </div>
     <button class="btn-add-faq" data-bs-toggle="modal" data-bs-target="#addFaqModal">
-        <i class="fa-solid fa-plus"></i> ThÃªm FAQ
+        <i class="fa-solid fa-plus"></i> Thêm FAQ
     </button>
 </div>
 
 <!-- Stats strip -->
 <div class="stats-strip">
     <i class="fa-solid fa-layer-group" style="color:#b59349;"></i>
-    Tá»•ng sá»‘ cÃ¢u há»i:
+    Tổng số câu hỏi:
     <span class="stats-badge">${empty faqs ? 0 : faqs.size()}</span>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+<!-- ══════════════════════════════════════════
      FAQ LIST
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+═══════════════════════════════════════════ -->
 <c:choose>
     <c:when test="${empty faqs}">
         <div class="empty-state">
             <div class="empty-icon"><i class="fa-solid fa-circle-question"></i></div>
-            <h5>ChÆ°a cÃ³ cÃ¢u há»i nÃ o</h5>
-            <p>Nháº¥n "+ ThÃªm FAQ" Ä‘á»ƒ táº¡o cÃ¢u há»i thÆ°á»ng gáº·p Ä‘áº§u tiÃªn.</p>
+            <h5>Chưa có câu hỏi nào</h5>
+            <p>Nhấn "+ Thêm FAQ" để tạo câu hỏi thường gặp đầu tiên.</p>
         </div>
     </c:when>
     <c:otherwise>
@@ -354,7 +354,7 @@
 
                     <!-- Content -->
                     <div class="faq-body">
-                        <div class="faq-index">CÃ¢u há»i #${status.index + 1}</div>
+                        <div class="faq-index">Câu hỏi #${status.index + 1}</div>
                         <div class="faq-question">${faq.question}</div>
                         <div class="faq-answer">${faq.answer}</div>
                     </div>
@@ -363,7 +363,7 @@
                     <div class="faq-actions">
                         <!-- Edit button -->
                         <button class="btn-icon btn-edit"
-                                title="Chá»‰nh sá»­a"
+                                title="Chỉnh sửa"
                                 data-bs-toggle="modal"
                                 data-bs-target="#editFaqModal"
                                 onclick="loadEditModal('${faq.questionID}', `${faq.question}`, `${faq.answer}`)">
@@ -371,7 +371,7 @@
                         </button>
                         <!-- Delete button -->
                         <button class="btn-icon btn-delete"
-                                title="XoÃ¡"
+                                title="Xoá"
                                 onclick="confirmDelete(${faq.questionID})">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
@@ -383,48 +383,48 @@
 </c:choose>
 
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+<!-- ══════════════════════════════════════════
      ADD FAQ MODAL
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+═══════════════════════════════════════════ -->
 <div class="modal fade" id="addFaqModal" tabindex="-1" aria-labelledby="addFaqModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header-gold">
                 <div class="modal-title" id="addFaqModalLabel">
-                    <i class="fa-solid fa-plus-circle"></i> ThÃªm CÃ¢u Há»i ThÆ°á»ng Gáº·p
+                    <i class="fa-solid fa-plus-circle"></i> Thêm Câu Hỏi Thường Gặp
                 </div>
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="ÄÃ³ng"></button>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Đóng"></button>
             </div>
-            <form action="faqsStaff" method="post">
+            <form action="faqs" method="post">
                 <div class="modal-body">
                     <div class="mb-4">
                         <label for="addQuestion" class="form-label">
-                            <i class="fa-solid fa-circle-question me-1" style="color:#b59349;"></i>CÃ¢u há»i
+                            <i class="fa-solid fa-circle-question me-1" style="color:#b59349;"></i>Câu hỏi
                         </label>
                         <input type="text"
                                class="form-control"
                                id="addQuestion"
                                name="question"
-                               placeholder="Nháº­p cÃ¢u há»i thÆ°á»ng gáº·p..."
+                               placeholder="Nhập câu hỏi thường gặp..."
                                required />
                     </div>
                     <div class="mb-2">
                         <label for="addAnswer" class="form-label">
-                            <i class="fa-solid fa-message me-1" style="color:#b59349;"></i>CÃ¢u tráº£ lá»i
+                            <i class="fa-solid fa-message me-1" style="color:#b59349;"></i>Câu trả lời
                         </label>
                         <textarea class="form-control"
                                   id="addAnswer"
                                   name="answer"
-                                  placeholder="Nháº­p cÃ¢u tráº£ lá»i chi tiáº¿t..."
+                                  placeholder="Nhập câu trả lời chi tiết..."
                                   required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light btn-cancel" data-bs-dismiss="modal">
-                        <i class="fa-solid fa-xmark me-1"></i>Huá»·
+                        <i class="fa-solid fa-xmark me-1"></i>Huỷ
                     </button>
                     <button type="submit" class="btn-gold">
-                        <i class="fa-solid fa-floppy-disk me-1"></i>LÆ°u FAQ
+                        <i class="fa-solid fa-floppy-disk me-1"></i>Lưu FAQ
                     </button>
                 </div>
             </form>
@@ -433,17 +433,17 @@
 </div>
 
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+<!-- ══════════════════════════════════════════
      EDIT FAQ MODAL
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+═══════════════════════════════════════════ -->
 <div class="modal fade" id="editFaqModal" tabindex="-1" aria-labelledby="editFaqModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header-gold">
                 <div class="modal-title" id="editFaqModalLabel">
-                    <i class="fa-solid fa-pen-to-square"></i> Chá»‰nh Sá»­a CÃ¢u Há»i
+                    <i class="fa-solid fa-pen-to-square"></i> Chỉnh Sửa Câu Hỏi
                 </div>
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="ÄÃ³ng"></button>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Đóng"></button>
             </div>
             <form action="UpdateFAQsServletStaff" method="post">
                 <div class="modal-body">
@@ -451,32 +451,32 @@
 
                     <div class="mb-4">
                         <label for="editQuestion" class="form-label">
-                            <i class="fa-solid fa-circle-question me-1" style="color:#b59349;"></i>CÃ¢u há»i
+                            <i class="fa-solid fa-circle-question me-1" style="color:#b59349;"></i>Câu hỏi
                         </label>
                         <input type="text"
                                class="form-control"
                                id="editQuestion"
                                name="question"
-                               placeholder="Nháº­p cÃ¢u há»i..."
+                               placeholder="Nhập câu hỏi..."
                                required />
                     </div>
                     <div class="mb-2">
                         <label for="editAnswer" class="form-label">
-                            <i class="fa-solid fa-message me-1" style="color:#b59349;"></i>CÃ¢u tráº£ lá»i
+                            <i class="fa-solid fa-message me-1" style="color:#b59349;"></i>Câu trả lời
                         </label>
                         <textarea class="form-control"
                                   id="editAnswer"
                                   name="answer"
-                                  placeholder="Nháº­p cÃ¢u tráº£ lá»i..."
+                                  placeholder="Nhập câu trả lời..."
                                   required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light btn-cancel" data-bs-dismiss="modal">
-                        <i class="fa-solid fa-xmark me-1"></i>Huá»·
+                        <i class="fa-solid fa-xmark me-1"></i>Huỷ
                     </button>
                     <button type="submit" class="btn-gold">
-                        <i class="fa-solid fa-floppy-disk me-1"></i>Cáº­p nháº­t
+                        <i class="fa-solid fa-floppy-disk me-1"></i>Cập nhật
                     </button>
                 </div>
             </form>
@@ -485,30 +485,30 @@
 </div>
 
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+<!-- ══════════════════════════════════════════
      SCRIPTS
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+═══════════════════════════════════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    /* â”€â”€ Populate edit modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Populate edit modal ─────────────────────── */
     function loadEditModal(id, question, answer) {
         document.getElementById('editQuestionID').value = id;
         document.getElementById('editQuestion').value   = question;
         document.getElementById('editAnswer').value     = answer;
     }
 
-    /* â”€â”€ Delete with SweetAlert2 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Delete with SweetAlert2 ─────────────────── */
     function confirmDelete(questionID) {
         Swal.fire({
-            title: 'XÃ¡c nháº­n xoÃ¡?',
-            text: 'CÃ¢u há»i nÃ y sáº½ bá»‹ xoÃ¡ vÄ©nh viá»…n vÃ  khÃ´ng thá»ƒ khÃ´i phá»¥c.',
+            title: 'Xác nhận xoá?',
+            text: 'Câu hỏi này sẽ bị xoá vĩnh viễn và không thể khôi phục.',
             icon: 'warning',
             iconColor: '#b59349',
             showCancelButton: true,
             confirmButtonColor: '#dc3545',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: '<i class="fa fa-trash me-1"></i> XoÃ¡ ngay',
-            cancelButtonText: 'Huá»· bá»',
+            confirmButtonText: '<i class="fa fa-trash me-1"></i> Xoá ngay',
+            cancelButtonText: 'Huỷ bỏ',
             customClass: {
                 popup:          'swal-font',
                 title:          'swal-title',
@@ -529,4 +529,3 @@
 </script>
 </body>
 </html>
-
