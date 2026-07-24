@@ -1,4 +1,4 @@
-﻿package com.smartride.controller;
+package com.smartride.controller;
 
 import com.smartride.constant.SendEmail;
 import com.smartride.dao.AccountDAO;
