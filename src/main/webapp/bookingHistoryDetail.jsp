@@ -585,6 +585,14 @@
                                     document.addEventListener('DOMContentLoaded', () => {
                                         fetchChatMessages();
                                         setInterval(fetchChatMessages, 10000);
+                                        
+                                        const urlParams = new URLSearchParams(window.location.search);
+                                        if (urlParams.get('openChat') === 'true') {
+                                            setTimeout(() => {
+                                                const chatBox = document.getElementById('chat-messages');
+                                                if (chatBox) chatBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                            }, 300);
+                                        }
                                     });
                                 </script>
                             </div>
