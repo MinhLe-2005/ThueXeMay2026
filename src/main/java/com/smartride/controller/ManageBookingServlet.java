@@ -99,7 +99,7 @@ public class ManageBookingServlet extends HttpServlet {
                 if (amtStr != null && !amtStr.isEmpty()) {
                     try { amt = Integer.parseInt(amtStr); } catch (Exception ignored) {}
                 }
-                BookingDAO.getInstance().updateBookingStatus(bookingID, "ÄÃ£ thanh toÃ¡n");
+                BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã thanh toán");
                 com.smartride.dao.PaymentDAO daoP = com.smartride.dao.PaymentDAO.getInstance();
                 java.time.LocalDateTime currentDateTime = java.time.LocalDateTime.now();
                 java.time.format.DateTimeFormatter outputFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -117,13 +117,13 @@ public class ManageBookingServlet extends HttpServlet {
                 for(com.smartride.dto.BookingDetail bd : listBD) {
                     int mcId = bd.getMotorcycleDetailID();
                     if(mcId > 0) {
-                        daoMS.insertMotorcycleStatus(mcId, staffId, "ÄÃ£ thanh toÃ¡n cá»c", paymentDateText, "Xác nhận thủ công bởi Admin");
+                        daoMS.insertMotorcycleStatus(mcId, staffId, "Đã thanh toán cá»c", paymentDateText, "Xác nhận thủ công bởi Admin");
                     }
                 }
             } else {
                 String delistatus = request.getParameter("delistatus_" + bookingID);
                 if (delistatus != null && !delistatus.isEmpty()) {
-                    if ("ÄÃ£ giao".equals(delistatus)) {
+                    if ("Đã giao".equals(delistatus)) {
                         StringBuilder imagePathsBuilder = new StringBuilder();
                         for (int i = 1; i <= 5; i++) {
                             Part filePart = request.getPart("deliveryImage" + i + "_" + bookingID);
@@ -171,7 +171,7 @@ public class ManageBookingServlet extends HttpServlet {
                         BookingDAO.getInstance().updateDeliveryStatus(delistatus, bookingID);
                     }
                 } else {
-                    BookingDAO.getInstance().updateBookingStatus(bookingID, "ÄÃ£ xÃ¡c nháº­n");
+                    BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã xác nhận");
                     BookingDAO.getInstance().updateDeliveryStatus("Chưa giao", bookingID);
                 }
             }
@@ -189,7 +189,7 @@ public class ManageBookingServlet extends HttpServlet {
                 com.smartride.dto.Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
                 String staffId = (staff != null) ? staff.getStaffID() : "STAFF00001";
                 CancellationDAO.getInstance().insertCancellation(cancelReason, bookingID, staffId);
-                BookingDAO.getInstance().updateBookingStatus(bookingID, "ÄÃ£ há»§y");
+                BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã hủy");
 
                 // Ghi nháº­n Lý do Há»§y vÃ o Chat Ä‘á»ƒ lÃ m tin nháº¯n Ä‘áº§u tiÃªn trong cuá»™c há»™i thoáº¡i Há»— trá»£
                 try {
@@ -206,7 +206,7 @@ public class ManageBookingServlet extends HttpServlet {
                 boolean isPaid = false;
                 String amountStr = "";
                 if (payment != null) {
-                    if ("ÄÃ£ thanh toÃ¡n".equalsIgnoreCase(payment.getPaymentStatus()) || "Success".equalsIgnoreCase(payment.getPaymentStatus())) {
+                    if ("Đã thanh toán".equalsIgnoreCase(payment.getPaymentStatus()) || "Success".equalsIgnoreCase(payment.getPaymentStatus())) {
                         isPaid = true;
                         amountStr = String.format("%,.0f", payment.getPaymentAmount()) + " VNÄ";
                     }
