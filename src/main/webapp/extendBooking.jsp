@@ -2144,7 +2144,7 @@
                                     success: function(response) {
                                         if (response.overlap) {
                                             overlap = true;
-                                            alert("Không thể gia hạn! Xe đã được khách hàng khác đặt trong khoảng thời gian này.");
+                                            Swal.fire({icon: 'error', title: 'Không thể gia hạn', text: 'Xe đã được khách hàng khác đặt trong khoảng thời gian này.'});
                                         }
                                     }
                                 });

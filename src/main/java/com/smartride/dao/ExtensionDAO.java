@@ -87,13 +87,13 @@ public class ExtensionDAO implements Serializable {
         List<Extension> list = new ArrayList<>();
         PreparedStatement stm;
         ResultSet rs;
-        String sql = "SELECT ExtensionID, \n"
-                + "       TO_CHAR(ExtensionDate, 'DD-MM-YYYY HH24:MI:SS') AS ExtensionDateFormatted,\n"
-                + "       TO_CHAR(PreviousEndDate, 'DD-MM-YYYY HH24:MI:SS') AS PreviousEndDateFormatted,\n"
-                + "       TO_CHAR(NewEndDate, 'DD-MM-YYYY HH24:MI:SS') AS NewEndDateFormatted,\n"
-                + "       ExtenstionFee, \n"
-                + "       BookingID, \n"
-                + "       StaffID\n"
+        String sql = "SELECT \"ExtensionID\", \n"
+                + "       TO_CHAR(\"ExtensionDate\", 'DD-MM-YYYY HH24:MI:SS') AS ExtensionDateFormatted,\n"
+                + "       TO_CHAR(\"PreviousEndDate\", 'DD-MM-YYYY HH24:MI:SS') AS PreviousEndDateFormatted,\n"
+                + "       TO_CHAR(\"NewEndDate\", 'DD-MM-YYYY HH24:MI:SS') AS NewEndDateFormatted,\n"
+                + "       \"ExtenstionFee\", \n"
+                + "       \"BookingID\", \n"
+                + "       \"StaffID\"\n"
                 + "FROM \"Extension\";";
         try {
             stm = conn.prepareStatement(sql);
