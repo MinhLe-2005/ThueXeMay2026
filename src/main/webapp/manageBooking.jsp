@@ -369,7 +369,7 @@
                                                                             <c:set var="paid" value="${pay.paymentAmount}"/>
                                                                         </c:if>
                                                                         <c:choose>
-                                                                            <c:when test="${listB.deliveryStatus == 'Đang thuê' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành'}">
+                                                                            <c:when test="${listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành'}">
                                                                                 <span class="badge bg-success border"><i class="fas fa-check me-1"></i>Đã TT</span>
                                                                             </c:when>
                                                                             <c:when test="${empty pay || paid == 0}">
@@ -428,9 +428,9 @@
                                                                                     data-typeCard="${cus.typeCard}"
                                                                                     data-customerId="searchCustomer?id=${listB.customerID}"
                                                                                     data-cusId="${listB.customerID}"
-                                                                                    data-paymentStatus="${(listB.deliveryStatus == 'Đang thuê' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') ? 'Đã thanh toán' : (pay != null ? pay.paymentStatus : '')}"
-                                                                                    data-paymentMethod="${(listB.deliveryStatus == 'Đang thuê' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') && (pay == null || pay.paymentMethod == '') ? 'Đã thanh toán' : (pay != null ? pay.paymentMethod : '')}"
-                                                                                    data-paymentAmount="${(listB.deliveryStatus == 'Đang thuê' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') && paid == 0 ? total : (pay != null ? pay.paymentAmount : '0')}"
+                                                                                    data-paymentStatus="${(listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') ? 'Đã thanh toán' : (pay != null ? pay.paymentStatus : '')}"
+                                                                                    data-paymentMethod="${(listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') && (pay == null || pay.paymentMethod == '') ? 'Đã thanh toán' : (pay != null ? pay.paymentMethod : '')}"
+                                                                                    data-paymentAmount="${(listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') && paid == 0 ? total : (pay != null ? pay.paymentAmount : '0')}"
                                                                                     onclick="openUserModal(this)">
                                                                                 <i class="fas ${buttonIcon} me-1"></i>${buttonText}
                                                                             </button>
