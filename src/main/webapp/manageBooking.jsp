@@ -672,7 +672,7 @@
                                                         <i class="fas fa-wallet"></i>
                                                     </div>
                                                     <div>
-                                                        <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Cần thu (Còn lại)</div>
+                                                        <div id="modal-Price-Label" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Cần thu (Còn lại)</div>
                                                         <h4 style="color: #b45309; font-weight: 800; margin: 0; font-size: 24px;" id="modal-Price"></h4>
                                                     </div>
                                                 </div>
@@ -762,7 +762,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" onclick="returnModalStep()">Quay về</button>
-                                    <button type="button" id="confirmModalYesButton" class="btn btn-primary" onclick="document.getElementById('confirmForm').submit()">Có</button>
+                                    <button type="button" id="confirmModalYesButton" class="btn btn-primary" onclick="showLoader(); document.getElementById('confirmForm').submit()">Có</button>
                                 </div>
                             </div>
                         </form>
@@ -816,7 +816,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay về</button>
-                                    <button type="button" id="confirmModalCancelYesButton" class="btn btn-primary" onclick="document.getElementById('confirmFormCancel').submit()">Có</button>
+                                    <button type="button" id="confirmModalCancelYesButton" class="btn btn-primary" onclick="showLoader(); document.getElementById('confirmFormCancel').submit()">Có</button>
                                 </div>
                             </div>
                         </form>
@@ -953,7 +953,21 @@
                 </div>
             </div>
         </div>
-    </body>
+    
+<!-- Full Page Loader -->
+<div id="fullPageLoader" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.7); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(3px);">
+    <div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem; border-width: 0.25em;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="mt-3 fw-bold text-primary" style="font-size: 1.2rem; text-shadow: 0 0 10px rgba(255,255,255,0.8);">Đang xử lý, vui lòng đợi...</div>
+</div>
+<script>
+function showLoader() {
+    document.getElementById('fullPageLoader').style.display = 'flex';
+}
+</script>
+</body>
+
     <script>
         // Toggle sidebar functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -1065,7 +1079,25 @@
             modal.find('#modal-deliveryStatus').html(dSHtml);
             modal.find('#modal-countMotorcycle').text(button.getAttribute('data-countMotorcycle'));
             modal.find('#modal-nameMotorcycle').html(button.getAttribute('data-nameMotorcycle'));
-            modal.find('#modal-Price').text(button.getAttribute('data-Price'));
+            
+            var totalStr = button.getAttribute('data-Price') || '0';
+            var totalVal = parseInt(totalStr.replace(/[^0-9]/g, '')) || 0;
+            var payAmtStr = button.getAttribute('data-paymentAmount') || '0';
+            var payAmtVal = parseInt(payAmtStr) || 0;
+            var remaining = totalVal - payAmtVal;
+            if (remaining < 0) remaining = 0;
+            var remainingStr = remaining.toLocaleString('vi-VN') + ' VNĐ';
+            modal.find('#modal-Price').text(remainingStr);
+            if (remaining <= 0) {
+                modal.find('#modal-Price-Label').text('ĐÃ THANH TOÁN (FULL)');
+                modal.find('#modal-Price-Label').css('color', '#059669');
+                modal.find('#modal-Price').css('color', '#059669');
+            } else {
+                modal.find('#modal-Price-Label').text('Cần thu (Còn lại)');
+                modal.find('#modal-Price-Label').css('color', '#64748b');
+                modal.find('#modal-Price').css('color', '#b45309');
+            }
+
             modal.find('#modal-customerId').attr('data-cusName', button.getAttribute('data-cusName'));
             modal.find('#modal-customerId').attr('data-cusPhone', button.getAttribute('data-cusPhone'));
             modal.find('#modal-customerId').attr('data-cusEmail', button.getAttribute('data-cusEmail'));
@@ -1680,7 +1712,7 @@ function showHandoverModal() {
     
     // Check if there's any payment made
     var paidStr = $('#modal-paymentInfo').text();
-    var hasPaid = !paidStr.includes('Chưa thanh toán');
+    var hasPaid = (totalAmount <= 0);
     
     $('#handover-bId').text(bId);
     
