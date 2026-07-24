@@ -606,7 +606,7 @@
                             </c:if>
                             
                             <c:if test="${statusBooking == 'Đã xác nhận' && booking.deliveryStatus == 'Đã giao'}">
-                                <button type="button" class="px-4 py-2 bg-red-600 text-white rounded-xl font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-2 hover:bg-red-700 hover:shadow-md hover:-translate-y-0.5 animate-pulse" onclick="openSosModal()">
+                                <button type="button" class="px-4 py-2 rounded-xl font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 animate-pulse" style="background-color: #dc2626; color: white;" onclick="openSosModal()">
                                     <i class="fas fa-exclamation-triangle text-lg"></i> 
                                     <span>SOS Khẩn Cấp</span>
                                 </button>
@@ -700,8 +700,8 @@
                         <textarea required name="cancelreason" id="cancelReason" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50" placeholder="Nhập lý do hủy đơn của bạn..."></textarea>
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-                        <button type="button" class="px-5 py-2 border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 font-bold text-sm transition-colors cursor-pointer" onclick="closeCancellation()">Đóng</button>
-                        <button type="submit" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold text-sm shadow-md shadow-red-500/10 transition-colors cursor-pointer">Gửi yêu cầu hủy</button>
+                        <button type="button" class="px-5 py-2 rounded-xl font-bold text-sm transition-colors cursor-pointer" style="background-color: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db;" onclick="closeCancellation()">Đóng</button>
+                        <button type="submit" class="px-5 py-2 rounded-xl font-bold text-sm transition-colors cursor-pointer" style="background-color: #ef4444; color: white; border: none; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);">Gửi yêu cầu hủy</button>
                     </div>
                 </form>
             </div>
@@ -1076,10 +1076,10 @@
                 </div>
                 <p class="text-gray-600 text-sm mb-4">Hệ thống sẽ tự động lấy vị trí hiện tại của bạn cho SmartRide. Hãy cho chúng tôi biết vấn đề bạn đang gặp phải.</p>
                 <textarea id="sos-note" rows="3" class="w-full border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 mb-4" placeholder="Ví dụ: Xe lủng lốp, không nổ máy được..."></textarea>
-                <div class="flex justify-end gap-3 mt-2">
-                    <button type="button" onclick="closeSosModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors">Hủy</button>
-                    <button type="button" onclick="sendSosRequest()" class="px-5 py-2 bg-red-600 text-white rounded-xl font-bold shadow-md hover:bg-red-700 transition-colors flex items-center gap-2">
-                        <i class="fas fa-paper-plane"></i> Gửi yêu cầu
+                <div class="flex justify-end gap-3 pt-6 border-t border-gray-100">
+                    <button type="button" class="px-5 py-2 rounded-xl font-bold transition-colors" style="background-color: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db;" onclick="closeSosModal()">Hủy</button>
+                    <button type="button" onclick="sendSosRequest()" class="px-5 py-2 rounded-xl font-bold shadow-md transition-colors flex items-center gap-2" style="background-color: #dc2626; color: white;">
+                        <i class="fas fa-paper-plane"></i> Gửi yêu cầu ngay
                     </button>
                 </div>
             </div>
