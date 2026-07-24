@@ -1419,7 +1419,7 @@
             $('#confirmModalMessage').text("Bạn có chắc chắn xác nhận đơn có mã: " + bookingId + " không?");
 
             $('#formConfirmBookingID').val(bookingId);
-            $('#formConfirmDelistatus').val(delistatus);
+            $('#formConfirmDelistatus').val("");
         }
 
         function returnModalStep() {
