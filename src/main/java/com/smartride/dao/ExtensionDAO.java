@@ -1,4 +1,4 @@
-package com.smartride.dao;
+﻿package com.smartride.dao;
 
 import com.smartride.dto.Extension;
 import com.smartride.util.DBUtil;
@@ -17,8 +17,8 @@ public class ExtensionDAO implements Serializable {
     private static ExtensionDAO instance;
     private Connection conn = DBUtil.makeConnection();
 
-    // Cấm new trực tiếp DAO
-    //Chỉ new DAO qua hàm static getInstance() để quản lí được số object/instance đã new - SINGLETON DESIGN PATTERN
+    // Cáº¥m new trá»±c tiáº¿p DAO
+    //Chá»‰ new DAO qua hÃ m static getInstance() Ä‘á»ƒ quáº£n lÃ­ Ä‘Æ°á»£c sá»‘ object/instance Ä‘Ã£ new - SINGLETON DESIGN PATTERN
     private ExtensionDAO() {
     }
 
@@ -60,7 +60,7 @@ public class ExtensionDAO implements Serializable {
         PreparedStatement stm;
         ResultSet rs;
 
-        String sql = "SELECT * FROM Extension WHERE BookingID = ?";
+        String sql = "SELECT * FROM "Extension" WHERE "BookingID" = ?";
 
         try {
             stm = conn.prepareStatement(sql);
@@ -94,7 +94,7 @@ public class ExtensionDAO implements Serializable {
                 + "       ExtenstionFee, \n"
                 + "       BookingID, \n"
                 + "       StaffID\n"
-                + "FROM Extension;";
+                + "FROM "Extension";";
         try {
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
@@ -117,7 +117,7 @@ public class ExtensionDAO implements Serializable {
 
     public boolean updateExtensionByStaff(String staffId, String bookingId) {
         PreparedStatement stm;
-        String sql = "Update Extension SET StaffID = ? where BookingID = ?";
+        String sql = "Update "Extension" SET "StaffID" = ? where "BookingID" = ?";
         try {
             stm = conn.prepareStatement(sql);
             stm.setString(1, staffId);
@@ -140,3 +140,5 @@ public class ExtensionDAO implements Serializable {
     }
 
 }
+
+
