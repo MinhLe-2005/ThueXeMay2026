@@ -762,7 +762,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" onclick="returnModalStep()">Quay về</button>
-                                    <button type="button" id="confirmModalYesButton" class="btn btn-primary">Có</button>
+                                    <button type="button" id="confirmModalYesButton" class="btn btn-primary" onclick="document.getElementById('confirmForm').submit()">Có</button>
                                 </div>
                             </div>
                         </form>
@@ -793,7 +793,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" onclick="returnshowError()">Quay về</button>
-                                    <button type="button" id="confirmModalCancelButton" class="btn btn-primary" >Gửi</button>
+                                    <button type="button" id="confirmModalCancelButton" class="btn btn-primary" onclick="document.getElementById('rejectForm').submit()">Gửi</button>
                                 </div>
                             </div>
                         </form>
@@ -815,8 +815,8 @@
                                     <!-- Message will be set by JavaScript -->
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" onclick="closeDetail()">Quay về</button>
-                                    <button type="button" id="confirmModalCancelYesButton" class="btn btn-primary">Có</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay về</button>
+                                    <button type="button" id="confirmModalCancelYesButton" class="btn btn-primary" onclick="document.getElementById('confirmFormCancel').submit()">Có</button>
                                 </div>
                             </div>
                         </form>
@@ -1427,10 +1427,6 @@
             $('#confirmModal').modal('hide');
         }
 
-        $('#confirmModalYesButton').click(function () {
-            $('#confirmForm').submit();
-        });
-
         function showError() {
             var bookingId = $('#modal-bookingId').text().trim();
             var cusID = $('#modal-cusId').text();
@@ -1449,21 +1445,12 @@
             $('#RejectModal').modal('hide');
         }
 
-        $('#confirmModalCancelButton').click(function () {
-            $('#rejectForm').submit();
-        });
-
-
         function showConfirmModal(bookingId) {
             $('#confirmModalCancel').modal('show');
             $('#confirmModalCancelMessage').text("Bạn có chắc chắn xác nhận đơn hủy có mã: " + bookingId + " không?");
 
             $('#cancelBookingID').val(bookingId);
         }
-        $('#confirmModalCancelYesButton').click(function () {
-            $('#confirmFormCancel').submit();
-//            $('#tab-cancelling').tab('show');
-        });
 
         function showConfirmExtendModal(bookingId) {
             $('#confirmModalExtend').modal('show');
@@ -1471,9 +1458,6 @@
 
             $('#extendBookingID').val(bookingId);
         }
-        $('#confirmModalExtendYesButton').click(function () {
-            $('#confirmFormExtend').submit();
-        });
 
         // ===== XÁC NHẬN TRẢ XE (QUÁ HẠN) =====
         var _pendingReturnBookingId = null;
