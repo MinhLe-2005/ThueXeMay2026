@@ -5235,9 +5235,11 @@
             .then(response => response.json())
             .then(data => {
                 var address;
+                var inputEl = document.getElementById('custom_' + type + '_input');
                 if (data && data.display_name) {
                     address = data.display_name.replace(/ Ward/g, '').replace(/ District/g, '');
-                    document.getElementById('custom_' + type + '_input').value = address;
+                    inputEl.value = address;
+                    inputEl.dataset.lastAddress = address; // Lưu lại để tránh onblur gọi calcDistance thừa
                     updateCustomLocation(type);
                     processDistance(lat, lon, type);
                 } else {
@@ -5295,8 +5297,12 @@
         }
         
         function calcDistance(type) {
-            var address = document.getElementById('custom_' + type + '_input').value;
+            var inputEl = document.getElementById('custom_' + type + '_input');
+            var address = inputEl.value;
             if (!address || address.trim() === '') return;
+            
+            // Nếu địa chỉ y hệt địa chỉ vừa được click trên bản đồ (reverse geocode) thì bỏ qua
+            if (address === inputEl.dataset.lastAddress) return;
             
             var coords = parseCoordinates(address);
             if (coords) {
