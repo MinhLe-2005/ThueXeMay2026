@@ -231,6 +231,20 @@ public class VoucherDAO implements Serializable {
     }
 
     // Check if a voucher code belongs to a specific account (for personal vouchers)
+    public boolean hasMilestoneVoucher(int accountId, String tierCodePrefix) {
+        String sql = "SELECT 1 FROM \"Voucher\" WHERE \"account_id\" = ? AND \"Code\" LIKE ?";
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, accountId);
+            ps.setString(2, tierCodePrefix + "%");
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean isVoucherOwnedByAccount(String code, int accountId) {
         String sql = "SELECT 1 FROM \"Voucher\" WHERE \"Code\" = ? AND (\"account_id\" = ? OR \"account_id\" IS NULL) AND \"Status\" = 'Đang hoạt động'";
         try (Connection c = DBUtil.makeConnection();
@@ -243,5 +257,33 @@ public class VoucherDAO implements Serializable {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public java.util.List<Voucher> getAvailableVouchersForAccount(int accountId) {
+        java.util.List<Voucher> list = new java.util.ArrayList<>();
+        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\" "
+                   + "FROM \"Voucher\" "
+                   + "WHERE (\"account_id\" = ? OR \"account_id\" IS NULL) "
+                   + "AND \"Status\" = 'Đang hoạt động' "
+                   + "AND (\"max_uses\" IS NULL OR \"used_count\" IS NULL OR \"used_count\" < \"max_uses\") "
+                   + "ORDER BY \"CreatedTime\" DESC";
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, accountId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Voucher v = new Voucher();
+                v.setVoucherId(rs.getInt("VoucherID"));
+                v.setCode(rs.getString("Code"));
+                v.setDiscountAmount(rs.getDouble("DiscountAmount"));
+                v.setDescription(rs.getString("Description"));
+                v.setCreatedTime(rs.getString("CreatedTime"));
+                v.setStatus(rs.getString("Status"));
+                list.add(v);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

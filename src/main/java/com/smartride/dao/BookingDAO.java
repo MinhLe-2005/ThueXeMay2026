@@ -357,6 +357,9 @@ public class BookingDAO {
             stm.setString(2, bookingID);
             int rowAffect = stm.executeUpdate();
             if (rowAffect > 0) {
+                if ("Đã hoàn thành".equals(status)) {
+                    com.smartride.service.LoyaltyService.checkAndIssueVoucher(bookingID);
+                }
                 return true;
             }
         } catch (SQLException ex) {
