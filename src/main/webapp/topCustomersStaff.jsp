@@ -1,5 +1,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,8 +39,16 @@
             gap: 16px;
         }
         .page-header-banner .banner-icon {
-            font-size: 3rem;
-            opacity: 0.9;
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+            backdrop-filter: blur(4px);
         }
         .page-header-banner h1 {
             font-size: 1.6rem;
@@ -177,7 +186,9 @@
 
                     <!-- Page Header Banner -->
                     <div class="page-header-banner">
-                        <div class="banner-icon">🏆</div>
+                        <div class="banner-icon">
+                            <i class="bi bi-trophy-fill"></i>
+                        </div>
                         <div>
                             <h1>Bảng Xếp Hạng Khách Hàng VIP</h1>
                             <p>Top 20 khách hàng có tổng chi tiêu cao nhất &bull; Click vào dòng để xem chi tiết & lịch sử thuê xe</p>
@@ -228,8 +239,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center gap-3">
                                                     <div class="customer-avatar">
-                                                        <c:set var="initials" value="${fn:substring(customer.FullName, 0, 1)}" />
-                                                        ${fn:substring(customer.FullName, fn:length(customer.FullName)-1, fn:length(customer.FullName))}
+                                                        <i class="bi bi-person-fill"></i>
                                                     </div>
                                                     <div>
                                                         <p class="customer-name">${customer.FullName}</p>
