@@ -10,5 +10,5 @@ FROM tomcat:10.1-jdk17
 RUN sed -i 's/port="8005"/port="-1"/g' /usr/local/tomcat/conf/server.xml
 COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 EXPOSE 8080
-ENV CATALINA_OPTS="-Xms128m -Xmx350m"
+ENV CATALINA_OPTS="-Xms128m -Xmx256m -XX:MaxMetaspaceSize=128m -Xss512k"
 CMD ["catalina.sh", "run"]
