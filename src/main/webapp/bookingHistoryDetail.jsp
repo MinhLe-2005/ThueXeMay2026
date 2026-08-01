@@ -452,9 +452,6 @@
                                                 </c:if>
                                             </c:forEach>
                                         </c:if>
-                                        <c:if test="${depositAmount == 0 && not empty payment}">
-                                            <c:set var="depositAmount" value="${payment.paymentAmount}" />
-                                        </c:if>
                                         <div class="flex justify-between items-center pt-1 border-b border-white/10 pb-4">
                                             <div>
                                                 <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiền cọc (${depositAmount > 0 ? 'Đã thanh toán' : 'Chưa thanh toán'})</p>

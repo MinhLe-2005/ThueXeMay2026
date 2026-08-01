@@ -102,8 +102,11 @@ public class PaymentDAO implements Serializable {
             stm.setString(1, id);
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
-                    list.add(new Payment(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6)));
+                    Payment p = new Payment(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6));
+                    list.add(p);
+                    System.out.println("[PaymentDAO.getListByBookingId] Added payment - Amount: " + p.getPaymentAmount() + ", Status: " + p.getPaymentStatus() + ", Date: " + p.getPaymentDate());
                 }
+                System.out.println("[PaymentDAO.getListByBookingId] Total payments for " + id + ": " + list.size());
             }
         } catch (Exception ex) {
             Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
