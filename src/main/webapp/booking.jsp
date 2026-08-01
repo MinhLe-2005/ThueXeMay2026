@@ -1816,22 +1816,6 @@
                     <i class="bi bi-x-lg"></i> Hủy đặt xe
                 </a>
               
-                <!-- ===== BOOKING PROGRESS BAR ===== -->
-                <div id="booking-progress-bar" style="position:sticky; top:0; z-index:999; background:#fff; border-bottom:2px solid #f0e8d0; padding:14px 20px 12px; margin-bottom:24px; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-                    <div style="display:flex; align-items:center; justify-content:space-between; max-width:700px; margin:0 auto; position:relative;">
-                        <!-- connector line -->
-                        <div style="position:absolute; top:18px; left:calc(10% + 18px); right:calc(10% + 18px); height:3px; background:#ede8da; z-index:0; border-radius:2px;">
-                            <div id="prog-line-fill" style="height:100%; width:0%; background:linear-gradient(90deg,#b59349,#e8c76a); border-radius:2px; transition:width 0.5s ease;"></div>
-                        </div>
-                        <% String[] stepNames = {"Thời gian","Chọn xe","Phụ kiện","Thông tin","Xác nhận","Thanh toán"};
-                           for(int si=0;si<stepNames.length;si++){ %>
-                        <div class="prog-step" data-step="<%=si%>" style="display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;flex:1;">
-                            <div class="prog-circle" id="prog-circle-<%=si%>" style="width:36px;height:36px;border-radius:50%;border:3px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#aaa;transition:all 0.4s ease;"><%=si+1%></div>
-                            <div style="font-size:10px;margin-top:5px;color:#bbb;font-weight:600;white-space:nowrap;transition:color 0.4s;" id="prog-label-<%=si%>"><%=stepNames[si]%></div>
-                        </div>
-                        <% } %>
-                    </div>
-                </div>
 
                 <form method="POST" id="signup-form" class="signup-form" action="" onkeydown="return event.key !== 'Enter' || event.target.tagName === 'TEXTAREA';"
                     onsubmit="return false;">
