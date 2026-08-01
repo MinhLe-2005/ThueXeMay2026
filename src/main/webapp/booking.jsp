@@ -1885,16 +1885,16 @@
                                         <select name="pickuplocation" id="pickuplocation" class="form-label select2-location" onchange="toggleCustomLocation('pickup')" style="width: 100%;">
                                             <option value="Your own address" data-icon="fa-map-location-dot" data-highlight="true">Địa chỉ của bạn (tự nhập)</option>
                                             <option value="Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng" data-icon="fa-store" data-highlight="true" selected>Tại cửa hàng SmartRide</option>
-                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng" data-icon="fa-map-marker-alt">Ga Đà Nẵng</option>
-                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng" data-icon="fa-map-marker-alt">Sân bay Đà Nẵng</option>
-                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng" data-icon="fa-map-marker-alt">Bến xe Trung tâm</option>
-                                            <option value="Chợ Hàn - 119 Trần Phú" data-icon="fa-map-marker-alt">Chợ Hàn</option>
-                                            <option value="Vincom Plaza - 910A Ngô Quyền" data-icon="fa-map-marker-alt">Vincom Plaza</option>
-                                            <option value="Cầu Rồng - Trần Hưng Đạo" data-icon="fa-map-marker-alt">Cầu Rồng</option>
-                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa" data-icon="fa-map-marker-alt">Ngũ Hành Sơn</option>
-                                            <option value="Lotte Mart - 6 Nại Nam" data-icon="fa-map-marker-alt">Lotte Mart</option>
-                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng" data-icon="fa-map-marker-alt">Phố đi bộ Bạch Đằng</option>
-                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng" data-icon="fa-map-marker-alt">Bệnh viện Đà Nẵng</option>
+                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng" data-icon="fa-map-marker-alt" data-lat="16.0747" data-lon="108.2132">Ga Đà Nẵng</option>
+                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng" data-icon="fa-map-marker-alt" data-lat="16.0538" data-lon="108.1977">Sân bay Đà Nẵng</option>
+                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng" data-icon="fa-map-marker-alt" data-lat="16.0520" data-lon="108.1691">Bến xe Trung tâm</option>
+                                            <option value="Chợ Hàn - 119 Trần Phú" data-icon="fa-map-marker-alt" data-lat="16.0682" data-lon="108.2235">Chợ Hàn</option>
+                                            <option value="Vincom Plaza - 910A Ngô Quyền" data-icon="fa-map-marker-alt" data-lat="16.0722" data-lon="108.2307">Vincom Plaza</option>
+                                            <option value="Cầu Rồng - Trần Hưng Đạo" data-icon="fa-map-marker-alt" data-lat="16.0610" data-lon="108.2274">Cầu Rồng</option>
+                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa" data-icon="fa-map-marker-alt" data-lat="16.0028" data-lon="108.2635">Ngũ Hành Sơn</option>
+                                            <option value="Lotte Mart - 6 Nại Nam" data-icon="fa-map-marker-alt" data-lat="16.0343" data-lon="108.2255">Lotte Mart</option>
+                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng" data-icon="fa-map-marker-alt" data-lat="16.0667" data-lon="108.2244">Phố đi bộ Bạch Đằng</option>
+                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng" data-icon="fa-map-marker-alt" data-lat="16.0734" data-lon="108.2163">Bệnh viện Đà Nẵng</option>
                                         </select>
                                         <div id="pickup_distance_info" style="font-size: 13px; color: #64748b; margin-top: 8px;"></div>
                                         <div id="pickup_custom_wrapper" style="display:none; margin-top:8px;">
@@ -1910,16 +1910,16 @@
                                         <select name="returnlocation" id="returnlocation" class="form-label select2-location" onchange="toggleCustomLocation('return')" style="width: 100%;">
                                             <option value="Your own address" data-icon="fa-map-location-dot" data-highlight="true">Địa chỉ của bạn (tự nhập)</option>
                                             <option value="Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng" data-icon="fa-store" data-highlight="true" selected>Tại cửa hàng SmartRide</option>
-                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng" data-icon="fa-map-marker-alt">Ga Đà Nẵng</option>
-                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng" data-icon="fa-map-marker-alt">Sân bay Đà Nẵng</option>
-                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng" data-icon="fa-map-marker-alt">Bến xe Trung tâm</option>
-                                            <option value="Chợ Hàn - 119 Trần Phú" data-icon="fa-map-marker-alt">Chợ Hàn</option>
-                                            <option value="Vincom Plaza - 910A Ngô Quyền" data-icon="fa-map-marker-alt">Vincom Plaza</option>
-                                            <option value="Cầu Rồng - Trần Hưng Đạo" data-icon="fa-map-marker-alt">Cầu Rồng</option>
-                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa" data-icon="fa-map-marker-alt">Ngũ Hành Sơn</option>
-                                            <option value="Lotte Mart - 6 Nại Nam" data-icon="fa-map-marker-alt">Lotte Mart</option>
-                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng" data-icon="fa-map-marker-alt">Phố đi bộ Bạch Đằng</option>
-                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng" data-icon="fa-map-marker-alt">Bệnh viện Đà Nẵng</option>
+                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng" data-icon="fa-map-marker-alt" data-lat="16.0747" data-lon="108.2132">Ga Đà Nẵng</option>
+                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng" data-icon="fa-map-marker-alt" data-lat="16.0538" data-lon="108.1977">Sân bay Đà Nẵng</option>
+                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng" data-icon="fa-map-marker-alt" data-lat="16.0520" data-lon="108.1691">Bến xe Trung tâm</option>
+                                            <option value="Chợ Hàn - 119 Trần Phú" data-icon="fa-map-marker-alt" data-lat="16.0682" data-lon="108.2235">Chợ Hàn</option>
+                                            <option value="Vincom Plaza - 910A Ngô Quyền" data-icon="fa-map-marker-alt" data-lat="16.0722" data-lon="108.2307">Vincom Plaza</option>
+                                            <option value="Cầu Rồng - Trần Hưng Đạo" data-icon="fa-map-marker-alt" data-lat="16.0610" data-lon="108.2274">Cầu Rồng</option>
+                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa" data-icon="fa-map-marker-alt" data-lat="16.0028" data-lon="108.2635">Ngũ Hành Sơn</option>
+                                            <option value="Lotte Mart - 6 Nại Nam" data-icon="fa-map-marker-alt" data-lat="16.0343" data-lon="108.2255">Lotte Mart</option>
+                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng" data-icon="fa-map-marker-alt" data-lat="16.0667" data-lon="108.2244">Phố đi bộ Bạch Đằng</option>
+                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng" data-icon="fa-map-marker-alt" data-lat="16.0734" data-lon="108.2163">Bệnh viện Đà Nẵng</option>
                                         </select>
                                         <div id="return_distance_info" style="font-size: 13px; color: #64748b; margin-top: 8px;"></div>
                                         <div id="return_custom_wrapper" style="display:none; margin-top:8px;">
@@ -1938,20 +1938,9 @@
                                             var info = document.getElementById(type + '_distance_info');
                                             var selectedOption = select.options[select.selectedIndex];
                                             
-                                            var predefinedCoords = {
-                                                "Ga Đà Nẵng": {lat: 16.0747, lon: 108.2132},
-                                                "Sân bay": {lat: 16.0538, lon: 108.1977},
-                                                "Bến xe": {lat: 16.0520, lon: 108.1691},
-                                                "Chợ Hàn": {lat: 16.0682, lon: 108.2235},
-                                                "Vincom": {lat: 16.0722, lon: 108.2307},
-                                                "Cầu Rồng": {lat: 16.0610, lon: 108.2274},
-                                                "Ngũ Hành Sơn": {lat: 16.0028, lon: 108.2635},
-                                                "Lotte Mart": {lat: 16.0343, lon: 108.2255},
-                                                "Bạch Đằng": {lat: 16.0667, lon: 108.2244},
-                                                "Bệnh viện": {lat: 16.0734, lon: 108.2163}
-                                            };
+                                            var val = select.value;
                                             
-                                            if (selectedOption.text.includes('(tự nhập)')) {
+                                            if (val === 'Your own address') {
                                                 wrapper.style.display = 'block';
                                                 input.required = true;
                                                 if (input.value) {
@@ -1968,7 +1957,7 @@
                                                 wrapper.style.display = 'none';
                                                 input.required = false;
                                                 
-                                                if (selectedOption.text.includes('Tại cửa hàng')) {
+                                                if (val.includes('Tại cửa hàng')) {
                                                     info.innerHTML = '<span style="color:#16a34a;"><i class="fas fa-check-circle"></i> Nhận/Trả tại cửa hàng (Miễn phí)</span>';
                                                     if (type === 'pickup') window._pickupFee = 0;
                                                     else window._returnFee = 0;
@@ -1976,14 +1965,9 @@
                                                     if(typeof changePrice === 'function') changePrice();
                                                     if(typeof maps !== 'undefined' && maps[type]) document.getElementById(type + '_map').style.display = 'none';
                                                 } else {
-                                                    var lat = 0, lon = 0;
-                                                    for (var key in predefinedCoords) {
-                                                        if (selectedOption.text.includes(key)) {
-                                                            lat = predefinedCoords[key].lat;
-                                                            lon = predefinedCoords[key].lon;
-                                                            break;
-                                                        }
-                                                    }
+                                                    var lat = parseFloat(selectedOption.getAttribute('data-lat')) || 0;
+                                                    var lon = parseFloat(selectedOption.getAttribute('data-lon')) || 0;
+                                                    
                                                     if (lat !== 0) {
                                                         if (typeof initMap === 'function') initMap(type);
                                                         if (typeof maps !== 'undefined' && maps[type] && markers[type]) {
