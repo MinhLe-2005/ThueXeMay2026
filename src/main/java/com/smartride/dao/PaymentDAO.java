@@ -69,7 +69,7 @@ public class PaymentDAO implements Serializable {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, bookingId);
             ps.setString(2, method);
-            ps.setString(3, paymentDate);
+            ps.setTimestamp(3, java.sql.Timestamp.valueOf(paymentDate));
             ps.setDouble(4, amount);
             ps.setString(5, status);
             ps.executeUpdate();
@@ -80,7 +80,7 @@ public class PaymentDAO implements Serializable {
                  PreparedStatement freshPs = freshConn.prepareStatement(sql)) {
                 freshPs.setString(1, bookingId);
                 freshPs.setString(2, method);
-                freshPs.setString(3, paymentDate);
+                freshPs.setTimestamp(3, java.sql.Timestamp.valueOf(paymentDate));
                 freshPs.setDouble(4, amount);
                 freshPs.setString(5, status);
                 freshPs.executeUpdate();
