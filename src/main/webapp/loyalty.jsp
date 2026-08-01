@@ -207,6 +207,10 @@
             color: #d4af37;
             letter-spacing: 1px;
         }
+        @keyframes shimmer {
+            0%   { left: -30px; }
+            100% { left: 110%; }
+        }
     </style>
 </head>
 <body style="background-color: #f4f6f9; color: #333;">
@@ -258,18 +262,57 @@
                     <fmt:formatNumber value="<%= spent %>" type="currency" currencySymbol="đ" maxFractionDigits="0" />
                 </div>
                 
-                <div class="progress-wrapper">
-                    <div class="progress-labels">
-                        <span>Hạng hiện tại</span>
-                        <% if (!tier.equals("DIAMOND")) { %>
-                            <span>Cần <fmt:formatNumber value="<%= nextMilestone - spent %>" type="currency" currencySymbol="đ" maxFractionDigits="0" /> nữa để lên hạng</span>
-                        <% } else { %>
-                            <span>Bạn đã đạt hạng cao nhất!</span>
-                        <% } %>
+                <div class="progress-wrapper" style="margin-top: 18px;">
+                    <%
+                        // Progress from 0 → 10,000,000 (max milestone)
+                        float maxMilestone = 10000000f;
+                        float overallPct = Math.min(100f, (spent / maxMilestone) * 100f);
+                        float pct2M = Math.min(100f, (2000000f / maxMilestone) * 100f); // 20%
+                        float pct5M = Math.min(100f, (5000000f / maxMilestone) * 100f); // 50%
+                        float pct10M = 100f;
+                    %>
+
+                    <!-- Labels top -->
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; opacity:0.85; font-weight:600;">
+                        <span>0đ</span>
+                        <span style="position:relative; left:-10px;">2.000.000đ<br><span style="font-size:10px; opacity:0.75;">Hạng Bạc</span></span>
+                        <span style="position:relative; right:-5px;">5.000.000đ<br><span style="font-size:10px; opacity:0.75;">Hạng Vàng</span></span>
+                        <span>10.000.000đ<br><span style="font-size:10px; opacity:0.75;">Kim Cương</span></span>
                     </div>
-                    <div style="width: 100%; background-color: rgba(255, 255, 255, 0.4); height: 16px; border-radius: 8px; margin-top: 10px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
-                        <div style="background: linear-gradient(90deg, #ffd700, #ff8c00); height: 100%; width: <%= progressPercent %>%; border-radius: 8px; box-shadow: 0 0 12px rgba(255,215,0,0.6); transition: width 1s ease;"></div>
+
+                    <!-- Bar container -->
+                    <div style="position:relative; width:100%; height:18px; border-radius:9px; background:rgba(255,255,255,0.3); box-shadow: inset 0 2px 5px rgba(0,0,0,0.3); overflow:visible;">
+                        <!-- Fill -->
+                        <div style="position:absolute; top:0; left:0; height:100%; width:<%= overallPct %>%; background:linear-gradient(90deg, #ffd700, #ff8c00); border-radius:9px; box-shadow:0 0 12px rgba(255,200,0,0.7); transition:width 1.2s ease; overflow:hidden;">
+                            <!-- Shimmer effect -->
+                            <div style="position:absolute; top:0; left:-30px; width:20px; height:100%; background:rgba(255,255,255,0.35); transform:skewX(-20deg); animation:shimmer 2.5s infinite;" ></div>
+                        </div>
+
+                        <!-- Milestone tick: 2M -->
+                        <div style="position:absolute; top:-4px; left:<%= pct2M %>%; transform:translateX(-50%); z-index:2;">
+                            <div style="width:10px; height:26px; background:<%= spent >= 2000000f ? \"#ffd700\" : \"rgba(255,255,255,0.5)\" %>; border-radius:3px; border:2px solid rgba(255,255,255,0.8);"></div>
+                        </div>
+
+                        <!-- Milestone tick: 5M -->
+                        <div style="position:absolute; top:-4px; left:<%= pct5M %>%; transform:translateX(-50%); z-index:2;">
+                            <div style="width:10px; height:26px; background:<%= spent >= 5000000f ? \"#ffd700\" : \"rgba(255,255,255,0.5)\" %>; border-radius:3px; border:2px solid rgba(255,255,255,0.8);"></div>
+                        </div>
                     </div>
+
+                    <!-- Current spending marker label -->
+                    <div style="position:relative; margin-top:10px; height:20px;">
+                        <div style="position:absolute; left:<%= overallPct %>%; transform:translateX(-50%); background:rgba(255,255,255,0.95); color:#b59349; font-weight:700; font-size:11px; padding:2px 8px; border-radius:10px; white-space:nowrap; box-shadow:0 2px 6px rgba(0,0,0,0.2); border:1.5px solid #e8c76a;">
+                            📍 <%= String.format("%,.0f", spent) %>đ
+                        </div>
+                    </div>
+
+                    <% if (!tier.equals("DIAMOND")) { %>
+                    <div style="margin-top:24px; font-size:13px; opacity:0.9; text-align:right;">
+                        Còn <strong><fmt:formatNumber value="<%= nextMilestone - spent %>" type="currency" currencySymbol="đ" maxFractionDigits="0" /></strong> nữa để lên hạng tiếp theo
+                    </div>
+                    <% } else { %>
+                    <div style="margin-top:24px; font-size:13px; opacity:0.9; text-align:right; font-weight:700;">🏆 Bạn đã đạt hạng cao nhất!</div>
+                    <% } %>
                 </div>
             </div>
             <div class="loyalty-icon" style="z-index: 1;">
