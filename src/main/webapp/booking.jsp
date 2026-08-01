@@ -1816,6 +1816,23 @@
                     <i class="bi bi-x-lg"></i> Hủy đặt xe
                 </a>
               
+                <!-- ===== BOOKING PROGRESS BAR ===== -->
+                <div id="booking-progress-bar" style="position:sticky; top:0; z-index:999; background:#fff; border-bottom:2px solid #f0e8d0; padding:14px 20px 12px; margin-bottom:24px; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+                    <div style="display:flex; align-items:center; justify-content:space-between; max-width:700px; margin:0 auto; position:relative;">
+                        <!-- connector line -->
+                        <div style="position:absolute; top:18px; left:calc(10% + 18px); right:calc(10% + 18px); height:3px; background:#ede8da; z-index:0; border-radius:2px;">
+                            <div id="prog-line-fill" style="height:100%; width:0%; background:linear-gradient(90deg,#b59349,#e8c76a); border-radius:2px; transition:width 0.5s ease;"></div>
+                        </div>
+                        <% String[] stepNames = {"Thời gian","Chọn xe","Phụ kiện","Thông tin","Xác nhận","Thanh toán"};
+                           for(int si=0;si<stepNames.length;si++){ %>
+                        <div class="prog-step" data-step="<%=si%>" style="display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;flex:1;">
+                            <div class="prog-circle" id="prog-circle-<%=si%>" style="width:36px;height:36px;border-radius:50%;border:3px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#aaa;transition:all 0.4s ease;"><%=si+1%></div>
+                            <div style="font-size:10px;margin-top:5px;color:#bbb;font-weight:600;white-space:nowrap;transition:color 0.4s;" id="prog-label-<%=si%>"><%=stepNames[si]%></div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+
                 <form method="POST" id="signup-form" class="signup-form" action="" onkeydown="return event.key !== 'Enter' || event.target.tagName === 'TEXTAREA';"
                     onsubmit="return false;">
                     
@@ -2701,7 +2718,7 @@
                         confirmPaymentMethod();
                     },
                     onStepChanged: function (event, currentIndex, priorIndex) {
-
+                        updateBookingProgress(currentIndex);
                         var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
                         storedFormData = {
                                 pickupdate: document.getElementById('pickupdate').value,
@@ -4349,6 +4366,16 @@
                 msgEl.textContent = 'Vui lòng nhập mã voucher';
                 return;
             }
+
+            // Check minimum order value: must be >= 300,000đ
+            const MIN_ORDER = 300000;
+            const currentTotal = parseInt((document.getElementById('finalTotal') || {}).value) || 0;
+            if (currentTotal > 0 && currentTotal < MIN_ORDER) {
+                msgEl.style.color = '#dc2626';
+                msgEl.textContent = '✗ Voucher chỉ áp dụng cho đơn từ ' + MIN_ORDER.toLocaleString('vi-VN') + 'đ trở lên. Đơn của bạn hiện là ₫' + currentTotal.toLocaleString('vi-VN') + '.';
+                return;
+            }
+
             msgEl.style.color = '#6b7280';
             msgEl.textContent = 'Đang kiểm tra...';
 
@@ -4791,6 +4818,48 @@
         });
 
         // Voucher được xử lý qua hàm applyVoucher() ở script phía trên (kết nối servlet /applyVoucher → database)
+
+        // ===== BOOKING PROGRESS BAR =====
+        function updateBookingProgress(activeStep) {
+            var totalSteps = 6;
+            for (var i = 0; i < totalSteps; i++) {
+                var circle = document.getElementById('prog-circle-' + i);
+                var label  = document.getElementById('prog-label-' + i);
+                if (!circle || !label) continue;
+                if (i < activeStep) {
+                    // Completed
+                    circle.style.background    = 'linear-gradient(135deg,#b59349,#e8c76a)';
+                    circle.style.borderColor   = '#b59349';
+                    circle.style.color         = '#fff';
+                    circle.innerHTML           = '&#10003;';
+                    label.style.color          = '#b59349';
+                } else if (i === activeStep) {
+                    // Active
+                    circle.style.background    = '#fff';
+                    circle.style.borderColor   = '#b59349';
+                    circle.style.color         = '#b59349';
+                    circle.style.boxShadow     = '0 0 0 4px rgba(181,147,73,0.18)';
+                    circle.innerHTML           = (i + 1);
+                    label.style.color          = '#b59349';
+                    label.style.fontWeight     = '700';
+                } else {
+                    // Upcoming
+                    circle.style.background    = '#fff';
+                    circle.style.borderColor   = '#ddd';
+                    circle.style.color         = '#bbb';
+                    circle.style.boxShadow     = 'none';
+                    circle.innerHTML           = (i + 1);
+                    label.style.color          = '#bbb';
+                    label.style.fontWeight     = '600';
+                }
+            }
+            // Update connector fill: (activeStep / (totalSteps-1)) * 100%
+            var pct = (activeStep / (totalSteps - 1)) * 100;
+            var fill = document.getElementById('prog-line-fill');
+            if (fill) fill.style.width = pct + '%';
+        }
+        // Initialise on load
+        updateBookingProgress(0);
         </script>
     <!-- Select2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

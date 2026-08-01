@@ -267,8 +267,8 @@
                             <span>Bạn đã đạt hạng cao nhất!</span>
                         <% } %>
                     </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: <%= progressPercent %>%;"></div>
+                    <div style="width: 100%; background-color: rgba(255, 255, 255, 0.4); height: 16px; border-radius: 8px; margin-top: 10px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
+                        <div style="background: linear-gradient(90deg, #ffd700, #ff8c00); height: 100%; width: <%= progressPercent %>%; border-radius: 8px; box-shadow: 0 0 12px rgba(255,215,0,0.6); transition: width 1s ease;"></div>
                     </div>
                 </div>
             </div>
