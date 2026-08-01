@@ -1930,14 +1930,12 @@
                                         </div>
                                         <div id="return_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
                                     </div>
-                                    <script>
+                                        <script>
                                         function toggleCustomLocation(type) {
                                             var select = document.getElementById(type + 'location');
                                             var wrapper = document.getElementById(type + '_custom_wrapper');
                                             var input = document.getElementById('custom_' + type + '_input');
                                             var info = document.getElementById(type + '_distance_info');
-                                            var selectedOption = select.options[select.selectedIndex];
-                                            
                                             var val = select.value;
                                             
                                             if (val === 'Your own address') {
@@ -1965,8 +1963,10 @@
                                                     if(typeof changePrice === 'function') changePrice();
                                                     if(typeof maps !== 'undefined' && maps[type]) document.getElementById(type + '_map').style.display = 'none';
                                                 } else {
-                                                    var lat = parseFloat(selectedOption.getAttribute('data-lat')) || 0;
-                                                    var lon = parseFloat(selectedOption.getAttribute('data-lon')) || 0;
+                                                    // Dùng jQuery để lấy option an toàn tuyệt đối
+                                                    var $selected = $('#' + type + 'location').find('option:selected');
+                                                    var lat = parseFloat($selected.attr('data-lat')) || 0;
+                                                    var lon = parseFloat($selected.attr('data-lon')) || 0;
                                                     
                                                     if (lat !== 0) {
                                                         if (typeof initMap === 'function') initMap(type);
@@ -1978,6 +1978,10 @@
                                                         if (typeof processDistance === 'function') {
                                                             processDistance(lat, lon, type);
                                                         }
+                                                    } else {
+                                                        // Fallback nếu không có data-lat
+                                                        if(typeof maps !== 'undefined' && maps[type]) document.getElementById(type + '_map').style.display = 'none';
+                                                        info.innerHTML = '';
                                                     }
                                                 }
                                             }
