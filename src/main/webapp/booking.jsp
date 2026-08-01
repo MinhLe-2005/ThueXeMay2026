@@ -5317,7 +5317,16 @@
             var info = document.getElementById(type + '_distance_info');
             info.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tìm kiếm địa chỉ...';
             
-            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address + ', Đà Nẵng, Việt Nam') + '&accept-language=vi&limit=1&email=contact@smartride.vn')
+            // "Smart" Parsing: Xóa bỏ các tiền tố quá chi tiết (Lô, Số, Kiệt, Hẻm) để OSM dễ tìm ra Tên Đường hơn
+            var cleanAddress = address
+                .replace(/^(lô|lo)\s+[a-zA-Z0-9-]+\s*,?\s*/i, '')
+                .replace(/^(số|số nhà|so|so nha)\s*\d+[a-zA-Z]?\s*,?\s*/i, '')
+                .replace(/^(kiệt|kiet)\s*\d+\s*,?\s*/i, '')
+                .replace(/^(hẻm|hem)\s*\d+\s*,?\s*/i, '')
+                .replace(/^(ngõ|ngo)\s*\d+\s*,?\s*/i, '')
+                .trim();
+            
+            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(cleanAddress + ', Đà Nẵng, Việt Nam') + '&accept-language=vi&limit=1&email=contact@smartride.vn')
             .then(function(response) { return response.json(); })
             .then(function(data) {
                 if (data && data.length > 0) {
