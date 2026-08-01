@@ -113,29 +113,27 @@ public class NotificationSchedulerListener implements ServletContextListener {
                 long minutesToStart = Duration.between(now, startDate).toMinutes();
                 long minutesToEnd = Duration.between(now, endDate).toMinutes();
                 
-                // Get tracker flags
+                // Get tracker flags using simple statement to avoid PSQLException prepared statement conflict
                 boolean pickup1h = false, pickup30m = false;
                 boolean return2h = false, return1h = false, return30m = false;
                 
-                PreparedStatement psTracker = conn.prepareStatement("SELECT * FROM notification_tracker WHERE booking_id = ?");
-                psTracker.setString(1, bookingId);
-                ResultSet rsTracker = psTracker.executeQuery();
-                
-                if (rsTracker.next()) {
-                    pickup1h = rsTracker.getBoolean("pickup_1h");
-                    pickup30m = rsTracker.getBoolean("pickup_30m");
-                    return2h = rsTracker.getBoolean("return_2h");
-                    return1h = rsTracker.getBoolean("return_1h");
-                    return30m = rsTracker.getBoolean("return_30m");
-                } else {
-                    // Create new tracker row
-                    PreparedStatement psInsert = conn.prepareStatement("INSERT INTO notification_tracker (booking_id) VALUES (?)");
-                    psInsert.setString(1, bookingId);
-                    psInsert.executeUpdate();
-                    psInsert.close();
+                try (PreparedStatement psTracker = conn.prepareStatement("SELECT * FROM notification_tracker WHERE booking_id = ?")) {
+                    psTracker.setString(1, bookingId);
+                    try (ResultSet rsTracker = psTracker.executeQuery()) {
+                        if (rsTracker.next()) {
+                            pickup1h = rsTracker.getBoolean("pickup_1h");
+                            pickup30m = rsTracker.getBoolean("pickup_30m");
+                            return2h = rsTracker.getBoolean("return_2h");
+                            return1h = rsTracker.getBoolean("return_1h");
+                            return30m = rsTracker.getBoolean("return_30m");
+                        } else {
+                            try (PreparedStatement psInsert = conn.prepareStatement("INSERT INTO notification_tracker (booking_id) VALUES (?)")) {
+                                psInsert.setString(1, bookingId);
+                                psInsert.executeUpdate();
+                            }
+                        }
+                    }
                 }
-                rsTracker.close();
-                psTracker.close();
                 
                 Customer customer = customerDAO.getCustomerbyID(customerId);
                 if (customer == null) continue;

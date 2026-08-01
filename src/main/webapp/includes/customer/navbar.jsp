@@ -99,6 +99,12 @@
                         </div>
                     </div>
                 </div>
+                
+                <c:if test="${sessionScope.account.roleID == 2 or sessionScope.account.roleID == 3}">
+                    <a href="manageSmartRide.jsp?iframeSrc=homeStaff" class="nav-action-icon position-relative d-flex align-items-center text-decoration-none" title="Trang Quản Trị" style="color: #ffffff; transition: all 0.3s; background-color: #b59349; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 600;" onmouseover="this.style.transform='scale(1.05)'; this.style.backgroundColor='#9b7a37';" onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#b59349';">
+                        <i class="fas fa-user-shield me-2"></i> Quản lý
+                    </a>
+                </c:if>
             </div>
 
             <div class="user-menu-wrap">
@@ -149,13 +155,21 @@
                                                 </li>-->
                         <div class="user-menu__item">
                             <a class="user-menu-link" href="profileCustomer.jsp">
-                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1604623/team.png" alt="team_icon" width=20 height=20 >
+                                <i class="fas fa-user-circle" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
                                 <div>Thông tin cá nhân</div>
                             </a>
                         </div>
+                        <c:if test="${sessionScope.account != null && (sessionScope.account.roleID == 2 || sessionScope.account.roleID == 3)}">
+                        <div class="user-menu__item">
+                            <a class="user-menu-link" href="manageSmartRide.jsp?iframeSrc=homeStaff">
+                                <i class="fas fa-user-shield" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
+                                <div>Trang Quản Trị</div>
+                            </a>
+                        </div>
+                        </c:if>
                         <div class="user-menu__item">
                             <a class="user-menu-link" href="bookingHistory?status=all">
-                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1604623/book.png" alt="team_icon" width=20 height=20 >
+                                <i class="fas fa-file-invoice" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
                                 <div>Quản lý đặt hàng</div>
                             </a>
                         </div>

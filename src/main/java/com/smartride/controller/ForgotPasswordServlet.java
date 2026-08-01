@@ -33,6 +33,13 @@ public class ForgotPasswordServlet extends HttpServlet {
         String token = UUID.randomUUID().toString();
         String email = request.getParameter("email");
         if(dao.createToken(token, email)){
+            String baseUrl = request.getScheme() + "://" + request.getServerName() 
+                + (request.getServerPort() != 80 && request.getServerPort() != 443 ? ":" + request.getServerPort() : "")
+                + request.getContextPath();
+            String resetLink = baseUrl + "/verify?token=" + token;
+            String homeLink = baseUrl + "/home";
+            String forgotLink = baseUrl + "/forgotPassword.jsp";
+
             String link = "<!DOCTYPE html>\n" +
                 "<html lang=\"vi\">\n" +
                 "<head>\n" +
@@ -60,12 +67,12 @@ public class ForgotPasswordServlet extends HttpServlet {
                 "        <div class=\"content\">\n" +
                 "            <h2 class=\"title\">Yêu cầu đặt lại mật khẩu</h2>\n" +
                 "            <p class=\"message\">Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn tại <strong>SmartRide</strong>. Nếu đây là bạn, vui lòng nhấn vào nút bên dưới để tiến hành đổi mật khẩu mới.</p>\n" +
-                "            <a href='http://localhost:8080/MotorcyleHiringProject/verify?token=" + token + "' class=\"btn-reset\">Đặt lại mật khẩu</a>\n" +
+                "            <a href='" + resetLink + "' class=\"btn-reset\">Đặt lại mật khẩu</a>\n" +
                 "            <p class=\"message\" style=\"font-size: 14px; margin-bottom: 0;\">Liên kết này sẽ hết hạn sau <strong>5 phút</strong>.<br>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>\n" +
                 "        </div>\n" +
                 "        <div class=\"footer\">\n" +
                 "            <p>Đội ngũ hỗ trợ khách hàng SmartRide<br>\n" +
-                "            <a href=\"http://localhost:8080/MotorcyleHiringProject/home\">Truy cập trang chủ</a> | <a href=\"http://localhost:8080/MotorcyleHiringProject/forgotPassword.jsp\">Yêu cầu link mới</a></p>\n" +
+                "            <a href=\"" + homeLink + "\">Truy cập trang chủ</a> | <a href=\"" + forgotLink + "\">Yêu cầu link mới</a></p>\n" +
                 "        </div>\n" +
                 "    </div>\n" +
                 "</body>\n" +

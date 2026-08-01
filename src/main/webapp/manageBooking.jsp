@@ -125,137 +125,6 @@
                 box-shadow: none !important;
             }
 
-            /* --- Premium Table Styles --- */
-            .e-panel.card {
-                border-radius: 16px;
-                box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04);
-                border: none;
-                background: #ffffff;
-            }
-            .table-responsive {
-                border-radius: 8px !important;
-                border: 1px solid #e2e8f0 !important;
-            }
-            .table {
-                margin-bottom: 0;
-            }
-            .table thead th {
-                background: #f8fafc !important; 
-                color: #1e293b !important; 
-                font-size: 0.85rem !important;
-                font-weight: 800 !important;
-                text-transform: uppercase !important;
-                letter-spacing: 0.5px !important;
-                border: none !important; 
-                border-bottom: 2px solid #cbd5e1 !important;
-                border-right: 1px solid #e2e8f0 !important;
-                padding: 16px 16px !important;
-                text-align: center;
-                vertical-align: middle;
-                white-space: nowrap; 
-            }
-            .table thead th:last-child {
-                border-right: none !important;
-            }
-            .table tbody td, .table tbody th {
-                background: transparent;
-                vertical-align: middle;
-                border: none !important;
-                border-bottom: 1px solid #cbd5e1 !important; 
-                border-right: 1px solid #cbd5e1 !important;
-                padding: 14px 16px !important; 
-                color: #1e293b; 
-                font-weight: 500;
-                font-size: 14px;
-                text-align: center;
-                transition: background-color 0.2s ease;
-                white-space: nowrap;
-            }
-            .table tbody td:last-child, .table tbody th:last-child {
-                border-right: none !important;
-            }
-            .table tbody tr:last-child td, .table tbody tr:last-child th {
-                border-bottom: none !important;
-            }
-            .table tbody tr:hover td, .table tbody tr:hover th {
-                background: #f8f9fa !important;
-            }
-            .table-bordered {
-                border: none !important;
-            }
-            .btn {
-                border-radius: 8px;
-                padding: 6px 12px;
-                font-weight: 600;
-                font-size: 13px;
-                transition: all 0.2s ease;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .modal {
-                font-family: 'Inter', 'Segoe UI', sans-serif;
-            }
-            .form-select {
-                border-radius: 8px;
-                border: 1px solid #e2e8f0;
-                font-size: 13px;
-                font-weight: 500;
-                color: #475569;
-                padding: 6px 30px 6px 12px;
-                box-shadow: none;
-            }
-            .form-select option {
-                background-color: #ffffff !important;
-                color: #1e293b !important;
-                font-weight: 500;
-            }
-            .form-select:disabled {
-                background-color: #f8fafc;
-                border-color: transparent;
-                color: #64748b;
-                font-weight: 600;
-                text-align: center;
-                padding: 6px 12px;
-                appearance: none;
-            }
-            .btn-success {
-                background: #ecfdf5 !important;
-                color: #059669 !important;
-                border: 1px solid #10b981 !important;
-                box-shadow: none !important;
-            }
-            .btn-success:hover:not(:disabled) {
-                background: #d1fae5 !important;
-            }
-            .btn-warning {
-                background: #fffbeb !important;
-                color: #d97706 !important;
-                border: 1px solid #fbbf24 !important;
-                box-shadow: none !important;
-            }
-            .btn-warning:hover:not(:disabled) {
-                background: #fef3c7 !important;
-            }
-            .btn-primary {
-                background: #eff6ff !important;
-                color: #2563eb !important;
-                border: 1px solid #3b82f6 !important;
-                box-shadow: none !important;
-            }
-            .btn-primary:hover:not(:disabled) {
-                background: #dbeafe !important;
-            }
-            .btn-info {
-                background: #f8fafc !important;
-                color: #0f172a !important;
-                border: 1px solid #cbd5e1 !important;
-                box-shadow: none !important;
-            }
-            .btn-info:hover:not(:disabled) {
-                background: #e2e8f0 !important;
-            }
-
             .status-returned {
                 background-color: #ecfdf5 !important; 
                 color: #059669 !important;
@@ -489,7 +358,7 @@
                                                                                     </c:when>
                                                                                     <c:otherwise>
                                                                                         <c:set var="statusClass" value="${listB.deliveryStatus == 'Đã trả' ? 'status-returned' : (listB.deliveryStatus == 'Đã giao' ? 'status-delivered' : (listB.deliveryStatus == 'Chưa giao' ? 'status-pending' : 'status-empty'))}" />
-                                                                                        <select name="delistatus_${listB.bookingID}" id="status-${listB.bookingID}" class="form-select form-select-sm ${statusClass}" aria-label="Trạng thái" onchange="document.getElementById('form-update-${listB.bookingID}').submit();" style="cursor: pointer;">
+                                                                                        <select name="delistatus_${listB.bookingID}" id="status-${listB.bookingID}" class="form-select form-select-sm ${statusClass}" aria-label="Trạng thái" onchange="updateDeliveryStatusAjax('${listB.bookingID}', this);" style="cursor: pointer;">
                                                                                             <option value="Chưa giao" ${listB.deliveryStatus == 'Chưa giao' ? 'selected' : ''}>Chờ nhận xe</option>
                                                                                             <option value="Đã giao" ${listB.deliveryStatus == 'Đã giao' ? 'selected' : ''}>Đang thuê</option>
                                                                                             <option value="Đã trả" ${listB.deliveryStatus == 'Đã trả' ? 'selected' : ''}>Đã trả xe</option>
@@ -505,22 +374,35 @@
                                                                             <c:set var="total" value="${total + detail.totalPrice}"/>
                                                                         </c:forEach>
                                                                         <c:set var="total" value="${total + (listB.deliveryFee != null ? listB.deliveryFee : 0)}"/>
+                                                                        
+                                                                        <c:set var="extensionTotal" value="0"/>
+                                                                        <c:forEach items="${sessionScope.extend}" var="ext">
+                                                                            <c:if test="${ext.bookingID == listB.bookingID and not empty ext.staffID}">
+                                                                                <c:set var="extensionTotal" value="${extensionTotal + ext.extensionFee}"/>
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                        <c:set var="total" value="${total + extensionTotal}"/>
+                                                                        
                                                                         <fmt:formatNumber value="${total}" type="number" pattern="#,##0" /> VNĐ
                                                                     </td>
                                                                     <td class="text-center align-middle font-weight-bold">
                                                                         <c:set var="paid" value="0"/>
+                                                                        <c:set var="pay" value="${paymentsMap[listB.bookingID]}"/>
                                                                         <c:if test="${not empty pay}">
                                                                             <c:set var="paid" value="${pay.paymentAmount}"/>
                                                                         </c:if>
                                                                         <c:choose>
-                                                                            <c:when test="${listB.deliveryStatus == 'Đang thuê' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành'}">
+                                                                            <c:when test="${listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả'}">
                                                                                 <span class="badge bg-success border"><i class="fas fa-check me-1"></i>Đã TT</span>
+                                                                            </c:when>
+                                                                            <c:when test="${listB.statusBooking == 'Đã xác nhận' && (empty pay || not fn:contains(pay.paymentMethod, 'Tiền mặt'))}">
+                                                                                <span class="badge bg-info text-dark border"><i class="fas fa-adjust me-1"></i>Đã cọc</span>
+                                                                            </c:when>
+                                                                            <c:when test="${paid > 0 && paid < total}">
+                                                                                <span class="badge bg-info text-dark border"><i class="fas fa-adjust me-1"></i>Đã cọc</span>
                                                                             </c:when>
                                                                             <c:when test="${empty pay || paid == 0}">
                                                                                 <span class="badge bg-warning text-dark border"><i class="fas fa-clock me-1"></i>Chờ TT</span>
-                                                                            </c:when>
-                                                                            <c:when test="${paid < total}">
-                                                                                <span class="badge bg-info text-dark border"><i class="fas fa-adjust me-1"></i>Đã cọc</span>
                                                                             </c:when>
                                                                             <c:otherwise>
                                                                                 <span class="badge bg-success border"><i class="fas fa-check me-1"></i>Đã TT</span>
@@ -555,6 +437,13 @@
                                                                                         <c:set var="total" value="${total + detail.totalPrice}"/>
                                                                                     </c:forEach>
                                                                                     <c:set var="total" value="${total + (listB.deliveryFee != null ? listB.deliveryFee : 0)}"/>
+                                                                                    <c:set var="extensionTotal" value="0"/>
+                                                                                    <c:forEach items="${sessionScope.extend}" var="ext">
+                                                                                        <c:if test="${ext.bookingID == listB.bookingID and not empty ext.staffID}">
+                                                                                            <c:set var="extensionTotal" value="${extensionTotal + ext.extensionFee}"/>
+                                                                                        </c:if>
+                                                                                    </c:forEach>
+                                                                                    <c:set var="total" value="${total + extensionTotal}"/>
                                                                                     <c:set var="paid" value="0"/>
                                                                                     <c:if test="${not empty paymentsMap[listB.bookingID]}">
                                                                                         <c:set var="paid" value="${paymentsMap[listB.bookingID].paymentAmount}"/>
@@ -572,9 +461,9 @@
                                                                                     data-typeCard="${cus.typeCard}"
                                                                                     data-customerId="searchCustomer?id=${listB.customerID}"
                                                                                     data-cusId="${listB.customerID}"
-                                                                                    data-paymentStatus="${(listB.deliveryStatus == 'Đang thuê' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') ? 'Đã thanh toán' : (pay != null ? pay.paymentStatus : '')}"
-                                                                                    data-paymentMethod="${(listB.deliveryStatus == 'Đang thuê' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') && (pay == null || pay.paymentMethod == '') ? 'Đã thanh toán' : (pay != null ? pay.paymentMethod : '')}"
-                                                                                    data-paymentAmount="${(listB.deliveryStatus == 'Đang thuê' || listB.deliveryStatus == 'Đã trả' || listB.statusBooking == 'Đã hoàn thành') && paid == 0 ? total : (pay != null ? pay.paymentAmount : '0')}"
+                                                                                    data-paymentStatus="${(listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả') ? 'Đã thanh toán' : ((listB.statusBooking == 'Đã xác nhận' && (empty pay || not fn:contains(pay.paymentMethod, 'Tiền mặt'))) ? 'Đã cọc' : (pay != null ? pay.paymentStatus : ''))}"
+                                                                                    data-paymentMethod="${(listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả') && (pay == null || pay.paymentMethod == '') ? 'Đã thanh toán' : (pay != null ? pay.paymentMethod : '')}"
+                                                                                    data-paymentAmount="${(listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả') && paid == 0 ? total : (pay != null ? pay.paymentAmount : '0')}"
                                                                                     onclick="openUserModal(this)">
                                                                                 <i class="fas ${buttonIcon} me-1"></i>${buttonText}
                                                                             </button>
@@ -612,25 +501,25 @@
                                                 <tbody>
                                                     <c:forEach items="${sessionScope.cancels}" var="listC">
                                                         <tr>
-                                                            <c:set var="buttonText" value="${empty listC.staffID ? 'Xác nhận' : 'Đã xác nhận'}" />
+                                                            <c:set var="buttonText" value="${empty listC.staffID ? 'Hoàn tất xử lý' : 'Đã hoàn tiền / Xong'}" />
                                                             <th scope="row">${listC.cancellationID}</th>
                                                             <td>${listC.bookingID}</td>
                                                             <td>${listC.cancellationDate}</td>
                                                             <td>${listC.note}</td>
                                                             <td>
-                                                                <c:if test="${buttonText == 'Đã xác nhận'}">
+                                                                <c:if test="${buttonText == 'Đã hoàn tiền / Xong'}">
                                                                     <button disabled class="btn btn-sm btn-success w-100 mb-1">
                                                                         <i class="fas fa-check-double me-1"></i>${buttonText}
                                                                     </button>
                                                                 </c:if>
-                                                                <c:if test="${buttonText == 'Xác nhận'}">
+                                                                <c:if test="${buttonText == 'Hoàn tất xử lý'}">
                                                                     <button type="button" class="btn btn-sm btn-primary w-100 mb-1" 
                                                                             onclick="showConfirmModal('${listC.bookingID}')">
                                                                         <i class="fas fa-check me-1"></i>${buttonText}
                                                                     </button>
                                                                 </c:if>
                                                                 <button type="button" class="btn btn-sm btn-info w-100 text-white" style="background-color: #0ea5e9; border: none;" onclick="openChatForCancelledBooking('${listC.bookingID}')">
-                                                                    <i class="fas fa-comments me-1"></i> Xem khiếu nại
+                                                                    <i class="fas fa-info-circle me-1"></i> Xem chi tiết
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -656,6 +545,7 @@
                                                         <th scope="col">Ngày hạn trước</th>
                                                         <th scope="col">Ngày hạn mới</th>
                                                         <th scope="col">Phí gia hạn</th>
+                                                        <th scope="col">Thanh toán</th>
                                                         <th scope="col">Thao tác</th>
 
                                                     </tr>
@@ -669,22 +559,46 @@
                                                             <td>${extend.extensionDate}</td>
                                                             <td>${extend.previousEndDate}</td>
                                                             <td>${extend.newEndDate}</td>
-                                                            <td>
-                                                                <fmt:formatNumber value="${extend.extensionFee}" type="number" pattern="#,##0" /> VNĐ
-                                                            </td>                        
-                                                            <td>
-                                                                <c:if test="${buttonText == 'Đã xác nhận'}">
-                                                                    <button disabled class="btn btn-sm btn-success w-100">
-                                                                        <i class="fas fa-check-double me-1"></i>${buttonText}
-                                                                    </button>
-                                                                </c:if>
-                                                                <c:if test="${buttonText == 'Xác nhận'}">
-                                                                    <button type="button" class="btn btn-sm btn-primary w-100" 
-                                                                            onclick="showConfirmExtendModal('${extend.bookingID}')">
-                                                                        <i class="fas fa-check me-1"></i>${buttonText}
-                                                                    </button>
-                                                                </c:if>
-                                                            </td>
+                                                            
+        <td>
+            <fmt:formatNumber value="${extend.extensionFee}" type="number" pattern="#,##0" /> VND
+        </td>
+        <td>
+            <c:choose>
+                <c:when test="${extend.paymentStatus == 'Đã thanh toán (CK)'}">
+                    <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Đã thanh toán</span>
+                </c:when>
+                <c:when test="${extend.paymentStatus == 'Đã thanh toán (Tiền mặt)'}">
+                    <span class="badge bg-success"><i class="fas fa-money-bill-wave me-1"></i>Đã thu tiền mặt</span>
+                </c:when>
+                <c:otherwise>
+                    <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Chưa thanh toán</span>
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td>
+            <c:if test="${buttonText == 'Đã xác nhận'}">
+                <button disabled class="btn btn-sm btn-success w-100 mb-1">
+                    <i class="fas fa-check-double me-1"></i>${buttonText}
+                </button>
+            </c:if>
+            <c:if test="${buttonText == 'Xác nhận'}">
+                <button type="button" class="btn btn-sm btn-primary w-100 mb-1" 
+                        onclick="showConfirmExtendModal('${extend.bookingID}')">
+                    <i class="fas fa-check me-1"></i>${buttonText}
+                </button>
+            </c:if>
+            <c:if test="${extend.paymentStatus == 'Chưa thanh toán'}">
+                <form action="manageBooking" method="post" style="display:inline;">
+                    <input type="hidden" name="action" value="mark_paid">
+                    <input type="hidden" name="bookingId" value="${extend.bookingID}">
+                    <button type="submit" class="btn btn-sm btn-outline-success w-100">
+                        <i class="fas fa-money-bill-wave me-1"></i>Thu tiền
+                    </button>
+                </form>
+            </c:if>
+        </td>
+
                                                         </tr>
                                                     </tbody>
                                                 </c:forEach>
@@ -702,7 +616,7 @@
                 <!-- modal để hiển thị thông tin chi tiết của đặt đơn-->
                 <div class="modal fade" role="dialog" tabindex="-1" id="user-form-modal">
                     <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
                             <div style="padding: 20px 24px; border-bottom: 1px solid #e2e8f0; border-top-left-radius: 12px; border-top-right-radius: 12px; background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);" class="modal-header d-flex align-items-center justify-content-between">
                                 <h5 class="modal-title" id="modal-title" style="font-weight: 800; color: #1e293b; font-size: 18px; margin: 0;">
                                     <i class="fas fa-file-invoice text-primary me-2"></i>Chi tiết Đơn hàng
@@ -816,7 +730,7 @@
                                                         <i class="fas fa-wallet"></i>
                                                     </div>
                                                     <div>
-                                                        <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Cần thu (Còn lại)</div>
+                                                        <div id="modal-Price-Label" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Cần thu (Còn lại)</div>
                                                         <h4 style="color: #b45309; font-weight: 800; margin: 0; font-size: 24px;" id="modal-Price"></h4>
                                                     </div>
                                                 </div>
@@ -858,29 +772,10 @@
                                                     <div style="font-size: 11px; font-weight: 500; opacity: 0.85; margin-top: 4px;">Thu tiền, chụp ảnh tình trạng và giao xe cho khách</div>
                                                 </button>
                                             </div>
-                                            <!-- GPS Tracking Button -->
-                                            <div class="col-12 mt-2" id="gpsTrackArea">
-                                                <button type="button" class="btn w-100 py-2" id="btnToggleGpsMap"
-                                                    style="font-weight: 700; border-radius: 8px; background: linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; border:none; display:flex; align-items:center; justify-content:center; gap:8px;"
-                                                    onclick="toggleGpsMap()">
-                                                    <i class="fas fa-map-marked-alt"></i>
-                                                    <span>Theo dõi vị trí GPS khách hàng</span>
-                                                    <span id="gpsLiveDot" class="position-relative" style="display:none;">
-                                                        <span style="width:10px;height:10px;background:#4ade80;border-radius:50%;display:inline-block;animation:ping 1s infinite;"></span>
-                                                    </span>
+                                            <div class="col-12 mt-2" id="btn-staff-extend" style="display: none;">
+                                                <button type="button" class="btn btn-secondary w-100 py-3" style="font-weight: 700; border-radius: 8px;" onclick="showStaffExtendModal()">
+                                                    <i class="fas fa-calendar-plus me-2"></i> Gia hạn xe (Cho Staff)
                                                 </button>
-                                                <!-- GPS Map Panel -->
-                                                <div id="gpsMapPanel" style="display:none; margin-top:10px; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0;">
-                                                    <div style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:between;">
-                                                        <span style="font-size:13px; font-weight:600; color:#4f46e5;"><i class="fas fa-satellite-dish me-1"></i> Vị trí thời gian thực</span>
-                                                        <span id="gpsStatusText" style="font-size:12px; color:#94a3b8; margin-left:10px;">Chờ tín hiệu...</span>
-                                                    </div>
-                                                    <div id="leaflet-map" style="height:280px; width:100%;"></div>
-                                                    <div style="padding:8px 12px; background:#f8fafc; font-size:12px; color:#64748b;">
-                                                        <i class="fas fa-info-circle me-1"></i>
-                                                        Bản đồ tự cập nhật mỗi 5 giây. Khách cần bật "Phát vị trí GPS" trong trang chi tiết đơn hàng.
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -929,7 +824,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" onclick="returnModalStep()">Quay về</button>
-                                    <button type="button" id="confirmModalYesButton" class="btn btn-primary">Có</button>
+                                    <button type="button" id="confirmModalYesButton" class="btn btn-primary" onclick="showLoader(); document.getElementById('confirmForm').submit()">Có</button>
                                 </div>
                             </div>
                         </form>
@@ -960,7 +855,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" onclick="returnshowError()">Quay về</button>
-                                    <button type="button" id="confirmModalCancelButton" class="btn btn-primary" >Gửi</button>
+                                    <button type="button" id="confirmModalCancelButton" class="btn btn-primary" onclick="document.getElementById('rejectForm').submit()">Gửi</button>
                                 </div>
                             </div>
                         </form>
@@ -982,8 +877,8 @@
                                     <!-- Message will be set by JavaScript -->
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" onclick="closeDetail()">Quay về</button>
-                                    <button type="button" id="confirmModalCancelYesButton" class="btn btn-primary">Có</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay về</button>
+                                    <button type="button" id="confirmModalCancelYesButton" class="btn btn-primary" onclick="showLoader(); document.getElementById('confirmFormCancel').submit()">Có</button>
                                 </div>
                             </div>
                         </form>
@@ -996,7 +891,7 @@
                     <div class="modal-dialog" role="document">
                         <form id="confirmFormExtend" action="manageBooking" method="post">
                             <input type="hidden" id="extendBookingID" name="extendBookId">
-                            <input type="hidden" id=extendStaffID" name="staffIdforEx">
+                            <input type="hidden" id="extendStaffID" name="staffIdforEx">
 
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -1008,6 +903,34 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" onclick="closeDetail()">Quay về</button>
                                     <button type="button" id="confirmModalExtendYesButton" class="btn btn-primary">Có</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Modal cho Staff Extend -->
+                <div class="modal fade" id="staffExtendModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <form action="manageBooking" method="post">
+                            <input type="hidden" name="bookingId" id="staffExtendBID">
+                            <input type="hidden" name="previousEndDate" id="staffExtendPreviousEnd">
+                            <input type="hidden" name="action" value="staff_extend">
+                            <div class="modal-content">
+                                <div class="modal-header"><h5>Gia h?n don hng</h5></div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label>Ngy tr? m?i (VD: 2024-12-31 15:00:00)</label>
+                                        <input type="text" name="newEndDate" class="form-control" required placeholder="YYYY-MM-DD HH:MM:SS">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Ph gia h?n (VN?)</label>
+                                        <input type="number" name="extensionFee" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">?ng</button>
+                                    <button type="submit" class="btn btn-primary">Xc nh?n</button>
                                 </div>
                             </div>
                         </form>
@@ -1120,7 +1043,27 @@
                 </div>
             </div>
         </div>
-    </body>
+    
+<!-- Full Page Loader -->
+<div id="fullPageLoader" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.7); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(3px);">
+    <div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem; border-width: 0.25em;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="mt-3 fw-bold text-primary" style="font-size: 1.2rem; text-shadow: 0 0 10px rgba(255,255,255,0.8);">Đang xử lý, vui lòng đợi...</div>
+</div>
+<script>
+function showLoader() {
+    document.getElementById('fullPageLoader').style.display = 'flex';
+}
+function showStaffExtendModal() {
+    var bid = $('#modal-bookingId').text();
+    $('#staffExtendBID').val(bid);
+    $('#user-form-modal').modal('hide');
+    $('#staffExtendModal').modal('show');
+}
+</script>
+</body>
+
     <script>
         // Toggle sidebar functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -1232,7 +1175,23 @@
             modal.find('#modal-deliveryStatus').html(dSHtml);
             modal.find('#modal-countMotorcycle').text(button.getAttribute('data-countMotorcycle'));
             modal.find('#modal-nameMotorcycle').html(button.getAttribute('data-nameMotorcycle'));
-            modal.find('#modal-Price').text(button.getAttribute('data-Price'));
+            
+            var totalStr = button.getAttribute('data-Price') || '0';
+            // data-Price contains the ALREADY CALCULATED remaining amount from JSP
+            var remaining = parseInt(totalStr.replace(/[^0-9]/g, '')) || 0;
+            if (remaining < 0) remaining = 0;
+            var remainingStr = remaining.toLocaleString('vi-VN') + ' VNĐ';
+            modal.find('#modal-Price').text(remainingStr);
+            if (remaining <= 0) {
+                modal.find('#modal-Price-Label').text('ĐÃ THANH TOÁN (FULL)');
+                modal.find('#modal-Price-Label').css('color', '#059669');
+                modal.find('#modal-Price').css('color', '#059669');
+            } else {
+                modal.find('#modal-Price-Label').text('Cần thu (Còn lại)');
+                modal.find('#modal-Price-Label').css('color', '#64748b');
+                modal.find('#modal-Price').css('color', '#b45309');
+            }
+
             modal.find('#modal-customerId').attr('data-cusName', button.getAttribute('data-cusName'));
             modal.find('#modal-customerId').attr('data-cusPhone', button.getAttribute('data-cusPhone'));
             modal.find('#modal-customerId').attr('data-cusEmail', button.getAttribute('data-cusEmail'));
@@ -1247,12 +1206,13 @@
             var payStatus = button.getAttribute('data-paymentStatus') || '';
             var payMethod = button.getAttribute('data-paymentMethod') || '';
             var payAmt = button.getAttribute('data-paymentAmount') || '0';
-            var hasPaid = payStatus !== '' && !payStatus.includes('Chờ');
+            var isFullyPaid = payStatus === 'Đã thanh toán' || payStatus === 'Success';
+            var isDeposited = payStatus === 'Đã cọc' || payStatus === 'Đã thanh toán cọc';
 
             // Hiển thị thông tin thanh toán
             if (payStatus === '') {
                 $('#modal-paymentInfo').html('<span style="color:#94a3b8; font-style:italic;">Chưa thanh toán</span>');
-            } else if (hasPaid) {
+            } else if (isFullyPaid || isDeposited) {
                 $('#modal-paymentInfo').html('<span style="color:#059669; background:#ecfdf5; padding:2px 10px; border-radius:6px; border:1px solid #10b981;"><i class="fas fa-check-circle me-1"></i>' + payMethod + '</span>');
             } else {
                 $('#modal-paymentInfo').html('<span style="color:#d97706; background:#fffbeb; padding:2px 10px; border-radius:6px; border:1px solid #fbbf24;">' + payStatus + '</span>');
@@ -1265,10 +1225,14 @@
                 $('#confirmwait').hide();
                 $('#confirmyes').show();
                 // Hiển thị nút duyệt hóa đơn nếu chưa thanh toán, ẩn nếu đã thanh toán
-                if (hasPaid) {
+                if (isFullyPaid) {
                     $('#approveInvoiceArea').hide();
                     $('#paidInvoiceArea').show();
                     $('#paidInvoiceLabel').text('Đã thanh toán (' + payMethod + ')');
+                } else if (isDeposited) {
+                    $('#approveInvoiceArea').show();
+                    $('#paidInvoiceArea').show();
+                    $('#paidInvoiceLabel').text('Đã cọc (' + payMethod + ')');
                 } else {
                     $('#approveInvoiceArea').show();
                     $('#paidInvoiceArea').hide();
@@ -1354,8 +1318,7 @@
                                 <div style="font-size:12px; color:#94a3b8;">Chưa cập nhật</div>
                             </div>`;
                 }
-                var isUrl = imgStr.startsWith('http');
-                var imgSrc = isUrl ? imgStr : 'upload/' + imgStr;
+                var imgSrc = imgStr.startsWith('http') ? imgStr : (imgStr.startsWith('assets/') ? imgStr : 'upload/' + imgStr);
                 return `<div style="flex: 1; min-width: 200px; text-align: center; cursor: pointer; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0; background:#f8fafc;" onclick="viewImageFull('${imgSrc}')">
                             <div style="font-size:11px; font-weight:700; color:#64748b; padding:8px; border-bottom: 1px solid #e2e8f0; text-transform:uppercase; letter-spacing:1px;">${label}</div>
                             <img src="${imgSrc}" style="width: 100%; height: 130px; object-fit: cover; transition: transform 0.2s; display:block;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Ảnh CCCD" onerror="console.error('Image load failed:', this.src); this.onerror=null; this.src='https://placehold.co/300x200?text=Anh+cu+da+bi+xoa';">
@@ -1581,17 +1544,22 @@
             $('#confirmModalMessage').text("Bạn có chắc chắn xác nhận đơn có mã: " + bookingId + " không?");
 
             $('#formConfirmBookingID').val(bookingId);
-            $('#formConfirmDelistatus').val(delistatus);
+            $('#formConfirmDelistatus').val("");
         }
 
         function returnModalStep() {
             $('#user-form-modal').modal('show');
             $('#confirmModal').modal('hide');
         }
-
-        $('#confirmModalYesButton').click(function () {
-            $('#confirmForm').submit();
-        });
+        
+        function showStaffExtendModal() {
+            var bId = $('#modal-bookingId').text();
+            var currentEnd = $('#modal-endDate').text().trim();
+            // Parse dd/MM/yyyy HH:mm:ss if possible to set minimum date for input, but simpler is just open modal
+            $('#staffExtendBookingId').val(bId);
+            $('#staffExtendPreviousEnd').val(currentEnd); // Can pass as raw string to DB, or format it
+            $('#staffExtendModal').modal('show');
+        }
 
         function showError() {
             var bookingId = $('#modal-bookingId').text().trim();
@@ -1611,21 +1579,12 @@
             $('#RejectModal').modal('hide');
         }
 
-        $('#confirmModalCancelButton').click(function () {
-            $('#rejectForm').submit();
-        });
-
-
         function showConfirmModal(bookingId) {
             $('#confirmModalCancel').modal('show');
             $('#confirmModalCancelMessage').text("Bạn có chắc chắn xác nhận đơn hủy có mã: " + bookingId + " không?");
 
             $('#cancelBookingID').val(bookingId);
         }
-        $('#confirmModalCancelYesButton').click(function () {
-            $('#confirmFormCancel').submit();
-//            $('#tab-cancelling').tab('show');
-        });
 
         function showConfirmExtendModal(bookingId) {
             $('#confirmModalExtend').modal('show');
@@ -1633,9 +1592,6 @@
 
             $('#extendBookingID').val(bookingId);
         }
-        $('#confirmModalExtendYesButton').click(function () {
-            $('#confirmFormExtend').submit();
-        });
 
         // ===== XÁC NHẬN TRẢ XE (QUÁ HẠN) =====
         var _pendingReturnBookingId = null;
@@ -1858,7 +1814,7 @@ function showHandoverModal() {
     
     // Check if there's any payment made
     var paidStr = $('#modal-paymentInfo').text();
-    var hasPaid = !paidStr.includes('Chưa thanh toán');
+    var hasPaid = (totalAmount <= 0);
     
     $('#handover-bId').text(bId);
     
@@ -2283,18 +2239,63 @@ document.getElementById('user-form-modal').addEventListener('hidden.bs.modal', f
 });
     
     function openChatForCancelledBooking(bId) {
-        var modal = $('#user-form-modal');
-        modal.find('#modal-bookingId').text(bId);
+        // Find the "Xem chi tiết" button in the booking tab for this booking ID
+        var btn = document.querySelector('#booking button[data-bookingId="' + bId + '"]');
+        if (btn) {
+            // Trigger a click to populate all the modal fields properly
+            btn.click();
+        } else {
+            // Fallback if the button is not found
+            var modal = $('#user-form-modal');
+            modal.find('#modal-bookingId').text(bId);
+            var modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('user-form-modal'));
+            modalInstance.show();
+        }
         
-        var modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('user-form-modal'));
-        modalInstance.show();
-        
+        // Wait for the modal to open, then switch to the Chat tab
         setTimeout(function() {
             var triggerEl = document.querySelector('#chat-tab');
             if (triggerEl) {
                 bootstrap.Tab.getOrCreateInstance(triggerEl).show();
             }
         }, 500);
+    }
+    function updateDeliveryStatusAjax(bookingID, selectElement) {
+        var newVal = selectElement.value;
+        var oldVal = selectElement.dataset.oldVal || selectElement.options[0].value;
+        
+        var formData = new FormData();
+        formData.append("bookingID", bookingID);
+        formData.append("delistatus_" + bookingID, newVal);
+        
+        selectElement.style.opacity = '0.5';
+        
+        fetch('manageBooking', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            selectElement.style.opacity = '1';
+            if (response.ok) {
+                selectElement.dataset.oldVal = newVal;
+                selectElement.classList.remove('status-pending', 'status-delivered', 'status-returned', 'status-empty');
+                if (newVal === 'Da tr?') {
+                    selectElement.classList.add('status-returned');
+                } else if (newVal === 'Da giao') {
+                    selectElement.classList.add('status-delivered');
+                } else if (newVal === 'Chua giao') {
+                    selectElement.classList.add('status-pending');
+                }
+            } else {
+                alert('Có lỗi xảy ra khi cập nhật!');
+                selectElement.value = oldVal;
+            }
+        })
+        .catch(error => {
+            selectElement.style.opacity = '1';
+            alert('Có lỗi xảy ra khi cập nhật!');
+            selectElement.value = oldVal;
+        });
     }
 </script>
 

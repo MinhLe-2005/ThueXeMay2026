@@ -104,8 +104,8 @@ public class ManageBookingServlet extends HttpServlet {
                 java.time.LocalDateTime currentDateTime = java.time.LocalDateTime.now();
                 java.time.format.DateTimeFormatter outputFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String paymentDateText = currentDateTime.format(outputFormatter);
-                // Sử dụng số tiền từ form
-                daoP.addPayment(bookingID, "Nhận chuyển khoản (Thủ công)", paymentDateText, amt, "Giao dịch thành công");
+                // Sá»­ dá»¥ng sá»‘ tiá»n tá»« form
+                daoP.addPayment(bookingID, "Nhận chuyển khoản (Thủ công)", paymentDateText, amt, "Giao dá»‹ch thÃ nh cÃ´ng");
                 
                 com.smartride.dao.MotorcycleStatusDAO daoMS = com.smartride.dao.MotorcycleStatusDAO.getInstance();
                 com.smartride.dao.BookingDetailDAO daoBD = com.smartride.dao.BookingDetailDAO.getInstance();
@@ -117,7 +117,7 @@ public class ManageBookingServlet extends HttpServlet {
                 for(com.smartride.dto.BookingDetail bd : listBD) {
                     int mcId = bd.getMotorcycleDetailID();
                     if(mcId > 0) {
-                        daoMS.insertMotorcycleStatus(mcId, staffId, "Đã thanh toán cọc", paymentDateText, "Xác nhận thủ công bởi Admin");
+                        daoMS.insertMotorcycleStatus(mcId, staffId, "Đã thanh toán cá»c", paymentDateText, "Xác nhận thủ công bởi Admin");
                     }
                 }
             } else {
@@ -129,7 +129,7 @@ public class ManageBookingServlet extends HttpServlet {
                             Part filePart = request.getPart("deliveryImage" + i + "_" + bookingID);
                             if (filePart != null && filePart.getSize() > 0) {
                                 String fileName = UUID.randomUUID().toString() + ".png";
-                                // Upload lên Supabase Storage
+                                // Upload lÃªn Supabase Storage
                                 String publicUrl = SupabaseStorageUtil.uploadFile("motor-images", fileName, filePart.getInputStream(), "image/png");
                                 if (publicUrl != null) {
                                     if (imagePathsBuilder.length() > 0) imagePathsBuilder.append(",");
@@ -140,7 +140,7 @@ public class ManageBookingServlet extends HttpServlet {
                         
                         String imagePaths = imagePathsBuilder.toString();
                         if (imagePaths.isEmpty()) {
-                            // Fallback cho form cũ nếu có
+                            // Fallback cho form cÅ© náº¿u cÃ³
                             Part filePart = request.getPart("deliveryImage_" + bookingID);
                             if (filePart != null && filePart.getSize() > 0) {
                                 String fileName = UUID.randomUUID().toString() + ".png";
@@ -191,13 +191,13 @@ public class ManageBookingServlet extends HttpServlet {
                 CancellationDAO.getInstance().insertCancellation(cancelReason, bookingID, staffId);
                 BookingDAO.getInstance().updateBookingStatus(bookingID, "Đã hủy");
 
-                // Ghi nhận Lý do Hủy vào Chat để làm tin nhắn đầu tiên trong cuộc hội thoại Hỗ trợ
+                // Ghi nháº­n Lý do Há»§y vÃ o Chat Ä‘á»ƒ lÃ m tin nháº¯n Ä‘áº§u tiÃªn trong cuá»™c há»™i thoáº¡i Há»— trá»£
                 try {
                     com.smartride.dao.ChatMessageDAO.getInstance().insertMessage(
                         bookingID, 
                         accountStaff.getAccountId(), 
                         "STAFF", 
-                        "Thông báo Hủy Đơn: " + cancelReason
+                        "ThÃ´ng bÃ¡o Há»§y ÄÆ¡n: " + cancelReason
                     );
                 } catch (Exception e) { e.printStackTrace(); }
 
@@ -208,48 +208,96 @@ public class ManageBookingServlet extends HttpServlet {
                 if (payment != null) {
                     if ("Đã thanh toán".equalsIgnoreCase(payment.getPaymentStatus()) || "Success".equalsIgnoreCase(payment.getPaymentStatus())) {
                         isPaid = true;
-                        amountStr = String.format("%,.0f", payment.getPaymentAmount()) + " VNĐ";
+                        amountStr = String.format("%,.0f", payment.getPaymentAmount()) + " VNÄ";
                     }
                 }
                 
-                String notifTitle = "Đơn thuê xe " + bookingID + " đã bị từ chối";
+                String notifTitle = "ÄÆ¡n thuÃª xe " + bookingID + " đã bị từ chối";
                 String notifMessage = "Lý do: " + cancelReason;
                 String link = "bookingHistoryDetail?bookingId=" + bookingID; // default link
                 
                 if (isPaid) {
-                    notifMessage += ". Số tiền cần hoàn lại: <strong>" + amountStr + "</strong>. Vui lòng click vào đây để cung cấp Số tài khoản hoàn tiền.";
+                    notifMessage += ". Sá»‘ tiá»n cáº§n hoÃ n láº¡i: <strong>" + amountStr + "</strong>. Vui lÃ²ng click vÃ o Ä‘Ã¢y Ä‘á»ƒ cung cáº¥p Sá»‘ tÃ i khoáº£n hoÃ n tiá»n.";
                     link = "refundRequest.jsp?bookingId=" + bookingID;
                 } else {
-                    notifMessage += ". Vui lòng cập nhật lại thông tin và đặt lại đơn mới.";
+                    notifMessage += ". Vui lÃ²ng cáº­p nháº­t láº¡i thÃ´ng tin vÃ  Ä‘áº·t láº¡i Ä‘Æ¡n má»›i.";
                 }
                 
                 NotificationDAO.getInstance().insertNotification(accountCus.getAccountId(), notifTitle, notifMessage, link);
             }
 
             String emailContent = ""
-                    + "<h3><strong>SmartRide </strong>xin chào quý khách, </h3>"
-                    + "<p>Mã đơn hàng: <strong>" + bookingID + "</strong> của quý khách đã bị hủy trong quá trình xử lý </p>"
-                    + "<p>Thời gian đặt: " + timeBook + " </p>"
-                    + "<p>Lý do hủy: <strong>" + cancelReason + "</strong></p>"
-                    + "<p>Vui lòng cập nhật lại thông tin chính xác và đặt lại đơn thuê xe nhé!</p>"
-                    + "<p>SmartRide xin cảm ơn, chúc quý khách một ngày vui vẻ! </p>";
+                    + "<h3><strong>SmartRide </strong>xin chÃ o quÃ½ khÃ¡ch, </h3>"
+                    + "<p>MÃ£ Ä‘Æ¡n hÃ ng: <strong>" + bookingID + "</strong> của quý khách đã bị hủy trong quá trình xử lý </p>"
+                    + "<p>Thá»i gian Ä‘áº·t: " + timeBook + " </p>"
+                    + "<p>Lý do há»§y: <strong>" + cancelReason + "</strong></p>"
+                    + "<p>Vui lÃ²ng cáº­p nháº­t láº¡i thÃ´ng tin chÃ­nh xÃ¡c vÃ  Ä‘áº·t láº¡i Ä‘Æ¡n thuÃª xe nhÃ©!</p>"
+                    + "<p>SmartRide xin cáº£m Æ¡n, chÃºc quÃ½ khÃ¡ch má»™t ngÃ y vui váº»! </p>";
             SendEmail.sendVerificationEmail(accountCus.getEmail(), emailContent);
         }
         //--------------------------------------------------------------------------------
-        //Hủy đơn (của khách hàng)  -> staff confirm
+        //Há»§y Ä‘Æ¡n (cá»§a khÃ¡ch hÃ ng)  -> staff confirm
         String cancelBookingID = request.getParameter("cancelBookId");
         if (cancelBookingID != null && !cancelBookingID.isEmpty()) {
             Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
             String staffId = staff != null ? staff.getStaffID() : "STAFF00001";
-            CancellationDAO.getInstance().updateCancellationByStaff(staffId, cancelBookingID);
+            CancellationDAO.getInstance().updateCancellationByStaff(staffId, cancelBookingID);BookingDAO.getInstance().updateBookingStatus(cancelBookingID, "Đã hủy");
         }
         //--------------------------------------------------------------------------------
-        //Gia hạn (của khách hàng) -> staff confirm
+        //Gia háº¡n (cá»§a khÃ¡ch hÃ ng) -> staff confirm
         String extendBookId = request.getParameter("extendBookId");
         if (extendBookId != null && !extendBookId.isEmpty()) {
             Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
             String staffId = staff != null ? staff.getStaffID() : "STAFF00001";
-            ExtensionDAO.getInstance().updateExtensionByStaff(staffId, extendBookId);
+            boolean updated = ExtensionDAO.getInstance().updateExtensionByStaff(staffId, extendBookId);
+            if (updated) {
+                com.smartride.dto.Extension ext = ExtensionDAO.getInstance().getExtensionByBookingID(extendBookId);
+                if (ext != null) {
+                    BookingDAO.getInstance().updateBookingEndDateAndPrice(extendBookId, ext.getNewEndDate(), ext.getExtensionFee());
+                }
+            }
+        }
+        
+        //Staff tu tao Don Gia han cho Khach
+        String staffExtendAction = request.getParameter("action");
+
+        if ("mark_paid".equals(staffExtendAction)) {
+            String bId = request.getParameter("bookingId");
+            if (bId != null) {
+                ExtensionDAO.getInstance().markExtensionPaid(bId);
+            }
+            response.sendRedirect("manageBooking");
+            return;
+        }
+
+        if ("staff_extend".equals(staffExtendAction)) {
+            String bId = request.getParameter("bookingId");
+            String previousEnd = request.getParameter("previousEndDate");
+            String newEnd = request.getParameter("newEndDate");
+            String extFeeStr = request.getParameter("extensionFee");
+            
+            if (bId != null && newEnd != null && extFeeStr != null) {
+                double extFee = 0;
+                try {
+                    extFee = Double.parseDouble(extFeeStr.replace(",", "").replace(".", ""));
+                } catch(Exception e){}
+                
+                // 1. Them vao bang Extension voi StaffID luon
+                Staff staff = StaffDAO.getInstance().getStaffbyAccountID(accountStaff.getAccountId());
+                String staffId = staff != null ? staff.getStaffID() : "STAFF00001";
+                
+                ExtensionDAO.getInstance().addExtension(previousEnd, newEnd, extFee, bId);
+                ExtensionDAO.getInstance().updateExtensionByStaff(staffId, bId);
+                // staff creating it means customer hasn't paid online, they pay cash
+                ExtensionDAO.getInstance().markExtensionUnpaid(bId);
+
+                
+                // 2. Cap nhat vao Booking
+                BookingDAO.getInstance().updateBookingEndDateAndPrice(bId, newEnd, extFee);
+                
+                response.sendRedirect("manageBooking");
+                return;
+            }
         }
         //--------------------------------------------------------------------------------
        
@@ -288,3 +336,4 @@ public class ManageBookingServlet extends HttpServlet {
     }// </editor-fold>
 
 }
+

@@ -89,6 +89,9 @@ public class ContactServlet extends HttpServlet {
         try {
             // Gửi cho Admin (Main Mail)
             com.smartride.constant.SendEmail.sendVerificationEmail(adminTo, adminContent);
+            
+            // Gửi cho Khách hàng
+            com.smartride.constant.SendEmail.sendVerificationEmail(email, customerContent);
 
             request.setAttribute("msg", "Gửi yêu cầu thành công! Cảm ơn bạn đã liên hệ, đội ngũ SmartRide sẽ phản hồi bạn trong vòng 24h làm việc.");
         } catch (Exception e) {

@@ -641,6 +641,14 @@
                                     document.addEventListener('DOMContentLoaded', () => {
                                         fetchChatMessages();
                                         setInterval(fetchChatMessages, 10000);
+                                        
+                                        const urlParams = new URLSearchParams(window.location.search);
+                                        if (urlParams.get('openChat') === 'true') {
+                                            setTimeout(() => {
+                                                const chatBox = document.getElementById('chat-messages');
+                                                if (chatBox) chatBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                            }, 300);
+                                        }
                                     });
                                 </script>
                             </div>
@@ -662,7 +670,7 @@
                             </c:if>
                             
                             <c:if test="${statusBooking == 'Đã xác nhận' && booking.deliveryStatus == 'Đã giao'}">
-                                <button type="button" class="px-4 py-2 bg-red-600 text-white rounded-xl font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-2 hover:bg-red-700 hover:shadow-md hover:-translate-y-0.5 animate-pulse" onclick="openSosModal()">
+                                <button type="button" class="px-4 py-2 rounded-xl font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer flex items-center gap-2 hover:shadow-md hover:-translate-y-0.5 animate-pulse" style="background-color: #dc2626; color: white;" onclick="openSosModal()">
                                     <i class="fas fa-exclamation-triangle text-lg"></i> 
                                     <span>SOS Khẩn Cấp</span>
                                 </button>
@@ -682,12 +690,38 @@
                                     <i class="fas fa-redo"></i> Đặt thuê xe lại
                                 </button>
                             </c:if>
+                            <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #059669" onclick="document.getElementById('contract-modal').style.display='flex'">
+                                <i class="fas fa-file-contract"></i> Xem Hợp Đồng
+                            </button>
                             <button type="button" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #1e293b" onclick="closeDetail()">
                                 <i class="fas fa-chevron-left"></i> Quay về danh sách
                             </button>
                         </div>
 
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HỢP ĐỒNG THUÊ XE MODAL -->
+        <div id="contract-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.65); z-index:99999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+            <div style="background:#fff; border-radius:12px; max-width:850px; width:100%; height:90vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.3);">
+                <div style="padding:16px 24px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; background:#fafafa;">
+                    <div>
+                        <h3 style="margin:0; color:#059669; font-size:18px;"><i class="fas fa-file-signature"></i> Hợp Đồng Thuê Xe Điện Tử</h3>
+                        <p style="margin:4px 0 0; font-size:12px; color:#777;">Hợp đồng được lập dựa trên sự đồng ý của bạn lúc đặt xe.</p>
+                    </div>
+                    <button type="button" onclick="document.getElementById('contract-modal').style.display='none'"
+                        style="background:#f1f5f9; border:none; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; color:#475569; transition: background 0.2s;">&times;</button>
+                </div>
+                <div style="flex:1; width:100%; overflow:hidden;">
+                    <iframe src="contract.jsp?id=${booking.bookingID}" style="width:100%; height:100%; border:none;"></iframe>
+                </div>
+                <div style="padding:14px 24px; border-top:1px solid #eee; display:flex; justify-content:flex-end; gap:10px; background:#fafafa;">
+                    <button type="button" onclick="document.getElementById('contract-modal').style.display='none'"
+                        style="padding:10px 24px; background:#e2e8f0; color:#334155; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer;">Đóng</button>
+                    <button type="button" onclick="window.open('contract.jsp?id=${booking.bookingID}&print=1', '_blank')"
+                        style="padding:10px 24px; background:#059669; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.5);"><i class="fas fa-print"></i> In / Tải về PDF</button>
                 </div>
             </div>
         </div>
@@ -728,11 +762,13 @@
                 <form id="cancel-form" action="cancelbooking" method="get" class="space-y-4">
                     <input type="hidden" id="bookingId" name="bookingId" value="${booking.bookingID}">
                     <div>
-                        <textarea required name="cancelreason" id="cancelReason" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50" placeholder="Nhập lý do hủy đơn của bạn..."></textarea>
+                        <textarea required name="cancelreason" id="cancelReason" rows="4" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50 mb-3" placeholder="Nhập lý do hủy đơn của bạn..."></textarea>
+                        <input type="text" name="bankinfo" id="bankInfo" class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-gray-50" placeholder="Số tài khoản ngân hàng để hoàn tiền (Không bắt buộc)">
+                        <p class="text-xs text-gray-400 mt-1 ml-1">* Nếu bạn đã đặt cọc, vui lòng cung cấp STK để chúng tôi hoàn tiền.</p>
                     </div>
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-                        <button type="button" class="px-5 py-2 border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 font-bold text-sm transition-colors cursor-pointer" onclick="closeCancellation()">Đóng</button>
-                        <button type="submit" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold text-sm shadow-md shadow-red-500/10 transition-colors cursor-pointer">Gửi yêu cầu hủy</button>
+                        <button type="button" class="px-5 py-2 rounded-xl font-bold text-sm transition-colors cursor-pointer" style="background-color: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db;" onclick="closeCancellation()">Đóng</button>
+                        <button type="submit" class="px-5 py-2 rounded-xl font-bold text-sm transition-colors cursor-pointer" style="background-color: #ef4444; color: white; border: none; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);">Gửi yêu cầu hủy</button>
                     </div>
                 </form>
             </div>
@@ -853,6 +889,13 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.get('autoPay') === 'true' && document.getElementById("pay-btn")) {
                     setTimeout(openPaymentModal, 300);
+                }
+                
+                // Auto open contract modal if requested (from email link)
+                if (urlParams.get('autoContract') === '1') {
+                    setTimeout(() => {
+                        document.getElementById('contract-modal').style.display='flex';
+                    }, 500);
                 }
             });
             function togglePayButton() {
@@ -1090,10 +1133,10 @@
                 </div>
                 <p class="text-gray-600 text-sm mb-4">Hệ thống sẽ tự động lấy vị trí hiện tại của bạn cho SmartRide. Hãy cho chúng tôi biết vấn đề bạn đang gặp phải.</p>
                 <textarea id="sos-note" rows="3" class="w-full border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 mb-4" placeholder="Ví dụ: Xe lủng lốp, không nổ máy được..."></textarea>
-                <div class="flex justify-end gap-3 mt-2">
-                    <button type="button" onclick="closeSosModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors">Hủy</button>
-                    <button type="button" onclick="sendSosRequest()" class="px-5 py-2 bg-red-600 text-white rounded-xl font-bold shadow-md hover:bg-red-700 transition-colors flex items-center gap-2">
-                        <i class="fas fa-paper-plane"></i> Gửi yêu cầu
+                <div class="flex justify-end gap-3 pt-6 border-t border-gray-100">
+                    <button type="button" class="px-5 py-2 rounded-xl font-bold transition-colors" style="background-color: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db;" onclick="closeSosModal()">Hủy</button>
+                    <button type="button" onclick="sendSosRequest()" class="px-5 py-2 rounded-xl font-bold shadow-md transition-colors flex items-center gap-2" style="background-color: #dc2626; color: white;">
+                        <i class="fas fa-paper-plane"></i> Gửi yêu cầu ngay
                     </button>
                 </div>
             </div>

@@ -134,8 +134,9 @@ public class BookingInforHander extends HttpServlet {
         // Save front and back files if present
         String uploadedFilePath = null;
         String custIdStr = customerId.equalsIgnoreCase("Not") ? "Temp" : customerId;
-        String filenameFront = "imageIdC" + custIdStr + "_front.jpg";
-        String filenameBack = "imageIdC" + custIdStr + "_back.jpg";
+        long timestamp = System.currentTimeMillis();
+        String filenameFront = "imageIdC" + custIdStr + "_" + timestamp + "_front.jpg";
+        String filenameBack = "imageIdC" + custIdStr + "_" + timestamp + "_back.jpg";
         
         String uploadedFrontPath = null;
         String uploadedBackPath = null;
@@ -164,9 +165,8 @@ public class BookingInforHander extends HttpServlet {
         }
 
         if (customerId.equalsIgnoreCase("Not")) {
-            if (uploadedFilePath == null) {
-                uploadedFilePath = filenameFront + "," + filenameBack;
-            }
+            // Do not use a dummy string. Allow it to remain null if no image was uploaded.
+            
             daoC.createNewCustomer(identityCard, uploadedFilePath, issuedon, expdate, "CMND/CCCD", 1, accountId);
             // We ALREADY uploaded the image as imageIdCTemp_front.jpg and got the public URL in uploadedFilePath.
             // We DO NOT need to upload it again, because the stream is already exhausted.
@@ -179,8 +179,6 @@ public class BookingInforHander extends HttpServlet {
                 Customer oldCust = daoC.getCustomerbyAccountID(accountId);
                 if (oldCust != null && oldCust.getIdentityCardImage() != null) {
                     uploadedFilePath = oldCust.getIdentityCardImage();
-                } else {
-                    uploadedFilePath = filenameFront + "," + filenameBack;
                 }
             } else {
                 Customer oldCust = daoC.getCustomerbyAccountID(accountId);

@@ -118,8 +118,12 @@ public class StaffFilter implements Filter {
 //        request.getRequestDispatcher("accessdenied.jsp").forward(request, response);  
         
         if (uri.toLowerCase().contains("staff") || uri.toLowerCase().contains("manage")) {       
-           
-            if(account != null && (!uri.toLowerCase().contains("managestaff") && (account.getRoleID() == 2 || account.getRoleID() == 3) 
+            if(account == null) {
+                req.getSession().setAttribute("error", "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+                res.sendRedirect("login.jsp");
+                return;
+            }
+            else if((!uri.toLowerCase().contains("managestaff") && (account.getRoleID() == 2 || account.getRoleID() == 3) 
                 || (uri.toLowerCase().contains("managestaff") && account.getRoleID() == 3))){
                 flag = false;
             }
@@ -130,7 +134,12 @@ public class StaffFilter implements Filter {
         }
         else if(uri.toLowerCase().contains("profilecustomer.jsp") || uri.toLowerCase().contains("transaction") 
                 || uri.toLowerCase().contains("bookinghistory") || uri.toLowerCase().contains("settingsprofile.jsp")) {
-            if(account != null && account.getRoleID() == 1){
+            if(account == null) {
+                req.getSession().setAttribute("error", "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+                res.sendRedirect("login.jsp");
+                return;
+            }
+            else if(account.getRoleID() == 1){
                 flag = false;
             }
             else {
@@ -140,12 +149,13 @@ public class StaffFilter implements Filter {
         }
         else if(uri.toLowerCase().contains("changepassword") || uri.toLowerCase().contains("uploadimage")
                 || uri.toLowerCase().contains("updateprofile")) {
-            if(account != null){
-                flag = false;
+            if(account == null) {
+                req.getSession().setAttribute("error", "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+                res.sendRedirect("login.jsp");
+                return;
             }
             else {
-                res.sendRedirect("accessdenied.jsp");
-                return;
+                flag = false;
             }
         }
 //        else if(uri.toLowerCase().contains("profilecustomer.jsp") ||)

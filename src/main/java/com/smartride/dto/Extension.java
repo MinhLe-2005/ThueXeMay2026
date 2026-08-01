@@ -18,4 +18,5 @@ public class Extension implements Serializable{
     private double extensionFee;
     private String bookingID;
     private String staffID;
+    private String paymentStatus;
 }

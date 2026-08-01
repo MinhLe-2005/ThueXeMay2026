@@ -36,12 +36,34 @@ public class CancelBookingServlet extends HttpServlet {
             throws ServletException, IOException {
         String bookingId = request.getParameter("bookingId");
         String cancelReason = request.getParameter("cancelreason");
+        String bankInfo = request.getParameter("bankinfo");
         HttpSession session = request.getSession();
 
         if (cancelReason != null && !cancelReason.trim().isEmpty()) {
-            boolean isInserted = CancellationDAO.getInstance().insertCancellation(cancelReason, bookingId, null);
+            String finalReason = cancelReason.trim();
+            if (bankInfo != null && !bankInfo.trim().isEmpty()) {
+                finalReason += " | STK hoàn tiền: " + bankInfo.trim();
+            }
+            boolean isInserted = CancellationDAO.getInstance().insertCancellation(finalReason, bookingId, null);
             BookingDAO.getInstance().updateBookingStatus(bookingId, "Đã hủy");
             if (isInserted) {
+                com.smartride.dto.Account account = (com.smartride.dto.Account) session.getAttribute("account");
+                if (account != null) {
+                    String chatMsg = "Khách hàng gửi yêu cầu HỦY ĐƠN. Lý do: " + finalReason;
+                    com.smartride.dao.ChatMessageDAO.getInstance().insertMessage(bookingId, account.getAccountId(), "CUSTOMER", chatMsg);
+                    
+                    String title = "Đơn hàng " + bookingId + " vừa bị hủy";
+                    String link = "manageSmartRide.jsp?iframeSrc=manageBooking&openChat=true&bookingId=" + bookingId;
+                    java.util.List<com.smartride.dto.Account> staffs = com.smartride.dao.AccountDAO.getInstance().getListAccountByRole(2);
+                    java.util.List<com.smartride.dto.Account> admins = com.smartride.dao.AccountDAO.getInstance().getListAccountByRole(3);
+                    
+                    for(com.smartride.dto.Account stf : staffs) {
+                        com.smartride.dao.NotificationDAO.getInstance().insertNotification(stf.getAccountId(), title, chatMsg, link);
+                    }
+                    for(com.smartride.dto.Account adm : admins) {
+                        com.smartride.dao.NotificationDAO.getInstance().insertNotification(adm.getAccountId(), title, chatMsg, link);
+                    }
+                }
                 session.setAttribute("cancelSuccess", "Hủy đơn thành công");
             } else {
                 session.setAttribute("cancelFail", "Hủy đơn thất bại... Vui lòng thử lại");

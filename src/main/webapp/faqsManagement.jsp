@@ -395,7 +395,7 @@
                 </div>
                 <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Đóng"></button>
             </div>
-            <form action="faqs" method="post">
+            <form action="faqsStaff" method="post">
                 <div class="modal-body">
                     <div class="mb-4">
                         <label for="addQuestion" class="form-label">
