@@ -702,6 +702,24 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    public boolean deleteMotorbikeById(String id) {
+        try {
+            String sql1 = "DELETE FROM \"MotorcycleDetail\" WHERE \"MotorcycleID\" = ?";
+            PreparedStatement ps1 = conn.prepareStatement(sql1);
+            ps1.setString(1, id);
+            ps1.executeUpdate();
+
+            String sql2 = "DELETE FROM \"Motorcycle\" WHERE \"MotorcycleID\" = ?";
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            ps2.setString(1, id);
+            ps2.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Delete Motorbike Error: " + e.getMessage());
+            return false; // Typically FK constraint error
+        }
+    }
+
     public List<Motorcycle> getInitialMotorcycles() {
         List<Motorcycle> list = new ArrayList<>();
         PreparedStatement stm;

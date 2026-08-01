@@ -1146,5 +1146,25 @@
         deduplicateDatalist('brandList');
     });
 </script>
+<script>
+    $(document).ready(function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('msg') === 'deleted') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Xóa thành công!',
+                text: 'Dữ liệu dòng xe đã được xóa khỏi hệ thống.',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        } else if (urlParams.get('error') === 'delete_failed') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Không thể xóa dòng xe này!',
+                text: 'Xe đã có lịch sử thuê, không thể xóa vĩnh viễn để bảo đảm dữ liệu đối soát!',
+            });
+        }
+    });
+</script>
 </body>
 </html>
