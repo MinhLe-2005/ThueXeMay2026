@@ -1933,6 +1933,14 @@
                                             <div id="pickup_map" style="height: 220px; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 15px; z-index: 1;"></div>
                                         </div>
                                     </div>
+                                    
+                                </fieldset>
+                                
+                                <h3>Khách hàng</h3>
+                                <fieldset>
+                                    <h2>THÔNG TIN KHÁCH HÀNG</h2>
+                                    <p class="desc">Vui lòng cung cấp thông tin cá nhân và giấy tờ tùy thân để xác minh.</p>
+
                                     <c:set var="flag" value="false" />                   
                                     <c:forEach items="${listC}" var="c">
                                         <c:if test="${account.accountId eq c.accountId}">
