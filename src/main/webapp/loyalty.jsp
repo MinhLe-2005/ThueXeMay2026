@@ -283,12 +283,24 @@
                         float pct10M = 100f;
                     %>
 
-                    <!-- Labels top -->
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; opacity:0.85; font-weight:600;">
-                        <span>0đ</span>
-                        <span style="position:relative; left:-10px;">2.000.000đ<br><span style="font-size:10px; opacity:0.75;">Hạng Bạc</span></span>
-                        <span style="position:relative; right:-5px;">5.000.000đ<br><span style="font-size:10px; opacity:0.75;">Hạng Vàng</span></span>
-                        <span>10.000.000đ<br><span style="font-size:10px; opacity:0.75;">Kim Cương</span></span>
+                    <!-- Labels — positioned at same % as ticks -->
+                    <div style="position:relative; width:100%; height:32px; margin-bottom:6px;">
+                        <!-- 0đ -->
+                        <div style="position:absolute; left:0%; transform:translateX(0); text-align:center; font-size:11px; font-weight:700; opacity:0.85;">
+                            0đ
+                        </div>
+                        <!-- 2M = 20% -->
+                        <div style="position:absolute; left:20%; transform:translateX(-50%); text-align:center; font-size:11px; font-weight:700; opacity:0.9;">
+                            2.000.000đ<br><span style="font-size:10px; opacity:0.75; font-weight:600;">Hạng Bạc</span>
+                        </div>
+                        <!-- 5M = 50% -->
+                        <div style="position:absolute; left:50%; transform:translateX(-50%); text-align:center; font-size:11px; font-weight:700; opacity:0.9;">
+                            5.000.000đ<br><span style="font-size:10px; opacity:0.75; font-weight:600;">Hạng Vàng</span>
+                        </div>
+                        <!-- 10M = 100% -->
+                        <div style="position:absolute; left:100%; transform:translateX(-100%); text-align:center; font-size:11px; font-weight:700; opacity:0.9;">
+                            10.000.000đ<br><span style="font-size:10px; opacity:0.75; font-weight:600;">Kim Cương</span>
+                        </div>
                     </div>
 
                     <!-- Bar container -->
