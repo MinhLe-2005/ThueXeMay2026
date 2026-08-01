@@ -1896,12 +1896,12 @@
                                             <option value="Phố đi bộ Bạch Đằng - Bạch Đằng" data-icon="fa-map-marker-alt">Phố đi bộ Bạch Đằng</option>
                                             <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng" data-icon="fa-map-marker-alt">Bệnh viện Đà Nẵng</option>
                                         </select>
+                                        <div id="pickup_distance_info" style="font-size: 13px; color: #64748b; margin-top: 8px;"></div>
                                         <div id="pickup_custom_wrapper" style="display:none; margin-top:8px;">
                                             <div style="display: flex; gap: 10px;">
                                                 <input type="text" id="custom_pickup_input" placeholder="Nhập địa chỉ nhận xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('pickup')" oninput="updateCustomLocation('pickup')" />
                                                 <button type="button" onclick="autoGeolocate('pickup')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
                                             </div>
-                                            <div id="pickup_distance_info" style="font-size: 12px; color: #64748b; margin-top: 5px;"></div>
                                             <div id="pickup_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
                                         </div>
                                     </div>
@@ -1921,12 +1921,12 @@
                                             <option value="Phố đi bộ Bạch Đằng - Bạch Đằng" data-icon="fa-map-marker-alt">Phố đi bộ Bạch Đằng</option>
                                             <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng" data-icon="fa-map-marker-alt">Bệnh viện Đà Nẵng</option>
                                         </select>
+                                        <div id="return_distance_info" style="font-size: 13px; color: #64748b; margin-top: 8px;"></div>
                                         <div id="return_custom_wrapper" style="display:none; margin-top:8px;">
                                             <div style="display: flex; gap: 10px;">
                                                 <input type="text" id="custom_return_input" placeholder="Nhập địa chỉ trả xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('return')" oninput="updateCustomLocation('return')" />
                                                 <button type="button" onclick="autoGeolocate('return')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
                                             </div>
-                                            <div id="return_distance_info" style="font-size: 12px; color: #64748b; margin-top: 5px;"></div>
                                             <div id="return_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
                                         </div>
                                     </div>
@@ -1935,13 +1935,58 @@
                                             var select = document.getElementById(type + 'location');
                                             var wrapper = document.getElementById(type + '_custom_wrapper');
                                             var input = document.getElementById('custom_' + type + '_input');
+                                            var info = document.getElementById(type + '_distance_info');
                                             var selectedOption = select.options[select.selectedIndex];
+                                            
+                                            var predefinedCoords = {
+                                                "Ga Đà Nẵng": {lat: 16.0747, lon: 108.2132},
+                                                "Sân bay": {lat: 16.0538, lon: 108.1977},
+                                                "Bến xe": {lat: 16.0520, lon: 108.1691},
+                                                "Chợ Hàn": {lat: 16.0682, lon: 108.2235},
+                                                "Vincom": {lat: 16.0722, lon: 108.2307},
+                                                "Cầu Rồng": {lat: 16.0610, lon: 108.2274},
+                                                "Ngũ Hành Sơn": {lat: 16.0028, lon: 108.2635},
+                                                "Lotte Mart": {lat: 16.0343, lon: 108.2255},
+                                                "Bạch Đằng": {lat: 16.0667, lon: 108.2244},
+                                                "Bệnh viện": {lat: 16.0734, lon: 108.2163}
+                                            };
+                                            
                                             if (selectedOption.text.includes('(tự nhập)')) {
                                                 wrapper.style.display = 'block';
                                                 input.required = true;
+                                                if (input.value) {
+                                                    if(typeof calcDistance === 'function') calcDistance(type);
+                                                } else {
+                                                    info.innerHTML = '';
+                                                    if (type === 'pickup') window._pickupFee = 0;
+                                                    else window._returnFee = 0;
+                                                    if(typeof recalculateDeliveryFee === 'function') recalculateDeliveryFee();
+                                                    if(typeof updateTotal === 'function') updateTotal();
+                                                }
                                             } else {
                                                 wrapper.style.display = 'none';
                                                 input.required = false;
+                                                if(typeof maps !== 'undefined' && maps[type]) document.getElementById(type + '_map').style.display = 'none';
+                                                
+                                                if (selectedOption.text.includes('Tại cửa hàng')) {
+                                                    info.innerHTML = '<span style="color:#16a34a;"><i class="fas fa-check-circle"></i> Nhận/Trả tại cửa hàng (Miễn phí)</span>';
+                                                    if (type === 'pickup') window._pickupFee = 0;
+                                                    else window._returnFee = 0;
+                                                    if(typeof recalculateDeliveryFee === 'function') recalculateDeliveryFee();
+                                                    if(typeof updateTotal === 'function') updateTotal();
+                                                } else {
+                                                    var lat = 0, lon = 0;
+                                                    for (var key in predefinedCoords) {
+                                                        if (selectedOption.text.includes(key)) {
+                                                            lat = predefinedCoords[key].lat;
+                                                            lon = predefinedCoords[key].lon;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (lat !== 0 && typeof processDistance === 'function') {
+                                                        processDistance(lat, lon, type);
+                                                    }
+                                                }
                                             }
                                         }
                                         function updateCustomLocation(type) {
