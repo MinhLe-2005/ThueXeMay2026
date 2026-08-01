@@ -338,57 +338,72 @@
 
     <!-- Customer Details Modal -->
     <div class="modal fade" id="customerDetailsModal" tabindex="-1" aria-labelledby="customerDetailsModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-          <div class="modal-header border-0" style="background: linear-gradient(135deg, #012970 0%, #4154f1 100%);">
-            <h5 class="modal-title fw-bold text-white" id="customerDetailsModalLabel">
-              <i class="bi bi-person-lines-fill me-2"></i>Chi Tiết Khách Hàng VIP
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0" style="border-radius:16px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+          <!-- Header -->
+          <div class="modal-header border-0 px-4 py-3" style="background: linear-gradient(135deg, #012970 0%, #4154f1 100%);">
+            <div class="d-flex align-items-center gap-3">
+              <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-person-fill text-white" style="font-size:1.3rem;"></i>
+              </div>
+              <div>
+                <h5 class="modal-title fw-bold text-white mb-0" id="customerDetailsModalLabel">Chi Tiết Khách Hàng VIP</h5>
+                <p class="text-white mb-0" style="opacity:0.75;font-size:0.8rem;">Thông tin & lịch sử thuê xe</p>
+              </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
-          <div class="modal-body p-4" style="background:#f8f9fc;">
-            <div class="row mb-4 g-3">
-              <div class="col-md-6">
-                <div class="card h-100 border-0 shadow-sm rounded-3">
-                  <div class="card-body">
-                    <p class="text-muted fw-semibold mb-3" style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;">Thông tin liên hệ</p>
-                    <h5 id="modalCustomerName" class="fw-bold mb-3" style="color:#012970;"></h5>
-                    <p class="mb-2 d-flex align-items-center gap-2">
-                      <span class="badge bg-light text-dark p-2"><i class="bi bi-telephone-fill text-primary"></i></span>
-                      <span id="modalCustomerPhone"></span>
-                    </p>
-                    <p class="mb-0 d-flex align-items-center gap-2">
-                      <span class="badge bg-light text-dark p-2"><i class="bi bi-envelope-fill text-primary"></i></span>
-                      <span id="modalCustomerEmail" style="font-size:0.9rem;"></span>
-                    </p>
+
+          <!-- Info Cards -->
+          <div class="p-4" style="background:#fff;">
+            <div class="row g-3 mb-4">
+              <!-- Contact Info -->
+              <div class="col-md-7">
+                <div class="p-3 rounded-3" style="background:#f8faff;border:1px solid #e8ecf4;">
+                  <p style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4154f1;margin-bottom:12px;">
+                    <i class="bi bi-person-vcard me-1"></i> Thông tin liên hệ
+                  </p>
+                  <h4 id="modalCustomerName" class="fw-bold mb-3" style="color:#012970;"></h4>
+                  <div class="d-flex flex-column gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="bi bi-telephone-fill" style="color:#4154f1;width:18px;"></i>
+                      <span id="modalCustomerPhone" style="font-size:0.95rem;font-weight:500;color:#333;"></span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      <i class="bi bi-envelope-fill" style="color:#4154f1;width:18px;"></i>
+                      <span id="modalCustomerEmail" style="font-size:0.9rem;color:#555;"></span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="card h-100 border-0 shadow-sm rounded-3 text-white" style="background: linear-gradient(135deg, #198754, #20c997);">
-                  <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
-                    <p class="fw-semibold mb-2" style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;opacity:0.8;">Tổng chi tiêu</p>
-                    <h2 id="modalCustomerSpent" class="fw-bold mb-3"></h2>
-                    <div class="badge bg-white rounded-pill px-4 py-2" style="color:#198754;font-size:0.9rem;">
-                      <i class="bi bi-bicycle me-1"></i>
-                      <span id="modalCustomerBookings" class="fw-bold"></span> chuyến
-                    </div>
+              <!-- Stats -->
+              <div class="col-md-5">
+                <div class="h-100 p-3 rounded-3 text-center d-flex flex-column justify-content-center align-items-center" style="background:linear-gradient(135deg,#012970,#4154f1);">
+                  <p style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:8px;">Tổng chi tiêu</p>
+                  <h3 id="modalCustomerSpent" class="fw-bold text-white mb-2" style="font-size:1.5rem;"></h3>
+                  <div class="d-flex align-items-center gap-1" style="background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 16px;">
+                    <i class="bi bi-bicycle text-white"></i>
+                    <span id="modalCustomerBookings" class="fw-bold text-white"></span>
+                    <span class="text-white" style="opacity:0.9;"> chuyến</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <p class="fw-bold mb-3" style="color:#333;"><i class="bi bi-clock-history me-2 text-primary"></i>Lịch sử thuê xe</p>
+            <!-- History Table -->
+            <p style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#4154f1;margin-bottom:12px;">
+              <i class="bi bi-clock-history me-1"></i> Lịch sử thuê xe
+            </p>
             <div class="table-responsive rounded-3" style="border:1px solid #e8ecf4;">
               <table class="table table-hover align-middle mb-0">
-                <thead style="background:#f8f9fc;">
-                  <tr>
-                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Mã Đơn</th>
-                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Số Xe</th>
-                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Ngày nhận</th>
-                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Ngày trả</th>
-                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Giá trị</th>
-                    <th class="border-0 fw-semibold text-muted text-center" style="font-size:0.8rem;">Trạng thái</th>
+                <thead>
+                  <tr style="background:linear-gradient(135deg,#1a2f6b,#2d4fa1);">
+                    <th class="border-0 text-white fw-600" style="padding:12px 16px;font-size:0.78rem;font-weight:600;">Mã Đơn</th>
+                    <th class="border-0 text-white fw-600" style="padding:12px 16px;font-size:0.78rem;font-weight:600;">Số Xe</th>
+                    <th class="border-0 text-white fw-600" style="padding:12px 16px;font-size:0.78rem;font-weight:600;">Ngày nhận</th>
+                    <th class="border-0 text-white fw-600" style="padding:12px 16px;font-size:0.78rem;font-weight:600;">Ngày trả</th>
+                    <th class="border-0 text-white fw-600" style="padding:12px 16px;font-size:0.78rem;font-weight:600;">Giá trị</th>
+                    <th class="border-0 text-white fw-600 text-center" style="padding:12px 16px;font-size:0.78rem;font-weight:600;">Trạng thái</th>
                   </tr>
                 </thead>
                 <tbody id="modalHistoryTableBody">
@@ -396,8 +411,11 @@
               </table>
             </div>
           </div>
-          <div class="modal-footer border-0" style="background:#f8f9fc;">
-            <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Đóng</button>
+
+          <div class="modal-footer border-0 px-4 py-3" style="background:#f8faff;">
+            <button type="button" class="btn px-4 fw-semibold rounded-pill" data-bs-dismiss="modal" style="background:#f0f2f5;color:#333;">
+              <i class="bi bi-x-circle me-1"></i> Đóng
+            </button>
           </div>
         </div>
       </div>

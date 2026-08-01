@@ -3,6 +3,7 @@ package com.smartride.controller;
 import com.google.gson.Gson;
 import com.smartride.dao.BookingDAO;
 import com.smartride.dto.Booking;
+import com.smartride.dto.BookingDetail;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,8 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.text.SimpleDateFormat;
-import com.smartride.dto.BookingDetail;
 
 @WebServlet(name = "CustomerHistoryStaffServlet", urlPatterns = {"/customerHistoryStaff"})
 public class CustomerHistoryStaffServlet extends HttpServlet {
@@ -32,19 +31,17 @@ public class CustomerHistoryStaffServlet extends HttpServlet {
             }
             
             int customerId = Integer.parseInt(customerIdStr);
-            
-            // Get all bookings
             List<Booking> bookings = BookingDAO.getInstance().getAllBookings();
             List<Map<String, Object>> result = new ArrayList<>();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             
             for (Booking b : bookings) {
                 if (b.getCustomerID() == customerId) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("bookingID", b.getBookingID());
-                    map.put("startDate", sdf.format(b.getStartDate()));
-                    map.put("endDate", sdf.format(b.getEndDate()));
-                    map.put("status", b.getStatusBooking());
+                    // startDate and endDate are Strings in the Booking DTO
+                    map.put("startDate", b.getStartDate() != null ? b.getStartDate() : "N/A");
+                    map.put("endDate", b.getEndDate() != null ? b.getEndDate() : "N/A");
+                    map.put("status", b.getStatusBooking() != null ? b.getStatusBooking() : "");
                     
                     double total = 0;
                     int count = 0;
