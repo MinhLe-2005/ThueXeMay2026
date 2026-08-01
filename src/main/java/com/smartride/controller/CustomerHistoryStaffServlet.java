@@ -2,7 +2,7 @@ package com.smartride.controller;
 
 import com.google.gson.Gson;
 import com.smartride.dao.BookingDAO;
-import com.smartride.model.Booking;
+import com.smartride.dto.Booking;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.text.SimpleDateFormat;
-import com.smartride.model.BookingDetail;
+import com.smartride.dto.BookingDetail;
 
 @WebServlet(name = "CustomerHistoryStaffServlet", urlPatterns = {"/customerHistoryStaff"})
 public class CustomerHistoryStaffServlet extends HttpServlet {
@@ -46,14 +46,16 @@ public class CustomerHistoryStaffServlet extends HttpServlet {
                     map.put("endDate", sdf.format(b.getEndDate()));
                     map.put("status", b.getStatusBooking());
                     
-                    if (b.getBookingDetails() != null && !b.getBookingDetails().isEmpty()) {
-                        BookingDetail bd = b.getBookingDetails().get(0);
-                        map.put("motorName", bd.getMotorbike().getMotorName());
-                        map.put("totalPrice", bd.getTotalPrice());
-                    } else {
-                        map.put("motorName", "Không xác định");
-                        map.put("totalPrice", 0);
+                    double total = 0;
+                    int count = 0;
+                    if (b.getListBookingDetails() != null) {
+                        count = b.getListBookingDetails().size();
+                        for (BookingDetail bd : b.getListBookingDetails()) {
+                            total += bd.getTotalPrice();
+                        }
                     }
+                    map.put("motorName", count + " xe");
+                    map.put("totalPrice", total);
                     result.add(map);
                 }
             }
