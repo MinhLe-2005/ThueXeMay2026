@@ -37,23 +37,28 @@ public class CustomerHistoryStaffServlet extends HttpServlet {
             
             for (Booking b : bookings) {
                 if (b.getCustomerID() == customerId) {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("bookingID", b.getBookingID());
-                    map.put("startDate", b.getStartDate() != null ? b.getStartDate() : "N/A");
-                    map.put("endDate", b.getEndDate() != null ? b.getEndDate() : "N/A");
-                    map.put("status", b.getStatusBooking() != null ? b.getStatusBooking() : "");
+                    boolean isCompleted = "Đã hoàn thành".equals(b.getStatusBooking()) || 
+                                          ("Đã xác nhận".equals(b.getStatusBooking()) && "Đã trả".equals(b.getDeliveryStatus()));
                     
-                    double total = 0;
-                    int count = 0;
-                    if (b.getListBookingDetails() != null) {
-                        count = b.getListBookingDetails().size();
-                        for (BookingDetail bd : b.getListBookingDetails()) {
-                            total += bd.getTotalPrice();
+                    if (isCompleted) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("bookingID", b.getBookingID());
+                        map.put("startDate", b.getStartDate() != null ? b.getStartDate() : "N/A");
+                        map.put("endDate", b.getEndDate() != null ? b.getEndDate() : "N/A");
+                        map.put("status", "Đã hoàn thành"); // Force status to say Đã hoàn thành for display
+                        
+                        double total = 0;
+                        int count = 0;
+                        if (b.getListBookingDetails() != null) {
+                            count = b.getListBookingDetails().size();
+                            for (BookingDetail bd : b.getListBookingDetails()) {
+                                total += bd.getTotalPrice();
+                            }
                         }
+                        map.put("motorName", count + " xe");
+                        map.put("totalPrice", total);
+                        result.add(map);
                     }
-                    map.put("motorName", count + " xe");
-                    map.put("totalPrice", total);
-                    result.add(map);
                 }
             }
             

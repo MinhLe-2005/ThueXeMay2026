@@ -403,7 +403,7 @@
             <p style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#d4a017;margin-bottom:10px;">
               <i class="bi bi-clock-history me-1"></i> Lịch sử thuê xe
             </p>
-            <div class="rounded-3 overflow-hidden" style="border:1px solid #e9ecef;background:#ffffff;">
+            <div class="rounded-3 overflow-hidden" style="border:1px solid #e9ecef;background:#ffffff; max-height: 400px; overflow-y: auto !important;">
               <table class="table table-hover align-middle mb-0">
                 <thead>
                   <tr style="background:#212529;border-bottom:2px solid #d4a017;">
