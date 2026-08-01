@@ -1961,7 +1961,7 @@
                                                     if (type === 'pickup') window._pickupFee = 0;
                                                     else window._returnFee = 0;
                                                     if(typeof recalculateDeliveryFee === 'function') recalculateDeliveryFee();
-                                                    if(typeof updateTotal === 'function') updateTotal();
+                                                    if(typeof changePrice === 'function') changePrice();
                                                 }
                                             } else {
                                                 wrapper.style.display = 'none';
@@ -1973,7 +1973,7 @@
                                                     if (type === 'pickup') window._pickupFee = 0;
                                                     else window._returnFee = 0;
                                                     if(typeof recalculateDeliveryFee === 'function') recalculateDeliveryFee();
-                                                    if(typeof updateTotal === 'function') updateTotal();
+                                                    if(typeof changePrice === 'function') changePrice();
                                                 } else {
                                                     var lat = 0, lon = 0;
                                                     for (var key in predefinedCoords) {
@@ -5331,7 +5331,7 @@
                     if (type === 'pickup') window._pickupFee = 25000;
                     else window._returnFee = 25000;
                     recalculateDeliveryFee();
-                    updateTotal();
+                    if(typeof changePrice === 'function') changePrice();
                     initMap(type);
                 }
             })
@@ -5392,7 +5392,7 @@
             if (type === 'pickup') window._pickupFee = fee;
             else window._returnFee = fee;
             recalculateDeliveryFee();
-            updateTotal();
+            if(typeof changePrice === 'function') changePrice();
         }
 
         function recalculateDeliveryFee() {
