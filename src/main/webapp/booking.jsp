@@ -5170,22 +5170,6 @@
         <script>
         window.deliveryFee = 0;
         
-        function toggleCustomLocation(type) {
-            var select = document.getElementById(type + 'location');
-            var wrapper = document.getElementById(type + '_custom_wrapper');
-            var input = document.getElementById('custom_' + type + '_input');
-            if (select.value === 'Your own address') {
-                wrapper.style.display = 'block';
-                input.required = true;
-                setTimeout(function() { initMap(type); }, 200);
-            } else {
-                wrapper.style.display = 'none';
-                input.required = false;
-                document.getElementById(type + '_distance_info').innerHTML = '';
-                if(maps[type]) document.getElementById(type + '_map').style.display = 'none';
-            }
-            recalculateDeliveryFee();
-        }
         
         var maps = { pickup: null, return: null };
         var markers = { pickup: null, return: null };
