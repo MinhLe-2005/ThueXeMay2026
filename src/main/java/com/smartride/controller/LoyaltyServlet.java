@@ -29,6 +29,9 @@ public class LoyaltyServlet extends HttpServlet {
 
         int accountId = account.getAccountId();
         float totalSpent = CustomerDAO.getInstance().getTotalSpentByAccountId(accountId);
+        
+        com.smartride.service.LoyaltyService.checkAndIssueVoucherForAccount(accountId);
+        
         List<Voucher> myVouchers = VoucherDAO.getInstance().getAvailableVouchersForAccount(accountId);
 
         request.setAttribute("totalSpent", totalSpent);

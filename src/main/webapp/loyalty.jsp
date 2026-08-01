@@ -88,19 +88,20 @@
         }
 
         .progress-bar-bg {
-            background: rgba(255, 255, 255, 0.2);
-            height: 8px;
-            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            height: 12px;
+            border-radius: 6px;
             overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+            width: 100%;
         }
 
         .progress-bar-fill {
-            background: #d4af37;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
             height: 100%;
-            border-radius: 4px;
+            border-radius: 6px;
             transition: width 1s ease-in-out;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
         }
 
         /* Milestones Grid */
@@ -302,17 +303,17 @@
             <h3><i class="bi bi-ticket-perforated"></i> Kho Voucher Của Bạn</h3>
             
             <c:choose>
-                <c:when test="">
+                <c:when test="${not empty myVouchers}">
                     <div class="voucher-grid">
-                        <c:forEach var="v" items="">
+                        <c:forEach var="v" items="${myVouchers}">
                             <div class="voucher-item">
                                 <div class="voucher-icon">
                                     <i class="bi bi-gift"></i>
                                 </div>
                                 <div class="voucher-info">
-                                    <h4></h4>
-                                    <p>Giảm: <fmt:formatNumber value="" type="number" maxFractionDigits="0"/> đ</p>
-                                    <div class="voucher-code"></div>
+                                    <h4>${v.description}</h4>
+                                    <p>Giảm: <fmt:formatNumber value="${v.discountAmount}" type="number" maxFractionDigits="0"/> đ</p>
+                                    <div class="voucher-code">${v.code}</div>
                                 </div>
                             </div>
                         </c:forEach>

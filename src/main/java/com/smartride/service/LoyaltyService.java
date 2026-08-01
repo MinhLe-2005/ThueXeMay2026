@@ -25,6 +25,13 @@ public class LoyaltyService {
         issueVoucherIfEligible(accountId, totalSpent, 2000000f, "VIP-SILVER", 15, "Voucher VIP Bạc (Giảm 15%)");
     }
 
+    public static void checkAndIssueVoucherForAccount(int accountId) {
+        float totalSpent = CustomerDAO.getInstance().getTotalSpentByAccountId(accountId);
+        issueVoucherIfEligible(accountId, totalSpent, 10000000f, "VIP-DIAMOND", 50, "Voucher VIP Kim Cương (Giảm 50%)");
+        issueVoucherIfEligible(accountId, totalSpent, 5000000f, "VIP-GOLD", 30, "Voucher VIP Vàng (Giảm 30%)");
+        issueVoucherIfEligible(accountId, totalSpent, 2000000f, "VIP-SILVER", 15, "Voucher VIP Bạc (Giảm 15%)");
+    }
+
     private static void issueVoucherIfEligible(int accountId, float totalSpent, float threshold, String tierCodePrefix, double discountAmount, String description) {
         if (totalSpent >= threshold) {
             VoucherDAO voucherDAO = VoucherDAO.getInstance();
