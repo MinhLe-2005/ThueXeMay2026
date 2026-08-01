@@ -10,13 +10,14 @@ import java.util.UUID;
 public class LoyaltyService {
 
     public static void checkAndIssueVoucher(String bookingID) {
-        Booking booking = BookingDAO.getInstance().searchBookingbyBookingId(bookingID);
-        if (booking == null) return;
+        java.util.List<Booking> bookings = BookingDAO.getInstance().searchBookingbyBookingId(bookingID);
+        if (bookings == null || bookings.isEmpty()) return;
+        Booking booking = bookings.get(0);
 
-        Customer customer = CustomerDAO.getInstance().getCustomerByID(booking.getCustomerID());
+        Customer customer = CustomerDAO.getInstance().getCustomerbyID(booking.getCustomerID());
         if (customer == null) return;
 
-        int accountId = customer.getAccountID();
+        int accountId = customer.getAccountId();
         float totalSpent = CustomerDAO.getInstance().getTotalSpentByAccountId(accountId);
 
         issueVoucherIfEligible(accountId, totalSpent, 10000000f, "VIP-DIAMOND", 50, "Voucher VIP Kim Cương (Giảm 50%)");
