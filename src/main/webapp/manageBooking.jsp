@@ -305,7 +305,6 @@
                                                 </thead>
                                                 <tbody>
                                                     <c:forEach items="${sessionScope.bookings}" var="listB">
-                                                        <c:if test="${listB.statusBooking != 'Chờ thanh toán'}">
                                                             <%
                                                                 com.smartride.dto.Booking b = (com.smartride.dto.Booking) pageContext.getAttribute("listB");
                                                                 com.smartride.dto.Account acc = com.smartride.dao.AccountDAO.getInstance().getAccountbyCustomerId(b.getCustomerID());
@@ -474,7 +473,6 @@
                                                                     </td>
                                                                 </tr>
                                                             </form>
-                                                        </c:if>
                                                     </c:forEach>
                                                 </tbody>
                                             </table>

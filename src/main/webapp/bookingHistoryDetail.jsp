@@ -718,7 +718,9 @@
                     <button type="button" onclick="document.getElementById('contract-modal').style.display='none'"
                         style="padding:10px 24px; background:#e2e8f0; color:#334155; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer;">Đóng</button>
                     <button type="button" onclick="window.open('contract.jsp?id=${booking.bookingID}&print=1', '_blank')"
-                        style="padding:10px 24px; background:#059669; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.5);"><i class="fas fa-print"></i> In / Tải về PDF</button>
+                        style="padding:10px 24px; background:#059669; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.5);"><i class="fas fa-print"></i> In Hợp Đồng</button>
+                    <button type="button" onclick="window.open('contract.jsp?id=${booking.bookingID}&pdf=1', '_blank')"
+                        style="padding:10px 24px; background:#dc2626; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.5);"><i class="fas fa-file-pdf"></i> Tải PDF</button>
                 </div>
             </div>
         </div>
