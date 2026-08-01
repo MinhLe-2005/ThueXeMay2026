@@ -86,14 +86,14 @@
         }
 
         .table-vip thead th {
-            background-color: #f8f9fc;
-            color: #555;
-            font-weight: 700;
-            font-size: 0.82rem;
+            background: linear-gradient(135deg, #1a2f6b, #2d4fa1);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
             padding: 14px 16px;
-            border-bottom: 2px solid #e8ecf4;
+            border: none;
         }
         .table-vip tbody tr {
             border-bottom: 1px solid #f0f2f5;
@@ -159,7 +159,60 @@
             align-items: center;
             gap: 5px;
         }
+        /* Gold rank accents */
+        .rank-gold   { color: #d4a017; font-size: 1.6rem; filter: drop-shadow(0 2px 6px rgba(212,160,23,0.5)); }
+        .rank-silver { color: #8e9bae; font-size: 1.6rem; filter: drop-shadow(0 2px 4px rgba(142,155,174,0.4)); }
+        .rank-bronze { color: #b5682c; font-size: 1.6rem; filter: drop-shadow(0 2px 4px rgba(181,104,44,0.4)); }
     </style>
+
+    <script>
+        // Function defined in <head> so it's available before the includes render
+        function showCustomerDetails(id, name, email, phone, bookings, spent) {
+            document.getElementById('modalCustomerName').innerText = name;
+            document.getElementById('modalCustomerEmail').innerText = email;
+            document.getElementById('modalCustomerPhone').innerText = phone;
+            document.getElementById('modalCustomerBookings').innerText = bookings;
+            document.getElementById('modalCustomerSpent').innerText = parseFloat(spent).toLocaleString('vi-VN') + ' đ';
+
+            const tbody = document.getElementById('modalHistoryTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted small">Đang tải dữ liệu...</p></td></tr>';
+
+            const myModal = new bootstrap.Modal(document.getElementById('customerDetailsModal'));
+            myModal.show();
+
+            fetch('customerHistoryStaff?customerId=' + id)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (!data || data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i>Không có lịch sử thuê xe.</td></tr>';
+                        return;
+                    }
+                    var html = '';
+                    data.forEach(function(b) {
+                        var badge;
+                        if (b.status === 'Đã hoàn thành' || b.status === 'Đã xác nhận') {
+                            badge = '<span class="badge rounded-pill px-3" style="background:#d1fae5;color:#065f46;">Hoàn thành</span>';
+                        } else if (b.status === 'Đã hủy') {
+                            badge = '<span class="badge rounded-pill px-3" style="background:#fee2e2;color:#991b1b;">Đã hủy</span>';
+                        } else {
+                            badge = '<span class="badge rounded-pill px-3" style="background:#fef9c3;color:#854d0e;">' + b.status + '</span>';
+                        }
+                        html += '<tr>'
+                            + '<td><span class="fw-bold" style="color:#4154f1;">#' + b.bookingID + '</span></td>'
+                            + '<td>' + b.motorName + '</td>'
+                            + '<td class="text-muted" style="font-size:0.85rem;">' + b.startDate + '</td>'
+                            + '<td class="text-muted" style="font-size:0.85rem;">' + b.endDate + '</td>'
+                            + '<td class="fw-bold">' + parseFloat(b.totalPrice).toLocaleString('vi-VN') + 'đ</td>'
+                            + '<td class="text-center">' + badge + '</td>'
+                            + '</tr>';
+                    });
+                    tbody.innerHTML = html;
+                })
+                .catch(function() {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-danger">Có lỗi khi tải dữ liệu.</td></tr>';
+                });
+        }
+    </script>
 </head>
 
 <body>
@@ -223,13 +276,13 @@
                                             <td class="text-center">
                                                 <c:choose>
                                                     <c:when test="${status.count == 1}">
-                                                        <i class="bi bi-trophy-fill medal-icon medal-1"></i>
+                                                        <i class="bi bi-trophy-fill rank-gold"></i>
                                                     </c:when>
                                                     <c:when test="${status.count == 2}">
-                                                        <i class="bi bi-trophy-fill medal-icon medal-2"></i>
+                                                        <i class="bi bi-trophy-fill rank-silver"></i>
                                                     </c:when>
                                                     <c:when test="${status.count == 3}">
-                                                        <i class="bi bi-trophy-fill medal-icon medal-3"></i>
+                                                        <i class="bi bi-trophy-fill rank-bronze"></i>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <span class="medal-other">#${status.count}</span>
