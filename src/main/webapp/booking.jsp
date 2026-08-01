@@ -5156,6 +5156,15 @@
                     attribution: '&copy; OpenStreetMap contributors'
                 }).addTo(maps[type]);
                 
+                var shopIcon = L.divIcon({
+                    html: '<i class="fas fa-map-marker-alt" style="color: #ea4335; font-size: 32px; text-shadow: 1px 1px 2px #fff;"></i><i class="fas fa-store" style="color: white; font-size: 12px; position: absolute; top: 6px; left: 9px;"></i>',
+                    className: 'custom-div-icon',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32]
+                });
+                L.marker([16.0609, 108.2057], {icon: shopIcon, zIndexOffset: -100}).addTo(maps[type]).bindPopup('<b>Cửa hàng SmartRide</b><br>254 Nguyễn Văn Linh').openPopup();
+                
                 markers[type] = L.marker([16.0609, 108.2057], {draggable: true}).addTo(maps[type]);
                 
                 markers[type].on('dragend', function(event) {
