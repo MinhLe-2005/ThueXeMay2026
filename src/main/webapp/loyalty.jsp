@@ -1,4 +1,4 @@
-﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
@@ -208,8 +208,10 @@
         }
     </style>
 </head>
-<body>
-    <div class="loyalty-container">
+<body style="background-color: #f4f6f9; color: #333;">
+    <jsp:include page="/includes/customer/navbar.jsp" />
+    
+    <div class="loyalty-container" style="margin-top: 100px;">
         
         <%
             Float totalSpentObj = (Float) request.getAttribute("totalSpent");
