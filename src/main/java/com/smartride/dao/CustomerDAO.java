@@ -220,7 +220,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
                    + "FROM \"Customer\" c "
                    + "JOIN \"Booking\" b ON c.\"CustomerID\" = b.\"CustomerID\" "
                    + "JOIN \"Booking Detail\" bd ON b.\"BookingID\" = bd.\"BookingID\" "
-                   + "WHERE c.\"AccountID\" = ? AND b.\"StatusBooking\" = 'Đã hoàn thành'";
+                   + "WHERE c.\"AccountID\" = ? AND (b.\"StatusBooking\" = 'Đã hoàn thành' OR (b.\"StatusBooking\" = 'Đã xác nhận' AND b.\"DeliveryStatus\" = 'Đã trả'))";
         try {
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setInt(1, accountId);
@@ -243,7 +243,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
                    + "JOIN \"Account\" a ON c.\"AccountID\" = a.\"AccountID\" "
                    + "JOIN \"Booking\" b ON c.\"CustomerID\" = b.\"CustomerID\" "
                    + "JOIN \"Booking Detail\" bd ON b.\"BookingID\" = bd.\"BookingID\" "
-                   + "WHERE b.\"StatusBooking\" = 'Đã hoàn thành' "
+                   + "WHERE b.\"StatusBooking\" = 'Đã hoàn thành' OR (b.\"StatusBooking\" = 'Đã xác nhận' AND b.\"DeliveryStatus\" = 'Đã trả') "
                    + "GROUP BY c.\"CustomerID\", a.\"FullName\", a.\"Email\", a.\"Phone\" "
                    + "ORDER BY \"TotalSpent\" DESC, \"TotalBookings\" DESC "
                    + "LIMIT ?";
