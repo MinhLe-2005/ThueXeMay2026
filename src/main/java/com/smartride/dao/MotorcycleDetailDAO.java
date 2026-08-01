@@ -108,7 +108,7 @@ public class MotorcycleDetailDAO implements Serializable, DAO<MotorcycleDetail> 
                     + "INNER JOIN\n"
                     + "    \"Motorcycle\" m ON md.\"MotorcycleID\" = m.\"MotorcycleID\"\n"
                     + "WHERE\n"
-                    + "    ls.\"StatusAction\" like 'Có sẵn' and (m.\"Model\" || ' ' || m.\"Displacement\") LIKE ?\n"
+                    + "    ls.\"StatusAction\" = 'Có sẵn' and (m.\"Model\" || ' ' || m.\"Displacement\") LIKE ?\n"
                     + "ORDER BY\n"
                     + "    md.\"MotorcycleID\";\n"
                     + "\n"
