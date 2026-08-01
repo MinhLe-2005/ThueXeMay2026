@@ -44,9 +44,9 @@ public class DeliveryCheckerJob implements ServletContextListener {
                 String shortBookingID = bookingID.replace("BK", "");
                 String voucherCode = "LATE" + shortBookingID + randomSuffix;
 
-                // Create personal voucher (50,000 VND discount)
+                // Create personal voucher (50,000 VND discount, no limits)
                 String desc = "Bồi thường giao xe trễ cho đơn #" + bookingID + ". Dùng 1 lần cho đơn tiếp theo.";
-                boolean created = VoucherDAO.getInstance().createPersonalVoucher(voucherCode, accountID, 50000, desc);
+                boolean created = VoucherDAO.getInstance().createPersonalVoucher(voucherCode, accountID, 50000, desc, 0, 0);
 
                 if (created) {
                     // Send personal notification
