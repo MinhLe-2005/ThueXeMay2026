@@ -95,28 +95,10 @@ public class DBUtil {
         }
 
         // 2. Ping kết nối của các DAO singleton đang hoạt động
-        for (ConnectionProxyHandler handler : activeHandlers) {
-            if (shuttingDown) break;
-            try {
-                Connection c = handler.realConn;
-                if (c != null && !c.isClosed()) {
-                    c.createStatement().execute("SELECT 1");
-                    handlerPinged++;
-                } else {
-                    // Thay thế kết nối chết của DAO
-                    Connection fresh = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-                    handler.realConn = fresh;
-                    replaced++;
-                }
-            } catch (Exception e) {
-                // Kết nối chết, thay thế
-                try {
-                    Connection fresh = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-                    handler.realConn = fresh;
-                    replaced++;
-                } catch (Exception ignored) {}
-            }
-        }
+        // ĐÃ XÓA: KHÔNG ĐƯỢC PING activeHandlers ở đây. 
+        // Vì nếu DAO đang chạy query (như rs.next()), việc ping SELECT 1 song song 
+        // trên CÙNG 1 Connection sẽ gây crash/deadlock JDBC Driver (Thread-safety issue).
+        // Proxy đã có cơ chế tự động reconnect (try-catch isConnectionError) khi DAO query bị rớt.
 
         System.out.println("[DBUtil-Keepalive] Pinged: pool=" + poolPinged +
             ", handlers=" + handlerPinged + ", replaced=" + replaced);
@@ -180,38 +162,34 @@ public class DBUtil {
     }
 
     static class ConnectionProxyHandler implements InvocationHandler {
-        volatile Connection realConn;
+        private static final ThreadLocal<Connection> threadConn = new ThreadLocal<>();
 
-        ConnectionProxyHandler(Connection realConn) {
-            this.realConn = realConn;
+        ConnectionProxyHandler(Connection ignored) {
+            // No longer bind to a specific realConn at instance level
+        }
+
+        private Connection getMyConnection() {
+            Connection c = threadConn.get();
+            try {
+                if (c == null || c.isClosed()) {
+                    c = getRawConnection();
+                    threadConn.set(c);
+                }
+            } catch (SQLException e) {
+                c = getRawConnection();
+                threadConn.set(c);
+            }
+            return c;
         }
 
         @Override
-        public synchronized Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            // Khi DAO gọi close(): trả kết nối về pool
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            // Khi DAO gọi close(): bỏ qua vì connection được quản lý theo Thread, tự động tái sử dụng.
             if ("close".equals(method.getName())) {
-                // Xóa khỏi danh sách activeHandlers để keepalive thread không cố khôi phục lại kết nối đã đóng
-                activeHandlers.remove(this);
-                Connection c = realConn;
-                if (c != null) {
-                    try {
-                        if (!c.isClosed() && pool.size() < 30) {
-                            pool.offer(c);
-                            realConn = null;
-                        } else {
-                            c.close();
-                            realConn = null;
-                        }
-                    } catch (Exception e) {
-                        realConn = null;
-                    }
-                }
                 return null;
             }
 
-            // Đảm bảo có kết nối sống trước khi thực thi
-            ensureConnection();
-
+            Connection realConn = getMyConnection();
             if (realConn == null) {
                 throw new SQLException("Database connection is currently unavailable.");
             }
@@ -227,6 +205,7 @@ public class DBUtil {
                         cause.getMessage() + ". Reconnecting and retrying...");
                     try { if (realConn != null) realConn.close(); } catch (Exception ignored) {}
                     realConn = getRawConnection();
+                    threadConn.set(realConn);
                     if (realConn != null) {
                         try {
                             return method.invoke(realConn, args);
@@ -236,18 +215,6 @@ public class DBUtil {
                     }
                 }
                 throw cause;
-            }
-        }
-
-        private void ensureConnection() {
-            try {
-                if (realConn == null || realConn.isClosed()) {
-                    System.out.println("[DBUtil-Proxy] Connection null/closed, fetching from pool...");
-                    realConn = getRawConnection();
-                }
-            } catch (Exception e) {
-                System.out.println("[DBUtil-Proxy] Error checking conn: " + e.getMessage() + ". Reconnecting...");
-                realConn = getRawConnection();
             }
         }
 
