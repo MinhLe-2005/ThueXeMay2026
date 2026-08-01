@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
         <i class="bi bi-x-lg" style="cursor: pointer; font-size: 18px; transition: color 0.3s;" onmouseover="this.style.color='#b59349'" onmouseout="this.style.color='#fff'" onclick="window.toggleChatWidget()"></i>
     </div>
-    <iframe src="https://www.chatbase.co/chatbot-iframe/HNBmb5fk-wSlCm4pwAPS6" style="flex-grow: 1; border: none; width: 100%; height: 100%;"></iframe>
+    <iframe src="https://www.chatbase.co/chatbot-iframe/HNBmb5fk-wSlCm4pwAPS6" allow="microphone" style="flex-grow: 1; border: none; width: 100%; height: 100%;"></iframe>
 </div>
 
 <style>
