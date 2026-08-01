@@ -454,7 +454,7 @@
                                         </c:if>
                                         <div class="flex justify-between items-center pt-1 border-b border-white/10 pb-4">
                                             <div>
-                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiền cọc (${depositAmount > 0 ? 'Đã thanh toán' : 'Chưa thanh toán'})</p>
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiền cọc (${depositAmount > 0 ? 'Đã cọc' : 'Chưa thanh toán'})</p>
                                                 <p class="text-2xl font-bold ${depositAmount > 0 ? 'text-green-400' : 'text-yellow-400'}" id="amount-paid">
                                                     <fmt:formatNumber value="${depositAmount}" pattern="#,##0" /> VNĐ
                                                 </p>
