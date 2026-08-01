@@ -477,7 +477,7 @@ public class BookingInforHander extends HttpServlet {
             String errorMsg = e.getMessage();
             if (errorMsg != null && errorMsg.contains("duplicate key value violates unique constraint")) {
                 if (errorMsg.contains("Customer_IdentityCard_key") || errorMsg.contains("IdentityCard")) {
-                    errorResponse.put("message", "Số CMND/CCCD này đã tồn tại trong hệ thống. Vui lòng kiểm tra lại!");
+                    errorResponse.put("message", "Số CMND/CCCD này đã được liên kết với một tài khoản khác. Vui lòng sử dụng tài khoản đó hoặc nhập CCCD khác!");
                 } else {
                     errorResponse.put("message", "Dữ liệu bị trùng lặp trong hệ thống (Duplicate Key).");
                 }
