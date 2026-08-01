@@ -158,7 +158,7 @@
 
         .voucher-item {
             background: #fff;
-            border: 1px dashed #d4af37;
+            border: 2px dashed #b59349;
             border-radius: 12px;
             padding: 20px;
             position: relative;
@@ -166,11 +166,13 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            box-shadow: 0 2px 10px rgba(181,147,73,0.10);
         }
         
         .voucher-item:hover {
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+            box-shadow: 0 8px 25px rgba(181,147,73,0.25);
             transform: translateY(-3px);
+            border-color: #d4af37;
         }
 
         .voucher-icon {
@@ -187,14 +189,23 @@
         }
 
         .voucher-info h4 {
-            margin: 0 0 5px;
+            margin: 0 0 6px;
             font-size: 16px;
-            color: #333;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        .voucher-discount-label {
+            font-size: 22px;
+            font-weight: 800;
+            color: #b59349;
+            margin: 4px 0 6px;
+            letter-spacing: -0.5px;
         }
         .voucher-info p {
             margin: 0;
             font-size: 13px;
-            color: #666;
+            color: #555;
+            font-weight: 500;
         }
         .voucher-code {
             display: inline-block;
@@ -358,7 +369,16 @@
                                 </div>
                                 <div class="voucher-info">
                                     <h4>${v.description}</h4>
-                                    <p>Giảm: <fmt:formatNumber value="${v.discountAmount}" type="number" maxFractionDigits="0"/> đ</p>
+                                    <c:choose>
+                                        <c:when test="${v.discountAmount <= 100}">
+                                            <div class="voucher-discount-label">-<fmt:formatNumber value="${v.discountAmount}" maxFractionDigits="0"/>%</div>
+                                            <p>Giảm theo % tổng đơn hàng</p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="voucher-discount-label">-<fmt:formatNumber value="${v.discountAmount}" type="currency" currencySymbol="đ" maxFractionDigits="0"/></div>
+                                            <p>Giảm cố định</p>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <div class="voucher-code">${v.code}</div>
                                 </div>
                             </div>

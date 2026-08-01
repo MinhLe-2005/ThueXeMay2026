@@ -43,14 +43,25 @@ public class ApplyVoucherServlet extends HttpServlet {
         if (voucher == null) {
             response.getWriter().write("{\"valid\":false,\"message\":\"Mã voucher không hợp lệ hoặc đã được sử dụng\"}");
         } else {
-            // Format discount nicely
-            long discount = (long) voucher.getDiscountAmount();
+            double raw = voucher.getDiscountAmount();
+            boolean isPercent = (raw > 0 && raw <= 100);
+            long discount;
+            if (isPercent) {
+                // Try to calculate from orderTotal sent by client
+                long orderTotal = 0;
+                String totalStr = request.getParameter("orderTotal");
+                if (totalStr != null && !totalStr.isEmpty()) {
+                    try { orderTotal = Long.parseLong(totalStr.trim()); } catch (Exception ignored) {}
+                }
+                discount = (orderTotal > 0) ? Math.round(orderTotal * raw / 100.0) : 0;
+            } else {
+                discount = Math.round(raw);
+            }
+            String desc = voucher.getDescription() != null ? voucher.getDescription().replace("\"", "\\\"") : "";
             String json = String.format(
-                "{\"valid\":true,\"voucherId\":%d,\"discount\":%d,\"code\":\"%s\",\"description\":\"%s\"}",
-                voucher.getVoucherId(),
-                discount,
-                voucher.getCode(),
-                voucher.getDescription() != null ? voucher.getDescription().replace("\"", "\\\"") : ""
+                "{\"valid\":true,\"voucherId\":%d,\"discount\":%d,\"isPercent\":%b,\"discountPct\":%.0f,\"code\":\"%s\",\"description\":\"%s\"}",
+                voucher.getVoucherId(), discount, isPercent, raw,
+                voucher.getCode(), desc
             );
             response.getWriter().write(json);
         }

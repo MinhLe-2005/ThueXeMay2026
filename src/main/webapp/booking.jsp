@@ -4383,6 +4383,7 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'code=' + encodeURIComponent(code)
+                    + '&orderTotal=' + (parseInt((document.getElementById('finalTotal') || {}).value) || 0)
             })
             .then(r => r.json())
             .then(data => {
@@ -4390,7 +4391,10 @@
                     document.getElementById('applied-voucher-id').value = data.voucherId;
                     document.getElementById('applied-discount').value = data.discount;
                     msgEl.style.color = '#16a34a';
-                    msgEl.innerHTML = '✅ Áp dụng thành công! Giảm <strong>₫' + Number(data.discount).toLocaleString('vi-VN') + '</strong>'
+                    let discLabel = data.isPercent
+                        ? '<strong>' + data.discountPct + '%</strong> (≈ ₫' + Number(data.discount).toLocaleString('vi-VN') + ')'
+                        : '₫<strong>' + Number(data.discount).toLocaleString('vi-VN') + '</strong>';
+                    msgEl.innerHTML = '✅ Áp dụng thành công! Giảm ' + discLabel
                         + (data.description ? ' — ' + data.description : '');
 
                     // Lock voucher: 1 đơn hàng chỉ 1 voucher
