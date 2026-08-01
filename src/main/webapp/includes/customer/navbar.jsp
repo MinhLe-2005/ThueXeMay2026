@@ -159,6 +159,12 @@
                                 <div>Thông tin cá nhân</div>
                             </a>
                         </div>
+                        <div class="user-menu__item">
+                            <a class="user-menu-link" href="loyalty">
+                                <i class="fas fa-gem" style="font-size: 18px; color: #b59349; width: 24px; text-align: center;"></i>
+                                <div>Hạng thành viên & Voucher</div>
+                            </a>
+                        </div>
                         <c:if test="${sessionScope.account != null && (sessionScope.account.roleID == 2 || sessionScope.account.roleID == 3)}">
                         <div class="user-menu__item">
                             <a class="user-menu-link" href="manageSmartRide.jsp?iframeSrc=homeStaff">

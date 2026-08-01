@@ -2186,9 +2186,11 @@
                                         <div style="margin-bottom: 12px;">
                                             <select id="my-voucher-select" onchange="selectMyVoucher(this.value)" style="width:100%; padding:10px 14px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; outline:none; background:#f9f9f9; color:#333; cursor:pointer;">
                                                 <option value="">-- Chọn voucher bạn đang có --</option>
-                                                <c:if test="">
-                                                    <c:forEach var="v" items="">
-                                                        <option value=""> (Mã: )</option>
+                                                <c:if test="${not empty myVouchers}">
+                                                    <c:forEach var="v" items="${myVouchers}">
+                                                        <option value="${v.code}">
+                                                            <fmt:formatNumber value="${v.discountAmount}" pattern="#,###" />đ - ${v.description} (Mã: ${v.code})
+                                                        </option>
                                                     </c:forEach>
                                                 </c:if>
                                             </select>
