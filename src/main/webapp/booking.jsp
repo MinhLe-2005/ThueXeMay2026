@@ -5376,12 +5376,14 @@
             var color  = fee > 0 ? '#d97706' : '#16a34a';
             var icon   = fee > 0 ? 'fa-motorcycle' : 'fa-check-circle';
 
+            var feeLabel = type === 'pickup' ? 'Phụ phí giao' : 'Phụ phí trả xe';
+            
             var info = document.getElementById(type + '_distance_info');
             info.innerHTML =
                 '<span style="color:' + color + '; font-weight:600;">'+
                 '<i class="fas ' + icon + '"></i> '+
                 'Khoảng cách: <strong>' + km.toFixed(1) + ' km</strong>. '+
-                'Phụ phí giao: <strong>' + feeStr + '</strong></span>';
+                feeLabel + ': <strong>' + feeStr + '</strong></span>';
 
             // Lưu vào dataset để updateTotal() tính lại giá trị chính xác
             var inputEl = document.getElementById('custom_' + type + '_input');
