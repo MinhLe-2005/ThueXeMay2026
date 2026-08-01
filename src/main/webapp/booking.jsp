@@ -2078,8 +2078,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </c:if>                                 
-                                </c:if>
+                                    </c:if>
                             </div>
                         </fieldset>
 
