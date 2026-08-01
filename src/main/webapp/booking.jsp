@@ -5187,15 +5187,23 @@
                     updateCustomLocation(type);
                     processDistance(lat, lon, type);
                 } else {
-                    info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Không thể phân tích tên đường tại đây. Vui lòng nhập tay địa chỉ của bạn.</span>';
-                    document.getElementById('custom_' + type + '_input').value = '';
+                    info.innerHTML = '<span style="color:#16a34a;"><i class="fas fa-check-circle"></i> Vị trí đã được đánh dấu (không tìm thấy tên đường).</span>';
+                    var inputEl = document.getElementById('custom_' + type + '_input');
+                    if(inputEl.value.trim() === '') {
+                        inputEl.value = lat.toFixed(5) + ', ' + lon.toFixed(5);
+                    }
                     updateCustomLocation(type);
+                    processDistance(lat, lon, type);
                 }
             })
             .catch(error => {
-                info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Lỗi lấy địa chỉ. Vui lòng nhập tay.</span>';
-                document.getElementById('custom_' + type + '_input').value = '';
+                info.innerHTML = '<span style="color:#16a34a;"><i class="fas fa-check-circle"></i> Vị trí đã được đánh dấu trên bản đồ.</span>';
+                var inputEl = document.getElementById('custom_' + type + '_input');
+                if(inputEl.value.trim() === '') {
+                    inputEl.value = lat.toFixed(5) + ', ' + lon.toFixed(5);
+                }
                 updateCustomLocation(type);
+                processDistance(lat, lon, type);
             });
         }
         
@@ -5226,7 +5234,7 @@
         }
 
         function parseCoordinates(str) {
-            var regex = /^(-?\d+(\.\d+)?)\s*,\s*(-?\d+(\.\d+)?)$/;
+            var regex = /^(-?\d+(\.\d+)?)\s*[, ]\s*(-?\d+(\.\d+)?)$/;
             var match = str.trim().match(regex);
             if (match) return { lat: parseFloat(match[1]), lon: parseFloat(match[3]) };
             return null;
@@ -5344,7 +5352,23 @@
             }
         }
 
-
+        $(document).ready(function() {
+            function formatLocation(opt) {
+                if (!opt.id) return opt.text;
+                var icon = $(opt.element).data('icon');
+                var isHighlight = $(opt.element).data('highlight');
+                var $opt = $('<span>' + (icon ? '<i class="fas ' + icon + '" style="margin-right: 8px;"></i>' : '') + opt.text + '</span>');
+                if (isHighlight) {
+                    $opt.css({'font-weight': 'bold', 'color': '#b59349'});
+                }
+                return $opt;
+            }
+            
+            $('.select2-location').select2({
+                templateResult: formatLocation,
+                templateSelection: formatLocation
+            });
+        });
         </script>
     <!-- CONTRACT SAMPLE MODAL -->
     <div id="contract-sample-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; align-items:center; justify-content:center; backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
