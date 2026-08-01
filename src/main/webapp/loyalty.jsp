@@ -289,20 +289,23 @@
                         </div>
 
                         <!-- Milestone tick: 2M -->
+                        <% String tick2Color = (spent >= 2000000f) ? "#ffd700" : "rgba(255,255,255,0.5)"; %>
                         <div style="position:absolute; top:-4px; left:<%= pct2M %>%; transform:translateX(-50%); z-index:2;">
-                            <div style="width:10px; height:26px; background:<%= spent >= 2000000f ? \"#ffd700\" : \"rgba(255,255,255,0.5)\" %>; border-radius:3px; border:2px solid rgba(255,255,255,0.8);"></div>
+                            <div style="width:10px; height:26px; background:<%= tick2Color %>; border-radius:3px; border:2px solid rgba(255,255,255,0.8);"></div>
                         </div>
 
                         <!-- Milestone tick: 5M -->
+                        <% String tick5Color = (spent >= 5000000f) ? "#ffd700" : "rgba(255,255,255,0.5)"; %>
                         <div style="position:absolute; top:-4px; left:<%= pct5M %>%; transform:translateX(-50%); z-index:2;">
-                            <div style="width:10px; height:26px; background:<%= spent >= 5000000f ? \"#ffd700\" : \"rgba(255,255,255,0.5)\" %>; border-radius:3px; border:2px solid rgba(255,255,255,0.8);"></div>
+                            <div style="width:10px; height:26px; background:<%= tick5Color %>; border-radius:3px; border:2px solid rgba(255,255,255,0.8);"></div>
                         </div>
                     </div>
 
                     <!-- Current spending marker label -->
+                    <% long spentLong = (long) spent; %>
                     <div style="position:relative; margin-top:10px; height:20px;">
                         <div style="position:absolute; left:<%= overallPct %>%; transform:translateX(-50%); background:rgba(255,255,255,0.95); color:#b59349; font-weight:700; font-size:11px; padding:2px 8px; border-radius:10px; white-space:nowrap; box-shadow:0 2px 6px rgba(0,0,0,0.2); border:1.5px solid #e8c76a;">
-                            📍 <%= String.format("%,.0f", spent) %>đ
+                            &#128205; <fmt:formatNumber value="<%= spentLong %>" type="number" groupingUsed="true" maxFractionDigits="0"/>đ
                         </div>
                     </div>
 
