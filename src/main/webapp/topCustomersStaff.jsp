@@ -435,7 +435,7 @@
             document.getElementById('modalCustomerSpent').innerText = parseFloat(spent).toLocaleString('vi-VN') + ' đ';
 
             const tbody = document.getElementById('modalHistoryTableBody');
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted small">Đang tải lịch sử...</p></td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-warning" role="status"></div><p class="mt-2" style="color:#a0b4d6;font-size:0.85rem;">Đang tải lịch sử...</p></td></tr>';
 
             const myModal = new bootstrap.Modal(document.getElementById('customerDetailsModal'));
             myModal.show();
@@ -444,26 +444,26 @@
                 .then(res => res.json())
                 .then(data => {
                     if (!data || data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i>Không có lịch sử thuê xe.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted"><i class="bi bi-inbox fs-1 d-block mb-3" style="opacity:0.3;color:#ffd700;"></i><span style="color:#a0b4d6;">Không có lịch sử thuê xe.</span></td></tr>';
                         return;
                     }
                     let html = '';
                     data.forEach(b => {
                         let badge;
                         if (b.status === 'Đã hoàn thành' || b.status === 'Đã xác nhận') {
-                            badge = '<span class="badge rounded-pill px-3" style="background:#d1fae5;color:#065f46;">Hoàn thành</span>';
+                            badge = '<span class="badge rounded-pill px-3 py-2" style="background:rgba(16,185,129,0.2);color:#34d399;border:1px solid rgba(16,185,129,0.3);">Hoàn thành</span>';
                         } else if (b.status === 'Đã hủy') {
-                            badge = '<span class="badge rounded-pill px-3" style="background:#fee2e2;color:#991b1b;">Đã hủy</span>';
+                            badge = '<span class="badge rounded-pill px-3 py-2" style="background:rgba(239,68,68,0.2);color:#f87171;border:1px solid rgba(239,68,68,0.3);">Đã hủy</span>';
                         } else {
-                            badge = '<span class="badge rounded-pill px-3" style="background:#fef9c3;color:#854d0e;">' + b.status + '</span>';
+                            badge = '<span class="badge rounded-pill px-3 py-2" style="background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);">' + b.status + '</span>';
                         }
                         html += `<tr>
-                            <td><span class="fw-bold" style="color:#4154f1;">#${b.bookingID}</span></td>
-                            <td>${b.motorName}</td>
-                            <td class="text-muted" style="font-size:0.85rem;">${b.startDate}</td>
-                            <td class="text-muted" style="font-size:0.85rem;">${b.endDate}</td>
-                            <td class="fw-bold">${parseFloat(b.totalPrice).toLocaleString('vi-VN')}đ</td>
-                            <td class="text-center">${badge}</td>
+                            <td class="border-0" style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.05) !important;"><span class="fw-bold" style="color:#60a5fa;">#${b.bookingID}</span></td>
+                            <td class="border-0" style="padding:16px;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.05) !important;">${b.motorName}</td>
+                            <td class="border-0" style="padding:16px;color:#94a3b8;font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.05) !important;">${b.startDate}</td>
+                            <td class="border-0" style="padding:16px;color:#94a3b8;font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.05) !important;">${b.endDate}</td>
+                            <td class="border-0" style="padding:16px;font-weight:600;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.05) !important;">${parseFloat(b.totalPrice).toLocaleString('vi-VN')}đ</td>
+                            <td class="border-0 text-center" style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.05) !important;">${badge}</td>
                         </tr>`;
                     });
                     tbody.innerHTML = html;
