@@ -24,80 +24,131 @@
     <style>
         body {
             font-family: 'Be Vietnam Pro', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f4f7fc;
         }
         
-        .top-customer-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            background: #fff;
-            overflow: hidden;
-            transition: transform 0.3s ease;
+        .page-header-banner {
+            background: linear-gradient(135deg, #012970 0%, #4154f1 100%);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
-        
-        .top-customer-card:hover {
-            transform: translateY(-5px);
+        .page-header-banner .banner-icon {
+            font-size: 3rem;
+            opacity: 0.9;
         }
-
-        .medal-icon {
-            font-size: 2rem;
-        }
-        
-        .medal-1 { color: #FFD700; } /* Gold */
-        .medal-2 { color: #C0C0C0; } /* Silver */
-        .medal-3 { color: #CD7F32; } /* Bronze */
-        .medal-other { color: #6c757d; font-size: 1.5rem; font-weight: bold; }
-
-        .table-custom {
-            margin-bottom: 0;
-        }
-        
-        .table-custom thead th {
-            background-color: #f1f4f9;
-            color: #444;
-            border-bottom: none;
-            padding: 15px;
-            font-weight: 600;
-        }
-        
-        .table-custom tbody td {
-            padding: 15px;
-            vertical-align: middle;
-            border-bottom: 1px solid #f1f4f9;
-        }
-
-        .customer-name {
-            font-weight: 600;
-            color: #012970;
-            margin-bottom: 0;
-        }
-        
-        .customer-email {
-            font-size: 0.85rem;
-            color: #899bbd;
-        }
-        
-        .total-spent {
+        .page-header-banner h1 {
+            font-size: 1.6rem;
             font-weight: 700;
-            color: #198754;
-            font-size: 1.1rem;
+            margin: 0;
         }
-        
-        .total-bookings {
-            display: inline-block;
-            padding: 5px 12px;
-            background-color: #e0f8e9;
-            color: #198754;
-            border-radius: 20px;
-            font-weight: 600;
+        .page-header-banner p {
+            opacity: 0.8;
+            margin: 0;
             font-size: 0.9rem;
         }
         
-        .page-title h1 {
-            font-size: 24px;
+        .vip-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .medal-icon { font-size: 1.8rem; }
+        .medal-1 { color: #FFD700; filter: drop-shadow(0 2px 4px rgba(255,215,0,0.5)); }
+        .medal-2 { color: #C0C0C0; filter: drop-shadow(0 2px 4px rgba(192,192,192,0.5)); }
+        .medal-3 { color: #CD7F32; filter: drop-shadow(0 2px 4px rgba(205,127,50,0.5)); }
+        .medal-other { 
+            display: inline-flex;
+            width: 36px; height: 36px;
+            background: #f0f2f5;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 0.85rem;
             font-weight: 700;
+        }
+
+        .table-vip thead th {
+            background: linear-gradient(135deg, #012970 0%, #1e3a8a 100%);
+            color: rgba(255,255,255,0.85);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            padding: 14px 16px;
+            border: none;
+        }
+        .table-vip tbody tr {
+            border-bottom: 1px solid #f0f2f5;
+            transition: all 0.2s ease;
+        }
+        .table-vip tbody tr:hover {
+            background-color: #f0f4ff;
+            transform: scale(1.003);
+            box-shadow: 0 2px 10px rgba(65, 84, 241, 0.1);
+        }
+        .table-vip tbody td {
+            padding: 14px 16px;
+            vertical-align: middle;
+            border: none;
+        }
+
+        .customer-avatar {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4154f1, #012970);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .customer-name {
+            font-weight: 600;
             color: #012970;
+            margin-bottom: 1px;
+            font-size: 0.95rem;
+        }
+        .customer-email {
+            font-size: 0.8rem;
+            color: #9aa5b4;
+        }
+        .customer-phone {
+            color: #444;
+            font-size: 0.9rem;
+        }
+        .total-spent {
+            font-weight: 700;
+            color: #198754;
+            font-size: 1rem;
+        }
+        .total-bookings {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .click-hint {
+            font-size: 0.78rem;
+            color: #9aa5b4;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
     </style>
 </head>
@@ -122,197 +173,110 @@
 
         <section class="section dashboard">
             <div class="row">
-
                 <div class="col-12">
-                    <div class="top-customer-card p-0">
-                        <div class="card-body p-0">
-                            <h5 class="card-title px-4 pt-4 pb-2 m-0" style="font-family: 'Be Vietnam Pro', sans-serif;">
-                                Bảng Xếp Hạng Chi Tiêu <span class="badge bg-primary ms-2">Top 20</span>
-                            </h5>
-                            
-                            <div class="table-responsive">
-                                <table class="table table-custom table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="text-center" style="width: 80px;">Xếp Hạng</th>
-                                            <th scope="col">Khách Hàng</th>
-                                            <th scope="col">Số Điện Thoại</th>
-                                            <th scope="col" class="text-center">Số Chuyến</th>
-                                            <th scope="col" class="text-end pe-4">Tổng Chi Tiêu</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach var="customer" items="${topCustomers}" varStatus="status">
-                                            <tr style="cursor: pointer;" onclick="showCustomerDetails('${customer.CustomerID}', '${customer.FullName}', '${customer.Email}', '${customer.Phone}', '${customer.TotalBookings}', '${customer.TotalSpent}')">
-                                                <td class="text-center">
-                                                    <c:choose>
-                                                        <c:when test="${status.count == 1}">
-                                                            <i class="bi bi-trophy-fill medal-icon medal-1"></i>
-                                                        </c:when>
-                                                        <c:when test="${status.count == 2}">
-                                                            <i class="bi bi-trophy-fill medal-icon medal-2"></i>
-                                                        </c:when>
-                                                        <c:when test="${status.count == 3}">
-                                                            <i class="bi bi-trophy-fill medal-icon medal-3"></i>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <span class="medal-other">#${status.count}</span>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </td>
-                                                <td>
-                                                    <p class="customer-name">${customer.FullName}</p>
-                                                    <span class="customer-email">${customer.Email}</span>
-                                                </td>
-                                                <td>${customer.Phone}</td>
-                                                <td class="text-center">
-                                                    <span class="total-bookings">${customer.TotalBookings} chuyến</span>
-                                                </td>
-                                                <td class="text-end pe-4">
-                                                    <span class="total-spent">
-                                                        <fmt:formatNumber value="${customer.TotalSpent}" pattern="#,##0" /> VNĐ
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        <c:if test="${empty topCustomers}">
-                                            <tr>
-                                                <td colspan="5" class="text-center py-5 text-muted">
-                                                    <i class="bi bi-inbox fs-1 d-block mb-3"></i>
-                                                    Chưa có dữ liệu khách hàng.
-                                                </td>
-                                            </tr>
-                                        </c:if>
-                                    </tbody>
-                                </table>
-                            </div>
+
+                    <!-- Page Header Banner -->
+                    <div class="page-header-banner">
+                        <div class="banner-icon">🏆</div>
+                        <div>
+                            <h1>Bảng Xếp Hạng Khách Hàng VIP</h1>
+                            <p>Top 20 khách hàng có tổng chi tiêu cao nhất &bull; Click vào dòng để xem chi tiết & lịch sử thuê xe</p>
                         </div>
                     </div>
-                </div>
 
+                    <div class="vip-card">
+                        <div class="p-3 px-4 border-bottom d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold text-dark">Danh sách xếp hạng</span>
+                                <span class="badge bg-primary rounded-pill">Top 20</span>
+                            </div>
+                            <div class="click-hint">
+                                <i class="bi bi-cursor-fill"></i>
+                                Nhấp vào khách hàng để xem chi tiết
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-vip mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 70px;">Hạng</th>
+                                        <th>Khách Hàng</th>
+                                        <th>Số Điện Thoại</th>
+                                        <th class="text-center">Số Chuyến</th>
+                                        <th class="text-end pe-4">Tổng Chi Tiêu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="customer" items="${topCustomers}" varStatus="status">
+                                        <tr style="cursor: pointer;" onclick="window.parent.showCustomerDetails('${customer.CustomerID}', '${customer.FullName}', '${customer.Email}', '${customer.Phone}', '${customer.TotalBookings}', '${customer.TotalSpent}')" title="Xem chi tiết ${customer.FullName}">
+                                            <td class="text-center">
+                                                <c:choose>
+                                                    <c:when test="${status.count == 1}">
+                                                        <i class="bi bi-trophy-fill medal-icon medal-1"></i>
+                                                    </c:when>
+                                                    <c:when test="${status.count == 2}">
+                                                        <i class="bi bi-trophy-fill medal-icon medal-2"></i>
+                                                    </c:when>
+                                                    <c:when test="${status.count == 3}">
+                                                        <i class="bi bi-trophy-fill medal-icon medal-3"></i>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="medal-other">#${status.count}</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="customer-avatar">
+                                                        <c:set var="initials" value="${fn:substring(customer.FullName, 0, 1)}" />
+                                                        ${fn:substring(customer.FullName, fn:length(customer.FullName)-1, fn:length(customer.FullName))}
+                                                    </div>
+                                                    <div>
+                                                        <p class="customer-name">${customer.FullName}</p>
+                                                        <span class="customer-email">${customer.Email}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="customer-phone">
+                                                <i class="bi bi-telephone me-1 text-muted"></i>
+                                                ${customer.Phone}
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="total-bookings">
+                                                    <i class="bi bi-bicycle"></i>
+                                                    ${customer.TotalBookings} chuyến
+                                                </span>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <span class="total-spent">
+                                                    <fmt:formatNumber value="${customer.TotalSpent}" pattern="#,##0" /> đ
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    <c:if test="${empty topCustomers}">
+                                        <tr>
+                                            <td colspan="5" class="text-center py-5 text-muted">
+                                                <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+                                                <p class="fw-semibold">Chưa có dữ liệu khách hàng.</p>
+                                            </td>
+                                        </tr>
+                                    </c:if>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </section>
 
     </main><!-- End #main -->
 
-    <!-- Customer Details Modal -->
-    <div class="modal fade" id="customerDetailsModal" tabindex="-1" aria-labelledby="customerDetailsModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-          <div class="modal-header bg-primary text-white border-0">
-            <h5 class="modal-title fw-bold" id="customerDetailsModalLabel"><i class="bi bi-person-lines-fill me-2"></i>Chi Tiết Khách Hàng VIP</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body p-4 bg-light">
-            <div class="row mb-4">
-              <div class="col-md-6">
-                <div class="card h-100 border-0 shadow-sm">
-                  <div class="card-body">
-                    <h6 class="text-muted fw-bold mb-3 text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Thông tin liên hệ</h6>
-                    <h5 id="modalCustomerName" class="fw-bold text-primary mb-2"></h5>
-                    <p class="mb-1"><i class="bi bi-telephone-fill text-muted me-2"></i> <span id="modalCustomerPhone"></span></p>
-                    <p class="mb-0"><i class="bi bi-envelope-fill text-muted me-2"></i> <span id="modalCustomerEmail"></span></p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card h-100 border-0 shadow-sm bg-primary text-white">
-                  <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
-                    <h6 class="fw-bold mb-3 text-uppercase text-white-50" style="font-size: 0.8rem; letter-spacing: 1px;">Tổng chi tiêu</h6>
-                    <h3 id="modalCustomerSpent" class="fw-bold mb-2"></h3>
-                    <div class="badge bg-white text-primary rounded-pill px-3 py-2">
-                        <span id="modalCustomerBookings" class="fw-bold"></span> Chuyến
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <h6 class="fw-bold text-dark mb-3"><i class="bi bi-clock-history me-2"></i>Lịch sử thuê xe</h6>
-            <div class="table-responsive bg-white rounded-3 shadow-sm">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="border-0">Mã Đơn</th>
-                            <th class="border-0">Xe</th>
-                            <th class="border-0">Ngày nhận</th>
-                            <th class="border-0">Ngày trả</th>
-                            <th class="border-0">Giá trị</th>
-                            <th class="border-0 text-center">Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody id="modalHistoryTableBody">
-                        <!-- AJAX content -->
-                    </tbody>
-                </table>
-            </div>
-          </div>
-          <div class="modal-footer border-0 bg-light">
-            <button type="button" class="btn btn-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">Đóng</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Vendor JS Files -->
     <script src="staffAssets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="staffAssets/js/main.js"></script>
 
-    <script>
-        function showCustomerDetails(id, name, email, phone, bookings, spent) {
-            // Fill Customer Info
-            document.getElementById('modalCustomerName').innerText = name;
-            document.getElementById('modalCustomerEmail').innerText = email;
-            document.getElementById('modalCustomerPhone').innerText = phone;
-            document.getElementById('modalCustomerBookings').innerText = bookings;
-            document.getElementById('modalCustomerSpent').innerText = parseFloat(spent).toLocaleString('vi-VN') + ' VNĐ';
-
-            // Show Loading
-            const tbody = document.getElementById('modalHistoryTableBody');
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Đang tải lịch sử...</p></td></tr>';
-
-            // Open Modal
-            var modal = new bootstrap.Modal(document.getElementById('customerDetailsModal'));
-            modal.show();
-
-            // Fetch History via AJAX
-            fetch('customerHistoryStaff?customerId=' + id)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Không tìm thấy lịch sử thuê xe.</td></tr>';
-                        return;
-                    }
-                    
-                    let html = '';
-                    data.forEach(booking => {
-                        let statusBadge = '';
-                        if (booking.status === 'Đã hoàn thành' || booking.status === 'Đã xác nhận') {
-                            statusBadge = '<span class="badge bg-success rounded-pill px-3">Hoàn thành</span>';
-                        } else if (booking.status === 'Đã hủy') {
-                            statusBadge = '<span class="badge bg-danger rounded-pill px-3">Đã hủy</span>';
-                        } else {
-                            statusBadge = '<span class="badge bg-warning text-dark rounded-pill px-3">' + booking.status + '</span>';
-                        }
-
-                        html += `
-                            <tr>
-                                <td><span class="fw-bold text-primary">#${booking.bookingID}</span></td>
-                                <td>${booking.motorName}</td>
-                                <td class="text-muted small">${booking.startDate}</td>
-                                <td class="text-muted small">${booking.endDate}</td>
-                                <td class="fw-bold">${parseFloat(booking.totalPrice).toLocaleString('vi-VN')}đ</td>
-                                <td class="text-center">${statusBadge}</td>
-                            </tr>
-                        `;
-                    });
-                    tbody.innerHTML = html;
-                })
-                .catch(error => {
-                    console.error('Error fetching history:', error);
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-danger">Có lỗi xảy ra khi tải dữ liệu.</td></tr>';
-                });
-        }
-    </script>
 </body>
 </html>
+
