@@ -376,7 +376,7 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
         ResultSet rs;
         List<Motorcycle> list = new ArrayList<>();
         try {
-            String sql = "Select * from \"Motorcycle\"\n"
+            String sql = "Select * from \"Motorcycle\" WHERE \"IsHidden\" = false\n"
                     + "ORDER BY \"MotorcycleID\"\n";
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
