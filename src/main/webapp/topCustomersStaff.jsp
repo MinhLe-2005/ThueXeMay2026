@@ -29,36 +29,43 @@
         }
         
         .page-header-banner {
-            background: linear-gradient(135deg, #012970 0%, #4154f1 100%);
+            background: linear-gradient(135deg, #d4a017 0%, #f59e0b 100%);
             border-radius: 16px;
             padding: 28px 32px;
             margin-bottom: 24px;
-            color: white;
+            color: #ffffff;
             display: flex;
             align-items: center;
             gap: 16px;
+            box-shadow: 0 8px 24px rgba(212, 160, 23, 0.25);
         }
         .page-header-banner .banner-icon {
             width: 64px;
             height: 64px;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.25);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
+            color: #ffffff;
             flex-shrink: 0;
             backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.4);
         }
         .page-header-banner h1 {
             font-size: 1.6rem;
             font-weight: 700;
             margin: 0;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
         }
         .page-header-banner p {
-            opacity: 0.8;
+            opacity: 0.95;
             margin: 0;
             font-size: 0.9rem;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         
         .vip-card {
