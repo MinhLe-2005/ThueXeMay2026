@@ -1884,7 +1884,7 @@
                                         <label for="pickuplocation" class="form-label">Địa điểm nhận xe <span class="note-star"> *</span></label>
                                         <select name="pickuplocation" id="pickuplocation" class="form-label select2-location" onchange="toggleCustomLocation('pickup')" style="width: 100%;">
                                             <option value="Your own address" data-icon="fa-map-location-dot" data-highlight="true">Địa chỉ của bạn (tự nhập)</option>
-                                            <option value="Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng" data-icon="fa-store" data-highlight="true">Tại cửa hàng SmartRide</option>
+                                            <option value="Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng" data-icon="fa-store" data-highlight="true" selected>Tại cửa hàng SmartRide</option>
                                             <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng" data-icon="fa-map-marker-alt">Ga Đà Nẵng</option>
                                             <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng" data-icon="fa-map-marker-alt">Sân bay Đà Nẵng</option>
                                             <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng" data-icon="fa-map-marker-alt">Bến xe Trung tâm</option>
@@ -1909,7 +1909,7 @@
                                         <label for="returnlocation" class="form-label">Địa điểm trả xe <span class="note-star"> *</span></label>
                                         <select name="returnlocation" id="returnlocation" class="form-label select2-location" onchange="toggleCustomLocation('return')" style="width: 100%;">
                                             <option value="Your own address" data-icon="fa-map-location-dot" data-highlight="true">Địa chỉ của bạn (tự nhập)</option>
-                                            <option value="Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng" data-icon="fa-store" data-highlight="true">Tại cửa hàng SmartRide</option>
+                                            <option value="Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng" data-icon="fa-store" data-highlight="true" selected>Tại cửa hàng SmartRide</option>
                                             <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng" data-icon="fa-map-marker-alt">Ga Đà Nẵng</option>
                                             <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng" data-icon="fa-map-marker-alt">Sân bay Đà Nẵng</option>
                                             <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng" data-icon="fa-map-marker-alt">Bến xe Trung tâm</option>
@@ -5428,6 +5428,14 @@
                     toggleCustomLocation(type);
                 }
             });
+            
+            // Sync UI state on page load
+            setTimeout(function() {
+                if (typeof toggleCustomLocation === 'function') {
+                    toggleCustomLocation('pickup');
+                    toggleCustomLocation('return');
+                }
+            }, 100);
         });
         </script>
     <!-- CONTRACT SAMPLE MODAL -->
