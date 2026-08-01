@@ -1816,7 +1816,6 @@
                     <i class="bi bi-x-lg"></i> Hủy đặt xe
                 </a>
               
-
                 <form method="POST" id="signup-form" class="signup-form" action="" onkeydown="return event.key !== 'Enter' || event.target.tagName === 'TEXTAREA';"
                     onsubmit="return false;">
                     
@@ -1883,50 +1882,65 @@
                                 <div class="form-flex">
                                     <div class="form-group">
                                         <label for="pickuplocation" class="form-label">Địa điểm nhận xe <span class="note-star"> *</span></label>
-                                        <select name="pickuplocation" id="pickuplocation" class="form-label" onchange="toggleCustomLocation('pickup')">
-                                            <option value="Tại cửa hàng SmartRide - 202 Hải Phòng, Đà Nẵng">📍 Tại cửa hàng SmartRide</option>
-                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng">Ga Đà Nẵng – 202 Hải Phòng, Tam Thuận</option>
-                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng">✈️ Sân bay Đà Nẵng – 132 Phan Đình Phùng</option>
-                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng">Bến xe Trung tâm – 33 Tôn Đức Thắng, Hải Châu</option>
-                                            <option value="Chợ Hàn - 119 Trần Phú">Chợ Hàn – 119 Trần Phú, Hải Châu</option>
-                                            <option value="Vincom Plaza - 910A Ngô Quyền">Vincom Plaza – 910A Ngô Quyền, Sơn Trà</option>
-                                            <option value="Cầu Rồng - Trần Hưng Đạo">Cầu Rồng – Trần Hưng Đạo, Hải Châu</option>
-                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa">Ngũ Hành Sơn – Huyền Trân Công Chúa</option>
-                                            <option value="Lotte Mart - 6 Nại Nam">Lotte Mart – 6 Nại Nam, Hải Châu</option>
-                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng">Phố đi bộ Bạch Đằng, Hải Châu</option>
-                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng">Bệnh viện Đà Nẵng – 124 Hải Phòng</option>
-                                            <option value="Your own address">✏️ Địa chỉ của bạn (tự nhập)</option>
+                                        <select name="pickuplocation" id="pickuplocation" class="form-label select2-location" onchange="toggleCustomLocation('pickup')" style="width: 100%;">
+                                            <option value="Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng" data-icon="fa-store" data-highlight="true">Tại cửa hàng SmartRide</option>
+                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng" data-icon="fa-map-marker-alt">Ga Đà Nẵng</option>
+                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng" data-icon="fa-map-marker-alt">Sân bay Đà Nẵng</option>
+                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng" data-icon="fa-map-marker-alt">Bến xe Trung tâm</option>
+                                            <option value="Chợ Hàn - 119 Trần Phú" data-icon="fa-map-marker-alt">Chợ Hàn</option>
+                                            <option value="Vincom Plaza - 910A Ngô Quyền" data-icon="fa-map-marker-alt">Vincom Plaza</option>
+                                            <option value="Cầu Rồng - Trần Hưng Đạo" data-icon="fa-map-marker-alt">Cầu Rồng</option>
+                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa" data-icon="fa-map-marker-alt">Ngũ Hành Sơn</option>
+                                            <option value="Lotte Mart - 6 Nại Nam" data-icon="fa-map-marker-alt">Lotte Mart</option>
+                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng" data-icon="fa-map-marker-alt">Phố đi bộ Bạch Đằng</option>
+                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng" data-icon="fa-map-marker-alt">Bệnh viện Đà Nẵng</option>
+                                            <option value="Your own address" data-icon="fa-map-location-dot" data-highlight="true">Địa chỉ của bạn (tự nhập)</option>
                                         </select>
-                                        <input type="text" id="custom_pickup_input" placeholder="Nhập địa chỉ nhận xe của bạn..." style="display:none; margin-top:8px; border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; width:100%; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" oninput="updateCustomLocation('pickup')" />
+                                        <div id="pickup_custom_wrapper" style="display:none; margin-top:8px;">
+                                            <div style="display: flex; gap: 10px;">
+                                                <input type="text" id="custom_pickup_input" placeholder="Nhập địa chỉ nhận xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('pickup')" oninput="updateCustomLocation('pickup')" />
+                                                <button type="button" onclick="autoGeolocate('pickup')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
+                                            </div>
+                                            <div id="pickup_distance_info" style="font-size: 12px; color: #64748b; margin-top: 5px;"></div>
+                                            <div id="pickup_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="returnlocation" class="form-label">Địa điểm trả xe <span class="note-star"> *</span></label>
-                                        <select name="returnlocation" id="returnlocation" class="form-label" onchange="toggleCustomLocation('return')">
-                                            <option value="Tại cửa hàng SmartRide - 202 Hải Phòng, Đà Nẵng">📍 Tại cửa hàng SmartRide</option>
-                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng">Ga Đà Nẵng – 202 Hải Phòng, Tam Thuận</option>
-                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng">✈️ Sân bay Đà Nẵng – 132 Phan Đình Phùng</option>
-                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng">Bến xe Trung tâm – 33 Tôn Đức Thắng, Hải Châu</option>
-                                            <option value="Chợ Hàn - 119 Trần Phú">Chợ Hàn – 119 Trần Phú, Hải Châu</option>
-                                            <option value="Vincom Plaza - 910A Ngô Quyền">Vincom Plaza – 910A Ngô Quyền, Sơn Trà</option>
-                                            <option value="Cầu Rồng - Trần Hưng Đạo">Cầu Rồng – Trần Hưng Đạo, Hải Châu</option>
-                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa">Ngũ Hành Sơn – Huyền Trân Công Chúa</option>
-                                            <option value="Lotte Mart - 6 Nại Nam">Lotte Mart – 6 Nại Nam, Hải Châu</option>
-                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng">Phố đi bộ Bạch Đằng, Hải Châu</option>
-                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng">Bệnh viện Đà Nẵng – 124 Hải Phòng</option>
-                                            <option value="Your own address">✏️ Địa chỉ của bạn (tự nhập)</option>
+                                        <select name="returnlocation" id="returnlocation" class="form-label select2-location" onchange="toggleCustomLocation('return')" style="width: 100%;">
+                                            <option value="Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng" data-icon="fa-store" data-highlight="true">Tại cửa hàng SmartRide</option>
+                                            <option value="Ga Đà Nẵng - Số 202 đường Hải Phòng" data-icon="fa-map-marker-alt">Ga Đà Nẵng</option>
+                                            <option value="Sân bay Quốc tế Đà Nẵng - 132 Phan Đình Phùng" data-icon="fa-map-marker-alt">Sân bay Đà Nẵng</option>
+                                            <option value="Bến xe Trung tâm - 33 Tôn Đức Thắng" data-icon="fa-map-marker-alt">Bến xe Trung tâm</option>
+                                            <option value="Chợ Hàn - 119 Trần Phú" data-icon="fa-map-marker-alt">Chợ Hàn</option>
+                                            <option value="Vincom Plaza - 910A Ngô Quyền" data-icon="fa-map-marker-alt">Vincom Plaza</option>
+                                            <option value="Cầu Rồng - Trần Hưng Đạo" data-icon="fa-map-marker-alt">Cầu Rồng</option>
+                                            <option value="Ngũ Hành Sơn - Huyền Trân Công Chúa" data-icon="fa-map-marker-alt">Ngũ Hành Sơn</option>
+                                            <option value="Lotte Mart - 6 Nại Nam" data-icon="fa-map-marker-alt">Lotte Mart</option>
+                                            <option value="Phố đi bộ Bạch Đằng - Bạch Đằng" data-icon="fa-map-marker-alt">Phố đi bộ Bạch Đằng</option>
+                                            <option value="Bệnh viện Đà Nẵng - 124 Hải Phòng" data-icon="fa-map-marker-alt">Bệnh viện Đà Nẵng</option>
+                                            <option value="Your own address" data-icon="fa-map-location-dot" data-highlight="true">Địa chỉ của bạn (tự nhập)</option>
                                         </select>
-                                        <input type="text" id="custom_return_input" placeholder="Nhập địa chỉ trả xe của bạn..." style="display:none; margin-top:8px; border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; width:100%; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" oninput="updateCustomLocation('return')" />
+                                        <div id="return_custom_wrapper" style="display:none; margin-top:8px;">
+                                            <div style="display: flex; gap: 10px;">
+                                                <input type="text" id="custom_return_input" placeholder="Nhập địa chỉ trả xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('return')" oninput="updateCustomLocation('return')" />
+                                                <button type="button" onclick="autoGeolocate('return')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
+                                            </div>
+                                            <div id="return_distance_info" style="font-size: 12px; color: #64748b; margin-top: 5px;"></div>
+                                            <div id="return_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
+                                        </div>
                                     </div>
                                     <script>
                                         function toggleCustomLocation(type) {
                                             var select = document.getElementById(type + 'location');
+                                            var wrapper = document.getElementById(type + '_custom_wrapper');
                                             var input = document.getElementById('custom_' + type + '_input');
                                             var selectedOption = select.options[select.selectedIndex];
                                             if (selectedOption.text.includes('(tự nhập)')) {
-                                                input.style.display = 'block';
+                                                wrapper.style.display = 'block';
                                                 input.required = true;
                                             } else {
-                                                input.style.display = 'none';
+                                                wrapper.style.display = 'none';
                                                 input.required = false;
                                             }
                                         }
@@ -1942,8 +1956,8 @@
                                 </div>
                             </div>
                         </fieldset>
-                                
-                                <h3>Xe máy</h3>
+
+                        <h3>Xe máy</h3>
                         <fieldset>
                             <h2>CHỌN XE MÁY</h2>
                             <p class="desc">Hãy chọn những chiếc xe tuyệt vời nhất cho hành trình của bạn</p>
@@ -2306,12 +2320,12 @@
                                                             <c:set var="imagesArr" value="${fn:split(c.identityCardImage, ',')}" />
                                                             
                                                             <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
-                                                                <label for="imageFront" class="upload-card">
+                                                                <label for="imageFrontAuth" class="upload-card">
                                                                     <i class="bi bi-person-vcard"></i>
                                                                     <span class="upload-title">Cập nhật mặt trước</span>
                                                                     <span class="upload-subtitle">Nhấn để chọn ảnh mới</span>
                                                                 </label>
-                                                                <input type="file" name="imageFront" id="imageFront" style="display: none;" />
+                                                                <input type="file" name="imageFront" id="imageFrontAuth" style="display: none;" />
                                                                 
                                                                 <!-- Preview Container (managed by JS) -->
                                                                 <div class="image-preview-container" style="display: none;">
@@ -2331,12 +2345,12 @@
                                                             </div>
 
                                                             <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
-                                                                <label for="imageBack" class="upload-card">
+                                                                <label for="imageBackAuth" class="upload-card">
                                                                     <i class="bi bi-credit-card-2-back"></i>
                                                                     <span class="upload-title">Cập nhật mặt sau</span>
                                                                     <span class="upload-subtitle">Nhấn để chọn ảnh mới</span>
                                                                 </label>
-                                                                <input type="file" name="imageBack" id="imageBack" style="display: none;" />
+                                                                <input type="file" name="imageBack" id="imageBackAuth" style="display: none;" />
                                                                 
                                                                 <!-- Preview Container (managed by JS) -->
                                                                 <div class="image-preview-container" style="display: none;">
@@ -2525,6 +2539,17 @@
                                         <input type="hidden" id="applied-discount" value="0"/>
                                         <input type="hidden" id="applied-voucher-id" value="0"/>
                                     </div>
+                                    
+                                    <!-- CAM KẾT GIAO XE -->
+                                    <div style="background:#f0faf0; border:1px solid #b2dfb2; border-radius:12px; padding:16px 20px; margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-start;">
+                                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e8f5e9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                            <i class="fas fa-shipping-fast text-green-600 text-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h4 style="margin:0 0 4px; color:#2e7d32; font-size:14px; font-weight: 700;">Cam kết giao xe đúng hạn!</h4>
+                                            <p style="margin:0; font-size:13px; color:#388e3c; line-height: 1.5;">SmartRide cam kết giao xe tận nơi chậm nhất trong <strong>45 phút</strong> kể từ lúc <strong>nhân viên duyệt đơn</strong> (hoặc theo đúng giờ đã hẹn). Nếu giao trễ quá thời gian này, hệ thống sẽ tự động tặng ngay <strong>Mã giảm giá 50.000đ</strong> đền bù vào đơn hàng của bạn! <em>*Lưu ý: Vui lòng đặt xe cách thời điểm hiện tại ít nhất 15 phút.</em></p>
+                                        </div>
+                                    </div>
 
                                     <!-- ĐIỀU KHOẢN -->
                                     <div style="background:#fffbf2; border:1px solid #f0e4b8; border-radius:12px; padding:20px;">
@@ -2546,7 +2571,8 @@
                                         </div>
                                         <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; font-weight:600; color:#333;">
                                             <input type="checkbox" id="daily-checkbox-term" style="width:18px; height:18px; accent-color:#b59349; cursor:pointer;" />
-                                            Tôi đã đọc và đồng ý với <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('terms-modal').style.display='flex'">Điều khoản &amp; Chính sách</span> của SmartRide
+                                            <span>Tôi đã đọc và đồng ý với <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('terms-modal').style.display='flex'">Điều khoản dịch vụ</span> &amp; 
+                                            <span style="color:#3b82f6; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('contract-modal').style.display='flex'">Hợp đồng thuê xe</span></span>
                                         </label>
                                     </div>
 
@@ -2663,14 +2689,29 @@
                                 var summaryAmt = document.getElementById('deposit-summary-amount');
                                 var summaryLbl = document.getElementById('deposit-summary-label');
                                 if (!dataEl || !summaryAmt) return;
-                                var rawAmt = dataEl.getAttribute('data-amount');
+                                var methodCash = document.getElementById('check-cash') && document.getElementById('check-cash').style.background === 'rgb(181, 147, 73)';
+                                var rawAmt = dataEl.getAttribute(methodCash ? 'data-full-amount' : 'data-amount');
                                 var amt = rawAmt ? parseInt(rawAmt) : 0;
-                                if (amt > 0) {
-                                    summaryAmt.textContent = '&#8363;' + amt.toLocaleString('vi-VN');
+                                
+                                // Update title and button
+                                var titleBox = summaryAmt.previousElementSibling;
+                                var submitBtn = document.querySelector('#payment-method-container button');
+                                
+                                if (methodCash) {
+                                    if (titleBox) titleBox.textContent = 'TỔNG TIỀN (KHI NHẬN XE)';
+                                    summaryLbl.textContent = 'Thanh toán tiền mặt khi nhận xe';
+                                    if (submitBtn) submitBtn.textContent = 'Xác nhận đặt xe (Thanh toán sau)';
+                                } else {
+                                    if (titleBox) titleBox.textContent = 'SỐ TIỀN ĐẶT CỌC';
                                     try {
                                         var h4 = dataEl.parentElement ? dataEl.parentElement.querySelector('h4') : null;
-                                        summaryLbl.textContent = h4 ? h4.textContent.trim() : 'Số tiền cần thanh toán trước';
+                                        summaryLbl.textContent = h4 ? h4.textContent.trim() : 'Cần đặt cọc (50% theo ngày):';
                                     } catch(e) {}
+                                    if (submitBtn) submitBtn.textContent = 'Xác nhận thanh toán';
+                                }
+
+                                if (amt > 0) {
+                                    summaryAmt.textContent = '&#8363;' + amt.toLocaleString('vi-VN');
                                 }
                             }
                             window.syncDepositSummary = syncDepositSummary;
@@ -2704,8 +2745,8 @@
                                 <div style="text-align:center; background:#fff; border:2px solid #e5e7eb; border-radius:16px; padding:20px; margin-bottom:18px;">
                                     <img id="sepay-qr-img" src="" alt="QR SePay" style="width:220px; height:220px; border-radius:8px; display:block; margin:0 auto;">
                                     <div style="margin-top:12px;">
-                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Ngân hàng: <strong>Vietcombank (VCB)</strong></div>
-                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Số tài khoản: <strong>1037077133</strong></div>
+                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Ngân hàng: <strong>MBBank (MBB)</strong></div>
+                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Số tài khoản: <strong>0943515000</strong></div>
                                         <div style="font-size:13px; color:#666;">Số tiền: <strong id="sepay-amount-text" style="color:#b59349;"></strong></div>
                                     </div>
                                 </div>
@@ -2722,12 +2763,7 @@
                                     ⏳ Đang chờ thanh toán...
                                 </div>
 
-                                <!-- Dev test button (remove in production) -->
-                                <div style="text-align:center; margin-top:12px;">
-                                    <button type="button" onclick="simulatePaymentSuccess()" style="background:#6b7280; color:#fff; border:none; padding:8px 18px; border-radius:8px; cursor:pointer; font-size:12px; opacity:0.6;">
-                                        [Dev] Giả lập thanh toán thành công
-                                    </button>
-                                </div>
+                                <button type="button" onclick="simulatePaymentSuccess(event)" style="margin-top:12px; width:100%; padding:10px; background:#16a34a; color:white; border:none; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer;">Tôi đã chuyển khoản</button>
                             </div>
 
                             <!-- Hiển thị khi chưa tạo QR -->
@@ -3001,7 +3037,7 @@
                         confirmPaymentMethod();
                     },
                     onStepChanged: function (event, currentIndex, priorIndex) {
-                        updateBookingProgress(currentIndex);
+
                         var nextButton = document.querySelector('.wizard .actions a[href="#next"]');
                         storedFormData = {
                                 pickupdate: document.getElementById('pickupdate').value,
@@ -4635,12 +4671,6 @@
        
 
         // ===== VOUCHER FUNCTIONS =====
-        function selectMyVoucher(code) {
-            if (code) {
-                document.getElementById('voucher-code-input').value = code;
-            }
-        }
-
         function applyVoucher() {
             const code = document.getElementById('voucher-code-input').value.trim();
             const msgEl = document.getElementById('voucher-msg');
@@ -4649,16 +4679,6 @@
                 msgEl.textContent = 'Vui lòng nhập mã voucher';
                 return;
             }
-
-            // Check minimum order value: must be >= 300,000đ
-            const MIN_ORDER = 300000;
-            const currentTotal = parseInt((document.getElementById('finalTotal') || {}).value) || 0;
-            if (currentTotal > 0 && currentTotal < MIN_ORDER) {
-                msgEl.style.color = '#dc2626';
-                msgEl.textContent = '✗ Voucher chỉ áp dụng cho đơn từ ' + MIN_ORDER.toLocaleString('vi-VN') + 'đ trở lên. Đơn của bạn hiện là ₫' + currentTotal.toLocaleString('vi-VN') + '.';
-                return;
-            }
-
             msgEl.style.color = '#6b7280';
             msgEl.textContent = 'Đang kiểm tra...';
 
@@ -4666,7 +4686,6 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'code=' + encodeURIComponent(code)
-                    + '&orderTotal=' + (parseInt((document.getElementById('finalTotal') || {}).value) || 0)
             })
             .then(r => r.json())
             .then(data => {
@@ -4674,10 +4693,7 @@
                     document.getElementById('applied-voucher-id').value = data.voucherId;
                     document.getElementById('applied-discount').value = data.discount;
                     msgEl.style.color = '#16a34a';
-                    let discLabel = data.isPercent
-                        ? '<strong>' + data.discountPct + '%</strong> (≈ ₫' + Number(data.discount).toLocaleString('vi-VN') + ')'
-                        : '₫<strong>' + Number(data.discount).toLocaleString('vi-VN') + '</strong>';
-                    msgEl.innerHTML = '✅ Áp dụng thành công! Giảm ' + discLabel
+                    msgEl.innerHTML = '✅ Áp dụng thành công! Giảm <strong>₫' + Number(data.discount).toLocaleString('vi-VN') + '</strong>'
                         + (data.description ? ' — ' + data.description : '');
 
                     // Lock voucher: 1 đơn hàng chỉ 1 voucher
@@ -5105,48 +5121,6 @@
         });
 
         // Voucher được xử lý qua hàm applyVoucher() ở script phía trên (kết nối servlet /applyVoucher → database)
-
-        // ===== BOOKING PROGRESS BAR =====
-        function updateBookingProgress(activeStep) {
-            var totalSteps = 6;
-            for (var i = 0; i < totalSteps; i++) {
-                var circle = document.getElementById('prog-circle-' + i);
-                var label  = document.getElementById('prog-label-' + i);
-                if (!circle || !label) continue;
-                if (i < activeStep) {
-                    // Completed
-                    circle.style.background    = 'linear-gradient(135deg,#b59349,#e8c76a)';
-                    circle.style.borderColor   = '#b59349';
-                    circle.style.color         = '#fff';
-                    circle.innerHTML           = '&#10003;';
-                    label.style.color          = '#b59349';
-                } else if (i === activeStep) {
-                    // Active
-                    circle.style.background    = '#fff';
-                    circle.style.borderColor   = '#b59349';
-                    circle.style.color         = '#b59349';
-                    circle.style.boxShadow     = '0 0 0 4px rgba(181,147,73,0.18)';
-                    circle.innerHTML           = (i + 1);
-                    label.style.color          = '#b59349';
-                    label.style.fontWeight     = '700';
-                } else {
-                    // Upcoming
-                    circle.style.background    = '#fff';
-                    circle.style.borderColor   = '#ddd';
-                    circle.style.color         = '#bbb';
-                    circle.style.boxShadow     = 'none';
-                    circle.innerHTML           = (i + 1);
-                    label.style.color          = '#bbb';
-                    label.style.fontWeight     = '600';
-                }
-            }
-            // Update connector fill: (activeStep / (totalSteps-1)) * 100%
-            var pct = (activeStep / (totalSteps - 1)) * 100;
-            var fill = document.getElementById('prog-line-fill');
-            if (fill) fill.style.width = pct + '%';
-        }
-        // Initialise on load
-        updateBookingProgress(0);
         </script>
     <!-- Select2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -5154,187 +5128,158 @@
         <script>
         window.deliveryFee = 0;
         
+        function toggleCustomLocation(type) {
+            var select = document.getElementById(type + 'location');
+            var wrapper = document.getElementById(type + '_custom_wrapper');
+            var input = document.getElementById('custom_' + type + '_input');
+            if (select.value === 'Your own address') {
+                wrapper.style.display = 'block';
+                input.required = true;
+                setTimeout(function() { initMap(type); }, 200);
+            } else {
+                wrapper.style.display = 'none';
+                input.required = false;
+                document.getElementById(type + '_distance_info').innerHTML = '';
+                if(maps[type]) document.getElementById(type + '_map').style.display = 'none';
+            }
+            recalculateDeliveryFee();
+        }
         
         var maps = { pickup: null, return: null };
         var markers = { pickup: null, return: null };
-        var geocoders = { pickup: null, return: null };
 
         function initMap(type) {
-            if (maps[type]) return; // Already initialized
-            
-            var mapElement = document.getElementById(type + '_map');
-            maps[type] = L.map(mapElement).setView([16.0609, 108.2057], 13);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(maps[type]);
-            
-            markers[type] = L.marker([16.0609, 108.2057], {draggable: true}).addTo(maps[type]);
-            
-            markers[type].on('dragend', function(event) {
-                var position = markers[type].getLatLng();
-                reverseGeocode(position.lat, position.lng, type);
-            });
-            
-            maps[type].on('click', function(event) {
-                markers[type].setLatLng(event.latlng);
-                reverseGeocode(event.latlng.lat, event.latlng.lng, type);
-            });
-            
-            // Fix map rendering issue when unhidden
-            setTimeout(function(){ maps[type].invalidateSize(); }, 100);
-        }
-
-        function reverseGeocode(lat, lng, type) {
-            var input = document.getElementById('custom_' + type + '_input');
-            input.value = "Đang tìm địa chỉ...";
-            
-            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=vi`)
-                .then(response => response.json())
-                .then(data => {
-                    var address = data.display_name;
-                    input.value = address;
-                    document.getElementById(type + 'location').value = address;
-                    processDistance(lat, lng, type);
-                })
-                .catch(error => {
-                    input.value = lat + ", " + lng;
-                    document.getElementById(type + 'location').value = lat + ", " + lng;
-                    processDistance(lat, lng, type);
+            if (!maps[type]) {
+                document.getElementById(type + '_map').style.display = 'block';
+                maps[type] = L.map(type + '_map').setView([16.0609, 108.2057], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(maps[type]);
+                
+                markers[type] = L.marker([16.0609, 108.2057], {draggable: true}).addTo(maps[type]);
+                
+                markers[type].on('dragend', function(event) {
+                    var position = markers[type].getLatLng();
+                    reverseGeocodeAndMap(position.lat, position.lng, type);
                 });
-        }
-
-        function toggleLocationType(type) {
-            var isCustom = document.querySelector(`input[name="${type}_type"]:checked`).value === 'custom';
-            var wrapper = document.getElementById(type + '_custom_wrapper');
-            var lblStore = document.getElementById('lbl_' + type + '_store');
-            var lblCustom = document.getElementById('lbl_' + type + '_custom');
-            
-            if (isCustom) {
-                wrapper.style.display = 'block';
-                lblCustom.style.borderColor = '#4f46e5';
-                lblCustom.style.background = '#eff6ff';
-                lblStore.style.borderColor = '#ddd';
-                lblStore.style.background = '#fff';
                 
-                var inputVal = document.getElementById('custom_' + type + '_input').value;
-                if (inputVal) {
-                    document.getElementById(type + 'location').value = inputVal;
-                } else {
-                    document.getElementById(type + 'location').value = "";
-                }
-                
-                // Initialize map if not already done
-                initMap(type);
-                // Fix map size after display block
-                setTimeout(function(){ if(maps[type]) maps[type].invalidateSize(); }, 100);
+                maps[type].on('click', function(event) {
+                    markers[type].setLatLng(event.latlng);
+                    reverseGeocodeAndMap(event.latlng.lat, event.latlng.lng, type);
+                });
             } else {
-                wrapper.style.display = 'none';
-                lblStore.style.borderColor = '#4f46e5';
-                lblStore.style.background = '#eff6ff';
-                lblCustom.style.borderColor = '#ddd';
-                lblCustom.style.background = '#fff';
-                
-                document.getElementById(type + 'location').value = "Tại cửa hàng SmartRide - 254 Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng";
-                
-                // Reset distance fee
-                var info = document.getElementById(type + '_distance_info');
-                info.innerHTML = '';
-                var inputEl = document.getElementById('custom_' + type + '_input');
-                if (inputEl) inputEl.dataset.dist = "0";
-                
-                if (type === 'pickup') window._pickupFee = 0;
-                else window._returnFee = 0;
-                
-                recalculateDeliveryFee();
-                updateTotal();
+                document.getElementById(type + '_map').style.display = 'block';
+                setTimeout(function(){ maps[type].invalidateSize(); }, 100);
             }
         }
-
-        function applyQuickLocation(type) {
-            var select = document.getElementById(type + '_quick_select');
-            var selectedOption = select.options[select.selectedIndex];
+        
+        function reverseGeocodeAndMap(lat, lon, type) {
+            var info = document.getElementById(type + '_distance_info');
+            info.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang phân tích địa chỉ...';
             
-            if (select.value) {
-                document.getElementById('custom_' + type + '_input').value = select.value;
-                document.getElementById(type + 'location').value = select.value;
-                
-                var lat = parseFloat(selectedOption.getAttribute('data-lat'));
-                var lng = parseFloat(selectedOption.getAttribute('data-lng'));
-                
-                if (maps[type] && markers[type]) {
-                    var newLatLng = new L.LatLng(lat, lng);
-                    markers[type].setLatLng(newLatLng);
-                    maps[type].setView(newLatLng, 15);
+            fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lon + '&accept-language=vi')
+            .then(response => response.json())
+            .then(data => {
+                var address;
+                if (data && data.display_name) {
+                    address = data.display_name.replace(/ Ward/g, '').replace(/ District/g, '');
+                    document.getElementById('custom_' + type + '_input').value = address;
+                    updateCustomLocation(type);
+                    processDistance(lat, lon, type);
+                } else {
+                    info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Không thể phân tích tên đường tại đây. Vui lòng nhập tay địa chỉ của bạn.</span>';
+                    document.getElementById('custom_' + type + '_input').value = '';
+                    updateCustomLocation(type);
                 }
-                
-                processDistance(lat, lng, type);
-            }
+            })
+            .catch(error => {
+                info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Lỗi lấy địa chỉ. Vui lòng nhập tay.</span>';
+                document.getElementById('custom_' + type + '_input').value = '';
+                updateCustomLocation(type);
+            });
         }
-
+        
         function autoGeolocate(type) {
             if (navigator.geolocation) {
-                document.getElementById('custom_' + type + '_input').value = "Đang lấy vị trí...";
+                var btn = event.currentTarget;
+                var oldHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var lat = position.coords.latitude;
                     var lon = position.coords.longitude;
+                    btn.innerHTML = oldHtml;
                     
-                    if (maps[type] && markers[type]) {
-                        var newLatLng = new L.LatLng(lat, lon);
-                        markers[type].setLatLng(newLatLng);
-                        maps[type].setView(newLatLng, 15);
-                    }
-                    reverseGeocode(lat, lon, type);
+                    initMap(type);
+                    var newLatLng = new L.LatLng(lat, lon);
+                    markers[type].setLatLng(newLatLng);
+                    maps[type].setView(newLatLng, 15);
+                    reverseGeocodeAndMap(lat, lon, type);
+                    
                 }, function(error) {
-                    alert('Không thể lấy vị trí. Vui lòng kiểm tra quyền truy cập vị trí của trình duyệt.');
-                    document.getElementById('custom_' + type + '_input').value = "";
-                });
+                    btn.innerHTML = oldHtml;
+                    Swal.fire({icon: 'error', title: 'Lỗi định vị', text: 'Vui lòng cho phép trình duyệt truy cập vị trí của bạn.'});
+                }, { timeout: 10000 });
             } else {
-                alert('Trình duyệt của bạn không hỗ trợ định vị.');
+                Swal.fire({icon: 'warning', title: 'Không hỗ trợ', text: 'Trình duyệt của bạn không hỗ trợ định vị.'});
             }
         }
 
+        function parseCoordinates(str) {
+            var regex = /^(-?\d+(\.\d+)?)\s*,\s*(-?\d+(\.\d+)?)$/;
+            var match = str.trim().match(regex);
+            if (match) return { lat: parseFloat(match[1]), lon: parseFloat(match[3]) };
+            return null;
+        }
+        
         function calcDistance(type) {
             var address = document.getElementById('custom_' + type + '_input').value;
-            if (!address) return;
+            if (!address || address.trim() === '') return;
             
-            document.getElementById(type + 'location').value = address;
+            var coords = parseCoordinates(address);
+            if (coords) {
+                initMap(type);
+                var newLatLng = new L.LatLng(coords.lat, coords.lon);
+                markers[type].setLatLng(newLatLng);
+                maps[type].setView(newLatLng, 15);
+                reverseGeocodeAndMap(coords.lat, coords.lon, type);
+                return;
+            }
+            
             var info = document.getElementById(type + '_distance_info');
-            info.innerHTML = '<span style="color:#64748b;"><i class="fas fa-spinner fa-spin"></i> Đang tính khoảng cách...</span>';
+            info.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tìm kiếm địa chỉ...';
             
-            var query = encodeURIComponent(address + ", Đà Nẵng, Việt Nam");
-            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + query)
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.length > 0) {
-                        var lat = parseFloat(data[0].lat);
-                        var lon = parseFloat(data[0].lon);
-                        
-                        if (maps[type] && markers[type]) {
-                            var newLatLng = new L.LatLng(lat, lon);
-                            markers[type].setLatLng(newLatLng);
-                            maps[type].setView(newLatLng, 15);
-                        }
-                        
-                        processDistance(lat, lon, type);
-                    } else {
-                        info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Không tìm thấy địa chỉ. Vui lòng chọn trên bản đồ.</span>';
-                        if (type === 'pickup') window._pickupFee = 25000;
-                        else window._returnFee = 25000;
-                        recalculateDeliveryFee();
-                        updateTotal();
-                    }
-                })
-                .catch(function() {
-                    info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Lỗi tìm kiếm địa chỉ.</span>';
+            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address + ', Đà Nẵng, Việt Nam') + '&accept-language=vi&limit=1')
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data && data.length > 0) {
+                    var lat = parseFloat(data[0].lat);
+                    var lon = parseFloat(data[0].lon);
+                    
+                    initMap(type);
+                    var newLatLng = new L.LatLng(lat, lon);
+                    markers[type].setLatLng(newLatLng);
+                    maps[type].setView(newLatLng, 15);
+                    
+                    processDistance(lat, lon, type);
+                } else {
+                    info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Không tìm thấy địa chỉ này. Vui lòng cắm cờ trên bản đồ.</span>';
+                    var inputEl = document.getElementById('custom_' + type + '_input');
+                    if (inputEl) inputEl.dataset.dist = "8";
                     if (type === 'pickup') window._pickupFee = 25000;
                     else window._returnFee = 25000;
                     recalculateDeliveryFee();
                     updateTotal();
-                });
+                    initMap(type);
+                }
+            })
+            .catch(function() {
+                info.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Lỗi tìm kiếm khoảng cách.</span>';
+            });
         }
-        
-var SHOP_LAT = 16.0609, SHOP_LON = 108.2057;
+
+        // Tọa độ cửa hàng SmartRide
+        var SHOP_LAT = 16.0609, SHOP_LON = 108.2057;
 
         function haversineKm(lat1, lon1, lat2, lon2) {
             var R = 6371;
