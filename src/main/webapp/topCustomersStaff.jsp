@@ -86,14 +86,14 @@
         }
 
         .table-vip thead th {
-            background: linear-gradient(135deg, #012970 0%, #1e3a8a 100%);
-            color: rgba(255,255,255,0.85);
-            font-weight: 600;
-            font-size: 0.8rem;
+            background-color: #f8f9fc;
+            color: #555;
+            font-weight: 700;
+            font-size: 0.82rem;
             text-transform: uppercase;
-            letter-spacing: 0.7px;
+            letter-spacing: 0.5px;
             padding: 14px 16px;
-            border: none;
+            border-bottom: 2px solid #e8ecf4;
         }
         .table-vip tbody tr {
             border-bottom: 1px solid #f0f2f5;
@@ -219,7 +219,7 @@
                                 </thead>
                                 <tbody>
                                     <c:forEach var="customer" items="${topCustomers}" varStatus="status">
-                                        <tr style="cursor: pointer;" onclick="window.parent.showCustomerDetails('${customer.CustomerID}', '${customer.FullName}', '${customer.Email}', '${customer.Phone}', '${customer.TotalBookings}', '${customer.TotalSpent}')" title="Xem chi tiết ${customer.FullName}">
+                                        <tr style="cursor: pointer; user-select: none;" onclick="showCustomerDetails('${customer.CustomerID}', '${customer.FullName}', '${customer.Email}', '${customer.Phone}', '${customer.TotalBookings}', '${customer.TotalSpent}')" title="Xem chi tiết ${customer.FullName}">
                                             <td class="text-center">
                                                 <c:choose>
                                                     <c:when test="${status.count == 1}">
@@ -283,10 +283,124 @@
 
     </main><!-- End #main -->
 
+    <!-- Customer Details Modal -->
+    <div class="modal fade" id="customerDetailsModal" tabindex="-1" aria-labelledby="customerDetailsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header border-0" style="background: linear-gradient(135deg, #012970 0%, #4154f1 100%);">
+            <h5 class="modal-title fw-bold text-white" id="customerDetailsModalLabel">
+              <i class="bi bi-person-lines-fill me-2"></i>Chi Tiết Khách Hàng VIP
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4" style="background:#f8f9fc;">
+            <div class="row mb-4 g-3">
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm rounded-3">
+                  <div class="card-body">
+                    <p class="text-muted fw-semibold mb-3" style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;">Thông tin liên hệ</p>
+                    <h5 id="modalCustomerName" class="fw-bold mb-3" style="color:#012970;"></h5>
+                    <p class="mb-2 d-flex align-items-center gap-2">
+                      <span class="badge bg-light text-dark p-2"><i class="bi bi-telephone-fill text-primary"></i></span>
+                      <span id="modalCustomerPhone"></span>
+                    </p>
+                    <p class="mb-0 d-flex align-items-center gap-2">
+                      <span class="badge bg-light text-dark p-2"><i class="bi bi-envelope-fill text-primary"></i></span>
+                      <span id="modalCustomerEmail" style="font-size:0.9rem;"></span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm rounded-3 text-white" style="background: linear-gradient(135deg, #198754, #20c997);">
+                  <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
+                    <p class="fw-semibold mb-2" style="font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;opacity:0.8;">Tổng chi tiêu</p>
+                    <h2 id="modalCustomerSpent" class="fw-bold mb-3"></h2>
+                    <div class="badge bg-white rounded-pill px-4 py-2" style="color:#198754;font-size:0.9rem;">
+                      <i class="bi bi-bicycle me-1"></i>
+                      <span id="modalCustomerBookings" class="fw-bold"></span> chuyến
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="fw-bold mb-3" style="color:#333;"><i class="bi bi-clock-history me-2 text-primary"></i>Lịch sử thuê xe</p>
+            <div class="table-responsive rounded-3" style="border:1px solid #e8ecf4;">
+              <table class="table table-hover align-middle mb-0">
+                <thead style="background:#f8f9fc;">
+                  <tr>
+                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Mã Đơn</th>
+                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Số Xe</th>
+                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Ngày nhận</th>
+                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Ngày trả</th>
+                    <th class="border-0 fw-semibold text-muted" style="font-size:0.8rem;">Giá trị</th>
+                    <th class="border-0 fw-semibold text-muted text-center" style="font-size:0.8rem;">Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody id="modalHistoryTableBody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer border-0" style="background:#f8f9fc;">
+            <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Đóng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Vendor JS Files -->
     <script src="staffAssets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="staffAssets/js/main.js"></script>
 
+    <script>
+        function showCustomerDetails(id, name, email, phone, bookings, spent) {
+            document.getElementById('modalCustomerName').innerText = name;
+            document.getElementById('modalCustomerEmail').innerText = email;
+            document.getElementById('modalCustomerPhone').innerText = phone;
+            document.getElementById('modalCustomerBookings').innerText = bookings;
+            document.getElementById('modalCustomerSpent').innerText = parseFloat(spent).toLocaleString('vi-VN') + ' đ';
+
+            const tbody = document.getElementById('modalHistoryTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted small">Đang tải lịch sử...</p></td></tr>';
+
+            const myModal = new bootstrap.Modal(document.getElementById('customerDetailsModal'));
+            myModal.show();
+
+            fetch('customerHistoryStaff?customerId=' + id)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted"><i class="bi bi-inbox fs-2 d-block mb-2"></i>Không có lịch sử thuê xe.</td></tr>';
+                        return;
+                    }
+                    let html = '';
+                    data.forEach(b => {
+                        let badge;
+                        if (b.status === 'Đã hoàn thành' || b.status === 'Đã xác nhận') {
+                            badge = '<span class="badge rounded-pill px-3" style="background:#d1fae5;color:#065f46;">Hoàn thành</span>';
+                        } else if (b.status === 'Đã hủy') {
+                            badge = '<span class="badge rounded-pill px-3" style="background:#fee2e2;color:#991b1b;">Đã hủy</span>';
+                        } else {
+                            badge = '<span class="badge rounded-pill px-3" style="background:#fef9c3;color:#854d0e;">' + b.status + '</span>';
+                        }
+                        html += `<tr>
+                            <td><span class="fw-bold" style="color:#4154f1;">#${b.bookingID}</span></td>
+                            <td>${b.motorName}</td>
+                            <td class="text-muted" style="font-size:0.85rem;">${b.startDate}</td>
+                            <td class="text-muted" style="font-size:0.85rem;">${b.endDate}</td>
+                            <td class="fw-bold">${parseFloat(b.totalPrice).toLocaleString('vi-VN')}đ</td>
+                            <td class="text-center">${badge}</td>
+                        </tr>`;
+                    });
+                    tbody.innerHTML = html;
+                })
+                .catch(() => {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-danger">Có lỗi khi tải dữ liệu.</td></tr>';
+                });
+        }
+    </script>
 </body>
 </html>
 
