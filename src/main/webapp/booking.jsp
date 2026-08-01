@@ -5377,6 +5377,11 @@
                 templateResult: formatLocation,
                 templateSelection: formatLocation,
                 minimumResultsForSearch: Infinity
+            }).on('change', function() {
+                var type = $(this).attr('id').replace('location', '');
+                if (typeof toggleCustomLocation === 'function') {
+                    toggleCustomLocation(type);
+                }
             });
         });
         </script>
