@@ -463,7 +463,12 @@
                                     <tbody id="table-body">
                                     <c:forEach items="${listM}" var="m">
                                             <tr>
-                                                <td style="font-weight: 700; color: #1e293b;">${m.motorcycleId}</td>
+                                                <td style="font-weight: 700; color: #1e293b;">
+                                                    ${m.motorcycleId}
+                                                    <c:if test="${m.isHidden}">
+                                                        <br><span class="badge" style="background:#f59e0b;color:white;font-size:10px;padding:3px 6px;margin-top:4px;border-radius:4px;">Đã Ẩn</span>
+                                                    </c:if>
+                                                </td>
                                                 <td>
                                                     <div class="img-box">
                                                         <img src="${empty m.image ? 'images/default.jpg' : (m.image.startsWith('http') ? m.image : 'images/'.concat(m.image))}" alt="motor">
@@ -530,6 +535,18 @@
                                                         <button type="button" class="btn-outline-custom-red" title="Xóa" onclick="confirmDelete('${m.motorcycleId}')">
                                                             <i class="fas fa-trash"></i> Xóa
                                                         </button>
+                                                        <c:choose>
+                                                            <c:when test="${m.isHidden}">
+                                                                <button type="button" class="btn-outline-custom-blue" style="background: #f1f5f9; color: #64748b;" title="Hiển thị lại" onclick="window.location.href='toggleMotorVisibility?id=${m.motorcycleId}'">
+                                                                    <i class="fas fa-eye"></i> Hiện
+                                                                </button>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <button type="button" class="btn-outline-custom-blue" style="background: #fef3c7; color: #d97706;" title="Ẩn xe" onclick="window.location.href='toggleMotorVisibility?id=${m.motorcycleId}'">
+                                                                    <i class="fas fa-eye-slash"></i> Ẩn
+                                                                </button>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -1162,6 +1179,20 @@
                 icon: 'error',
                 title: 'Không thể xóa dòng xe này!',
                 text: 'Xe đã có lịch sử thuê, không thể xóa vĩnh viễn để bảo đảm dữ liệu đối soát!',
+            });
+        } else if (urlParams.get('msg') === 'toggled') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Trạng thái hiển thị của dòng xe đã được cập nhật.',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        } else if (urlParams.get('error') === 'toggle_failed') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Không thể cập nhật trạng thái hiển thị của dòng xe này!',
             });
         }
     });

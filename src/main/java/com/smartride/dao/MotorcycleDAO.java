@@ -31,6 +31,12 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
     public static MotorcycleDAO getInstance() {
         if (instance == null) {
             instance = new MotorcycleDAO();
+            try {
+                // Auto-migrate to add IsHidden column if not exists
+                instance.conn.createStatement().execute("ALTER TABLE \"Motorcycle\" ADD COLUMN \"IsHidden\" BOOLEAN DEFAULT false;");
+            } catch (Exception ignored) {
+                // Column already exists or other error, safely ignored
+            }
         }
         try {
             if (instance.conn == null || instance.conn.isClosed()) {
@@ -66,7 +72,8 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     + "    \"MinAge\",\n"
                     + "    \"BrandID\",\n"
                     + "    \"CategoryID\",\n"
-                    + "    \"PriceListID\"\n"
+                    + "    \"PriceListID\",\n"
+                    + "    \"IsHidden\"\n"
                     + "FROM \n"
                     + "    \"Motorcycle\";";
             stm = conn.prepareStatement(sql);
@@ -83,6 +90,7 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                 motorcycle.setBrandID(rs.getInt(7));
                 motorcycle.setCategoryID(rs.getInt(8));
                 motorcycle.setPriceListID(rs.getInt(9));
+                motorcycle.setHidden(rs.getBoolean(10));
                 
                 motorcycle.setListMotorcycleDetails(detailsMap.getOrDefault(mId, new ArrayList<>()));
                 list.add(motorcycle);
@@ -166,6 +174,7 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     + "LEFT JOIN\n"
                     + "    LatestStatus ls ON md.\"MotorcycleDetailID\" = ls.\"MotorcycleDetailID\" AND ls.\"RowNum\" = 1\n"
                     + "WHERE\n"
+                    + "    m.\"IsHidden\" = false AND\n"
                     + "    (ls.\"StatusAction\" like 'Có sẵn' OR ls.\"StatusAction\" IS NULL)\n"
                     + "GROUP BY\n"
                     + "    m.\"MotorcycleID\"\n"
@@ -715,8 +724,22 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
             ps2.executeUpdate();
             return true;
         } catch (SQLException e) {
-            System.out.println("Delete Motorbike Error: " + e.getMessage());
-            return false; // Typically FK constraint error
+            System.out.println("Delete Motorbike Error (Constraint), falling back to Soft Delete: " + e.getMessage());
+            // Tự động chuyển qua Soft Delete
+            return toggleVisibilityMotorcycle(id);
+        }
+    }
+
+    public boolean toggleVisibilityMotorcycle(String id) {
+        try {
+            String sql = "UPDATE \"Motorcycle\" SET \"IsHidden\" = NOT \"IsHidden\" WHERE \"MotorcycleID\" = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            System.out.println("Toggle Visibility Error: " + e.getMessage());
+            return false;
         }
     }
 
@@ -736,7 +759,7 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     + "    \"CategoryID\",\n"
                     + "    \"PriceListID\"\n"
                     + "FROM \n"
-                    + "    \"Motorcycle\" ORDER BY \"MotorcycleID\" LIMIT 6";
+                    + "    \"Motorcycle\" WHERE \"IsHidden\" = false ORDER BY \"MotorcycleID\" LIMIT 6";
             //why không * đi
             stm = conn.prepareStatement(sql);
             rs = stm.executeQuery();
@@ -777,7 +800,7 @@ public class MotorcycleDAO implements Serializable, DAO<Motorcycle> {
                     + "    \"CategoryID\",\n"
                     + "    \"PriceListID\"\n"
                     + "FROM \n"
-                    + "    \"Motorcycle\" ORDER BY \"MotorcycleID\"\n"
+                    + "    \"Motorcycle\" WHERE \"IsHidden\" = false ORDER BY \"MotorcycleID\"\n"
                     + "LIMIT 3 OFFSET ?;";
             stm = conn.prepareStatement(sql);
             stm.setInt(1, iAmount);

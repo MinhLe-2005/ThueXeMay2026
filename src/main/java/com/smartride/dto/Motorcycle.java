@@ -25,6 +25,7 @@ public class Motorcycle implements Serializable{
     private int categoryID;
     private int priceListID;
     private List<MotorcycleDetail> listMotorcycleDetails;
+    private boolean isHidden;
 
     public Motorcycle(String motorcycleId, String model, String image, String displacement, String description, int minAge, int brandID, int categoryID, int priceListID) {
         this.motorcycleId = motorcycleId;
@@ -36,6 +37,20 @@ public class Motorcycle implements Serializable{
         this.brandID = brandID;
         this.categoryID = categoryID;
         this.priceListID = priceListID;
+        this.isHidden = false;
+    }
+    
+    public Motorcycle(String motorcycleId, String model, String image, String displacement, String description, int minAge, int brandID, int categoryID, int priceListID, boolean isHidden) {
+        this.motorcycleId = motorcycleId;
+        this.model = model;
+        this.image = image;
+        this.displacement = displacement;
+        this.description = description;
+        this.minAge = minAge;
+        this.brandID = brandID;
+        this.categoryID = categoryID;
+        this.priceListID = priceListID;
+        this.isHidden = isHidden;
     }
     
 }
