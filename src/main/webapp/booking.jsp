@@ -1899,7 +1899,7 @@
                                         <div id="pickup_distance_info" style="font-size: 13px; color: #64748b; margin-top: 8px;"></div>
                                         <div id="pickup_custom_wrapper" style="display:none; margin-top:8px;">
                                             <div style="display: flex; gap: 10px;">
-                                                <input type="text" id="custom_pickup_input" placeholder="Nhập địa chỉ nhận xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('pickup')" oninput="updateCustomLocation('pickup')" />
+                                                <input type="text" id="custom_pickup_input" placeholder="Nhập địa chỉ hoặc dán tọa độ (VD: 16.05, 108.20)..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('pickup')" oninput="updateCustomLocation('pickup')" />
                                                 <button type="button" onclick="autoGeolocate('pickup')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
                                             </div>
                                             <div id="pickup_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
@@ -1924,7 +1924,7 @@
                                         <div id="return_distance_info" style="font-size: 13px; color: #64748b; margin-top: 8px;"></div>
                                         <div id="return_custom_wrapper" style="display:none; margin-top:8px;">
                                             <div style="display: flex; gap: 10px;">
-                                                <input type="text" id="custom_return_input" placeholder="Nhập địa chỉ trả xe của bạn..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('return')" oninput="updateCustomLocation('return')" />
+                                                <input type="text" id="custom_return_input" placeholder="Nhập địa chỉ hoặc dán tọa độ (VD: 16.05, 108.20)..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('return')" oninput="updateCustomLocation('return')" />
                                                 <button type="button" onclick="autoGeolocate('return')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
                                             </div>
                                             <div id="return_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
