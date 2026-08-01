@@ -438,7 +438,7 @@ public class BookingDAO {
         // The DB might have NewEndDate in yyyy-MM-dd HH:mm:ss format
         String sql = "UPDATE \"Booking\" SET \"EndDate\" = ?, \"TotalPrice\" = COALESCE(\"TotalPrice\", 0) + ? WHERE \"BookingID\" = ?";
         try {
-            stm = conn.prepareStatement(sql);
+            stm = getConnection().prepareStatement(sql);
             stm.setString(1, newEndDate);
             stm.setDouble(2, additionalPrice);
             stm.setString(3, bookingID);
