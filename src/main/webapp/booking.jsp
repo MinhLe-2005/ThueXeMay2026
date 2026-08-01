@@ -2218,10 +2218,64 @@
                         </fieldset>
 
                         <h3>Khách hàng</h3>
-                                <fieldset>
-                                    <h2>THÔNG TIN KHÁCH HÀNG</h2>
-                                    <p class="desc">Vui lòng cung cấp thông tin cá nhân và giấy tờ tùy thân để xác minh.</p>
-
+                        <fieldset>
+                            <h2>THÔNG TIN CÁ NHÂN</h2>
+                            <p class="desc">Hãy xác nhận hoặc cập nhật thông tin của bạn</p>
+                            <div class="fieldset-content">
+                                <c:if test="${not empty sessionScope.account}">
+                                    <a id="accountId"  style="display: none">${account.accountId}</a>
+                                   
+                                    <div class="form-row">
+                                        <div class="form-flex">
+                                            <div class="form-group">
+                                                <label class="form-label">Họ <span class="note-star"> *</span></label>
+                                                <input type="text" name="first_name" id="first_name" value="${account.firstName}" oninput="validateForm()" />
+                                              
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Tên <span class="note-star"> *</span></label>
+                                                <input type="text" name="last_name" id="last_name" value="${account.lastName}" oninput="validateForm()" />
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="width:100%; margin-bottom:15px; padding:12px; background:#fff1f2; border-left:4px solid #ef4444; border-radius:4px; color:#b91c1c; font-size:13px; font-weight:600; line-height:1.5;">
+                                        ⚠️ Vui lòng nhập chính xác Email và Số điện thoại để hệ thống gửi thông báo và hỗ trợ hoàn tiền khi cần thiết.
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-flex">
+                                            <div class="form-group">
+                                                <label for="email" class="form-label">Email <span class="note-star"> *</span></label>
+                                                <input type="email" name="email" id="email" value="${account.email}" oninput="validateForm()" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="phonenumber" class="form-label">Số điện thoại <span class="note-star"> *</span></label>
+                                                <input type="text" name="phonenumber" id="phonenumber" value="${account.phoneNumber}" oninput="validateForm()"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group" style="width: 100%;">
+                                            <label for="address" class="form-label">Địa chỉ <span class="note-star"> *</span></label>
+                                            <input type="text" name="address" id="address" value="${account.address}" oninput="validateForm()" />
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-flex">
+                                            <div class="form-group">
+                                                 <label for="birth_date" class="form-label">Ngày sinh <span class="note-star"> *</span></label>
+                                                 <input type="date" name="dob" id="dob" value="${account.dob}" oninput="validateForm()" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="gender" class="form-label">Giới tính <span class="note-star"> *</span></label>
+                                                <div class="form-radio-group">   
+                                                    <label><input type="radio" name="gender" value="Không muốn tiết lộ" ${account.gender == 'Không muốn tiết lộ' ? 'checked' : ''} onclick="validateForm()">Bí mật</label>
+                                                    <label><input type="radio" name="gender" value="Nam" ${account.gender == 'Nam' ? 'checked' : ''} onclick="validateForm()">Nam</label>
+                                                    <label><input type="radio" name="gender" value="Nữ" ${account.gender == 'Nữ' ? 'checked' : ''} onclick="validateForm()">Nữ</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <c:set var="flag" value="false" />                   
                                     <c:forEach items="${listC}" var="c">
                                         <c:if test="${account.accountId eq c.accountId}">
@@ -2252,12 +2306,12 @@
                                                             <c:set var="imagesArr" value="${fn:split(c.identityCardImage, ',')}" />
                                                             
                                                             <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
-                                                                <label for="imageFrontAuth" class="upload-card">
+                                                                <label for="imageFront" class="upload-card">
                                                                     <i class="bi bi-person-vcard"></i>
                                                                     <span class="upload-title">Cập nhật mặt trước</span>
                                                                     <span class="upload-subtitle">Nhấn để chọn ảnh mới</span>
                                                                 </label>
-                                                                <input type="file" name="imageFront" id="imageFrontAuth" style="display: none;" />
+                                                                <input type="file" name="imageFront" id="imageFront" style="display: none;" />
                                                                 
                                                                 <!-- Preview Container (managed by JS) -->
                                                                 <div class="image-preview-container" style="display: none;">
@@ -2277,12 +2331,12 @@
                                                             </div>
 
                                                             <div class="upload-card-wrapper" style="flex: 1; min-width: 0;">
-                                                                <label for="imageBackAuth" class="upload-card">
+                                                                <label for="imageBack" class="upload-card">
                                                                     <i class="bi bi-credit-card-2-back"></i>
                                                                     <span class="upload-title">Cập nhật mặt sau</span>
                                                                     <span class="upload-subtitle">Nhấn để chọn ảnh mới</span>
                                                                 </label>
-                                                                <input type="file" name="imageBack" id="imageBackAuth" style="display: none;" />
+                                                                <input type="file" name="imageBack" id="imageBack" style="display: none;" />
                                                                 
                                                                 <!-- Preview Container (managed by JS) -->
                                                                 <div class="image-preview-container" style="display: none;">
@@ -2368,7 +2422,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </c:if>
+                                    </c:if>                                 
+                                </c:if>
                             </div>
                         </fieldset>
 
@@ -2462,47 +2517,13 @@
                                         <h4 style="margin:0 0 14px; color:#b59349; font-size:13px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
                                             <i class="bi bi-ticket-perforated"></i> Mã Giảm Giá (Voucher)
                                         </h4>
-                                        
-                                        <%
-                                            com.smartride.dto.Account accVoucher = (com.smartride.dto.Account) session.getAttribute("account");
-                                            java.util.List<com.smartride.dto.Voucher> myVouchers = null;
-                                            if (accVoucher != null) {
-                                                myVouchers = com.smartride.dao.VoucherDAO.getInstance().getAvailableVouchersForAccount(accVoucher.getAccountId());
-                                            }
-                                            request.setAttribute("myVouchers", myVouchers);
-                                        %>
-                                        
-                                        <div style="margin-bottom: 12px;">
-                                            <select id="my-voucher-select" onchange="selectMyVoucher(this.value)" style="width:100%; padding:10px 14px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; outline:none; background:#f9f9f9; color:#333; cursor:pointer;">
-                                                <option value="">-- Chọn voucher bạn đang có --</option>
-                                                <c:if test="${not empty myVouchers}">
-                                                    <c:forEach var="v" items="${myVouchers}">
-                                                        <option value="${v.code}">
-                                                            <fmt:formatNumber value="${v.discountAmount}" pattern="#,###" />đ - ${v.description} (Mã: ${v.code})
-                                                        </option>
-                                                    </c:forEach>
-                                                </c:if>
-                                            </select>
-                                        </div>
-                                        
                                         <div style="display:flex; gap:10px; align-items:center;">
-                                            <input type="text" id="voucher-code-input" placeholder="Hoặc nhập mã voucher..." style="flex:1; padding:10px 14px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; outline:none;" />
+                                            <input type="text" id="voucher-code-input" placeholder="Nhập mã voucher..." style="flex:1; padding:10px 14px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; outline:none;" />
                                             <button type="button" id="apply-voucher-btn" onclick="applyVoucher()" style="background:#b59349; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px; white-space:nowrap;">Áp dụng</button>
                                         </div>
                                         <div id="voucher-msg" style="font-size:13px; margin-top:8px;"></div>
                                         <input type="hidden" id="applied-discount" value="0"/>
                                         <input type="hidden" id="applied-voucher-id" value="0"/>
-                                    </div>
-                                    
-                                    <!-- CAM KẾT GIAO XE -->
-                                    <div style="background:#f0faf0; border:1px solid #b2dfb2; border-radius:12px; padding:16px 20px; margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-start;">
-                                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #e8f5e9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                            <i class="fas fa-shipping-fast text-green-600 text-lg"></i>
-                                        </div>
-                                        <div>
-                                            <h4 style="margin:0 0 4px; color:#2e7d32; font-size:14px; font-weight: 700;">Cam kết giao xe đúng hạn!</h4>
-                                            <p style="margin:0; font-size:13px; color:#388e3c; line-height: 1.5;">SmartRide cam kết giao xe tận nơi chậm nhất trong <strong>45 phút</strong> kể từ lúc <strong>nhân viên duyệt đơn</strong> (hoặc theo đúng giờ đã hẹn). Nếu giao trễ quá thời gian này, hệ thống sẽ tự động tặng ngay <strong>Mã giảm giá 50.000đ</strong> đền bù vào đơn hàng của bạn! <em>*Lưu ý: Vui lòng đặt xe cách thời điểm hiện tại ít nhất 15 phút.</em></p>
-                                        </div>
                                     </div>
 
                                     <!-- ĐIỀU KHOẢN -->
@@ -2525,8 +2546,7 @@
                                         </div>
                                         <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; font-weight:600; color:#333;">
                                             <input type="checkbox" id="daily-checkbox-term" style="width:18px; height:18px; accent-color:#b59349; cursor:pointer;" />
-                                            <span>Tôi đã đọc và đồng ý với <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('terms-modal').style.display='flex'">Điều khoản dịch vụ</span> &amp; 
-                                            <span style="color:#3b82f6; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('contract-modal').style.display='flex'">Hợp đồng thuê xe</span></span>
+                                            Tôi đã đọc và đồng ý với <span style="color:#b59349; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('terms-modal').style.display='flex'">Điều khoản &amp; Chính sách</span> của SmartRide
                                         </label>
                                     </div>
 
@@ -2643,29 +2663,14 @@
                                 var summaryAmt = document.getElementById('deposit-summary-amount');
                                 var summaryLbl = document.getElementById('deposit-summary-label');
                                 if (!dataEl || !summaryAmt) return;
-                                var methodCash = document.getElementById('check-cash') && document.getElementById('check-cash').style.background === 'rgb(181, 147, 73)';
-                                var rawAmt = dataEl.getAttribute(methodCash ? 'data-full-amount' : 'data-amount');
+                                var rawAmt = dataEl.getAttribute('data-amount');
                                 var amt = rawAmt ? parseInt(rawAmt) : 0;
-                                
-                                // Update title and button
-                                var titleBox = summaryAmt.previousElementSibling;
-                                var submitBtn = document.querySelector('#payment-method-container button');
-                                
-                                if (methodCash) {
-                                    if (titleBox) titleBox.textContent = 'TỔNG TIỀN (KHI NHẬN XE)';
-                                    summaryLbl.textContent = 'Thanh toán tiền mặt khi nhận xe';
-                                    if (submitBtn) submitBtn.textContent = 'Xác nhận đặt xe (Thanh toán sau)';
-                                } else {
-                                    if (titleBox) titleBox.textContent = 'SỐ TIỀN ĐẶT CỌC';
-                                    try {
-                                        var h4 = dataEl.parentElement ? dataEl.parentElement.querySelector('h4') : null;
-                                        summaryLbl.textContent = h4 ? h4.textContent.trim() : 'Cần đặt cọc (50% theo ngày):';
-                                    } catch(e) {}
-                                    if (submitBtn) submitBtn.textContent = 'Xác nhận thanh toán';
-                                }
-
                                 if (amt > 0) {
                                     summaryAmt.textContent = '&#8363;' + amt.toLocaleString('vi-VN');
+                                    try {
+                                        var h4 = dataEl.parentElement ? dataEl.parentElement.querySelector('h4') : null;
+                                        summaryLbl.textContent = h4 ? h4.textContent.trim() : 'Số tiền cần thanh toán trước';
+                                    } catch(e) {}
                                 }
                             }
                             window.syncDepositSummary = syncDepositSummary;
@@ -2699,8 +2704,8 @@
                                 <div style="text-align:center; background:#fff; border:2px solid #e5e7eb; border-radius:16px; padding:20px; margin-bottom:18px;">
                                     <img id="sepay-qr-img" src="" alt="QR SePay" style="width:220px; height:220px; border-radius:8px; display:block; margin:0 auto;">
                                     <div style="margin-top:12px;">
-                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Ngân hàng: <strong>MBBank (MBB)</strong></div>
-                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Số tài khoản: <strong>0943515000</strong></div>
+                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Ngân hàng: <strong>Vietcombank (VCB)</strong></div>
+                                        <div style="font-size:13px; color:#666; margin-bottom:4px;">Số tài khoản: <strong>1037077133</strong></div>
                                         <div style="font-size:13px; color:#666;">Số tiền: <strong id="sepay-amount-text" style="color:#b59349;"></strong></div>
                                     </div>
                                 </div>
@@ -2717,7 +2722,12 @@
                                     ⏳ Đang chờ thanh toán...
                                 </div>
 
-                                <button type="button" onclick="simulatePaymentSuccess(event)" style="margin-top:12px; width:100%; padding:10px; background:#16a34a; color:white; border:none; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer;">Tôi đã chuyển khoản</button>
+                                <!-- Dev test button (remove in production) -->
+                                <div style="text-align:center; margin-top:12px;">
+                                    <button type="button" onclick="simulatePaymentSuccess()" style="background:#6b7280; color:#fff; border:none; padding:8px 18px; border-radius:8px; cursor:pointer; font-size:12px; opacity:0.6;">
+                                        [Dev] Giả lập thanh toán thành công
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Hiển thị khi chưa tạo QR -->
