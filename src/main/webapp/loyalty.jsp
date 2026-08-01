@@ -391,6 +391,17 @@
                                             <p>Giảm cố định</p>
                                         </c:otherwise>
                                     </c:choose>
+                                    <c:if test="${v.minSpend > 0 || v.maxDiscount > 0}">
+                                        <div style="font-size: 11px; color: #d9534f; margin-top: 5px; font-weight: 600;">
+                                            <c:if test="${v.minSpend > 0}">
+                                                Đơn tối thiểu: <fmt:formatNumber value="${v.minSpend}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                                            </c:if>
+                                            <c:if test="${v.minSpend > 0 && v.maxDiscount > 0}"> | </c:if>
+                                            <c:if test="${v.maxDiscount > 0}">
+                                                Giảm tối đa: <fmt:formatNumber value="${v.maxDiscount}" type="currency" currencySymbol="đ" maxFractionDigits="0"/>
+                                            </c:if>
+                                        </div>
+                                    </c:if>
                                     <div class="voucher-code">${v.code}</div>
                                 </div>
                             </div>

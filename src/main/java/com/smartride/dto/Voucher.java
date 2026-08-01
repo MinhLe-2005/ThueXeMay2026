@@ -20,4 +20,7 @@ public class Voucher implements Serializable {
     private String createdTime;
     private String status;
     private boolean isPublished;
+    private double minSpend;
+    private double maxDiscount;
+    private Integer accountId;
 }

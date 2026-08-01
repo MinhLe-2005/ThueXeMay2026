@@ -27,7 +27,7 @@ public class VoucherDAO implements Serializable {
      * If customerID > 0, also checks that the voucher belongs to that customer OR is a general voucher (customerID=0).
      */
     public Voucher getVoucherByCode(String code, int customerId) {
-        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\" "
+        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\", \"account_id\", \"MinSpend\", \"MaxDiscount\" "
                    + "FROM \"Voucher\" "
                    + "WHERE \"Code\" = ? AND \"Status\" = 'Đang hoạt động'";
         try (Connection c = DBUtil.makeConnection();
@@ -42,6 +42,9 @@ public class VoucherDAO implements Serializable {
                     v.setDescription(rs.getString("Description"));
                     v.setCreatedTime(rs.getString("CreatedTime"));
                     v.setStatus(rs.getString("Status"));
+                    v.setAccountId(rs.getObject("account_id") != null ? rs.getInt("account_id") : null);
+                    v.setMinSpend(rs.getDouble("MinSpend"));
+                    v.setMaxDiscount(rs.getDouble("MaxDiscount"));
                     return v;
                 }
             }
@@ -215,14 +218,16 @@ public class VoucherDAO implements Serializable {
     }
 
     // Create a personal voucher for a specific customer (late delivery compensation)
-    public boolean createPersonalVoucher(String code, int accountId, double discountAmount, String description) {
-        String sql = "INSERT INTO \"Voucher\" (\"Code\", \"DiscountAmount\", \"Description\", \"Status\", \"account_id\", \"max_uses\", \"used_count\") VALUES (?, ?, ?, 'Đang hoạt động', ?, 1, 0)";
+    public boolean createPersonalVoucher(String code, int accountId, double discountAmount, String description, double minSpend, double maxDiscount) {
+        String sql = "INSERT INTO \"Voucher\" (\"Code\", \"DiscountAmount\", \"Description\", \"Status\", \"account_id\", \"max_uses\", \"used_count\", \"MinSpend\", \"MaxDiscount\") VALUES (?, ?, ?, 'Đang hoạt động', ?, 1, 0, ?, ?)";
         try (Connection c = DBUtil.makeConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, code);
             ps.setDouble(2, discountAmount);
             ps.setString(3, description);
             ps.setInt(4, accountId);
+            ps.setDouble(5, minSpend);
+            ps.setDouble(6, maxDiscount);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -261,7 +266,7 @@ public class VoucherDAO implements Serializable {
 
     public java.util.List<Voucher> getAvailableVouchersForAccount(int accountId) {
         java.util.List<Voucher> list = new java.util.ArrayList<>();
-        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\" "
+        String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\", \"account_id\", \"MinSpend\", \"MaxDiscount\" "
                    + "FROM \"Voucher\" "
                    + "WHERE (\"account_id\" = ? OR \"account_id\" IS NULL) "
                    + "AND \"Status\" = 'Đang hoạt động' "
@@ -279,6 +284,9 @@ public class VoucherDAO implements Serializable {
                 v.setDescription(rs.getString("Description"));
                 v.setCreatedTime(rs.getString("CreatedTime"));
                 v.setStatus(rs.getString("Status"));
+                v.setAccountId(rs.getObject("account_id") != null ? rs.getInt("account_id") : null);
+                v.setMinSpend(rs.getDouble("MinSpend"));
+                v.setMaxDiscount(rs.getDouble("MaxDiscount"));
                 list.add(v);
             }
         } catch (Exception e) {

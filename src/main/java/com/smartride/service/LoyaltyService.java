@@ -20,25 +20,25 @@ public class LoyaltyService {
         int accountId = customer.getAccountId();
         float totalSpent = CustomerDAO.getInstance().getTotalSpentByAccountId(accountId);
 
-        issueVoucherIfEligible(accountId, totalSpent, 10000000f, "VIP-DIAMOND", 50, "Voucher VIP Kim Cương (Giảm 50%)");
-        issueVoucherIfEligible(accountId, totalSpent, 5000000f, "VIP-GOLD", 30, "Voucher VIP Vàng (Giảm 30%)");
-        issueVoucherIfEligible(accountId, totalSpent, 2000000f, "VIP-SILVER", 15, "Voucher VIP Bạc (Giảm 15%)");
+        issueVoucherIfEligible(accountId, totalSpent, 10000000f, "VIP-DIAMOND", 50, "Voucher VIP Kim Cương (Giảm 50%)", 3000000, 1500000);
+        issueVoucherIfEligible(accountId, totalSpent, 5000000f, "VIP-GOLD", 30, "Voucher VIP Vàng (Giảm 30%)", 2000000, 800000);
+        issueVoucherIfEligible(accountId, totalSpent, 2000000f, "VIP-SILVER", 15, "Voucher VIP Bạc (Giảm 15%)", 1000000, 300000);
     }
 
     public static void checkAndIssueVoucherForAccount(int accountId) {
         float totalSpent = CustomerDAO.getInstance().getTotalSpentByAccountId(accountId);
-        issueVoucherIfEligible(accountId, totalSpent, 10000000f, "VIP-DIAMOND", 50, "Voucher VIP Kim Cương (Giảm 50%)");
-        issueVoucherIfEligible(accountId, totalSpent, 5000000f, "VIP-GOLD", 30, "Voucher VIP Vàng (Giảm 30%)");
-        issueVoucherIfEligible(accountId, totalSpent, 2000000f, "VIP-SILVER", 15, "Voucher VIP Bạc (Giảm 15%)");
+        issueVoucherIfEligible(accountId, totalSpent, 10000000f, "VIP-DIAMOND", 50, "Voucher VIP Kim Cương (Giảm 50%)", 3000000, 1500000);
+        issueVoucherIfEligible(accountId, totalSpent, 5000000f, "VIP-GOLD", 30, "Voucher VIP Vàng (Giảm 30%)", 2000000, 800000);
+        issueVoucherIfEligible(accountId, totalSpent, 2000000f, "VIP-SILVER", 15, "Voucher VIP Bạc (Giảm 15%)", 1000000, 300000);
     }
 
-    private static void issueVoucherIfEligible(int accountId, float totalSpent, float threshold, String tierCodePrefix, double discountAmount, String description) {
+    private static void issueVoucherIfEligible(int accountId, float totalSpent, float threshold, String tierCodePrefix, double discountAmount, String description, double minSpend, double maxDiscount) {
         if (totalSpent >= threshold) {
             VoucherDAO voucherDAO = VoucherDAO.getInstance();
             if (!voucherDAO.hasMilestoneVoucher(accountId, tierCodePrefix)) {
                 // Issue voucher
                 String randomCode = tierCodePrefix + "-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-                boolean success = voucherDAO.createPersonalVoucher(randomCode, accountId, discountAmount, description);
+                boolean success = voucherDAO.createPersonalVoucher(randomCode, accountId, discountAmount, description, minSpend, maxDiscount);
                 if (success) {
                     System.out.println("Issued milestone voucher " + randomCode + " to account " + accountId);
                 }
