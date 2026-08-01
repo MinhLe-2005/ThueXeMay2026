@@ -27,6 +27,8 @@
         booking.setBookingDate("2026-07-23 10:00:00");
         booking.setStartDate("2026-07-23 12:00:00");
         booking.setEndDate("2026-07-24 12:00:00");
+        booking.setDeliveryLocation("[Cập nhật theo lựa chọn của bạn]");
+        booking.setReturnLocation("[Cập nhật theo lựa chọn của bạn]");
         
         account = new Account();
         account.setFirstName("Nguyễn Văn");
