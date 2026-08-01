@@ -59,7 +59,7 @@
                 
                 out.println(String.format("Xe: %s | Giá 1 ngày: %,.0f VNĐ | Giá tuần: %,.0f VNĐ/ngày | Giá tháng: %,.0f VNĐ/ngày", 
                             rs.getString("Model"), priceDay, priceWeek, priceMonth));
-                out.println("Link đặt xe: https://thuexemay2026.onrender.com/booking?motorcycleid=" + rs.getString("MotorcycleID"));
+                out.println("Link xem chi tiết và đặt xe: https://thuexemay2026.onrender.com/motorcycleDetail?id=" + rs.getString("MotorcycleID"));
             }
         }
 

@@ -58,7 +58,7 @@ public class ChatbaseSyncUtil {
                 try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sqlMoto)) {
                     while (rs.next()) {
                         sb.append(String.format("Xe: %s | Giá 1 ngày: %,.0f VNĐ\n", rs.getString("Model"), rs.getDouble("DailyPriceForDay")));
-                        sb.append("Link đặt xe: https://thuexemay2026.onrender.com/booking?motorcycleid=").append(rs.getString("MotorcycleID")).append("\n");
+                        sb.append("Link xem chi tiết và đặt xe: https://thuexemay2026.onrender.com/motorcycleDetail?id=").append(rs.getString("MotorcycleID")).append("\n");
                     }
                 }
             }
