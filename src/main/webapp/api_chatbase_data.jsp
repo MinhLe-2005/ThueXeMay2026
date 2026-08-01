@@ -17,7 +17,7 @@
 
         // 1. Get Active Events (Promotions)
         out.println("================ CHƯƠNG TRÌNH KHUYẾN MÃI ĐANG DIỄN RA ================");
-        String sqlEvent = "SELECT \"EventTitle\", \"StartDate\", \"EndDate\", \"Content\", \"Discount\" FROM \"Event\" WHERE \"EndDate\" >= CURRENT_DATE";
+        String sqlEvent = "SELECT \"EventTitle\", \"StartDate\", \"EndDate\", \"Content\", \"Discount\" FROM \"Event\" WHERE CURRENT_DATE >= \"StartDate\" AND CURRENT_DATE <= \"EndDate\"";
         boolean hasEvent = false;
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sqlEvent)) {
             while (rs.next()) {
@@ -39,7 +39,7 @@
         out.println("================ BẢNG GIÁ THUÊ XE HÔM NAY ================");
         out.println("Lưu ý cho AI: Nếu có sự kiện khuyến mãi đang diễn ra ở trên, hãy tự động tính toán (Trừ đi % giảm giá) rồi báo giá cuối cùng cho khách.\n");
         
-        String sqlMoto = "SELECT m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\", c.\"CategoryName\" " +
+        String sqlMoto = "SELECT m.\"MotorcycleID\", m.\"Model\", p.\"DailyPriceForDay\", p.\"DailyPriceForWeek\", p.\"DailyPriceForMonth\", c.\"CategoryName\" " +
                          "FROM \"Motorcycle\" m " +
                          "JOIN \"PriceList\" p ON m.\"PriceListID\" = p.\"PriceListID\" " +
                          "JOIN \"Category\" c ON m.\"CategoryID\" = c.\"CategoryID\" " +
@@ -59,6 +59,7 @@
                 
                 out.println(String.format("Xe: %s | Giá 1 ngày: %,.0f VNĐ | Giá tuần: %,.0f VNĐ/ngày | Giá tháng: %,.0f VNĐ/ngày", 
                             rs.getString("Model"), priceDay, priceWeek, priceMonth));
+                out.println("Link đặt xe: https://thuexemay2026.onrender.com/booking?motorcycleid=" + rs.getString("MotorcycleID"));
             }
         }
 

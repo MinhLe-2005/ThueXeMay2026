@@ -37,7 +37,7 @@ public class ChatbaseSyncUtil {
         try (Connection conn = DBUtil.makeConnection()) {
             if (conn != null) {
                 sb.append("================ CHƯƠNG TRÌNH KHUYẾN MÃI ĐANG DIỄN RA ================\n");
-                String sqlEvent = "SELECT \"EventTitle\", \"StartDate\", \"EndDate\", \"Content\", \"Discount\" FROM \"Event\" WHERE \"EndDate\" >= CURRENT_DATE";
+                String sqlEvent = "SELECT \"EventTitle\", \"StartDate\", \"EndDate\", \"Content\", \"Discount\" FROM \"Event\" WHERE CURRENT_DATE >= \"StartDate\" AND CURRENT_DATE <= \"EndDate\"";
                 boolean hasEvent = false;
                 try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sqlEvent)) {
                     while (rs.next()) {
@@ -54,10 +54,11 @@ public class ChatbaseSyncUtil {
                 }
 
                 sb.append("================ BẢNG GIÁ THUÊ XE HÔM NAY ================\n");
-                String sqlMoto = "SELECT m.\"Model\", p.\"DailyPriceForDay\" FROM \"Motorcycle\" m JOIN \"PriceList\" p ON m.\"PriceListID\" = p.\"PriceListID\"";
+                String sqlMoto = "SELECT m.\"MotorcycleID\", m.\"Model\", p.\"DailyPriceForDay\" FROM \"Motorcycle\" m JOIN \"PriceList\" p ON m.\"PriceListID\" = p.\"PriceListID\"";
                 try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sqlMoto)) {
                     while (rs.next()) {
                         sb.append(String.format("Xe: %s | Giá 1 ngày: %,.0f VNĐ\n", rs.getString("Model"), rs.getDouble("DailyPriceForDay")));
+                        sb.append("Link đặt xe: https://thuexemay2026.onrender.com/booking?motorcycleid=").append(rs.getString("MotorcycleID")).append("\n");
                     }
                 }
             }
