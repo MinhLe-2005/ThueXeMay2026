@@ -4395,21 +4395,38 @@
                 } else {
                     if (typeof Swal !== 'undefined') {
                         var titleStr = aiErrorData && aiErrorData.status === 'error' ? 'Không thể đặt xe' : 'Lỗi';
-                        Swal.fire({ 
-                            icon: 'error', 
-                            title: titleStr, 
-                            text: errMsg,
-                            showCancelButton: true,
-                            confirmButtonText: '<i class="fas fa-undo"></i> Quay lại Bước 2',
-                            cancelButtonText: 'Đóng'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                var stepsObj = $('#booking-form').children("div");
-                                stepsObj.steps("previous");
-                                stepsObj.steps("previous");
-                                stepsObj.steps("previous");
-                            }
-                        });
+                        if (errMsg.includes("CCCD")) {
+                            Swal.fire({ 
+                                icon: 'error', 
+                                title: titleStr, 
+                                text: errMsg,
+                                showCancelButton: true,
+                                confirmButtonText: '<i class="fas fa-undo"></i> Quay lại Bước 4',
+                                cancelButtonText: 'Đóng'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    var stepsObj = $('#booking-form').children("div");
+                                    stepsObj.steps("previous");
+                                    stepsObj.steps("previous");
+                                }
+                            });
+                        } else {
+                            Swal.fire({ 
+                                icon: 'error', 
+                                title: titleStr, 
+                                text: errMsg,
+                                showCancelButton: true,
+                                confirmButtonText: '<i class="fas fa-undo"></i> Quay lại Bước 2',
+                                cancelButtonText: 'Đóng'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    var stepsObj = $('#booking-form').children("div");
+                                    stepsObj.steps("previous");
+                                    stepsObj.steps("previous");
+                                    stepsObj.steps("previous");
+                                }
+                            });
+                        }
                     } else {
                         alert('Lỗi: ' + errMsg);
                     }
