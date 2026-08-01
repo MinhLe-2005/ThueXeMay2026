@@ -473,7 +473,18 @@ public class BookingInforHander extends HttpServlet {
             response.setContentType("application/json;charset=UTF-8");
             java.util.Map<String, String> errorResponse = new java.util.HashMap<>();
             errorResponse.put("status", "error");
-            errorResponse.put("message", "Lỗi backend: " + e.getMessage());
+            
+            String errorMsg = e.getMessage();
+            if (errorMsg != null && errorMsg.contains("duplicate key value violates unique constraint")) {
+                if (errorMsg.contains("Customer_IdentityCard_key") || errorMsg.contains("IdentityCard")) {
+                    errorResponse.put("message", "Số CMND/CCCD này đã tồn tại trong hệ thống. Vui lòng kiểm tra lại!");
+                } else {
+                    errorResponse.put("message", "Dữ liệu bị trùng lặp trong hệ thống (Duplicate Key).");
+                }
+            } else {
+                errorResponse.put("message", "Lỗi xử lý hệ thống. Vui lòng thử lại sau.");
+            }
+            
             response.getWriter().write(new com.google.gson.Gson().toJson(errorResponse));
         }
     }
