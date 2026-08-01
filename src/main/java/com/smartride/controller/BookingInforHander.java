@@ -126,10 +126,17 @@ public class BookingInforHander extends HttpServlet {
           //Create or Update Customer
         CustomerDAO daoC = CustomerDAO.getInstance();
         String customerId = (String) dataMap.get("customerId");
+        int accountId = Integer.parseInt((String) dataMap.get("accountId"));
+        
+        // Auto-fix if frontend sends "Not" but customer actually exists in DB
+        com.smartride.dto.Customer existingCust = daoC.getCustomerbyAccountID(accountId);
+        if (existingCust != null && existingCust.getCustomerId() > 0) {
+            customerId = String.valueOf(existingCust.getCustomerId());
+        }
+        
         String identityCard = (String) dataMap.get("identityCard");
         String issuedon = (String) dataMap.get("issuedon");
         String expdate = (String) dataMap.get("expdate");
-        int accountId = Integer.parseInt((String) dataMap.get("accountId"));
         
         // Save front and back files if present
         String uploadedFilePath = null;
