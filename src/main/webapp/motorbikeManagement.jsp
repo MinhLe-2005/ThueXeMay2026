@@ -465,7 +465,7 @@
                                             <tr>
                                                 <td style="font-weight: 700; color: #1e293b;">
                                                     ${m.motorcycleId}
-                                                    <c:if test="${m.isHidden}">
+                                                    <c:if test="${m.hidden}">
                                                         <br><span class="badge" style="background:#f59e0b;color:white;font-size:10px;padding:3px 6px;margin-top:4px;border-radius:4px;">Đã Ẩn</span>
                                                     </c:if>
                                                 </td>
@@ -536,7 +536,7 @@
                                                             <i class="fas fa-trash"></i> Xóa
                                                         </button>
                                                         <c:choose>
-                                                            <c:when test="${m.isHidden}">
+                                                            <c:when test="${m.hidden}">
                                                                 <button type="button" class="btn-outline-custom-blue" style="background: #f1f5f9; color: #64748b;" title="Hiển thị lại" onclick="window.location.href='toggleMotorVisibility?id=${m.motorcycleId}'">
                                                                     <i class="fas fa-eye"></i> Hiện
                                                                 </button>
