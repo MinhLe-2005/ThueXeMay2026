@@ -236,7 +236,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
 
     public List<Map<String, Object>> getTopCustomers(int limit) {
         List<Map<String, Object>> topCustomers = new ArrayList<>();
-        String sql = "SELECT c.\"CustomerID\", a.\"FullName\", a.\"Email\", a.\"Phone\", "
+        String sql = "SELECT c.\"CustomerID\", a.\"FirstName\" || ' ' || a.\"LastName\" AS \"FullName\", a.\"Email\", a.\"PhoneNumber\" AS \"Phone\", "
                    + "COUNT(b.\"BookingID\") AS \"TotalBookings\", "
                    + "SUM(bd.\"TotalPrice\") AS \"TotalSpent\" "
                    + "FROM \"Customer\" c "
@@ -244,7 +244,7 @@ public class CustomerDAO implements Serializable, DAO<Customer> {
                    + "JOIN \"Booking\" b ON c.\"CustomerID\" = b.\"CustomerID\" "
                    + "JOIN \"Booking Detail\" bd ON b.\"BookingID\" = bd.\"BookingID\" "
                    + "WHERE b.\"StatusBooking\" = 'Đã hoàn thành' OR (b.\"StatusBooking\" = 'Đã xác nhận' AND b.\"DeliveryStatus\" = 'Đã trả') "
-                   + "GROUP BY c.\"CustomerID\", a.\"FullName\", a.\"Email\", a.\"Phone\" "
+                   + "GROUP BY c.\"CustomerID\", a.\"FirstName\", a.\"LastName\", a.\"Email\", a.\"PhoneNumber\" "
                    + "ORDER BY \"TotalSpent\" DESC, \"TotalBookings\" DESC "
                    + "LIMIT ?";
         try {
