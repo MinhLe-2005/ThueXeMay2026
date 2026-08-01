@@ -31,6 +31,7 @@ public class CustomerHistoryStaffServlet extends HttpServlet {
             }
             
             int customerId = Integer.parseInt(customerIdStr);
+            // Get bookings directly by customerID
             List<Booking> bookings = BookingDAO.getInstance().getAllBookings();
             List<Map<String, Object>> result = new ArrayList<>();
             
@@ -38,7 +39,6 @@ public class CustomerHistoryStaffServlet extends HttpServlet {
                 if (b.getCustomerID() == customerId) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("bookingID", b.getBookingID());
-                    // startDate and endDate are Strings in the Booking DTO
                     map.put("startDate", b.getStartDate() != null ? b.getStartDate() : "N/A");
                     map.put("endDate", b.getEndDate() != null ? b.getEndDate() : "N/A");
                     map.put("status", b.getStatusBooking() != null ? b.getStatusBooking() : "");
