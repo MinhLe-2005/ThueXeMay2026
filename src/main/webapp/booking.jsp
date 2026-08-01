@@ -1936,7 +1936,281 @@
                                     
                                 </fieldset>
                                 
-                                <h3>Khách hàng</h3>
+                                <h3>Xe máy</h3>
+                        <fieldset>
+                            <h2>CHỌN XE MÁY</h2>
+                            <p class="desc">Hãy chọn những chiếc xe tuyệt vời nhất cho hành trình của bạn</p>
+                            
+                            <div class="fieldset-content">
+                                <!-- Banner xe đã chọn realtime -->
+                                <div id="bike-selection-banner" style="display:none; background: linear-gradient(135deg,#fdf8ee,#fff8e1); border:1.5px solid #e0c87a; border-radius:10px; padding:10px 16px; margin-bottom:14px; font-size:13px; color:#7a5c00; font-weight:600;">
+                                    <i class="bi bi-check-circle-fill" style="color:#b59349;"></i>
+                                    Đã chọn: <span id="bike-selection-list"></span>
+                                </div>
+                                <div class="scrollable-vertical" id="motorcyclelist">
+                                    <c:forEach items="${listM}" var="o">
+                                        <c:if test="${o.motorcycleId eq chosenmotor}">
+                                            <div class="form-box">
+                                                <div class="form-img-bike">
+                                                    <label style="width: 100%" for="body-bg"><img src="${empty o.image ? 'images/default.jpg' : (o.image.startsWith('http') ? o.image : 'images/'.concat(o.image))}" alt=""></label>
+                                                </div>
+                                                <div class="form-text">
+                                                    <h4 class="motor-name">${o.model} ${o.displacement}</h4>
+                                                    <div class="form-doc" style="box-sizing: border-box;">
+                                                        ${o.description}
+                                                    </div>
+                                                </div>
+                                                <div class="form-check"> 
+                                                    <c:forEach items="${listP}" var="p">
+                                                        <c:if test="${p.priceListId eq o.priceListID}">
+                                                            <c:choose>
+                                                                <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                    <div style="display: flex; gap: 8px; align-items: baseline;">
+                                                                        <fmt:formatNumber var="origDay" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${origDay}</span>
+                                                                        <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
+                                                                    </div>
+                                                                    <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedDayRaw" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedWeekRaw" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedMonthRaw" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <h2 class="main-price price-day" data-rawprice="${discountedDayRaw}">₫${discountedDay}/Ngày</h2>
+                                                                    <h2 class="main-price price-week" data-rawprice="${discountedWeekRaw}">₫${discountedWeek}/Ngày</h2>
+                                                                    <h2 class="main-price price-month" data-rawprice="${discountedMonthRaw}">₫${discountedMonth}/Ngày</h2>
+                                                                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                                                                        <span style="font-size: 11px; color: #15803d; background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tuần (&ge;7 ngày): ₫${discountedWeek}/ngày</span>
+                                                                        <span style="font-size: 11px; color: #6d28d9; background: #ede9fe; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tháng (&ge;30 ngày): ₫${discountedMonth}/ngày</span>
+                                                                    </div>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <fmt:formatNumber var="fmtDay" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="fmtWeek" value="${p.dailyPriceForWeek}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="fmtMonth" value="${p.dailyPriceForMonth}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="rawDay" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <fmt:formatNumber var="rawWeek" value="${p.dailyPriceForWeek}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <fmt:formatNumber var="rawMonth" value="${p.dailyPriceForMonth}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <h2 class="main-price price-day" data-rawprice="${rawDay}">₫${fmtDay}/Ngày</h2>
+                                                                    <h2 class="main-price price-week" data-rawprice="${rawWeek}">₫${fmtWeek}/Ngày</h2>
+                                                                    <h2 class="main-price price-month" data-rawprice="${rawMonth}">₫${fmtMonth}/Ngày</h2>
+                                                                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                                                                        <span style="font-size: 11px; color: #15803d; background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tuần (&ge;7 ngày): ₫${fmtWeek}/ngày</span>
+                                                                        <span style="font-size: 11px; color: #6d28d9; background: #ede9fe; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tháng (&ge;30 ngày): ₫${fmtMonth}/ngày</span>
+                                                                    </div>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:if>
+                                                    </c:forEach>                                             
+                                                    <p class="price-note">Không bao gồm thuế và bảo hiểm</p>                                                    
+                                                        <input style="display: none" type="checkbox"  id="daily-checkbox-${o.motorcycleId}" class="option-checkbox">
+                                                        <div class="rent-button">                                                     
+                                                            <c:set var="found" value="false" />
+                                                            <c:forEach var="entry" items="${listMA}">
+                                                                <c:if test="${entry.key eq o.motorcycleId}">
+                                                                    <c:set var="found" value="true" />
+                                                                    <a>Chọn số lượng xe: </a>
+                                                                    <select class="form-check-select" id="daily-select-${o.motorcycleId}">
+                                                                        <c:forEach begin="0" end="${entry.value}" var="i">
+                                                                            <option value="${i}" ${i == "1" ? 'selected' : ''}>${i}</option>
+                                                                        </c:forEach>
+                                                                    </select>
+                                                                </c:if>
+                                                            </c:forEach>
+                                                            <c:if test="${found eq false}">
+                                                                <a>Hết xe</a>
+                                                            </c:if>
+                                                        </div>
+                                                </div>                                                         
+                                            </div>
+                                           
+                                        </c:if>
+                                    </c:forEach>
+                                    <c:forEach items="${listM}" var="o">
+                                        <c:if test="${o.motorcycleId ne chosenmotor}">
+                                            <div class="form-box">
+                                                <div class="form-img-bike">
+                                                    <label style="width: 100%" for="body-bg"><img src="${empty o.image ? 'images/default.jpg' : (o.image.startsWith('http') ? o.image : 'images/'.concat(o.image))}" alt=""></label>
+                                                </div>
+                                                <div class="form-text">
+                                                    <h4 class="motor-name">${o.model} ${o.displacement}</h4>
+                                                    <div class="form-doc" style="box-sizing: border-box;">
+                                                        ${o.description}
+                                                    </div>
+                                                </div>
+                                                <div class="form-check"> 
+                                                    <c:forEach items="${listP}" var="p">
+                                                        <c:if test="${p.priceListId eq o.priceListID}">
+                                                            <c:choose>
+                                                                <c:when test="${not empty activeEvent and activeEvent.discount > 0}">
+                                                                    <div style="display: flex; gap: 8px; align-items: baseline;">
+                                                                        <fmt:formatNumber var="origDay2" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                        <span style="text-decoration: line-through; color: #999; font-size: 16px;">₫${origDay2}</span>
+                                                                        <span style="color: #dc2626; font-size: 14px; font-weight: bold; padding: 2px 6px; background: #fee2e2; border-radius: 4px;">Giảm <fmt:formatNumber value="${activeEvent.discount * 100}" maxFractionDigits="0"/>%</span>
+                                                                    </div>
+                                                                    <fmt:formatNumber var="discountedDay" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedWeek" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedMonth" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="true" />
+                                                                    <fmt:formatNumber var="discountedDayRaw2" value="${p.dailyPriceForDay * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedWeekRaw2" value="${p.dailyPriceForWeek * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <fmt:formatNumber var="discountedMonthRaw2" value="${p.dailyPriceForMonth * (1 - activeEvent.discount)}" maxFractionDigits="0" groupingUsed="false" />
+                                                                    <h2 class="main-price price-day" data-rawprice="${discountedDayRaw2}">₫${discountedDay}/Ngày</h2>
+                                                                    <h2 class="main-price price-week" data-rawprice="${discountedWeekRaw2}">₫${discountedWeek}/Ngày</h2>
+                                                                    <h2 class="main-price price-month" data-rawprice="${discountedMonthRaw2}">₫${discountedMonth}/Ngày</h2>
+                                                                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                                                                        <span style="font-size: 11px; color: #15803d; background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tuần (&ge;7 ngày): ₫${discountedWeek}/ngày</span>
+                                                                        <span style="font-size: 11px; color: #6d28d9; background: #ede9fe; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tháng (&ge;30 ngày): ₫${discountedMonth}/ngày</span>
+                                                                    </div>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <fmt:formatNumber var="fmtDay2" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="fmtWeek2" value="${p.dailyPriceForWeek}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="fmtMonth2" value="${p.dailyPriceForMonth}" maxFractionDigits="0" groupingUsed="true"/>
+                                                                    <fmt:formatNumber var="rawDay2" value="${p.dailyPriceForDay}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <fmt:formatNumber var="rawWeek2" value="${p.dailyPriceForWeek}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <fmt:formatNumber var="rawMonth2" value="${p.dailyPriceForMonth}" maxFractionDigits="0" groupingUsed="false"/>
+                                                                    <h2 class="main-price price-day" data-rawprice="${rawDay2}">₫${fmtDay2}/Ngày</h2>
+                                                                    <h2 class="main-price price-week" data-rawprice="${rawWeek2}">₫${fmtWeek2}/Ngày</h2>
+                                                                    <h2 class="main-price price-month" data-rawprice="${rawMonth2}">₫${fmtMonth2}/Ngày</h2>
+                                                                    <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+                                                                        <span style="font-size: 11px; color: #15803d; background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tuần (&ge;7 ngày): ₫${fmtWeek2}/ngày</span>
+                                                                        <span style="font-size: 11px; color: #6d28d9; background: #ede9fe; padding: 2px 6px; border-radius: 4px; font-weight: 600;">Gói Tháng (&ge;30 ngày): ₫${fmtMonth2}/ngày</span>
+                                                                    </div>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:if>
+                                                    </c:forEach>                                             
+                                                    <p class="price-note">Không bao gồm thuế và bảo hiểm</p>                                                                                             
+                                                        <input style="display: none" type="checkbox"  id="daily-checkbox-${o.motorcycleId}" class="option-checkbox">
+                                                        <div class="rent-button">                                                     
+                                                            <c:set var="found" value="false" />
+                                                            <c:forEach var="entry" items="${listMA}">
+                                                                <c:if test="${entry.key eq o.motorcycleId}">
+                                                                    <c:set var="found" value="true" />
+                                                                    <a>Chọn số lượng xe: </a>
+                                                                    <select class="form-check-select" id="daily-select-${o.motorcycleId}">
+                                                                        <c:forEach begin="0" end="${entry.value}" var="i">
+                                                                            <option value="${i}">${i}</option>
+                                                                        </c:forEach>
+                                                                    </select>
+                                                                </c:if>
+                                                            </c:forEach>
+                                                            <c:if test="${found eq false}">
+                                                                <a>Hết xe</a>
+                                                            </c:if>
+                                                        </div>
+                                                </div>                                                         
+                                            </div>
+                                        </c:if>
+                                    </c:forEach>                                  
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <h3>Phụ kiện đi kèm</h3>
+                        <fieldset>
+                            <h2>PHỤ KIỆN ĐI KÈM</h2>
+                            <p class="desc">Hãy chọn những phụ kiện có thể giúp ích cho hành trình của bạn</p>
+                            <div class="fieldset-content">
+                                <!-- Banner phụ kiện đã chọn realtime -->
+                                <div id="acc-selection-banner" style="display:none; background: linear-gradient(135deg,#f0fdf4,#e8fce8); border:1.5px solid #86efac; border-radius:10px; padding:10px 16px; margin-bottom:14px; font-size:13px; color:#166534; font-weight:600;">
+                                    <i class="bi bi-bag-check-fill" style="color:#16a34a;"></i>
+                                    Phụ kiện đã chọn: <span id="acc-selection-list"></span>
+                                </div>
+                                <div class="scrollable-vertical" id="protection">
+<!--                                <h4>SERVICES</h4>
+                                <div class="form-box">
+                                    <div class="form-img">
+                                        <label for="body-bg"><img src="images/body-bg.jpg" alt=""></label>
+                                    </div>
+                                    <div class="form-text">
+                                        <h4>Xe đi đường dài</h4>
+                                        <div class="form-doc" style="box-sizing: border-box;">
+                                            <p>Khoản ph&iacute; n&agrave;y sẽ&nbsp;&aacute;p dụng&nbsp;cho c&aacute;c kh&aacute;ch h&agrave;ng
+                                                sử dụng xe một trong trường hợp sau:</p>
+                                            <ul>
+                                                <li>Kh&aacute;ch thu&ecirc; xe đi&nbsp;đường d&agrave;i, ra khỏi nội th&agrave;nh Da Nang</li>
+                                                <li>Xe đi phượt&nbsp;c&aacute;c tỉnh hoặc đến c&aacute;c địa h&igrave;nh v&ugrave;ng n&uacute;i.
+                                                </li>
+                                            </ul>
+                                            <p>Lưu &yacute;: Đối với c&aacute;c kh&aacute;ch&nbsp;đi đường d&agrave;i chưa lựa
+                                                chọn&nbsp;g&oacute;i ph&aacute;t sinh n&agrave;y, khi trả xe COLORMOTOR sẽ thu bổ sung của
+                                                kh&aacute;ch. Để biết th&ecirc;m chi tiết&nbsp;vui l&ograve;ng li&ecirc;n hệ <a
+                                                    href="tel:0338023344">0338.02.33.44</a> để được giải đ&aacute;p.</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-check">
+                                        <div class="checkbox-container">
+                                            <input type="checkbox" id="daily-checkbox-1" class="option-checkbox">
+                                            <label for="daily-checkbox">₫50.000/Day</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4>PROTECTIONS & COVERAGES</h4>
+                                <div class="form-box">
+                                    <div class="form-img">
+                                        <label for="body-bg"><img src="images/baohiemhonghocxe.png" alt=""></label>
+                                    </div>
+                                    <div class="form-text">
+                                        <h4>Bảo hiểm hỏng hóc 50k/ngày Yamaha Sirius & Honda Vision</h4>
+                                        <div class="form-doc" style="box-sizing: border-box;">
+                                            <p>Ph&iacute;&nbsp;50.000đ/ng&agrave;y &aacute;p dụng cho d&ograve;ng xe Honda Airblade 125cc
+                                                v&agrave; Winner 150cc</p>
+                                            <p>Khoản ph&iacute; n&agrave;y sẽ&nbsp;&aacute;p dụng&nbsp;cho c&aacute;c kh&aacute;ch h&agrave;ng
+                                                sử dụng xe một trong trường hợp sau:</p>
+                                            <ul>
+                                                <li>G&oacute;i bảo hiểm &aacute;p dụng cho trường hợp kh&aacute;ch đi chuyển gặp bất kỳ vấn đề
+                                                    g&igrave; hư hỏng&nbsp;li&ecirc;n quan đến xe m&aacute;y đang thu&ecirc;, sẽ được chi trả 100%
+                                                    số tiền sửa chữa bao gồm cả vấn đề va chạm, tai nạn hư hại về xe.</li>
+                                            </ul>
+                                            <p>Lưu &yacute;: Đối với c&aacute;c kh&aacute;ch&nbsp;đi đường d&agrave;i n&ecirc;n&nbsp;lựa
+                                                chọn&nbsp;g&oacute;i ph&aacute;t sinh n&agrave;y&nbsp;để an to&agrave;n v&agrave; y&ecirc;n
+                                                t&acirc;m trong qu&aacute; tr&igrave;nh đi phượt,...</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-check">
+                                        <div class="checkbox-container">
+                                            <input type="checkbox" id="daily-checkbox-2" class="option-checkbox">
+                                            <label for="daily-checkbox">₫50.000/Day</label>
+                                        </div>
+                                    </div>
+                                </div>-->
+
+
+<!--                                <h4>EQUIPMENTS</h4>-->
+                                <c:forEach items="${listA}" var="a">
+                                    <div class="form-box">
+                                        <div class="form-img">
+                                            <label for="body-bg"><img src="${empty a.accessoryImage ? 'images/default.jpg' : (a.accessoryImage.startsWith('http') ? a.accessoryImage : 'images/'.concat(a.accessoryImage))}" alt=""></label>
+                                        </div>
+                                        <div class="form-text">
+                                            <h4>${a.accessoryName}</h4>
+                                            <div class="form-doc" style="box-sizing: border-box;">
+                                                ${a.accessoryDescription}
+                                            </div>
+                                        </div>
+                                        <div class="form-check">
+                                            <div class="checkbox-container">
+<!--                                                <input type="checkbox" id="daily-checkbox-${a.accessoryId}" class="option-checkbox">-->
+                                                <select class="form-check-select" id="daily-select-${a.accessoryId}"
+                                                    data-rawprice="${a.price}">
+                                                </select>
+                                                <c:if test="${a.price eq 0}">
+                                                    <label for="daily-checkbox" class="items-free">Free</label>
+                                                </c:if>
+                                                <c:if test="${a.price ne 0}">
+                                                    <fmt:formatNumber var="fmtAcc" value="${a.price}" maxFractionDigits="0" groupingUsed="true"/>
+                                                    <label for="daily-checkbox" data-rawprice="${a.price}">₫${fmtAcc}</label>
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>                               
+                                </div><!-- end scrollable-vertical protection -->
+                            </div><!-- end fieldset-content -->
+                        </fieldset>
+
+                        <h3>Khách hàng</h3>
                                 <fieldset>
                                     <h2>THÔNG TIN KHÁCH HÀNG</h2>
                                     <p class="desc">Vui lòng cung cấp thông tin cá nhân và giấy tờ tùy thân để xác minh.</p>
