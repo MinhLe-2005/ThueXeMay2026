@@ -1902,8 +1902,8 @@
                                                 <input type="text" id="custom_pickup_input" placeholder="Nhập địa chỉ hoặc dán tọa độ (VD: 16.05, 108.20)..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('pickup')" oninput="updateCustomLocation('pickup')" />
                                                 <button type="button" onclick="autoGeolocate('pickup')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
                                             </div>
-                                            <div id="pickup_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
                                         </div>
+                                        <div id="pickup_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
                                     </div>
                                     <div class="form-group">
                                         <label for="returnlocation" class="form-label">Địa điểm trả xe <span class="note-star"> *</span></label>
@@ -1927,8 +1927,8 @@
                                                 <input type="text" id="custom_return_input" placeholder="Nhập địa chỉ hoặc dán tọa độ (VD: 16.05, 108.20)..." style="border:1px solid #ebebeb; padding:10px 15px; border-radius:5px; flex: 1; box-sizing:border-box; font-family:'Montserrat',sans-serif; font-size:14px;" onblur="calcDistance('return')" oninput="updateCustomLocation('return')" />
                                                 <button type="button" onclick="autoGeolocate('return')" style="background-color: #4f46e5; color: white; border: none; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; white-space: nowrap;"><i class="fas fa-location-crosshairs"></i> Tự động lấy vị trí</button>
                                             </div>
-                                            <div id="return_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
                                         </div>
+                                        <div id="return_map" style="width: 100%; height: 250px; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; display: none; z-index: 1;"></div>
                                     </div>
                                     <script>
                                         function toggleCustomLocation(type) {
@@ -1963,10 +1963,10 @@
                                                     if(typeof recalculateDeliveryFee === 'function') recalculateDeliveryFee();
                                                     if(typeof changePrice === 'function') changePrice();
                                                 }
+                                                if (typeof initMap === 'function') initMap(type);
                                             } else {
                                                 wrapper.style.display = 'none';
                                                 input.required = false;
-                                                if(typeof maps !== 'undefined' && maps[type]) document.getElementById(type + '_map').style.display = 'none';
                                                 
                                                 if (selectedOption.text.includes('Tại cửa hàng')) {
                                                     info.innerHTML = '<span style="color:#16a34a;"><i class="fas fa-check-circle"></i> Nhận/Trả tại cửa hàng (Miễn phí)</span>';
@@ -1974,6 +1974,7 @@
                                                     else window._returnFee = 0;
                                                     if(typeof recalculateDeliveryFee === 'function') recalculateDeliveryFee();
                                                     if(typeof changePrice === 'function') changePrice();
+                                                    if(typeof maps !== 'undefined' && maps[type]) document.getElementById(type + '_map').style.display = 'none';
                                                 } else {
                                                     var lat = 0, lon = 0;
                                                     for (var key in predefinedCoords) {
@@ -1983,8 +1984,16 @@
                                                             break;
                                                         }
                                                     }
-                                                    if (lat !== 0 && typeof processDistance === 'function') {
-                                                        processDistance(lat, lon, type);
+                                                    if (lat !== 0) {
+                                                        if (typeof initMap === 'function') initMap(type);
+                                                        if (typeof maps !== 'undefined' && maps[type] && markers[type]) {
+                                                            var pos = [lat, lon];
+                                                            maps[type].setView(pos, 15);
+                                                            markers[type].setLatLng(pos);
+                                                        }
+                                                        if (typeof processDistance === 'function') {
+                                                            processDistance(lat, lon, type);
+                                                        }
                                                     }
                                                 }
                                             }
