@@ -3,58 +3,48 @@ package com.smartride.util;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.util.regex.*;
 
 /**
- * Utility gọi FPT.AI Vision API để OCR ảnh CCCD/CMND.
- * Dùng chung cho BookingInforHander và VerifyIdCardServlet.
- *
- * Cấu hình: đặt FPT_API_KEY từ https://console.fpt.ai/
+ * Utility OCR ảnh CCCD/CMND dùng ocr.space API.
+ * Demo key "helloworld" hoạt động ngay (1000 req/tháng với key riêng).
+ * Đăng ký key miễn phí tại: https://ocr.space/ocrapi/freekey
  */
 public class IdCardVerifier {
 
-    public static final String FPT_API_KEY = "6wNP06jo9FT0N0rihPRgR0GgHAkw5jdQ";
-    private static final String FPT_API_URL = "https://api.fpt.ai/vision/idr/vnm/";
+    // Key "helloworld" là demo key chính thức của ocr.space, hoạt động ngay không cần đăng ký
+    // Đăng ký key miễn phí tại ocr.space để dùng tiếng Việt (language=vie) không giới hạn hơn
+    public static final String OCR_API_KEY = "helloworld";
+    private static final String OCR_API_URL = "https://api.ocr.space/parse/image";
 
     /**
      * Kết quả xác thực CCCD.
      */
     public static class VerifyResult {
-        public boolean configured;   // API key đã được cấu hình chưa
-        public boolean success;      // Gọi API thành công không
-        public boolean idMatch;      // Số CCCD khớp không
-        public boolean nameMatch;    // Họ tên khớp không
-        public boolean doeValid;     // CCCD còn hạn không
-        public boolean valid;        // idMatch && nameMatch && doeValid
+        public boolean configured;
+        public boolean success;
+        public boolean idMatch;
+        public boolean nameMatch;
+        public boolean doeValid;
+        public boolean valid;
         public String ocrId;
         public String ocrName;
         public String ocrDob;
         public String ocrDoe;
         public String ocrSex;
         public String type;
-        public String errorMsg;      // Thông báo tổng quát
-        public java.util.List<String> fieldErrors = new java.util.ArrayList<>(); // Lỗi chi tiết từng trường
+        public String errorMsg;
+        public java.util.List<String> fieldErrors = new java.util.ArrayList<>();
     }
 
     /**
-     * Xác thực từ đường dẫn file ảnh (local path hoặc URL).
-     *
-     * @param imagePath  đường dẫn ảnh (local path tương đối với webroot/upload, hoặc http URL)
-     * @param webRootPath  đường dẫn webroot thực (getServletContext().getRealPath("/"))
-     * @param storedId   số CCCD lưu trong DB
-     * @param storedName tên đầy đủ lưu trong DB
+     * Xác thực từ đường dẫn file ảnh (local path hoặc http URL).
      */
     public static VerifyResult verify(String imagePath, String webRootPath,
                                       String storedId, String storedName) {
         VerifyResult r = new VerifyResult();
-
-        if ("YOUR_FPT_API_KEY_HERE".equals(FPT_API_KEY) || FPT_API_KEY == null || FPT_API_KEY.isBlank()) {
-            r.configured = false;
-            r.success    = false;
-            r.valid      = false;
-            r.errorMsg   = "Chưa cấu hình FPT.AI API Key";
-            return r;
-        }
         r.configured = true;
 
         if (imagePath == null || imagePath.trim().isEmpty()) {
@@ -64,123 +54,87 @@ public class IdCardVerifier {
             return r;
         }
 
-        // Resolve file
-        File imageFile;
+        // Gọi OCR API
+        String ocrText;
         try {
             if (imagePath.trim().startsWith("http")) {
-                imageFile = downloadFromUrl(imagePath.trim());
+                ocrText = callOcrByUrl(imagePath.trim());
             } else {
-                // local file under /upload/
+                File imageFile;
                 String path = imagePath.trim();
                 imageFile = new File(webRootPath, "upload" + File.separator + path);
+                if (!imageFile.exists()) imageFile = new File(webRootPath, path);
                 if (!imageFile.exists()) {
-                    // thử không có prefix upload/
-                    imageFile = new File(webRootPath, path);
+                    r.success  = false;
+                    r.valid    = false;
+                    r.errorMsg = "Không tìm thấy file ảnh: " + imagePath;
+                    return r;
                 }
+                ocrText = callOcrByFile(imageFile);
             }
         } catch (Exception e) {
             r.success  = false;
             r.valid    = false;
-            r.errorMsg = "Lỗi tải file ảnh: " + e.getMessage();
+            r.errorMsg = "Lỗi gọi OCR API: " + e.getMessage();
             return r;
         }
 
-        if (imageFile == null || !imageFile.exists()) {
+        if (ocrText == null || ocrText.trim().isEmpty()) {
             r.success  = false;
             r.valid    = false;
-            r.errorMsg = "Không tìm thấy file ảnh: " + imagePath;
+            r.errorMsg = "Không đọc được nội dung ảnh. Kiểm tra lại chất lượng ảnh.";
             return r;
         }
 
-        // Gọi FPT.AI
-        String fptJson = callFptApi(imageFile);
-        if (fptJson == null) {
-            r.success  = false;
-            r.valid    = false;
-            r.errorMsg = "Lỗi kết nối FPT.AI API";
-            return r;
-        }
-
-        // Parse kết quả
         r.success = true;
-        int errorCode = extractInt(fptJson, "\"errorCode\"");
-        int httpStatus = extractInt(fptJson, "\"__httpStatus\"");
-        if (httpStatus == 429 || errorCode == 429) {
-            r.success  = false;
-            r.valid    = false;
-            r.errorMsg = "API key FPT.AI đã hết hạn mức sử dụng miễn phí (Rate Limit 429). Vui lòng đăng ký key mới tại console.fpt.ai";
-            return r;
-        }
-        if (httpStatus == 401 || httpStatus == 403 || errorCode == 401 || errorCode == 403) {
-            r.success  = false;
-            r.valid    = false;
-            r.errorMsg = "API key FPT.AI không hợp lệ hoặc đã bị vô hiệu hóa (HTTP " + (httpStatus > 0 ? httpStatus : errorCode) + ")";
-            return r;
-        }
-        if (errorCode != 0 && errorCode != -1) {
-            r.success  = false;
-            r.valid    = false;
-            r.errorMsg = "FPT API lỗi: " + extractString(fptJson, "\"errorMessage\"");
-            return r;
-        }
+        r.type = "CCCD/CMND";
 
-        r.ocrId   = extractString(fptJson, "\"id\"");
-        r.ocrName = extractString(fptJson, "\"name\"");
-        r.ocrDob  = extractString(fptJson, "\"dob\"");
-        r.ocrDoe  = extractString(fptJson, "\"doe\"");
-        r.ocrSex  = extractString(fptJson, "\"sex\"");
-        r.type    = extractString(fptJson, "\"type\"");
+        // Parse các trường từ OCR text của CCCD Việt Nam
+        r.ocrId   = parseId(ocrText);
+        r.ocrName = parseName(ocrText);
+        r.ocrDob  = parseDob(ocrText);
+        r.ocrDoe  = parseDoe(ocrText);
+        r.ocrSex  = parseSex(ocrText);
 
-        r.idMatch   = storedId   != null && r.ocrId   != null && normalize(storedId).equals(normalize(r.ocrId));
+        // So khớp số CCCD (chỉ cần số khớp là được)
+        r.idMatch = storedId != null && isValid(r.ocrId)
+                && normalizeDigits(storedId).equals(normalizeDigits(r.ocrId));
+
+        // So khớp họ tên (fuzzy - bỏ qua ký tự lỗi OCR)
         r.nameMatch = false;
-        if (storedName != null && r.ocrName != null) {
-            String normDB = normalizeVN(storedName);
-            String normOCR = normalizeVN(r.ocrName);
+        if (storedName != null && isValid(r.ocrName)) {
+            String normDB  = normalizeLetters(normalizeVN(storedName));
+            String normOCR = normalizeLetters(normalizeVN(r.ocrName));
             if (normDB.equalsIgnoreCase(normOCR)) {
                 r.nameMatch = true;
             } else {
-                // Ignore word order
-                String[] dbWords = normDB.split("\\s+");
-                String[] ocrWords = normOCR.split("\\s+");
-                java.util.Set<String> dbSet = new java.util.HashSet<>(java.util.Arrays.asList(dbWords));
-                java.util.Set<String> ocrSet = new java.util.HashSet<>(java.util.Arrays.asList(ocrWords));
-                if (dbSet.equals(ocrSet)) {
-                    r.nameMatch = true;
-                }
+                // So từng chữ (bỏ qua thứ tự)
+                java.util.Set<String> dbSet  = new java.util.HashSet<>(java.util.Arrays.asList(normDB.split("\\s+")));
+                java.util.Set<String> ocrSet = new java.util.HashSet<>(java.util.Arrays.asList(normOCR.split("\\s+")));
+                r.nameMatch = !dbSet.isEmpty() && dbSet.equals(ocrSet);
             }
         }
 
-        // Kiểm tra ngày hết hạn CCCD (ocrDoe định dạng dd/MM/yyyy hoặc yyyy-MM-dd hoặc ddMMyyyy)
+        // Kiểm tra ngày hết hạn
         r.doeValid = true;
-        if (r.ocrDoe != null && !r.ocrDoe.equals("N/A") && !r.ocrDoe.isBlank()) {
+        if (isValid(r.ocrDoe)) {
             try {
-                java.time.LocalDate expiry = null;
-                String doe = r.ocrDoe.trim();
-                // Thử các định dạng phổ biến của FPT.AI
-                if (doe.matches("\\d{2}/\\d{2}/\\d{4}")) {
-                    expiry = java.time.LocalDate.parse(doe, java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                } else if (doe.matches("\\d{4}-\\d{2}-\\d{2}")) {
-                    expiry = java.time.LocalDate.parse(doe, java.time.format.DateTimeFormatter.ISO_LOCAL_DATE);
-                } else if (doe.matches("\\d{8}")) {
-                    expiry = java.time.LocalDate.parse(doe, java.time.format.DateTimeFormatter.ofPattern("ddMMyyyy"));
-                } else if (doe.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                    expiry = java.time.LocalDate.parse(doe, java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                }
+                java.time.LocalDate expiry = parseDate(r.ocrDoe);
                 if (expiry != null && expiry.isBefore(java.time.LocalDate.now())) {
                     r.doeValid = false;
                 }
-            } catch (Exception ignored) { /* không parse được thì bỏ qua */ }
+            } catch (Exception ignored) {}
         }
 
-        // Tổng hợp lỗi chi tiết từng trường
+        // Tổng hợp lỗi chi tiết
         if (!r.idMatch) {
-            r.fieldErrors.add("❌ Số CCCD/CMND không khớp: DB lưu [" + (storedId != null ? storedId : "?") + "] – AI đọc được [" + (r.ocrId != null ? r.ocrId : "?") + "]");
+            r.fieldErrors.add("❌ Số CCCD/CMND không khớp: DB [" + (storedId != null ? storedId : "?") + "] – AI đọc [" + (r.ocrId != null ? r.ocrId : "?") + "]");
         }
         if (!r.nameMatch) {
-            r.fieldErrors.add("❌ Họ và tên không khớp: DB lưu [" + (storedName != null ? storedName : "?") + "] – AI đọc được [" + (r.ocrName != null ? r.ocrName : "?") + "]");
+            r.fieldErrors.add("❌ Họ và tên không khớp: DB [" + (storedName != null ? storedName : "?") + "] – AI đọc [" + (r.ocrName != null ? r.ocrName : "?") + "]");
         }
         if (!r.doeValid) {
-            r.fieldErrors.add("❌ CCCD/CMND đã hết hạn (ngày hết hạn: " + r.ocrDoe + "). Vui lòng cập nhật giấy tờ còn hiệu lực.");
+            r.fieldErrors.add("❌ CCCD/CMND đã hết hạn (ngày hết hạn: " + r.ocrDoe + ").");
         }
 
         r.valid = r.idMatch && r.nameMatch && r.doeValid;
@@ -190,108 +144,189 @@ public class IdCardVerifier {
         return r;
     }
 
-    // ─── HTTP multipart ────────────────────────────────────────────────────────
+    // ─── OCR API calls ─────────────────────────────────────────────────────────
 
-    private static String callFptApi(File imageFile) {
-        String boundary = "----FPTBoundary" + System.currentTimeMillis();
-        try {
-            URL url = new URL(FPT_API_URL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setRequestProperty("api-key", FPT_API_KEY);
-            conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-            conn.setConnectTimeout(15000);
-            conn.setReadTimeout(15000);
+    private static String callOcrByUrl(String imageUrl) throws Exception {
+        String body = "apikey=" + URLEncoder.encode(OCR_API_KEY, "UTF-8")
+                + "&url=" + URLEncoder.encode(imageUrl, "UTF-8")
+                + "&language=eng"
+                + "&OCREngine=2"
+                + "&scale=true";
+        return postForm(body);
+    }
 
-            try (DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
-                dos.writeBytes("--" + boundary + "\r\n");
-                dos.writeBytes("Content-Disposition: form-data; name=\"image\"; filename=\""
-                        + imageFile.getName() + "\"\r\n");
-                dos.writeBytes("Content-Type: image/jpeg\r\n\r\n");
-                Files.copy(imageFile.toPath(), dos);
-                dos.writeBytes("\r\n--" + boundary + "--\r\n");
-                dos.flush();
-            }
+    private static String callOcrByFile(File imageFile) throws Exception {
+        String boundary = "----OcrBoundary" + System.currentTimeMillis();
+        URL url = new URL(OCR_API_URL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+        conn.setConnectTimeout(20000);
+        conn.setReadTimeout(30000);
 
-            int code = conn.getResponseCode();
-            if (code == 429) {
-                // Rate limit exceeded - API key hết quota
-                return "{\"__httpStatus\": 429, \"errorCode\": 429}";
-            }
-            if (code == 401 || code == 403) {
-                return "{\"__httpStatus\": " + code + ", \"errorCode\": " + code + "}";
-            }
-            InputStream is = (code == 200) ? conn.getInputStream() : conn.getErrorStream();
-            if (is == null) return null;
-            StringBuilder sb = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
-                String line;
-                while ((line = br.readLine()) != null) sb.append(line);
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        try (DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
+            writeField(dos, boundary, "apikey", OCR_API_KEY);
+            writeField(dos, boundary, "language", "eng");
+            writeField(dos, boundary, "OCREngine", "2");
+            writeField(dos, boundary, "scale", "true");
+            dos.writeBytes("--" + boundary + "\r\n");
+            dos.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + imageFile.getName() + "\"\r\n");
+            dos.writeBytes("Content-Type: image/jpeg\r\n\r\n");
+            Files.copy(imageFile.toPath(), dos);
+            dos.writeBytes("\r\n--" + boundary + "--\r\n");
+            dos.flush();
         }
+        return extractParsedText(readRaw(conn));
     }
 
-    private static File downloadFromUrl(String urlStr) throws Exception {
-        URL url = new URL(urlStr);
-        File tmp = File.createTempFile("cccd_", ".jpg");
-        tmp.deleteOnExit();
-        try (InputStream in = url.openStream(); FileOutputStream fos = new FileOutputStream(tmp)) {
-            byte[] buf = new byte[4096];
-            int n;
-            while ((n = in.read(buf)) != -1) fos.write(buf, 0, n);
+    private static String postForm(String body) throws Exception {
+        URL url = new URL(OCR_API_URL);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setConnectTimeout(20000);
+        conn.setReadTimeout(30000);
+        try (OutputStream os = conn.getOutputStream()) {
+            os.write(body.getBytes("UTF-8"));
         }
-        return tmp;
+        return extractParsedText(readRaw(conn));
     }
 
-    // ─── JSON helpers (no external lib) ────────────────────────────────────────
-
-    private static String extractString(String json, String key) {
-        int idx = json.indexOf(key);
-        if (idx < 0) return "N/A";
-        int colon = json.indexOf(':', idx + key.length());
-        if (colon < 0) return "N/A";
-        int start = colon + 1;
-        while (start < json.length() && (json.charAt(start) == ' ' || json.charAt(start) == '\n'
-                || json.charAt(start) == '\r')) start++;
-        if (start >= json.length() || json.charAt(start) != '"') return "N/A";
-        int end = json.indexOf('"', start + 1);
-        return end < 0 ? "N/A" : json.substring(start + 1, end);
+    private static String readRaw(HttpURLConnection conn) throws Exception {
+        int code = conn.getResponseCode();
+        InputStream is = null;
+        try { is = conn.getInputStream(); } catch (Exception e) { is = conn.getErrorStream(); }
+        if (is == null) return null;
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
+            String line; while ((line = br.readLine()) != null) sb.append(line).append("\n");
+        }
+        return sb.toString();
     }
 
-    private static int extractInt(String json, String key) {
-        int idx = json.indexOf(key);
-        if (idx < 0) return -1;
-        int colon = json.indexOf(':', idx + key.length());
-        if (colon < 0) return -1;
-        int start = colon + 1;
-        while (start < json.length() && json.charAt(start) == ' ') start++;
+    private static String extractParsedText(String json) {
+        if (json == null) return null;
+        int idx = json.indexOf("\"ParsedText\"");
+        if (idx < 0) return null;
+        int start = json.indexOf('"', idx + 13) + 1;
+        if (start <= 0) return null;
         int end = start;
-        while (end < json.length() && (Character.isDigit(json.charAt(end)) || json.charAt(end) == '-')) end++;
-        try { return Integer.parseInt(json.substring(start, end)); } catch (Exception e) { return -1; }
+        while (end < json.length()) {
+            char c = json.charAt(end);
+            if (c == '"' && (end == 0 || json.charAt(end - 1) != '\\')) break;
+            end++;
+        }
+        return json.substring(start, end)
+                .replace("\\n", "\n").replace("\\r", "\r")
+                .replace("\\t", "\t").replace("\\/", "/")
+                .replace("\\\"", "\"").replace("\\\\", "\\");
     }
 
-    // ─── Text normalization ─────────────────────────────────────────────────────
-
-    private static String normalize(String s) {
-        return s == null ? "" : s.trim().replaceAll("[^0-9a-zA-Z]", "").toLowerCase();
+    private static void writeField(DataOutputStream dos, String boundary, String name, String value) throws IOException {
+        dos.writeBytes("--" + boundary + "\r\n");
+        dos.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"\r\n\r\n");
+        dos.writeBytes(value + "\r\n");
     }
 
+    // ─── CCCD text parsers ──────────────────────────────────────────────────────
+
+    private static String parseId(String text) {
+        // "No.: 045205001036" - chuẩn CCCD 12 số bắt đầu bằng 0
+        Matcher m = Pattern.compile("[Nn]o\\.?\\s*[:\\-]?\\s*(0\\d{11})").matcher(text);
+        if (m.find()) return m.group(1);
+        // Hoặc "S./No.: 045205001036"
+        Matcher m2 = Pattern.compile("S[^/]*/[Nn]o\\.?\\s*[:\\-]?\\s*(0\\d{11})").matcher(text);
+        if (m2.find()) return m2.group(1);
+        // Fallback: 12 chữ số liên tiếp bắt đầu bằng 0
+        Matcher m3 = Pattern.compile("\\b(0\\d{11})\\b").matcher(text);
+        if (m3.find()) return m3.group(1);
+        // CMND 9 chữ số
+        Matcher m4 = Pattern.compile("\\b(\\d{9})\\b").matcher(text);
+        if (m4.find()) return m4.group(1);
+        return "N/A";
+    }
+
+    private static String parseName(String text) {
+        // "Full name:\nLÊ QUANG MINH" hoặc "Full name: LÊ QUANG MINH"
+        Matcher m = Pattern.compile("(?:[Ff]ull\\s*name|Full name)[/\\\\]?[^:]*:\\s*\\n?([A-Z][A-Z?Ê\\s]{3,40}?)(?=\\n|\\r|$)").matcher(text);
+        if (m.find()) return m.group(1).trim();
+        // Thử pattern với dòng kế tiếp sau "Full name:"
+        String[] lines = text.split("\n");
+        for (int i = 0; i < lines.length - 1; i++) {
+            if (lines[i].toLowerCase().contains("full name")) {
+                String nextLine = lines[i + 1].trim();
+                if (nextLine.matches("[A-Z?Ê][A-Z?\\s]{3,40}")) return nextLine;
+                // Có thể tên trên cùng dòng với "Full name:"
+                Matcher m2 = Pattern.compile("[Ff]ull\\s*name[^:]*:\\s*([A-Z][A-Z?\\s]{3,40})").matcher(lines[i]);
+                if (m2.find()) return m2.group(1).trim();
+            }
+        }
+        return "N/A";
+    }
+
+    private static String parseDob(String text) {
+        Matcher m = Pattern.compile("(?:[Dd]ate\\s*of\\s*birth|Date of birth)[^:]*:\\s*(\\d{2}[/-]\\d{2}[/-]\\d{4})").matcher(text);
+        if (m.find()) return m.group(1);
+        return "N/A";
+    }
+
+    private static String parseDoe(String text) {
+        // "Date of expiry\n01/09/2030" hoặc "expiry: 01/09/2030"
+        Matcher m = Pattern.compile("(?:[Dd]ate\\s*of\\s*expiry|[Cc][óo]\\s*gi[áa][^:]*)[^:]*:?\\s*\\n?(\\d{2}[/-]\\d{2}[/-]\\d{4})").matcher(text);
+        if (m.find()) return m.group(1);
+        // Tìm ngày đầu tiên trong text (ưu tiên ngày muộn hơn = ngày hết hạn)
+        Matcher m2 = Pattern.compile("(\\d{2}/\\d{2}/\\d{4})").matcher(text);
+        String latest = null;
+        while (m2.find()) {
+            String d = m2.group(1);
+            if (latest == null || d.compareTo(latest) > 0) latest = d;
+        }
+        return latest != null ? latest : "N/A";
+    }
+
+    private static String parseSex(String text) {
+        if (Pattern.compile("\\bNam\\b").matcher(text).find()) return "Nam";
+        if (Pattern.compile("\\b[Nn][uữ]\\b|Female").matcher(text).find()) return "Nữ";
+        return "N/A";
+    }
+
+    private static java.time.LocalDate parseDate(String dateStr) {
+        if (!isValid(dateStr)) return null;
+        try {
+            if (dateStr.matches("\\d{2}/\\d{2}/\\d{4}"))
+                return java.time.LocalDate.parse(dateStr, java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            if (dateStr.matches("\\d{2}-\\d{2}-\\d{4}"))
+                return java.time.LocalDate.parse(dateStr, java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            if (dateStr.matches("\\d{4}-\\d{2}-\\d{2}"))
+                return java.time.LocalDate.parse(dateStr);
+        } catch (Exception ignored) {}
+        return null;
+    }
+
+    // ─── Helpers ────────────────────────────────────────────────────────────────
+
+    private static boolean isValid(String s) {
+        return s != null && !s.isBlank() && !s.equalsIgnoreCase("N/A");
+    }
+
+    private static String normalizeDigits(String s) {
+        return s == null ? "" : s.replaceAll("[^0-9]", "");
+    }
+
+    /** Chuẩn hóa tên: bỏ dấu tiếng Việt, bỏ ký tự lỗi OCR (?, ?, etc.), chỉ giữ chữ cái */
     private static String normalizeVN(String s) {
         if (s == null) return "";
-        return s.trim()
-                .replaceAll("[àáâãäåæăắặằẳẵâấậầẩẫ]", "a")
-                .replaceAll("[ÀÁÂÃÄÅÆĂẮẶẰẲẴÂẤẬẦẨẪ]", "A")
-                .replaceAll("[èéêëêếệềểễ]", "e").replaceAll("[ÈÉÊËÊẾỆỀỂỄ]", "E")
-                .replaceAll("[ìíîï]", "i").replaceAll("[ÌÍÎÏ]", "I")
-                .replaceAll("[òóôõöøôốộồổỗơớợờởỡ]", "o").replaceAll("[ÒÓÔÕÖØÔỐỘỒỔỖƠỚỢỜỞỠ]", "O")
-                .replaceAll("[ùúûüưứựừửữ]", "u").replaceAll("[ÙÚÛÜƯỨỰỪỬỮ]", "U")
-                .replaceAll("[ýÿ]", "y").replaceAll("[ÝŸ]", "Y")
-                .replaceAll("[đ]", "d").replaceAll("[Đ]", "D")
-                .toLowerCase().trim();
+        s = s.trim().toUpperCase();
+        s = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD);
+        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        s = s.replace("Đ", "D").replace("đ", "D");
+        return s.replaceAll("\\s+", " ").trim();
+    }
+
+    /** Bỏ tất cả ký tự không phải chữ cái A-Z (dùng cho fuzzy match tên) */
+    private static String normalizeLetters(String s) {
+        return s == null ? "" : s.replaceAll("[^A-Z ]", "").replaceAll("\\s+", " ").trim();
     }
 }
