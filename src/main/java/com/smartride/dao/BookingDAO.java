@@ -238,8 +238,6 @@ public class BookingDAO {
     }
     
     public Map<String, Integer> getMotorcycleDetailsByBookingID(String bookingID) {
-        PreparedStatement stm;
-        ResultSet rs;
         Map<String, Integer> motorcycleDetails = new HashMap<>();
         String sql = "select m.\"Model\", COUNT(m.\"MotorcycleID\") \"Quantity\"\n"
                 + "from \"Motorcycle\" m\n"
@@ -250,14 +248,15 @@ public class BookingDAO {
                 + "	where \"BookingID\" = ?\n"
                 + ")\n"
                 + "GROUP BY m.\"MotorcycleID\", m.\"Model\"";
-        try {
-            stm = getConnection().prepareStatement(sql);
+        try (Connection conn = getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, bookingID);
-            rs = stm.executeQuery();
-            while (rs.next()) {
-                String model = rs.getString("Model");
-                int quantity = rs.getInt("Quantity");
-                motorcycleDetails.put(model, quantity);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    String model = rs.getString("Model");
+                    int quantity = rs.getInt("Quantity");
+                    motorcycleDetails.put(model, quantity);
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -275,19 +274,18 @@ public class BookingDAO {
                 + "    where \"BookingID\" = ? "
                 + ") "
                 + "GROUP BY m.\"MotorcycleID\", m.\"Model\"";
-        try {
-            PreparedStatement stm = getConnection().prepareStatement(sql);
+        try (Connection conn = getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, bookingID);
-            ResultSet rs = stm.executeQuery();
-            while (rs.next()) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("motorcycleId", rs.getString("MotorcycleID"));
-                map.put("model", rs.getString("Model"));
-                map.put("quantity", rs.getInt("Quantity"));
-                list.add(map);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("motorcycleId", rs.getString("MotorcycleID"));
+                    map.put("model", rs.getString("Model"));
+                    map.put("quantity", rs.getInt("Quantity"));
+                    list.add(map);
+                }
             }
-            rs.close();
-            stm.close();
         } catch (Exception ex) {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -305,16 +303,17 @@ public class BookingDAO {
                    + "AND b.\"StatusBooking\" != 'Từ chối' "
                    + "AND CAST(b.\"StartDate\" AS TIMESTAMP) < CAST(? AS TIMESTAMP) "
                    + "AND COALESCE((SELECT CAST(\"NewEndDate\" AS TIMESTAMP) FROM \"Extension\" WHERE \"BookingID\" = b.\"BookingID\" ORDER BY \"ExtensionDate\" DESC LIMIT 1), CAST(b.\"EndDate\" AS TIMESTAMP)) > (SELECT COALESCE((SELECT CAST(\"NewEndDate\" AS TIMESTAMP) FROM \"Extension\" WHERE \"BookingID\" = ? ORDER BY \"ExtensionDate\" DESC LIMIT 1), CAST(\"EndDate\" AS TIMESTAMP)) FROM \"Booking\" WHERE \"BookingID\" = ?)";
-        try {
-            java.sql.PreparedStatement stm = getConnection().prepareStatement(sql);
+        try (Connection conn = getConnection();
+             java.sql.PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, bookingID);
             stm.setString(2, bookingID);
             stm.setString(3, newEndDate);
             stm.setString(4, bookingID);
             stm.setString(5, bookingID);
-            java.sql.ResultSet rs = stm.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            try (java.sql.ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -323,8 +322,6 @@ public class BookingDAO {
     }
     
     public List<String> getMotorcyclePlatesByBookingID(String bookingID) {
-        PreparedStatement stm;
-        ResultSet rs;
         List<String> motorcycleDetails = new ArrayList<>();
         String sql = "select m.\"Model\", md.\"LicensePlate\"\n"
                 + "from \"Motorcycle\" m\n"
@@ -334,14 +331,15 @@ public class BookingDAO {
                 + "	select \"MotorcycleDetailID\" from \"Booking Detail\"\n"
                 + "	where \"BookingID\" = ?\n"
                 + ")";
-        try {
-            stm = getConnection().prepareStatement(sql);
+        try (Connection conn = getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, bookingID);
-            rs = stm.executeQuery();
-            while (rs.next()) {
-                String model = rs.getString("Model");
-                String plate = rs.getString("LicensePlate");
-                motorcycleDetails.add(model + " - Biển: " + plate);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    String model = rs.getString("Model");
+                    String plate = rs.getString("LicensePlate");
+                    motorcycleDetails.add(model + " - Biển: " + plate);
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -350,10 +348,9 @@ public class BookingDAO {
     }
     
     public boolean updateBookingStatus(String bookingID, String status) {
-        PreparedStatement stm;
         String sql = "UPDATE \"Booking\" SET \"StatusBooking\" = ?, \"ApprovedDate\" = CASE WHEN ? = N'Đã xác nhận' AND \"ApprovedDate\" IS NULL THEN NOW() ELSE \"ApprovedDate\" END WHERE \"BookingID\" = ?";
-        try {
-            stm = getConnection().prepareStatement(sql);
+        try (Connection conn = getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, status);
             stm.setString(2, status);
             stm.setString(3, bookingID);
