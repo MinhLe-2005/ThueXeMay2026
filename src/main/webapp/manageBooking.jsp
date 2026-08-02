@@ -1837,8 +1837,8 @@ function showHandoverModal() {
     var totalAmount = parseInt(priceStr) || 0;
     
     // Check if there's any payment made
-    var paidStr = $('#modal-paymentInfo').text();
-    var hasPaid = (totalAmount <= 0);
+    var statusBooking = $('#modal-statusBooking').text().trim();
+    var hasPaid = (totalAmount <= 0) || (statusBooking === 'Đã thanh toán') || (statusBooking === 'Đang thuê');
     
     $('#handover-bId').text(bId);
     
@@ -1899,6 +1899,8 @@ function markHandoverPaid(method) {
     if (triggerBtn) {
         triggerBtn.setAttribute('data-paymentStatus', 'Thành công');
         triggerBtn.setAttribute('data-paymentMethod', method);
+        triggerBtn.setAttribute('data-statusBooking', 'Đã thanh toán'); // update local attribute
+        $('#modal-statusBooking').text('Đã thanh toán'); // update modal UI
     }
     
     // Auto submit to approve manual invoice if needed

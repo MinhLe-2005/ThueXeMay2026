@@ -48,7 +48,7 @@ public class HandoverAPI extends HttpServlet {
                     String uniqueFileName = bookingId + "_" + System.currentTimeMillis() + "_" + fileName;
                     
                     // Upload to Supabase Storage
-                    String publicUrl = SupabaseStorageUtil.uploadFile("handoverImg", uniqueFileName, part.getInputStream(), part.getContentType());
+                    String publicUrl = SupabaseStorageUtil.uploadFile("motor-images", uniqueFileName, part.getInputStream(), part.getContentType());
                     if (publicUrl != null) {
                         savedImages.add(publicUrl);
                     }
