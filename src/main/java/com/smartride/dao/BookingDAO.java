@@ -394,10 +394,9 @@ public class BookingDAO {
     }
     
     public boolean updateDeliveryStatusWithImage(String deliveryStatus, String bookingID, String imagePath) {
-        PreparedStatement stm;
         String sql = "UPDATE \"Booking\" SET \"DeliveryStatus\" = ?, \"DeliveryImage\" = ? WHERE \"BookingID\" = ?";
-        try {
-            stm = getConnection().prepareStatement(sql);
+        try (Connection conn = getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, deliveryStatus);
             stm.setString(2, imagePath);
             stm.setString(3, bookingID);
@@ -406,6 +405,10 @@ public class BookingDAO {
             if (rowAffect > 0) {
                 if ("Đã trả".equals(deliveryStatus)) {
                     updateBookingStatus(bookingID, "Đã hoàn thành");
+                    makeMotorcyclesStatus(bookingID, "Có sẵn", "Đã trả xe");
+                } else if ("Đã giao".equals(deliveryStatus)) {
+                    updateBookingStatus(bookingID, "Đang thuê");
+                    makeMotorcyclesStatus(bookingID, "Đang thuê", "Đã giao xe cho khách");
                 }
                 return true;
             }
@@ -416,18 +419,19 @@ public class BookingDAO {
     }
 
     public boolean updateDeliveryStatus(String deliveryStatus, String bookingID) {
-        PreparedStatement stm;
         String sql = "UPDATE \"Booking\" SET \"DeliveryStatus\" = ? WHERE \"BookingID\" = ?";
-        try {
-            stm = getConnection().prepareStatement(sql);
+        try (Connection conn = getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, deliveryStatus);
             stm.setString(2, bookingID);
             
             int rowAffect = stm.executeUpdate();
             if (rowAffect > 0) {
                 if ("Đã trả".equals(deliveryStatus)) {
+                    updateBookingStatus(bookingID, "Đã hoàn thành");
                     makeMotorcyclesStatus(bookingID, "Có sẵn", "Đã trả xe");
                 } else if ("Đã giao".equals(deliveryStatus)) {
+                    updateBookingStatus(bookingID, "Đang thuê");
                     makeMotorcyclesStatus(bookingID, "Đang thuê", "Đã giao xe cho khách");
                 }
                 return true;

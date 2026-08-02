@@ -104,8 +104,8 @@ public class ManageBookingServlet extends HttpServlet {
                 java.time.LocalDateTime currentDateTime = java.time.LocalDateTime.now();
                 java.time.format.DateTimeFormatter outputFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String paymentDateText = currentDateTime.format(outputFormatter);
-                // Sá»­ dá»¥ng sá»‘ tiá»n tá»« form
-                daoP.addPayment(bookingID, "Nhận chuyển khoản (Thủ công)", paymentDateText, amt, "Giao dá»‹ch thÃ nh cÃ´ng");
+                
+                daoP.addPayment(bookingID, "Nhận chuyển khoản (Thủ công)", paymentDateText, amt, "Thành công");
                 
                 com.smartride.dao.MotorcycleStatusDAO daoMS = com.smartride.dao.MotorcycleStatusDAO.getInstance();
                 com.smartride.dao.BookingDetailDAO daoBD = com.smartride.dao.BookingDetailDAO.getInstance();
