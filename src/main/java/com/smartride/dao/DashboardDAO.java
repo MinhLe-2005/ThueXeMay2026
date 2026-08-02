@@ -221,7 +221,7 @@ public class DashboardDAO {
                 orderMap.put(curr.toString(), 0); revenueMap.put(curr.toString(), 0.0); customerMap.put(curr.toString(), 0);
                 curr = curr.plusMonths(1);
             }
-        } else if (diffDays > 60) {
+        } else if (diffDays >= 14) {
             LocalDate curr = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
             while (!curr.isAfter(end)) {
                 orderMap.put(curr.toString(), 0); revenueMap.put(curr.toString(), 0.0); customerMap.put(curr.toString(), 0);
@@ -243,7 +243,7 @@ public class DashboardDAO {
             dtSelect = "TO_CHAR(b.\"BookingDate\", 'YYYY-MM-DD\"T\"HH24:00:00')";
         } else if (diffDays > 180) {
             dtSelect = "DATE(DATE_TRUNC('month', b.\"BookingDate\"))";
-        } else if (diffDays > 60) {
+        } else if (diffDays >= 14) {
             dtSelect = "DATE(DATE_TRUNC('week', b.\"BookingDate\"))";
         }
 
