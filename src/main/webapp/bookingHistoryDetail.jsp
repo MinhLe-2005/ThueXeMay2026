@@ -479,7 +479,7 @@
                                         <c:set var="depositAmount" value="0" />
                                         <c:if test="${not empty paymentList}">
                                             <c:forEach items="${paymentList}" var="pm">
-                                                <c:if test="${pm.paymentStatus == 'Thành công'}">
+                                                <c:if test="${pm.paymentStatus == 'Thành công' || fn:contains(pm.paymentStatus, 'thÃ nh cÃ´ng') || fn:contains(pm.paymentStatus, 'Giao dá»‹ch')}">
                                                     <c:set var="depositAmount" value="${depositAmount + pm.paymentAmount}" />
                                                 </c:if>
                                             </c:forEach>
@@ -499,7 +499,8 @@
                                             <div>
                                                 <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Số tiền cần thanh toán thêm</p>
                                                 <p class="text-xl font-bold text-rose-400">
-                                                    <fmt:formatNumber value="${total - depositAmount}" pattern="#,##0" /> VNĐ
+                                                    <c:set var="remainingAmt" value="${total - depositAmount}" />
+                                                    <fmt:formatNumber value="${remainingAmt > 0 ? remainingAmt : 0}" pattern="#,##0" /> VNĐ
                                                 </p>
                                             </div>
                                         </div>
