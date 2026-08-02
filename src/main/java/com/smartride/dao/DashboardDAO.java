@@ -116,9 +116,14 @@ public class DashboardDAO {
         String paymentDateCondition = getPaymentDateCondition(period, startDate, endDate, isPrevious);
         String paymentConditionWithAlias = paymentDateCondition.isEmpty() ? "" : (" WHERE " + paymentDateCondition);
 
+        // Revenue: chỉ tính tiền đã thực thu (Payment) cho các đơn chưa bị hủy
+        String cancelledFilter = conditionWithAlias.isEmpty()
+                ? " WHERE b.\"StatusBooking\" != '\u0110\u00e3 h\u1ee7y'"
+                : conditionWithAlias + " AND b.\"StatusBooking\" != '\u0110\u00e3 h\u1ee7y'";
+
         String sql = "SELECT "
                    + "(SELECT COUNT(*) FROM \"Booking\" b " + conditionWithAlias + ") AS orders, "
-                   + "(SELECT COALESCE(SUM(b.\"TotalPrice\"), 0) FROM \"Booking\" b " + conditionWithAlias + ") AS revenue, "
+                   + "(SELECT COALESCE(SUM(p.\"PaymentAmount\"), 0) FROM \"Payment\" p JOIN \"Booking\" b ON p.\"BookingID\" = b.\"BookingID\" " + cancelledFilter.replace("WHERE", "WHERE") + ") AS revenue, "
                    + "(SELECT COUNT(DISTINCT b.\"CustomerID\") FROM \"Booking\" b " + conditionWithAlias + ") AS customers, "
                    + "(SELECT COUNT(*) FROM \"Booking\" b " + conditionRentals + ") AS rentals";
 

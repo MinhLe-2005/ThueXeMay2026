@@ -935,6 +935,21 @@
                     </div>
                 </div>
 
+                <!-- Modal xem ảnh CCCD toàn màn hình -->
+                <div class="modal fade" id="image-viewer-modal" tabindex="-1" role="dialog" style="z-index: 1080;">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw; width: auto;">
+                        <div class="modal-content" style="background: #000; border: none; border-radius: 12px; overflow: hidden;">
+                            <div class="modal-header" style="background: rgba(0,0,0,0.8); border: none; padding: 10px 16px;">
+                                <span style="color: #fff; font-size: 14px; font-weight: 600;"><i class="fas fa-id-card me-2" style="color:#60a5fa;"></i>Ảnh Giấy Tờ Tùy Thân</span>
+                                <button type="button" class="close" onclick="$('#image-viewer-modal').modal('hide')" style="background:transparent; border:none; color:#fff; font-size:28px; line-height:1; padding:0; margin-left:auto;">&times;</button>
+                            </div>
+                            <div class="modal-body" style="padding: 0; text-align: center; background: #111;">
+                                <img id="image-viewer-modal-img" src="" style="max-width: 90vw; max-height: 80vh; object-fit: contain; display: block; margin: 0 auto;" alt="Ảnh CCCD">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Modal thông tin khách hàng -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="customer-info-modal" style="z-index: 1060;">
                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -1255,7 +1270,16 @@ function showStaffExtendModal() {
         
         function viewImageFull(src) {
             $('#image-viewer-modal-img').attr('src', src);
-            $('#image-viewer-modal').modal('show');
+            var imgModal = new bootstrap.Modal(document.getElementById('image-viewer-modal'));
+            imgModal.show();
+            // Ensure backdrop sits above other modals
+            setTimeout(function() {
+                var backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 0) {
+                    backdrops[backdrops.length - 1].style.zIndex = '1075';
+                }
+                document.getElementById('image-viewer-modal').style.zIndex = '1080';
+            }, 50);
         }
 
         function openCustomerModal() {
