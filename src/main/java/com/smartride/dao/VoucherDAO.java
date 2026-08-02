@@ -120,9 +120,9 @@ public class VoucherDAO implements Serializable {
         java.util.List<Voucher> list = new java.util.ArrayList<>();
         String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\" "
                    + "FROM \"Voucher\" ORDER BY \"CreatedTime\" DESC";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Voucher v = new Voucher();
                 v.setVoucherId(rs.getInt("VoucherID"));
@@ -146,9 +146,9 @@ public class VoucherDAO implements Serializable {
         java.util.List<Voucher> list = new java.util.ArrayList<>();
         String sql = "SELECT \"VoucherID\", \"Code\", \"DiscountAmount\", \"Description\", \"CreatedTime\", \"Status\" "
                    + "FROM \"Voucher\" ORDER BY \"CreatedTime\" DESC";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Voucher v = new Voucher();
                 v.setVoucherId(rs.getInt("VoucherID"));
@@ -170,8 +170,8 @@ public class VoucherDAO implements Serializable {
      */
     public boolean insertVoucher(Voucher v) {
         String sql = "INSERT INTO \"Voucher\" (\"Code\", \"DiscountAmount\", \"Description\", \"Status\") VALUES (?, ?, ?, ?)";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, v.getCode());
             ps.setDouble(2, v.getDiscountAmount());
             ps.setString(3, v.getDescription());
@@ -188,8 +188,8 @@ public class VoucherDAO implements Serializable {
      */
     public boolean updateVoucher(Voucher v) {
         String sql = "UPDATE \"Voucher\" SET \"Code\" = ?, \"DiscountAmount\" = ?, \"Description\" = ?, \"Status\" = ? WHERE \"VoucherID\" = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, v.getCode());
             ps.setDouble(2, v.getDiscountAmount());
             ps.setString(3, v.getDescription());
@@ -207,8 +207,8 @@ public class VoucherDAO implements Serializable {
      */
     public boolean deleteVoucher(int voucherId) {
         String sql = "DELETE FROM \"Voucher\" WHERE \"VoucherID\" = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection c = DBUtil.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, voucherId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

@@ -46,7 +46,12 @@ public class VoucherManageServlet extends HttpServlet {
                 v.setDescription(description);
                 v.setStatus(status);
                 
-                dao.insertVoucher(v);
+                boolean added = dao.insertVoucher(v);
+                if (added) {
+                    request.getSession().setAttribute("successMsg", "Tạo Voucher thành công!");
+                } else {
+                    request.getSession().setAttribute("errorMsg", "Không thể tạo Voucher (Mã có thể đã tồn tại)!");
+                }
             } else if ("edit".equals(action)) {
                 int voucherId = Integer.parseInt(request.getParameter("voucherId"));
                 String code = request.getParameter("code").toUpperCase();
