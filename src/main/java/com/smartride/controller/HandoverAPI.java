@@ -67,6 +67,31 @@ public class HandoverAPI extends HttpServlet {
             // Save image URLs to DB and update status
             BookingDAO.getInstance().updateDeliveryStatusWithImage("Đã giao", bookingId, jsonImages);
 
+            // AUTO PAY REMAINING AMOUNT
+            try {
+                String checkQuery = "SELECT b.\"BookingID\", " +
+                        "COALESCE(SUM(bd.\"TotalPrice\"), 0) + COALESCE(b.\"DeliveryFee\", 0) + COALESCE((SELECT SUM(\"ExtensionFee\") FROM \"BookingExtension\" WHERE \"BookingID\" = b.\"BookingID\"), 0) AS TotalAmount, " +
+                        "COALESCE((SELECT SUM(\"PaymentAmount\") FROM \"Payment\" WHERE \"BookingID\" = b.\"BookingID\" AND (\"PaymentStatus\" = 'Thành công' OR \"PaymentStatus\" LIKE '%th%nh c%ng%')), 0) AS PaidAmount " +
+                        "FROM \"Booking\" b LEFT JOIN \"BookingDetail\" bd ON b.\"BookingID\" = bd.\"BookingID\" " +
+                        "WHERE b.\"BookingID\" = ? GROUP BY b.\"BookingID\", b.\"DeliveryFee\"";
+                try (java.sql.Connection conn = com.smartride.util.DBUtil.getConnection();
+                     java.sql.PreparedStatement ps = conn.prepareStatement(checkQuery)) {
+                    ps.setString(1, bookingId);
+                    try (java.sql.ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            double total = rs.getDouble("TotalAmount");
+                            double paid = rs.getDouble("PaidAmount");
+                            double diff = total - paid;
+                            if (diff > 0) {
+                                com.smartride.dao.PaymentDAO.getInstance().addLateFeePayment(bookingId, "Tiền mặt (Thu tự động)", java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")), diff);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                System.out.println("Loi tu dong thanh toan khi giao xe: " + ex.getMessage());
+            }
+
             json.put("status", "success");
             json.put("message", "Handover completed successfully");
 
