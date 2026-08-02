@@ -16,7 +16,7 @@ public class FixPayments {
 
         String insertPaymentSql = "INSERT INTO \"Payment\" (\"BookingID\", \"PaymentMethod\", \"PaymentDate\", \"PaymentAmount\", \"PaymentStatus\") VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBUtil.getConnection();
+        try (Connection conn = DBUtil.makeConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query);
              PreparedStatement pstmt = conn.prepareStatement(insertPaymentSql)) {

@@ -74,7 +74,7 @@ public class HandoverAPI extends HttpServlet {
                         "COALESCE((SELECT SUM(\"PaymentAmount\") FROM \"Payment\" WHERE \"BookingID\" = b.\"BookingID\" AND (\"PaymentStatus\" = 'Thành công' OR \"PaymentStatus\" LIKE '%th%nh c%ng%')), 0) AS PaidAmount " +
                         "FROM \"Booking\" b LEFT JOIN \"BookingDetail\" bd ON b.\"BookingID\" = bd.\"BookingID\" " +
                         "WHERE b.\"BookingID\" = ? GROUP BY b.\"BookingID\", b.\"DeliveryFee\"";
-                try (java.sql.Connection conn = com.smartride.util.DBUtil.getConnection();
+                try (java.sql.Connection conn = com.smartride.util.DBUtil.makeConnection();
                      java.sql.PreparedStatement ps = conn.prepareStatement(checkQuery)) {
                     ps.setString(1, bookingId);
                     try (java.sql.ResultSet rs = ps.executeQuery()) {
