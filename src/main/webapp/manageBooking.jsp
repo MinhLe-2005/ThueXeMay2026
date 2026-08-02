@@ -423,6 +423,7 @@
                                                                                     data-deliveryLocation="${listB.deliveryLocation}"
                                                                                     data-returnedLocation="${listB.returnedLocation}"
                                                                                     data-deliveryStatus="${listB.deliveryStatus}"
+                                                                                    data-deliveryImage="${fn:escapeXml(listB.deliveryImage)}"
                                                                                     data-countMotorcycle="${fn:length(listB.listBookingDetails)}"
                                                                                     data-nameMotorcycle=" 
                                                                                     <c:set var="plates" value="${motorcyclePlatesMap[listB.bookingID]}" />
@@ -774,6 +775,12 @@
                                                 <button type="button" class="btn btn-secondary w-100 py-3" style="font-weight: 700; border-radius: 8px;" onclick="showStaffExtendModal()">
                                                     <i class="fas fa-calendar-plus me-2"></i> Gia hạn xe (Cho Staff)
                                                 </button>
+                                            </div>
+                                            <div class="col-12 mt-2" id="deliveryImagesArea" style="display: none;">
+                                                <div class="p-3" style="background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
+                                                    <h6 class="fw-bold mb-2 text-dark" style="font-size:14px;"><i class="fas fa-camera me-2 text-primary"></i>Ảnh bàn giao xe</h6>
+                                                    <div id="deliveryImagesContainer" class="d-flex flex-wrap gap-2"></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1258,6 +1265,28 @@ function showStaffExtendModal() {
                 } else {
                     $('#handoverArea').hide();
                 }
+            }
+
+            var deliveryImage = button.getAttribute('data-deliveryImage');
+            var imgContainer = document.getElementById('deliveryImagesContainer');
+            var imgArea = document.getElementById('deliveryImagesArea');
+            if (deliveryImage && deliveryImage.trim() !== '') {
+                try {
+                    var images = JSON.parse(deliveryImage);
+                    if (images && images.length > 0) {
+                        imgArea.style.display = 'block';
+                        imgContainer.innerHTML = '';
+                        images.forEach(function(imgUrl) {
+                            imgContainer.innerHTML += '<img src="' + imgUrl + '" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 1px solid #cbd5e1;" onclick="viewImageFull(this.src)">';
+                        });
+                    } else {
+                        imgArea.style.display = 'none';
+                    }
+                } catch (e) {
+                    imgArea.style.display = 'none';
+                }
+            } else {
+                imgArea.style.display = 'none';
             }
 
             var modalEl = document.getElementById('user-form-modal');

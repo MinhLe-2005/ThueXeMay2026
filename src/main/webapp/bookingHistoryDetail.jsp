@@ -249,6 +249,29 @@
                                                 </div>
                                             </div>
                                         </c:if>
+                                        <c:if test="${not empty booking.deliveryImage and booking.deliveryImage != '[]' and booking.deliveryImage != ''}">
+                                            <div class="mt-6 pt-5 border-t border-gray-100">
+                                                <h5 class="text-sm font-bold text-gray-800 mb-3"><i class="fas fa-camera text-blue-500 mr-2"></i> Ảnh bàn giao xe</h5>
+                                                <div id="customerDeliveryImages" class="flex flex-wrap gap-2"></div>
+                                                <script>
+                                                    document.addEventListener('DOMContentLoaded', function() {
+                                                        try {
+                                                            var imgRaw = '${fn:escapeXml(booking.deliveryImage)}';
+                                                            if (imgRaw) {
+                                                                var imgs = JSON.parse(imgRaw);
+                                                                var html = '';
+                                                                if (imgs && imgs.length > 0) {
+                                                                    imgs.forEach(function(url) {
+                                                                        html += '<img src="'+url+'" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform=\'scale(1.05)\'" onmouseout="this.style.transform=\'scale(1)\'" onclick="window.open(this.src, \'_blank\')">';
+                                                                    });
+                                                                    document.getElementById('customerDeliveryImages').innerHTML = html;
+                                                                }
+                                                            }
+                                                        } catch(e){}
+                                                    });
+                                                </script>
+                                            </div>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
