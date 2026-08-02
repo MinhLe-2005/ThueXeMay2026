@@ -463,7 +463,7 @@
                                         </c:if>
                                         <div class="flex justify-between items-center pt-1 border-b border-white/10 pb-4">
                                             <div>
-                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiền cọc (${depositAmount > 0 ? 'Đã cọc' : 'Chưa thanh toán'})</p>
+                                                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5">Tiền đã thanh toán (${depositAmount >= total ? 'Đã thanh toán toàn bộ' : (depositAmount > 0 ? 'Đã cọc' : 'Chưa thanh toán')})</p>
                                                 <p class="text-2xl font-bold ${depositAmount > 0 ? 'text-green-400' : 'text-yellow-400'}" id="amount-paid">
                                                     <fmt:formatNumber value="${depositAmount}" pattern="#,##0" /> VNĐ
                                                 </p>
@@ -752,7 +752,6 @@
                         <p class="text-gray-600 text-sm font-semibold">Đang kết nối cổng thanh toán SePay VietQR...</p>
                     </div>
                 </div>
-                <button type="button" onclick="confirmBankPayment()" style="margin-top:16px; width:100%; padding:12px; background:#16a34a; color:white; border:none; border-radius:10px; font-weight:700; font-size:14px; cursor:pointer;">Tôi đã chuyển khoản</button>
             </div>
         </div>
 
