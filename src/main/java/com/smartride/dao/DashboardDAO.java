@@ -118,7 +118,7 @@ public class DashboardDAO {
 
         String sql = "SELECT "
                    + "(SELECT COUNT(*) FROM \"Booking\" b " + conditionWithAlias + ") AS orders, "
-                   + "(SELECT COALESCE(SUM(p.\"PaymentAmount\"), 0) FROM \"Payment\" p JOIN \"Booking\" b ON p.\"BookingID\" = b.\"BookingID\" " + paymentConditionWithAlias + ") AS revenue, "
+                   + "(SELECT COALESCE(SUM(b.\"TotalPrice\"), 0) FROM \"Booking\" b " + conditionWithAlias + ") AS revenue, "
                    + "(SELECT COUNT(DISTINCT b.\"CustomerID\") FROM \"Booking\" b " + conditionWithAlias + ") AS customers, "
                    + "(SELECT COUNT(*) FROM \"Booking\" b " + conditionRentals + ") AS rentals";
 
@@ -243,9 +243,9 @@ public class DashboardDAO {
         }
 
         String sql = "SELECT " + dtSelect + " as dt, COUNT(b.\"BookingID\") as orders, "
-                   + "COALESCE(SUM(p.\"PaymentAmount\"), 0) as revenue, "
+                   + "COALESCE(SUM(b.\"TotalPrice\"), 0) as revenue, "
                    + "COUNT(DISTINCT b.\"CustomerID\") as customers "
-                   + "FROM \"Booking\" b LEFT JOIN \"Payment\" p ON b.\"BookingID\" = p.\"BookingID\" "
+                   + "FROM \"Booking\" b "
                    + conditionWithAlias
                    + " GROUP BY " + dtSelect;
 
@@ -308,17 +308,16 @@ public class DashboardDAO {
             e.printStackTrace();
         }
 
-        String paymentDateCondition = getPaymentDateCondition(period, startDate, endDate, false);
-        String paymentConditionWithAlias = paymentDateCondition.isEmpty() ? "" : (" WHERE " + paymentDateCondition);
+        String dateCondition = getDateCondition(period, startDate, endDate, false);
+        String conditionWithAlias = dateCondition.isEmpty() ? "" : (" WHERE " + dateCondition.replace("\"BookingDate\"", "b.\"BookingDate\""));
         
-        String sql = "SELECT br.\"BrandName\", SUM(p.\"PaymentAmount\") as revenue "
-                   + "FROM \"Payment\" p "
-                   + "JOIN \"Booking\" b ON p.\"BookingID\" = b.\"BookingID\" "
+        String sql = "SELECT br.\"BrandName\", SUM(bd.\"TotalPrice\") as revenue "
+                   + "FROM \"Booking\" b "
                    + "JOIN \"Booking Detail\" bd ON b.\"BookingID\" = bd.\"BookingID\" "
                    + "JOIN \"Motorcycle Detail\" md ON bd.\"MotorcycleDetailID\" = md.\"MotorcycleDetailID\" "
                    + "JOIN \"Motorcycle\" m ON md.\"MotorcycleID\" = m.\"MotorcycleID\" "
                    + "JOIN \"Brand\" br ON m.\"BrandID\" = br.\"BrandID\" "
-                   + paymentConditionWithAlias
+                   + conditionWithAlias
                    + " GROUP BY br.\"BrandName\"";
                    
         try (PreparedStatement ps = conn.prepareStatement(sql);
