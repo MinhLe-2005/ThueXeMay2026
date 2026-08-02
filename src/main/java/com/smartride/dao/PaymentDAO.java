@@ -96,7 +96,7 @@ public class PaymentDAO implements Serializable {
 
     public List<Payment> getListByBookingId(String id) {
         List<Payment> list = new ArrayList<>();
-        String sql = "SELECT * FROM \"Payment\" WHERE \"BookingID\" = ? ORDER BY \"PaymentDate\" DESC";
+        String sql = "SELECT \"PaymentID\", \"BookingID\", \"PaymentMethod\", to_char(\"PaymentDate\", 'DD/MM/YYYY HH24:MI:SS'), \"PaymentAmount\", \"PaymentStatus\" FROM \"Payment\" WHERE \"BookingID\" = ? ORDER BY \"PaymentDate\" DESC";
         try (Connection conn = getConnection();
              PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, id);

@@ -203,7 +203,7 @@
                                             <div>
                                                 <p class="text-xs text-gray-400 font-bold uppercase mb-1">Nhận xe</p>
                                                 <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5" id="delivery-location-text">${booking.deliveryLocation}</p>
-                                                <p class="text-sm text-yellow-600 font-semibold"><i class="far fa-clock mr-1"></i> ${booking.startDate}</p>
+                                                <p class="text-sm text-yellow-600 font-semibold"><i class="far fa-clock mr-1"></i> ${startDay}/${startMonth}/${startYear} ${startParts[1]}</p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4">
@@ -213,7 +213,7 @@
                                             <div>
                                                 <p class="text-xs text-gray-400 font-bold uppercase mb-1">Trả xe</p>
                                                 <p class="text-base text-gray-800 font-bold leading-relaxed mb-0.5" id="return-location-text">${booking.returnedLocation}</p>
-                                                <p class="text-sm text-green-600 font-semibold"><i class="far fa-clock mr-1"></i> ${booking.endDate}</p>
+                                                <p class="text-sm text-green-600 font-semibold"><i class="far fa-clock mr-1"></i> ${endDay}/${endMonth}/${endYear} ${endParts[1]}</p>
                                             </div>
                                         </div>
                                         <c:if test="${statusBooking == 'Đã xác nhận'}">
@@ -672,12 +672,12 @@
                                     <span>SOS Khẩn Cấp</span>
                                 </button>
                             </c:if>
-                            <c:if test="${statusBooking != 'Đã hủy'}">
+                            <c:if test="${statusBooking == 'Đã xác nhận'}">
                                 <button type="button" id="pay-btn" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #10b981">
                                     <i class="fas fa-wallet"></i> Thanh toán ngay
                                 </button>
                             </c:if>
-                            <c:if test="${statusBooking != 'Đã hủy' && booking.deliveryStatus != 'Đã trả'}">
+                            <c:if test="${statusBooking == 'Đã xác nhận' && booking.deliveryStatus != 'Đã trả'}">
                                 <button type="button" id="extension" class="px-4 py-2 text-white rounded-xl font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-1.5 hover:opacity-90" style="background-color: #3b82f6" onclick="openExtensionForm()">
                                     <i class="fas fa-calendar-plus"></i> Gia hạn thời gian
                                 </button>
