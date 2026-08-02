@@ -1000,7 +1000,7 @@
                                     <div style="border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 4px;">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; display:flex; align-items:center; gap:6px;">
-                                                <i class="fas fa-robot" style="color:#8b5cf6;"></i> Xác thực bằng AI (FPT.AI OCR)
+                                                <i class="fas fa-robot" style="color:#8b5cf6;"></i> Quét CCCD bằng AI
                                             </div>
                                             <button type="button" id="btn-verify-ai" onclick="verifyIdCardAI()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display:flex; align-items:center; gap:6px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                                                 <i class="fas fa-magic"></i> Quét CCCD bằng AI
@@ -1396,11 +1396,11 @@ function showStaffExtendModal() {
 
                 if (!data.success) {
                     var needKey = data.needKey;
-                    var title = needKey ? 'Chưa cài FPT.AI API Key' : 'Không thể xác thực';
+                    var title = needKey ? 'Chưa cài API Key' : 'Không thể xác thực';
                     var msgHtml = '<div style="background:#fef3c7; border:1px solid #fcd34d; border-radius:10px; padding:16px;">'
                         + '<div style="font-weight:700; color:#92400e; margin-bottom:8px;"><i class="fas ' + (needKey ? 'fa-key' : 'fa-exclamation-triangle') + ' me-2"></i>' + title + '</div>'
                         + '<div style="font-size:13px; color:#78350f;">' + (data.message || 'Lỗi không xác định') + '</div>'
-                        + (needKey ? '<div style="margin-top:10px; font-size:12px; color:#92400e;">1. Đăng ký tại <a href="https://console.fpt.ai" target="_blank">console.fpt.ai</a> để lấy API key miễn phí<br>2. Mở file <code>VerifyIdCardServlet.java</code><br>3. Điền key vào biến <code>FPT_API_KEY</code></div>' : '')
+                        + (needKey ? '<div style="margin-top:10px; font-size:12px; color:#92400e;">1. Đăng ký tại <a href="https://ocr.space/ocrapi/freekey" target="_blank">ocr.space</a> để lấy API key miễn phí<br>2. Mở file <code>IdCardVerifier.java</code><br>3. Điền key vào biến <code>OCR_API_KEY</code></div>' : '')
                         + '</div>';
                     $('#ai-result-box').html(msgHtml).show();
                     return;
@@ -1442,9 +1442,10 @@ function showStaffExtendModal() {
                 var doeColor = doeOk ? '#059669' : '#dc2626';
                 var doeLabel = doeOk ? 'Còn hiệu lực' : '⚠ HẾT HẠN';
                 var doeRow = '<div style="' + rowStyle + ' background:' + doeBg + '; border-radius:8px; padding:10px; margin-bottom:6px;">'
-                    + '<div><span style="color:#64748b; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Ngày hết hạn</span><br>'
-                    + '<span style="color:#0f172a; font-weight:700;">' + (data.ocrDoe||'N/A') + '</span></div>'
-                    + '<div style="text-align:right;"><i class="fas ' + doeIcon + '" style="color:' + doeColor + ';"></i> <span style="color:' + doeColor + '; font-weight:700;">' + doeLabel + '</span></div>'
+                    + '<div><span style="color:#64748b; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Ngày hết hạn (AI)</span><br>'
+                    + '<span style="color:#64748b; font-size:11px; font-style:italic;">(Không lưu trong hệ thống)</span></div>'
+                    + '<div style="text-align:right;"><span style="color:#64748b; font-size:11px;">AI đọc được:</span><br>'
+                    + '<span style="font-weight:700;">' + (data.ocrDoe||'N/A') + '</span> <span style="color:' + doeColor + '; font-weight:700; margin-left:4px;"><i class="fas ' + doeIcon + '"></i> ' + doeLabel + '</span></div>'
                     + '</div>';
 
                 // Danh sách lỗi chi tiết
@@ -1463,6 +1464,7 @@ function showStaffExtendModal() {
                     + '<i class="fas ' + icon + '"></i>' + statusText
                     + '</div>'
                     + '<div style="padding: 14px 16px; background:#fff;">'
+                    + '<div style="font-weight:700; color:#64748b; margin-bottom:12px; font-size:12px;"><i class="fas fa-robot me-1" style="color:#8b5cf6;"></i> XÁC THỰC BẰNG AI (SMART OCR)</div>'
                     + '<div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">So sánh dữ liệu</div>'
                     + matchBadge(data.idMatch, storedId, data.ocrId, 'Số CCCD/CMND')
                     + matchBadge(data.nameMatch, storedName, data.ocrName, 'Họ và tên')
