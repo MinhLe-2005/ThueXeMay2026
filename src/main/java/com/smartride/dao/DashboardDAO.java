@@ -215,13 +215,13 @@ public class DashboardDAO {
                 orderMap.put(key, 0); revenueMap.put(key, 0.0); customerMap.put(key, 0);
                 currDt = currDt.plusHours(4);
             }
-        } else if (diffDays > 31) {
+        } else if (diffDays > 180) {
             LocalDate curr = start.withDayOfMonth(1);
             while (!curr.isAfter(end)) {
                 orderMap.put(curr.toString(), 0); revenueMap.put(curr.toString(), 0.0); customerMap.put(curr.toString(), 0);
                 curr = curr.plusMonths(1);
             }
-        } else if (diffDays > 7) {
+        } else if (diffDays > 60) {
             LocalDate curr = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
             while (!curr.isAfter(end)) {
                 orderMap.put(curr.toString(), 0); revenueMap.put(curr.toString(), 0.0); customerMap.put(curr.toString(), 0);
@@ -241,16 +241,17 @@ public class DashboardDAO {
         String dtSelect = "DATE(b.\"BookingDate\")";
         if (diffDays == 0) {
             dtSelect = "TO_CHAR(b.\"BookingDate\", 'YYYY-MM-DD\"T\"HH24:00:00')";
-        } else if (diffDays > 31) {
+        } else if (diffDays > 180) {
             dtSelect = "DATE(DATE_TRUNC('month', b.\"BookingDate\"))";
-        } else if (diffDays > 7) {
+        } else if (diffDays > 60) {
             dtSelect = "DATE(DATE_TRUNC('week', b.\"BookingDate\"))";
         }
 
-        String sql = "SELECT " + dtSelect + " as dt, COUNT(b.\"BookingID\") as orders, "
-                   + "COALESCE(SUM(b.\"TotalPrice\"), 0) as revenue, "
+        String sql = "SELECT " + dtSelect + " as dt, COUNT(DISTINCT b.\"BookingID\") as orders, "
+                   + "COALESCE(SUM(p.\"PaymentAmount\"), 0) as revenue, "
                    + "COUNT(DISTINCT b.\"CustomerID\") as customers "
                    + "FROM \"Booking\" b "
+                   + "LEFT JOIN \"Payment\" p ON b.\"BookingID\" = p.\"BookingID\" AND b.\"StatusBooking\" != 'Đã hủy' "
                    + conditionWithAlias
                    + " GROUP BY " + dtSelect;
 
@@ -267,8 +268,8 @@ public class DashboardDAO {
                 } else {
                     java.sql.Date dt = rs.getDate("dt");
                     if (dt == null) continue;
-                    if (diffDays > 31) key = dt.toLocalDate().withDayOfMonth(1).toString();
-                    else if (diffDays > 7) key = dt.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toString();
+                    if (diffDays > 180) key = dt.toLocalDate().withDayOfMonth(1).toString();
+                    else if (diffDays > 60) key = dt.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toString();
                     else key = dt.toString();
                 }
 
