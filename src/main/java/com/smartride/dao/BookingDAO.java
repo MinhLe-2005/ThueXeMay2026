@@ -144,31 +144,30 @@ public class BookingDAO {
     }
     
     public Booking getBookingById(String bookingId) {
-        PreparedStatement stm;
-        ResultSet rs;
-        try {
-            String sql = "SELECT * FROM \"Booking\" WHERE \"BookingID\" = ?";
-            stm = getConnection().prepareStatement(sql);
+        String sql = "SELECT * FROM \"Booking\" WHERE \"BookingID\" = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, bookingId);
-            rs = stm.executeQuery();
-            while (rs.next()) {
-                Booking b = new Booking();
-                List<BookingDetail> listBookingDetails = BookingDetailDAO.getInstance().getListBookingDetails(rs.getString(1));
-                b.setBookingID(rs.getString(1));
-                b.setBookingDate(rs.getString(2));
-                b.setStartDate(rs.getString(3));
-                b.setEndDate(rs.getString(4));
-                b.setStatusBooking(rs.getString(5));
-                b.setDeliveryLocation(rs.getString(6));
-                b.setReturnedLocation(rs.getString(7));
-                b.setDeliveryStatus(rs.getString(8));
-                b.setVoucherID(rs.getInt(9));
-                b.setCustomerID(rs.getInt(10));
-                try { b.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
-                try { b.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
-                try { b.setApprovedDate(rs.getString("ApprovedDate")); } catch (SQLException ignore) {}
-                b.setListBookingDetails(listBookingDetails);
-                return b;
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    Booking b = new Booking();
+                    List<BookingDetail> listBookingDetails = BookingDetailDAO.getInstance().getListBookingDetails(rs.getString(1));
+                    b.setBookingID(rs.getString(1));
+                    b.setBookingDate(rs.getString(2));
+                    b.setStartDate(rs.getString(3));
+                    b.setEndDate(rs.getString(4));
+                    b.setStatusBooking(rs.getString(5));
+                    b.setDeliveryLocation(rs.getString(6));
+                    b.setReturnedLocation(rs.getString(7));
+                    b.setDeliveryStatus(rs.getString(8));
+                    b.setVoucherID(rs.getInt(9));
+                    b.setCustomerID(rs.getInt(10));
+                    try { b.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
+                    try { b.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
+                    try { b.setApprovedDate(rs.getString("ApprovedDate")); } catch (SQLException ignore) {}
+                    b.setListBookingDetails(listBookingDetails);
+                    return b;
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(BookingDAO.class.getName()).log(Level.SEVERE, null, ex);
