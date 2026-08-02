@@ -461,9 +461,10 @@
                                                                                     data-typeCard="${cus.typeCard}"
                                                                                     data-customerId="searchCustomer?id=${listB.customerID}"
                                                                                     data-cusId="${listB.customerID}"
-                                                                                    data-paymentStatus="${(listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả') ? 'Đã thanh toán' : ((listB.statusBooking == 'Đã xác nhận' && (empty pay || not fn:contains(pay.paymentMethod, 'Tiền mặt'))) ? 'Đã cọc' : (pay != null ? pay.paymentStatus : ''))}"
-                                                                                    data-paymentMethod="${(listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả') && (pay == null || pay.paymentMethod == '') ? 'Đã thanh toán' : (pay != null ? pay.paymentMethod : '')}"
-                                                                                    data-paymentAmount="${(listB.statusBooking == 'Đã thanh toán' || listB.statusBooking == 'Đã hoàn thành' || listB.deliveryStatus == 'Đã giao' || listB.deliveryStatus == 'Đã trả') && paid == 0 ? total : (pay != null ? pay.paymentAmount : '0')}"
+                                                                                    data-paymentStatus="${remaining <= 0 ? 'Đã thanh toán' : (paid > 0 ? 'Đã cọc' : 'Chưa thanh toán')}"
+                                                                                    data-paymentMethod="${pay != null ? pay.paymentMethod : 'Tiền mặt'}"
+                                                                                    data-paymentAmount="${paid}"
+                                                                                    data-deliveryImage='${listB.deliveryImage}'
                                                                                     onclick="openUserModal(this)">
                                                                                 <i class="fas ${buttonIcon} me-1"></i>${buttonText}
                                                                             </button>
