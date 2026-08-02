@@ -104,7 +104,20 @@ public class IdCardVerifier {
         // Parse kết quả
         r.success = true;
         int errorCode = extractInt(fptJson, "\"errorCode\"");
-        if (errorCode != 0) {
+        int httpStatus = extractInt(fptJson, "\"__httpStatus\"");
+        if (httpStatus == 429 || errorCode == 429) {
+            r.success  = false;
+            r.valid    = false;
+            r.errorMsg = "API key FPT.AI đã hết hạn mức sử dụng miễn phí (Rate Limit 429). Vui lòng đăng ký key mới tại console.fpt.ai";
+            return r;
+        }
+        if (httpStatus == 401 || httpStatus == 403 || errorCode == 401 || errorCode == 403) {
+            r.success  = false;
+            r.valid    = false;
+            r.errorMsg = "API key FPT.AI không hợp lệ hoặc đã bị vô hiệu hóa (HTTP " + (httpStatus > 0 ? httpStatus : errorCode) + ")";
+            return r;
+        }
+        if (errorCode != 0 && errorCode != -1) {
             r.success  = false;
             r.valid    = false;
             r.errorMsg = "FPT API lỗi: " + extractString(fptJson, "\"errorMessage\"");
@@ -202,6 +215,13 @@ public class IdCardVerifier {
             }
 
             int code = conn.getResponseCode();
+            if (code == 429) {
+                // Rate limit exceeded - API key hết quota
+                return "{\"__httpStatus\": 429, \"errorCode\": 429}";
+            }
+            if (code == 401 || code == 403) {
+                return "{\"__httpStatus\": " + code + ", \"errorCode\": " + code + "}";
+            }
             InputStream is = (code == 200) ? conn.getInputStream() : conn.getErrorStream();
             if (is == null) return null;
             StringBuilder sb = new StringBuilder();
