@@ -116,10 +116,10 @@ public class DashboardDAO {
         String paymentDateCondition = getPaymentDateCondition(period, startDate, endDate, isPrevious);
         String paymentConditionWithAlias = paymentDateCondition.isEmpty() ? "" : (" WHERE " + paymentDateCondition);
 
-        // Revenue: chỉ tính tiền đã thực thu (Payment) cho các đơn chưa bị hủy
+        // Revenue: chỉ tính tiền đã thực thu (Payment) cho các đơn chưa bị hủy, và chỉ tính các payment Thành công
         String cancelledFilter = conditionWithAlias.isEmpty()
-                ? " WHERE b.\"StatusBooking\" != '\u0110\u00e3 h\u1ee7y'"
-                : conditionWithAlias + " AND b.\"StatusBooking\" != '\u0110\u00e3 h\u1ee7y'";
+                ? " WHERE b.\"StatusBooking\" != '\u0110\u00e3 h\u1ee7y' AND (p.\"PaymentStatus\" = 'Thành công' OR p.\"PaymentStatus\" LIKE '%th%nh c%ng%')"
+                : conditionWithAlias + " AND b.\"StatusBooking\" != '\u0110\u00e3 h\u1ee7y' AND (p.\"PaymentStatus\" = 'Thành công' OR p.\"PaymentStatus\" LIKE '%th%nh c%ng%')";
 
         String sql = "SELECT "
                    + "(SELECT COUNT(*) FROM \"Booking\" b " + conditionWithAlias + ") AS orders, "
@@ -251,7 +251,7 @@ public class DashboardDAO {
                    + "COALESCE(SUM(p.\"PaymentAmount\"), 0) as revenue, "
                    + "COUNT(DISTINCT b.\"CustomerID\") as customers "
                    + "FROM \"Booking\" b "
-                   + "LEFT JOIN \"Payment\" p ON b.\"BookingID\" = p.\"BookingID\" AND b.\"StatusBooking\" != 'Đã hủy' "
+                   + "LEFT JOIN \"Payment\" p ON b.\"BookingID\" = p.\"BookingID\" AND b.\"StatusBooking\" != 'Đã hủy' AND (p.\"PaymentStatus\" = 'Thành công' OR p.\"PaymentStatus\" LIKE '%th%nh c%ng%') "
                    + conditionWithAlias
                    + " GROUP BY " + dtSelect;
 

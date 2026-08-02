@@ -32,18 +32,21 @@ public class PaymentDAO implements Serializable {
 
     public Payment getPayMentbyBookingId(String bookingId) {
         String sql = "SELECT \"PaymentID\", \"BookingID\", \"PaymentMethod\", \"PaymentDate\", \"PaymentAmount\", \"PaymentStatus\" "
-                   + "FROM \"Payment\" WHERE \"BookingID\" = ? AND \"PaymentStatus\" = ? ORDER BY \"PaymentDate\" DESC";
+                   + "FROM \"Payment\" WHERE \"BookingID\" = ? ORDER BY \"PaymentDate\" DESC";
         try (Connection conn = getConnection();
              PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setString(1, bookingId);
-            stm.setString(2, "Thành công");
             try (ResultSet rs = stm.executeQuery()) {
                 List<Payment> allPayments = new ArrayList<>();
                 double totalAmount = 0;
                 while (rs.next()) {
-                    Payment p = new Payment(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), rs.getString(6));
-                    allPayments.add(p);
-                    totalAmount += p.getPaymentAmount();
+                    String status = rs.getString(6);
+                    // Filter successful payments handling legacy garbled text from previous encoding issues
+                    if (status != null && (status.equals("Thành công") || status.toLowerCase().contains("thành") || status.contains("thÃ nh"))) {
+                        Payment p = new Payment(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5), status);
+                        allPayments.add(p);
+                        totalAmount += p.getPaymentAmount();
+                    }
                 }
                 if (!allPayments.isEmpty()) {
                     Payment latest = allPayments.get(0);

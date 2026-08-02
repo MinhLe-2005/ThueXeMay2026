@@ -125,39 +125,42 @@ public class SepayWebhookServlet extends HttpServlet {
             LocalDateTime currentDateTime = LocalDateTime.now();
             DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String paymentDateText = currentDateTime.format(outputFormatter);
-            // Check if payment already exists to avoid UNIQUE constraint violation
-            java.util.List<com.smartride.dto.Payment> existingPays = daoP.getListByBookingId(bookingId);
+            
+            // Deduplicate webhooks based on BookingID + Amount within 5 minutes
+            String dedupeKey = bookingId + "_" + amount;
+            Long lastTime = paidOrders.get(dedupeKey);
             boolean alreadyInserted = false;
-            for (com.smartride.dto.Payment p : existingPays) {
-                if ("Thành công".equals(p.getPaymentStatus())) {
-                    alreadyInserted = true;
-                    break;
-                }
+            if (lastTime != null && (System.currentTimeMillis() - lastTime < 300_000)) {
+                alreadyInserted = true;
+            } else {
+                paidOrders.put(dedupeKey, System.currentTimeMillis());
             }
+            
             if (!alreadyInserted) {
                 daoP.addPayment(bookingId, "SePay VietQR", paymentDateText, amount, "Thành công");
                 System.out.println("[SepayWebhook] Inserted payment for booking " + bookingId + " - Amount: " + amount);
             } else {
-                System.out.println("[SepayWebhook] Skipped duplicate payment for booking " + bookingId);
+                System.out.println("[SepayWebhook] Skipped duplicate webhook for booking " + bookingId + " - Amount: " + amount);
             }
             
             // Verify payment was inserted
             java.util.List<com.smartride.dto.Payment> allPaymentsCheck = daoP.getListByBookingId(bookingId);
             System.out.println("[SepayWebhook] Verification - Total payments in DB for " + bookingId + ": " + allPaymentsCheck.size());
-                for (com.smartride.dto.Payment p : allPaymentsCheck) {
-                    System.out.println("[SepayWebhook] Payment - Amount: " + p.getPaymentAmount() + ", Status: " + p.getPaymentStatus());
+            for (com.smartride.dto.Payment p : allPaymentsCheck) {
+                System.out.println("[SepayWebhook] Payment - Amount: " + p.getPaymentAmount() + ", Status: " + p.getPaymentStatus());
+            }
+            
+            // Calculate total paid - sum all payments for this booking
+            java.util.List<com.smartride.dto.Payment> allPayments = daoP.getListByBookingId(bookingId);
+            double totalPaid = 0;
+            for (com.smartride.dto.Payment p : allPayments) {
+                String status = p.getPaymentStatus();
+                if (status != null && (status.equals("Thành công") || status.toLowerCase().contains("thành") || status.contains("thÃ nh"))) {
+                    totalPaid += p.getPaymentAmount();
                 }
-                
-                // Calculate total paid - sum all payments for this booking
-                java.util.List<com.smartride.dto.Payment> allPayments = daoP.getListByBookingId(bookingId);
-                double totalPaid = 0;
-                for (com.smartride.dto.Payment p : allPayments) {
-                    if ("Thành công".equals(p.getPaymentStatus())) {
-                        totalPaid += p.getPaymentAmount();
-                    }
-                }
-                
-                double bookingTotal = 0;
+            }
+            
+            double bookingTotal = 0;
                 for (com.smartride.dto.BookingDetail detail : existingBooking.getListBookingDetails()) {
                     bookingTotal += detail.getTotalPrice();
                 }
