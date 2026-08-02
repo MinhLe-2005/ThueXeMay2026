@@ -123,10 +123,19 @@
                             <script>
                             (function() {
                                 var startDateStr = "${booking.startDate}"; 
-                                var parsedStr = startDateStr.replace(/-/g, '/').replace('.0', '');
-                                var targetTime = new Date(parsedStr);
-                                var now = new Date();
+                                var approvedDateStr = "${booking.approvedDate}"; 
+                                var parsedStart = startDateStr.replace(/-/g, '/').replace('.0', '');
+                                var targetTime = new Date(parsedStart);
                                 
+                                if (approvedDateStr && approvedDateStr.trim() !== '') {
+                                    var parsedApproved = approvedDateStr.replace(/-/g, '/').replace('.0', '');
+                                    var approvedTime = new Date(parsedApproved);
+                                    if (approvedTime > targetTime) {
+                                        targetTime = approvedTime;
+                                    }
+                                }
+                                
+                                var now = new Date();
                                 var diffMs = targetTime - now;
                                 var diffMins = Math.floor(diffMs / 60000);
                                 

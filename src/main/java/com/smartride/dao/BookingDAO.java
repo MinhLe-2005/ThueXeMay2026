@@ -166,6 +166,7 @@ public class BookingDAO {
                 b.setCustomerID(rs.getInt(10));
                 try { b.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
                 try { b.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
+                try { b.setApprovedDate(rs.getString("ApprovedDate")); } catch (SQLException ignore) {}
                 b.setListBookingDetails(listBookingDetails);
                 return b;
             }
@@ -227,6 +228,7 @@ public class BookingDAO {
                 b.setCustomerID(rs.getInt(10));
                 try { b.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
                 try { b.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
+                try { b.setApprovedDate(rs.getString("ApprovedDate")); } catch (SQLException ignore) {}
                 b.setListBookingDetails(listBookingDetails);
                 list.add(b);
             }
@@ -350,11 +352,12 @@ public class BookingDAO {
     
     public boolean updateBookingStatus(String bookingID, String status) {
         PreparedStatement stm;
-        String sql = "UPDATE \"Booking\" SET \"StatusBooking\" = ? WHERE \"BookingID\" = ?";
+        String sql = "UPDATE \"Booking\" SET \"StatusBooking\" = ?, \"ApprovedDate\" = CASE WHEN ? = N'Đã xác nhận' AND \"ApprovedDate\" IS NULL THEN NOW() ELSE \"ApprovedDate\" END WHERE \"BookingID\" = ?";
         try {
             stm = getConnection().prepareStatement(sql);
             stm.setString(1, status);
-            stm.setString(2, bookingID);
+            stm.setString(2, status);
+            stm.setString(3, bookingID);
             int rowAffect = stm.executeUpdate();
             if (rowAffect > 0) {
                 if ("Đã hoàn thành".equals(status)) {
@@ -630,6 +633,7 @@ public class BookingDAO {
                 b.setCustomerID(rs.getInt(10));
                 try { b.setDeliveryImage(rs.getString("DeliveryImage")); } catch (SQLException ignore) {}
                 try { b.setHandoverChecklist(rs.getString("HandoverChecklist")); } catch (SQLException ignore) {}
+                try { b.setApprovedDate(rs.getString("ApprovedDate")); } catch (SQLException ignore) {}
                 list.add(b);
             }
         } catch (SQLException ex) {
