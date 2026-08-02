@@ -53,12 +53,19 @@ public class CheckPaymentServlet extends HttpServlet {
                 // If we have a Payment object associated with this booking that is fully paid
                 Payment pay = PaymentDAO.getInstance().getPayMentbyBookingId(bookingId);
                 
-                // Assuming paymentAmount > 0 and status is not 'Chờ'
                 if (pay != null && pay.getPaymentStatus() != null && !pay.getPaymentStatus().contains("Chờ")) {
-                    json.put("status", "success");
-                    json.put("paid", true);
-                    out.print(new Gson().toJson(json));
-                    return;
+                    double totalPrice = booking.getDeliveryFee();
+                    if (booking.getListBookingDetails() != null) {
+                        for (com.smartride.dto.BookingDetail detail : booking.getListBookingDetails()) {
+                            totalPrice += detail.getTotalPrice();
+                        }
+                    }
+                    if (pay.getPaymentAmount() >= totalPrice - 1) {
+                        json.put("status", "success");
+                        json.put("paid", true);
+                        out.print(new Gson().toJson(json));
+                        return;
+                    }
                 }
             }
 
